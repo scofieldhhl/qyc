@@ -44,7 +44,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-        tools:replace="android:icon, android:supportsRtl, android:allowBackup,android:label">
+        tools:replace="android:icon, android:supportsRtl,
+        android:allowBackup, android:label, android:theme">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="S64Fn6drcdAGvYxq2AW0ikTOBVKInQXO" />
