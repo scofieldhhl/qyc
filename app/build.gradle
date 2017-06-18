@@ -21,29 +21,48 @@ android {
             versionCode 1
             versionName "1.0"
             testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+            multiDexEnabled true
         }
         buildTypes {
             release {
                 debuggable false
                 zipAlignEnabled false
                 shrinkResources false
-                minifyEnabled true
+                minifyEnabled false
                 // 移除无用的resource文件
-                shrinkResources true
+                shrinkResources false
                 proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
                 buildConfigField "boolean", "IS_ARRIVING", "false"//发布版时关闭调试
 
             }
-//            debug {
-//                buildConfigField "boolean", "isDebug", "true" //调试版开启调试
-//
-//            }
+            debug {
+                buildConfigField "boolean", "isDebug", "true" //调试版开启调试
+
+            }
         }
         lintOptions {
             checkReleaseBuilds false
             abortOnError false
         }
+
+        /*productFlavors {//渠道包
+            kuan {
+                manifestPlaceholders = [UMENG_CHANNEL_VALUE: "kuan"]
+            }
+            xiaomi {
+                manifestPlaceholders = [UMENG_CHANNEL_VALUE: "xiaomi"]
+            }
+            qh360 {
+                manifestPlaceholders = [UMENG_CHANNEL_VALUE: "qh360"]
+            }
+            baidu {
+                manifestPlaceholders = [UMENG_CHANNEL_VALUE: "baidu"]
+            }
+            wandoujia {
+                manifestPlaceholders = [UMENG_CHANNEL_VALUE: "wandoujia"]
+            }
+        }*/
     }
 
     dependencies {
@@ -59,7 +78,6 @@ android {
         compile files('libs/nineoldandroids-2.4.0.jar')
         compile 'com.android.support:recyclerview-v7:25.1.0'
         compile files('libs/baidumapapi_util_v4_1_1.jar')
-        compile files('libs/gson-2.2.1.jar')
         compile project(':xrecyclerview')
         compile files('libs/BaiduNaviSDK_3.2.0.jar')
         compile files('libs/httpmime-4.1.2.jar')
@@ -68,14 +86,20 @@ android {
         compile 'com.android.volley:volley:1.0.0'
         //bmob-sdk：Bmob的android sdk包，包含了Bmob的数据存储、文件等服务，以下是最新的bmob-sdk:
         //3.5.5：请务必查看下面注释[1]
-        compile 'cn.bmob.android:bmob-sdk:3.5.5'
+        compile ('cn.bmob.android:bmob-sdk:3.5.5') {
+            transitive = true;
+            exclude module: 'gson'
+        }
         //bmob-sms ：Bmob单独为短信服务提供的包
 //        compile 'cn.bmob.android:bmob-sms:1.0.1'
         //如果你想应用能够兼容Android6.0，请添加此依赖(org.apache.http.legacy.jar)
-        compile 'cn.bmob.android:http-legacy:1.0'
-        compile 'com.umeng.analytics:analytics:latest.integration'
+        compile ('cn.bmob.android:http-legacy:1.0') {
+            transitive = true;
+            exclude module: 'gson'
+        }
+        compile ('com.umeng.analytics:analytics:latest.integration') {
+            transitive = true;
+            exclude module: 'gson'
+        }
     }
-}
-dependencies {
-    compile 'com.android.support.constraint:constraint-layout:+'
 }

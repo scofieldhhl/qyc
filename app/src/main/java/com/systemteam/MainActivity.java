@@ -11,11 +11,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.util.TypedValue;
@@ -1068,13 +1070,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void checkSDK(){
+        CheckPermission();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
             int hasWritePermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
             int hasReadPermission = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
             int gpsPermission = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
             int readStatePermission = checkSelfPermission(Manifest.permission.READ_PHONE_STATE);
-            int settingPermission = checkSelfPermission(Manifest.permission.WRITE_SETTINGS);
+//            int settingPermission = checkSelfPermission(Manifest.permission.WRITE_SETTINGS);
 
             List<String> permissions = new ArrayList<String>();
             if (hasWritePermission != PackageManager.PERMISSION_GRANTED) {
@@ -1095,9 +1097,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             if (readStatePermission != PackageManager.PERMISSION_GRANTED) {
                 permissions.add(Manifest.permission.READ_PHONE_STATE);
             }
-            if (settingPermission != PackageManager.PERMISSION_GRANTED) {
-                permissions.add(Manifest.permission.WRITE_SETTINGS);
-            }
+//            if (settingPermission != PackageManager.PERMISSION_GRANTED) {
+////                permissions.add(Manifest.permission.WRITE_SETTINGS);
+//            }
 
             if (!permissions.isEmpty()) {
                 requestPermissions(permissions.toArray(new String[permissions.size()]), REQUEST_CODE_SOME_FEATURES_PERMISSIONS);
@@ -1106,6 +1108,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
 
+    private void CheckPermission() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!Settings.System.canWrite(this)) {
+                    Uri selfPackageUri = Uri.parse("package:" + getPackageName());
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, selfPackageUri);
+                    startActivity(intent);
+                }
+            }
+        }catch (Exception e){}
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {

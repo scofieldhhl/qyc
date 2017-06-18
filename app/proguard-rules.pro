@@ -176,3 +176,9 @@ public static java.lang.String TABLENAME;
     public static ** valueOf(java.lang.String);
 }
 #Umeng
+
+#baidumap
+-keep class com.baidu.** {*;}
+-keep class vi.com.** {*;}
+-dontwarn com.baidu.**
+#baidumap

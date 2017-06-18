@@ -52,11 +52,7 @@
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activity.CodeUnlockActivity"
@@ -106,9 +102,15 @@
             android:value="59463a8c07fe65436a001723" />
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="Channel ID" />
+            android:value="${UMENG_CHANNEL_VALUE}" />
 
-        <activity android:name=".activity.SplashActivity"></activity>
+        <activity android:name=".activity.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
