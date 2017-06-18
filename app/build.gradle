@@ -1,0 +1,81 @@
+apply plugin: 'com.android.application'
+android {
+    aaptOptions {
+        cruncherEnabled = false
+        useNewCruncher = false
+    }
+    signingConfigs {
+        release {
+            keyAlias 'SystemStudio'
+            keyPassword 'HUANGhl8811^'
+            storeFile file('F:/studio/qyc/BiuBike/appkey/systemstudio.jks')
+            storePassword 'HUANGhl8811^'
+        }
+
+        compileSdkVersion 25
+        buildToolsVersion "25.0.0"
+        defaultConfig {
+            applicationId "com.systemteam"
+            minSdkVersion 16
+            targetSdkVersion 25
+            versionCode 1
+            versionName "1.0"
+            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        }
+        buildTypes {
+            release {
+                debuggable false
+                zipAlignEnabled false
+                shrinkResources false
+                minifyEnabled true
+                // 移除无用的resource文件
+                shrinkResources true
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+                buildConfigField "boolean", "IS_ARRIVING", "false"//发布版时关闭调试
+
+            }
+//            debug {
+//                buildConfigField "boolean", "isDebug", "true" //调试版开启调试
+//
+//            }
+        }
+        lintOptions {
+            checkReleaseBuilds false
+            abortOnError false
+        }
+    }
+
+    dependencies {
+        compile fileTree(include: ['*.jar'], dir: 'libs')
+        androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+            exclude group: 'com.android.support', module: 'support-annotations'
+        })
+        compile 'com.android.support:appcompat-v7:25.1.0'
+//        compile 'com.android.support:support-v4:23.2.1'
+        testCompile 'junit:junit:4.12'
+        compile files('libs/baidumapapi_base_v4_1_1.jar')
+        compile files('libs/baidumapapi_map_v4_1_1.jar')
+        compile files('libs/nineoldandroids-2.4.0.jar')
+        compile 'com.android.support:recyclerview-v7:25.1.0'
+        compile files('libs/baidumapapi_util_v4_1_1.jar')
+        compile files('libs/gson-2.2.1.jar')
+        compile project(':xrecyclerview')
+        compile files('libs/BaiduNaviSDK_3.2.0.jar')
+        compile files('libs/httpmime-4.1.2.jar')
+        compile files('libs/Msc.jar')
+        compile files('libs/Sunflower.jar')
+        compile 'com.android.volley:volley:1.0.0'
+        //bmob-sdk：Bmob的android sdk包，包含了Bmob的数据存储、文件等服务，以下是最新的bmob-sdk:
+        //3.5.5：请务必查看下面注释[1]
+        compile 'cn.bmob.android:bmob-sdk:3.5.5'
+        //bmob-sms ：Bmob单独为短信服务提供的包
+//        compile 'cn.bmob.android:bmob-sms:1.0.1'
+        //如果你想应用能够兼容Android6.0，请添加此依赖(org.apache.http.legacy.jar)
+        compile 'cn.bmob.android:http-legacy:1.0'
+        compile 'com.umeng.analytics:analytics:latest.integration'
+    }
+}
+dependencies {
+    compile 'com.android.support.constraint:constraint-layout:+'
+}
