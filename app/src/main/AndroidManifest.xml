@@ -44,8 +44,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-        tools:replace="android:icon, android:supportsRtl,
-        android:allowBackup, android:label, android:theme">
+        tools:replace="android:allowBackup, android:icon, android:label,
+        android:supportsRtl">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="S64Fn6drcdAGvYxq2AW0ikTOBVKInQXO" />
@@ -101,9 +101,9 @@
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="59463a8c07fe65436a001723" />
-        <meta-data
+        <!--<meta-data
             android:name="UMENG_CHANNEL"
-            android:value="${UMENG_CHANNEL_VALUE}" />
+            android:value="${UMENG_CHANNEL_VALUE}" />-->
 
         <activity android:name=".activity.SplashActivity">
             <intent-filter>

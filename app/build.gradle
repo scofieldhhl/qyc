@@ -8,10 +8,10 @@ android {
         release {
             keyAlias 'SystemStudio'
             keyPassword 'HUANGhl8811^'
-            storeFile file('F:/studio/qyc/BiuBike/appkey/systemstudio.jks')
+//            storeFile file('F:/studio/qyc/BiuBike/appkey/systemstudio.jks')
+            storeFile file('/Users/ws/git/qyc/qyc/appkey/systemstudio.jks')
             storePassword 'HUANGhl8811^'
         }
-
         compileSdkVersion 25
         buildToolsVersion "25.0.0"
         defaultConfig {
@@ -21,6 +21,9 @@ android {
             versionCode 1
             versionName "1.0"
             testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
             multiDexEnabled true
         }
         buildTypes {
@@ -41,7 +44,6 @@ android {
             checkReleaseBuilds false
             abortOnError false
         }
-
         /*productFlavors {//渠道包
             kuan {
                 manifestPlaceholders = [UMENG_CHANNEL_VALUE: "kuan"]
@@ -59,6 +61,7 @@ android {
                 manifestPlaceholders = [UMENG_CHANNEL_VALUE: "wandoujia"]
             }
         }*/
+        useLibrary 'org.apache.http.legacy'
     }
 
     dependencies {
@@ -80,22 +83,9 @@ android {
         compile files('libs/Msc.jar')
         compile files('libs/Sunflower.jar')
         compile 'com.android.volley:volley:1.0.0'
-        //bmob-sdk：Bmob的android sdk包，包含了Bmob的数据存储、文件等服务，以下是最新的bmob-sdk:
-        //3.5.5：请务必查看下面注释[1]
-        compile ('cn.bmob.android:bmob-sdk:3.5.5') {
-            transitive = true;
-            exclude module: 'gson'
-        }
+        compile 'cn.bmob.android:bmob-sdk:3.5.5'
         //bmob-sms ：Bmob单独为短信服务提供的包
 //        compile 'cn.bmob.android:bmob-sms:1.0.1'
-        //如果你想应用能够兼容Android6.0，请添加此依赖(org.apache.http.legacy.jar)
-        compile ('cn.bmob.android:http-legacy:1.0') {
-            transitive = true;
-            exclude module: 'gson'
-        }
-        compile ('com.umeng.analytics:analytics:latest.integration') {
-            transitive = true;
-            exclude module: 'gson'
-        }
+        compile 'com.umeng.analytics:analytics:latest.integration'
     }
 }
