@@ -11,17 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginLeft="35dp"
-        android:layout_marginTop="80dp"
+        android:padding="30dp"
         android:onClick="gotoUser">
 
         <com.systemteam.custom.CircleImageView
             android:id="@+id/user_photo"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
             android:scaleType="fitXY"
             android:src="@mipmap/ic_launcher" />
 
@@ -29,14 +26,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="15dp"
             android:layout_toRightOf="@+id/user_photo">
 
             <TextView
                 android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="黄工"
+                android:text="营盘工作室"
                 android:textColor="@color/color_f2f2f2"
                 android:textSize="16sp" />
 
@@ -57,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="35dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginBottom="30dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -81,11 +78,31 @@
         </LinearLayout>
 
         <View style="@style/menu_divider_style" />
+        <LinearLayout
+            style="@style/menu_layout_style"
+            android:onClick="gotoMyRoute"
+            android:visibility="gone">
 
+            <ImageView
+                style="@style/menu_icon_style"
+                android:src="@mipmap/route" />
+
+            <TextView
+                style="@style/menu_text_style"
+                android:text="我的摇摇车" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <ImageView style="@style/menu_right_arrow_style" />
+        </LinearLayout>
 
         <LinearLayout
             style="@style/menu_layout_style"
-            android:onClick="gotoMyRoute">
+            android:onClick="gotoMyRoute"
+            android:visibility="gone">
 
             <ImageView
                 style="@style/menu_icon_style"
@@ -105,7 +122,8 @@
 
         <View style="@style/menu_divider_style" />
 
-        <LinearLayout style="@style/menu_layout_style">
+        <LinearLayout style="@style/menu_layout_style"
+            android:visibility="gone">
 
             <ImageView
                 style="@style/menu_icon_style"
@@ -114,26 +132,6 @@
             <TextView
                 style="@style/menu_text_style"
                 android:text="@string/invite_friend" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <ImageView style="@style/menu_right_arrow_style" />
-        </LinearLayout>
-
-        <View style="@style/menu_divider_style" />
-
-        <LinearLayout style="@style/menu_layout_style">
-
-            <ImageView
-                style="@style/menu_icon_style"
-                android:src="@mipmap/feedback" />
-
-            <TextView
-                style="@style/menu_text_style"
-                android:text="@string/feedback" />
 
             <View
                 android:layout_width="0dp"
@@ -165,6 +163,27 @@
 
         <View style="@style/menu_divider_style" />
 
+        <LinearLayout style="@style/menu_layout_style"
+            android:visibility="gone">
+
+            <ImageView
+                style="@style/menu_icon_style"
+                android:src="@mipmap/feedback" />
+
+            <TextView
+                style="@style/menu_text_style"
+                android:text="@string/feedback" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <ImageView style="@style/menu_right_arrow_style" />
+        </LinearLayout>
+
+        <View style="@style/menu_divider_style" />
+
         <LinearLayout style="@style/menu_layout_style">
 
             <ImageView
@@ -183,6 +202,81 @@
             <ImageView style="@style/menu_right_arrow_style" />
         </LinearLayout>
 
+        <View style="@style/menu_divider_style" />
+
+        <LinearLayout style="@style/menu_layout_style">
+
+            <ImageView
+                style="@style/menu_icon_style"
+                android:src="@mipmap/guide" />
+
+            <TextView
+                style="@style/menu_text_style"
+                android:text="检查新版本" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <ImageView style="@style/menu_right_arrow_style" />
+        </LinearLayout>
+        <View style="@style/menu_divider_style" />
+
+        <LinearLayout style="@style/menu_layout_style">
+
+            <ImageView
+                style="@style/menu_icon_style"
+                android:src="@mipmap/guide" />
+
+            <TextView
+                style="@style/menu_text_style"
+                android:text="关于我们" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <ImageView style="@style/menu_right_arrow_style" />
+        </LinearLayout>
+        <View style="@style/menu_divider_style" />
+        <LinearLayout style="@style/menu_layout_style">
+
+            <ImageView
+                style="@style/menu_icon_style"
+                android:src="@mipmap/guide" />
+
+            <TextView
+                style="@style/menu_text_style"
+                android:text="退出登录" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <ImageView style="@style/menu_right_arrow_style" />
+        </LinearLayout>
+        <View style="@style/menu_divider_style" />
+        <LinearLayout style="@style/menu_layout_style"
+            android:visibility="gone">
+
+            <ImageView
+                style="@style/menu_icon_style"
+                android:src="@mipmap/guide" />
+
+            <TextView
+                style="@style/menu_text_style"
+                android:text="结算" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <ImageView style="@style/menu_right_arrow_style" />
+        </LinearLayout>
         <View style="@style/menu_divider_style" />
 
     </LinearLayout>
