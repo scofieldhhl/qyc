@@ -153,7 +153,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SDKInitializer.initialize(getApplicationContext());//在Application的onCreate()不行，必须在activity的onCreate()中
+        //在Application的onCreate()不行，必须在activity的onCreate()中
+        SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
         checkSDK();
         LogTool.i("MainActivity---------onCreate---------------");
