@@ -1,26 +1,15 @@
 package com.systemteam.user;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.view.View;
 
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.StringRequest;
-import com.google.gson.Gson;
 import com.systemteam.R;
 import com.systemteam.base.BaseActivity;
-
-import java.io.UnsupportedEncodingException;
-
-import okhttp3.internal.Util;
+import com.systemteam.view.IconEditFullTextView;
+import com.systemteam.view.ProgressDialogHelper;
 
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
@@ -38,15 +27,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         Intent intent = getIntent();
         if (intent != null) {
             boolean restart = intent.getBooleanExtra(RestartApp, false);
-            if (restart) {
+            /*if (restart) {
                 ExpertApplication mapp = (ExpertApplication) getApplication();
                 mapp.Initial(this);
-            }
+            }*/
         }
         initializeView();
 
         mProgressHelper = new ProgressDialogHelper(this);
-        mRequestQueue = ((ExpertApplication) getApplication()).getRequestQueue();
 
     }
 
@@ -100,17 +88,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_login:
-                Util.hideSoftKeyboard(this);
+                /*Util.hideSoftKeyboard(this);
                 if (!NetworkUtil.isNetworkAvailable(this)) {
                     showToastShort(R.string.networkerror);
                     return;
-                }
+                }*/
                 if (validateInput()) {
                     mProgressHelper.showProgressDialog(getResources().getString(R.string.account_tip_login_ing));
                     getRequestToken();
                 }
                 break;
-            case R.id.login_forget_pwd:
+            /*case R.id.login_forget_pwd:
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(LoginUtils.FIND_PASSWORD_URL)));
                 break;
             case R.id.login_sign_up:
@@ -126,12 +114,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 Intent tIntent = new Intent(LoginActivity.this, SocialLoginAct.class);
                 tIntent.putExtra("type", LoginUtils.TYPE_TWITTER);
                 startActivity(tIntent);
-                break;
+                break;*/
         }
     }
 
     protected void getRequestToken() {
-        String requestUrl = ProtocolEncode.encodeRequestToken(this);
+        /*String requestUrl = ProtocolEncode.encodeRequestToken(this);
         StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
@@ -151,26 +139,26 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 showToastShort(R.string.account_tip_login_failed);
             }
         });
-        mRequestQueue.add(request);
+        mRequestQueue.add(request);*/
     }
 
 
     private boolean validateInput() {
         String userName = mEmailEdt.getInputText();
         String passWd = mPwdEdt.getInputText();
-        if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(passWd)) {
+        /*if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(passWd)) {
             showToastShort(R.string.account_tip_login_info);
             return false;
         } else if (!LoginUtils.validateEmailAddress(userName)) {
             showToastShort(R.string.account_tip_email_format);
             return false;
-        } else
+        } else*/
             return true;
     }
 
 
     private void login() {
-        String userName = mEmailEdt.getInputText();
+        /*String userName = mEmailEdt.getInputText();
         String passWd = mPwdEdt.getInputText();
         String loginUrl = ProtocolEncode.encodeCommonLogin(this, userName, passWd);
 
@@ -198,11 +186,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 GACollect.getInstance().CollectEvent("LoginFail", getString(R.string.account_tip_login_failed));
             }
         });
-        mRequestQueue.add(request);
+        mRequestQueue.add(request);*/
     }
 
 
-    private void requestUserInfo(final String memberId) {
+    /*private void requestUserInfo(final String memberId) {
         String url = ProtocolEncode.encodeGetUserInfo(this, memberId);
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -239,5 +227,5 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         };
         mRequestQueue.add(request);
-    }
+    }*/
 }

@@ -8,4 +8,17 @@
     <declare-styleable name="SlidingMenu">
         <attr name="rightPadding" format="dimension"/>
     </declare-styleable>
+
+    <declare-styleable name="IconEditTextView">
+        <attr name="edtIcon" format="integer" />
+        <attr name="edtHint" format="string" />
+        <attr name="isHideIcon" format="boolean" />
+        <attr name="isIconGone" format="boolean" />
+        <attr name="enable" format="boolean" />
+        <attr name="focusable" format="boolean" />
+        <attr name="maxLength" format="integer" />
+        <attr name="text" format="string" />
+        <attr name="isPhoneNum" format="boolean" />
+        <attr name="isNumeric" format="boolean" />
+    </declare-styleable>
 </resources>

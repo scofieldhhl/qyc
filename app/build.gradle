@@ -64,6 +64,10 @@ android {
         useLibrary 'org.apache.http.legacy'
     }
 
+    repositories {
+        maven { url "https://jitpack.io" }
+    }
+
     dependencies {
         compile fileTree(include: ['*.jar'], dir: 'libs')
         androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -87,5 +91,6 @@ android {
         //bmob-sms ：Bmob单独为短信服务提供的包
 //        compile 'cn.bmob.android:bmob-sms:1.0.1'
         compile 'com.umeng.analytics:analytics:latest.integration'
+        compile 'com.github.lovetuzitong:MultiImageSelector:1.2'
     }
 }
