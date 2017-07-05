@@ -1,8 +1,6 @@
 package com.systemteam;
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -19,6 +17,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -71,6 +70,7 @@ import com.systemteam.activity.MyRouteActivity;
 import com.systemteam.activity.NavigationActivity;
 import com.systemteam.activity.RouteDetailActivity;
 import com.systemteam.activity.WalletActivity;
+import com.systemteam.activity.ZxingScanActivity;
 import com.systemteam.base.BaseActivity;
 import com.systemteam.bean.BikeInfo;
 import com.systemteam.callback.AllInterface;
@@ -79,10 +79,12 @@ import com.systemteam.fragment.LeftMenuFragment;
 import com.systemteam.map.MyOrientationListener;
 import com.systemteam.map.RouteLineAdapter;
 import com.systemteam.service.RouteService;
+import com.systemteam.user.ProtocolPreferences;
 import com.systemteam.user.UserActivity;
 import com.systemteam.util.LocationManager;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
+import com.systemteam.welcome.WelcomeActivity;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -142,9 +144,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case DISMISS_SPLASH:
-                    Animator animator = AnimatorInflater.loadAnimator(MainActivity.this, R.animator.splash);
+                    /*Animator animator = AnimatorInflater.loadAnimator(MainActivity.this, R.animator.splash);
                     animator.setTarget(splash_img);
-                    animator.start();
+                    animator.start();*/
                     break;
             }
         }
@@ -158,6 +160,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         setContentView(R.layout.activity_main);
         checkSDK();
         LogTool.i("MainActivity---------onCreate---------------");
+        mContext = this;
+        checkLogin();
         setStatusBar();
         initMap();
         initView();
@@ -171,6 +175,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         if (mMenuFragment == null) {
             fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment = new LeftMenuFragment()).commit();
+        }
+    }
+
+    private void checkLogin(){
+        String userId = ProtocolPreferences.getImId(mContext);
+        if(TextUtils.isEmpty(userId)){
+            startActivity(new Intent(MainActivity.this, WelcomeActivity.class));
         }
     }
 
@@ -451,7 +462,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mMapView.setOnClickListener(this);
         dragLocationIcon = BitmapDescriptorFactory.fromResource(R.mipmap.drag_location);
         bikeIcon = BitmapDescriptorFactory.fromResource(R.mipmap.bike_icon);
-//        handler.sendEmptyMessageDelayed(DISMISS_SPLASH, 3000);
+        handler.sendEmptyMessageDelayed(DISMISS_SPLASH, 3000);
     }
 
 
@@ -853,7 +864,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     public void gotoCodeUnlock(View view) {
-        startActivity(new Intent(this, CodeUnlockActivity.class));
+//        startActivity(new Intent(this, CodeUnlockActivity.class));
+        startActivity(new Intent(this, ZxingScanActivity.class));
     }
 
     public void gotoMyRoute(View view) {
@@ -1077,7 +1089,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             int hasReadPermission = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
             int gpsPermission = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
             int readStatePermission = checkSelfPermission(Manifest.permission.READ_PHONE_STATE);
-//            int settingPermission = checkSelfPermission(Manifest.permission.WRITE_SETTINGS);
+            int cameraPermission = checkSelfPermission(Manifest.permission.CAMERA);
 
             List<String> permissions = new ArrayList<String>();
             if (hasWritePermission != PackageManager.PERMISSION_GRANTED) {
@@ -1098,12 +1110,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             if (readStatePermission != PackageManager.PERMISSION_GRANTED) {
                 permissions.add(Manifest.permission.READ_PHONE_STATE);
             }
-//            if (settingPermission != PackageManager.PERMISSION_GRANTED) {
-////                permissions.add(Manifest.permission.WRITE_SETTINGS);
-//            }
+            if (cameraPermission != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.CAMERA);
+            }
 
             if (!permissions.isEmpty()) {
-                requestPermissions(permissions.toArray(new String[permissions.size()]), REQUEST_CODE_SOME_FEATURES_PERMISSIONS);
+                requestPermissions(permissions.toArray(new String[permissions.size()]),
+                        REQUEST_CODE_SOME_FEATURES_PERMISSIONS);
             }
         }
     }

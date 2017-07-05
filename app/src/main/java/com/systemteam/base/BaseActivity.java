@@ -1,9 +1,13 @@
 package com.systemteam.base;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -14,7 +18,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
 import com.systemteam.R;
+import com.systemteam.view.ProgressDialogHelper;
 
 import java.lang.reflect.Field;
 
@@ -28,7 +34,14 @@ import static com.systemteam.util.Utils.dp2px;
 public class BaseActivity extends AppCompatActivity {
 
     public int statusBarHeight = 0,titleHeight;
-
+    protected Toolbar mToolbar;
+    protected Context mContext;
+    protected SharedPreferences mSharedPre;
+    protected String params;
+    public RequestQueue mQueue;
+    protected ProgressDialogHelper mProgressHelper;
+    protected boolean CheckNetwork = true;
+    protected static boolean isOfflineResponse = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,5 +183,29 @@ public class BaseActivity extends AppCompatActivity {
         if (this.mCompositeSubscription != null) {
             this.mCompositeSubscription.unsubscribe();
         }
+    }
+
+    protected void initToolBar(Activity act, int titleId) {
+        mToolbar = (Toolbar) act.findViewById(R.id.tb_toolbar);
+        mToolbar.getVisibility();
+        if (titleId == 0) {
+            mToolbar.setTitle("");
+        } else {
+            int titleColor = act.getResources().getColor(R.color.white);
+            mToolbar.setTitleTextColor(titleColor);
+            mToolbar.setTitle(titleId);
+        }
+
+
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+            mToolbar.setNavigationIcon(R.drawable.btn_return);
+        }
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }

@@ -208,7 +208,7 @@ public class UserActivity extends BaseActivity {
 			//BmobObject类型
 			Person person = new Person();
 			person.setObjectId("721fe0cdf2");
-			newUser.setBanker(person);
+//			newUser.setBanker(person);
 			//---------------------数组操作(add、addAll、addUnique、addAllUnique)---------------------------------------
 			//添加Object类型的数组,Object数组调用addAllUnique、addUnique方法后本地用户信息未支持去重
 			List<BankCard> cards =new ArrayList<BankCard>();
