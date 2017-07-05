@@ -81,6 +81,7 @@ import com.systemteam.map.RouteLineAdapter;
 import com.systemteam.service.RouteService;
 import com.systemteam.user.ProtocolPreferences;
 import com.systemteam.user.UserActivity;
+import com.systemteam.util.Constant;
 import com.systemteam.util.LocationManager;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
@@ -98,7 +99,8 @@ import overlayutil.WalkingRouteOverlay;
 
 import static com.systemteam.bean.BikeInfo.infos;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener, OnGetRoutePlanResultListener, AllInterface.OnMenuSlideListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener,
+        OnGetRoutePlanResultListener, AllInterface.OnMenuSlideListener {
 
     private static final int REQUEST_CODE_SOME_FEATURES_PERMISSIONS = 101;
     private double currentLatitude, currentLongitude, changeLatitude, changeLongitude;
@@ -181,7 +183,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void checkLogin(){
         String userId = ProtocolPreferences.getImId(mContext);
         if(TextUtils.isEmpty(userId)){
-            startActivity(new Intent(MainActivity.this, WelcomeActivity.class));
+            startActivityForResult(new Intent(MainActivity.this, WelcomeActivity.class),
+                    Constant.REQUEST_CODE_WELCOME);
         }
     }
 
@@ -1149,6 +1152,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             default: {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
+            case Constant.REQUEST_CODE_WELCOME:
+                if(resultCode == RESULT_CANCELED){
+                    finish();
+                    System.exit(0);
+                }else {
+                    Bundle b=data.getExtras(); //data为B中回传的Intent
+                    String str=b.getString("str1");//str即为回传的值
+                }
+                break;
+            default:
+                break;
         }
     }
 

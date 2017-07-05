@@ -162,6 +162,7 @@ public class WelcomeActivity extends FragmentActivity {
                     }
                 }, 2000);
             } else {
+                setResult(RESULT_CANCELED);
                 finish();
                 System.exit(0);
             }
