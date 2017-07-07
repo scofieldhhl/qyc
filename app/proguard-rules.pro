@@ -194,7 +194,7 @@ public static java.lang.String TABLENAME;
 #picasso
 
 #Bmob
-#-ignorewarnings
+-ignorewarnings
 
 -keepattributes Signature,*Annotation*
 
