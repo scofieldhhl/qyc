@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:button="@drawable/common_checkbox_selector"
-            android:text="记住我的选择"
+            android:text="@string/mark_choice"
             android:textColor="@color/color_999999"
             android:textSize="18dip" />
 
@@ -51,7 +51,7 @@
             android:layout_weight="1"
             android:background="@drawable/bg_selector"
             android:gravity="center"
-            android:text="取消"
+            android:text="@string/cancel"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
@@ -67,7 +67,7 @@
             android:layout_weight="1"
             android:background="@drawable/bg_selector"
             android:gravity="center"
-            android:text="确定"
+            android:text="@string/confirm"
             android:textColor="@color/black"
             android:textSize="16sp" />
     </LinearLayout>

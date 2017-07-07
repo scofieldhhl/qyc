@@ -23,7 +23,7 @@ import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
 import com.systemteam.R;
-import com.systemteam.base.BaseActivity;
+import com.systemteam.BaseActivity;
 import com.systemteam.bean.RoutePoint;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -170,6 +170,16 @@ public class RouteDetailActivity extends BaseActivity {
         routeBaiduMap.setMyLocationEnabled(false);
         mlocationClient.stop();
         completeRoute = false;
+    }
+
+    @Override
+    protected void initView() {
+
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     public void finishActivity(View view) {

@@ -9,7 +9,7 @@
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="请点击选择所需路线，在地图中绘制"
+            android:text="@string/map_line_paint"
             android:textColor="#00ffff"
             android:padding="15dp"/>
 

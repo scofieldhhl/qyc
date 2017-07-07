@@ -18,7 +18,8 @@
             android:id="@+id/user_photo"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
+            android:clickable="false"
             android:scaleType="fitXY"
             android:src="@mipmap/ic_launcher" />
 
@@ -26,22 +27,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@+id/user_photo">
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/user_photo">
 
             <TextView
                 android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="营盘工作室"
+                android:text="@string/uername"
+                android:clickable="false"
+                android:enabled="false"
                 android:textColor="@color/color_f2f2f2"
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/tv_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/user_name"
-                android:text="158****8761"
+                android:visibility="gone"
+                android:text="@string/phone"
+                android:clickable="false"
+                android:enabled="false"
                 android:textColor="@color/color_f2f2f2"
                 android:textSize="16sp" />
 
@@ -89,7 +97,7 @@
 
             <TextView
                 style="@style/menu_text_style"
-                android:text="我的摇摇车" />
+                android:text="@string/my_car" />
 
             <View
                 android:layout_width="0dp"
@@ -102,7 +110,7 @@
         <LinearLayout
             style="@style/menu_layout_style"
             android:onClick="gotoMyRoute"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
                 style="@style/menu_icon_style"
@@ -212,7 +220,7 @@
 
             <TextView
                 style="@style/menu_text_style"
-                android:text="检查新版本" />
+                android:text="@string/check_update" />
 
             <View
                 android:layout_width="0dp"
@@ -231,7 +239,7 @@
 
             <TextView
                 style="@style/menu_text_style"
-                android:text="关于我们" />
+                android:text="@string/about" />
 
             <View
                 android:layout_width="0dp"
@@ -249,7 +257,7 @@
 
             <TextView
                 style="@style/menu_text_style"
-                android:text="退出登录" />
+                android:text="@string/sign_out" />
 
             <View
                 android:layout_width="0dp"
@@ -268,7 +276,7 @@
 
             <TextView
                 style="@style/menu_text_style"
-                android:text="结算" />
+                android:text="@string/withdraw" />
 
             <View
                 android:layout_width="0dp"
@@ -277,8 +285,15 @@
 
             <ImageView style="@style/menu_right_arrow_style" />
         </LinearLayout>
-        <View style="@style/menu_divider_style" />
+        <LinearLayout style="@style/menu_layout_style"
+            android:gravity="center"
+            android:visibility="gone">
 
+            <TextView
+                android:id="@+id/tv_version"
+                style="@style/menu_text_style" />
+
+        </LinearLayout>
     </LinearLayout>
 
 

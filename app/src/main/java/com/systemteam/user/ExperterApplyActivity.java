@@ -3,7 +3,6 @@ package com.systemteam.user;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,14 +10,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -27,49 +22,37 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HurlStack;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.gson.Gson;
 import com.systemteam.R;
-import com.systemteam.base.BaseActivity;
+import com.systemteam.BaseActivity;
 import com.systemteam.util.LogTool;
+import com.systemteam.view.IconEditTextView;
 import com.systemteam.view.ProgressDialogHelper;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.File;
+import org.greenrobot.eventbus.EventBus;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Vector;
 
-import me.nereo.multi_image_selector.MultiImageSelector;
-import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import me.nereo.multi_image_selector.bean.Image;
-import me.nereo.multi_image_selector.utils.ImageCompressUtil;
 
 /**
  * @author scofield.hhl@gmail.com
  * @Description
  * @time 2016/6/16
  */
-public class ExperterApplyActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class ExperterApplyActivity extends BaseActivity implements View.OnClickListener,
+        CompoundButton.OnCheckedChangeListener {
     private final String FLAG_URL = "http:";
     private final int MAX_NUM_STORE_PHOTO = 4;
     private final int SELECT_COUNTRY = 1;
@@ -77,7 +60,6 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
     private final int SELECT_EXISTSTORE = 3;
     private final int SOCKET_TIMEOUT = 1000;
     public RequestQueue mQueue;
-    private Experter mExperter;
 
     private RelativeLayout iv_savelayout;
     private ImageView mIvUserPhoto, mIvDelPhoto, mIvAddPhoto, mIvCountrySelect,
@@ -86,15 +68,12 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
             mIetAddressStore, mIetSkill, mIetOtherSkill, mIetPhoneNum, mIetWhatsapp, mIetPrice;
     private ImageView mIvAddStorePhoto;
     private LinearLayout mLlStoreInfo, mLlStorePhoto, mLlSkillSelection;
-    private Vector<IconImageView> mArrIvStorePhoto;
     private ArrayList<String> mArrUserPhotos = new ArrayList<>();
     private String mUserPhotoPath = "";
     private Bitmap mUserBitmap;
     private ArrayList<String> mArrStorePhotos = new ArrayList<>();//本地加载店铺图片集合
     private ArrayList<Bitmap> mArrStoreBitmap = new ArrayList<>();
-    private TitleCheckbox[] mTCbSkill;
     private String mMemberId;
-    private Info mInfo = null;
     private Dialog mAlertDialog;
     private ListView mLvInfo;
     private ArrayAdapter<String> mAdpaterInfo;
@@ -121,7 +100,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case Constants.Msg.MSG_NOTIF_USERPHOTO:
+                /*case Constants.Msg.MSG_NOTIF_USERPHOTO:
                     if (mUserPhotoPath != null && !TextUtils.isEmpty(mUserPhotoPath)) {
                         File file = new File(mUserPhotoPath);
                         if (file.exists()) {
@@ -142,13 +121,6 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
                         }
                     }
                     break;
-                /*case MSG_DEL_USERPHOTO:
-                    if(mUserBitmap != null){
-                        mUserBitmap.recycle();
-                        mUserBitmap = null;
-                    }
-                    mIvUserPhoto.setImageResource(R.drawable.avatar_info);
-                    break;*/
                 case Constants.Msg.MSG_NOTIF_STOREPHOTO:
                     List<String> photoPathList = (List<String>) msg.obj;
                     showStorePhotos(photoPathList);
@@ -194,7 +166,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
                         }
                     }
                     initData();
-                    break;
+                    break;*/
             }
         }
     };
@@ -203,7 +175,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apply);
-        initToolBar(this, R.string.Title_apply);
+        initToolBar(this, R.string.app_name);
         imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         EventBus.getDefault().register(this);
         initView();
@@ -221,17 +193,8 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
         mIvAddPhoto.setOnClickListener(this);
         mIvClose.setOnClickListener(this);
 
-        mIvAddStorePhoto = (ImageView) findViewById(R.id.iv_add_store_photo);
-        mIvAddStorePhoto.setOnClickListener(this);
-        mArrIvStorePhoto = new Vector<>();
-        mLlStoreInfo = (LinearLayout) findViewById(R.id.ll_store_info);
-        mLlStorePhoto = (LinearLayout) findViewById(R.id.ll_store_photo);
-        mIvCountrySelect = (ImageView) findViewById(R.id.iv_country_arrow);
-        mIvLanguageSelect = (ImageView) findViewById(R.id.iv_language_arrow);
         mIvCountrySelect.setOnClickListener(this);
         mIvLanguageSelect.setOnClickListener(this);
-        mRlCountry = (RelativeLayout) findViewById(R.id.rl_apply_country);
-        mRlLanguage = (RelativeLayout) findViewById(R.id.rl_apply_language);
         iv_savelayout = (RelativeLayout) findViewById(R.id.iv_savelayout);
         mRlCountry.setOnClickListener(this);
         mRlLanguage.setOnClickListener(this);
@@ -239,13 +202,8 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
 
         mIetFirstName = (IconEditTextView) findViewById(R.id.iet_firstname_apply);
         mIetLastName = (IconEditTextView) findViewById(R.id.iet_lastname_apply);
-        mIetCountry = (IconEditTextView) findViewById(R.id.iet_country_apply);
-        mIetLanguage = (IconEditTextView) findViewById(R.id.iet_language_apply);
         mIetCountry.setOnClickListener(this);
         mIetLanguage.setOnClickListener(this);
-        mIetExistStore = (IconEditTextView) findViewById(R.id.iet_exist_store_apply);
-        mIetNameStore = (IconEditTextView) findViewById(R.id.iet_name_store_apply);
-        mIetAddressStore = (IconEditTextView) findViewById(R.id.iet_address_store_apply);
         mIetSkill = (IconEditTextView) findViewById(R.id.iet_skill_apply);
         mLlSkillSelection = (LinearLayout) findViewById(R.id.ll_skills_selection);
         mIetOtherSkill = (IconEditTextView) findViewById(R.id.iet_skill_other);
@@ -259,8 +217,6 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
             }
         });
 
-        mRbExistStore = (RadioButton) findViewById(R.id.rb_exist_store);
-        mRbExistStoreNo = (RadioButton) findViewById(R.id.rb_exist_store_no);
         mRbExistStore.setOnCheckedChangeListener(this);
         mRbExistStoreNo.setOnCheckedChangeListener(this);
 
@@ -280,23 +236,17 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
             mIetOtherSkill.setMaxLength(100);
         }
 
-        mIetPhoneNum = (IconEditTextView) findViewById(R.id.iet_phonenum_apply);
-        mIetWhatsapp = (IconEditTextView) findViewById(R.id.iet_whatsapp_apply);
-        mIetPrice = (IconEditTextView) findViewById(R.id.iet_price_apply);
-
         mIetPhoneNum.setEnable(true);
         mIetWhatsapp.setEnable(true);
         mIetPrice.setEnable(true);
 
-        findViewById(R.id.line_phone).setVisibility(View.GONE);
-        findViewById(R.id.line_whatsapp).setVisibility(View.GONE);
-        findViewById(R.id.line_price).setVisibility(View.GONE);
     }
 
-    private void initData() {
+    @Override
+    protected void initData() {
         mProgressHelper = new ProgressDialogHelper(this);
         mSharedPre = mContext.getSharedPreferences(Constants.SHAERD_FILE_NAME, Context.MODE_PRIVATE);
-        mExperter = (Experter) getIntent().getSerializableExtra("experter");
+        /*mExperter = (Experter) getIntent().getSerializableExtra("experter");
         mUserBean = reload(mContext);
         if (mExperter != null) {
             isUpdateInfo = true;
@@ -315,7 +265,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
                 showNickNameInfo(mExperter);
                 setInfo(mExperter);
             }
-        }
+        }*/
     }
 
     @Override
@@ -358,7 +308,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
     }
 
     private void requestData() {
-        mQueue = Volley.newRequestQueue(mContext, new HurlStack());
+        /*mQueue = Volley.newRequestQueue(mContext, new HurlStack());
         StringRequest mUpdate = new StringRequest(Request.Method.GET, ProtocolEncode.encodeCommontInfo(mContext), createMyReqSuccessListener(), createMyReqErrorListener()) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {//设置字符集为UTF-8,并采用gzip压缩传输
@@ -375,7 +325,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
                 return retryPolicy;
             }
         };
-        mQueue.add(mUpdate);
+        mQueue.add(mUpdate);*/
     }
 
     //请求成功
@@ -385,10 +335,10 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
             public void onResponse(String paramObject) {
                 LogTool.i("paramObject:" + paramObject);
                 if (null != paramObject && !TextUtils.isEmpty(paramObject)) {
-                    mInfo = Info.saveInfo(mContext, paramObject);
+                    /*mInfo = Info.saveInfo(mContext, paramObject);
                     if (mInfo != null) {
                         initInfo();
-                    }
+                    }*/
                 }
             }
         };
@@ -413,7 +363,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
     public void onClick(View v) {
         v.requestFocus();
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
-        switch (v.getId()) {
+        /*switch (v.getId()) {
             case R.id.iv_close:
                 finish();
                 break;
@@ -516,7 +466,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
                 }
             }
             break;
-        }
+        }*/
     }
 
     /**
@@ -524,11 +474,10 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
      *
      * @param image
      */
-    @Subscribe
     public void onAvatarSelect(Image image) {
-        ImageUtil.compressByQuality(image.getPath());
-        mUserPhotoPath = image.getPath();
-        Glide.with(this).load(image.getPath())
+//        ImageUtil.compressByQuality(image.getPath());
+        mUserPhotoPath = image.path;
+        Glide.with(this).load(image.path)
                 .asBitmap()
                 .placeholder(R.drawable.account_default_head_portrait)
                 .centerCrop()
@@ -547,7 +496,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         imm.hideSoftInputFromWindow(buttonView.getWindowToken(), 0); //强制隐藏键盘
-        switch (buttonView.getId()) {
+        /*switch (buttonView.getId()) {
             case R.id.rb_exist_store:
                 if (isChecked) {
                     mRbExistStoreNo.setChecked(false);
@@ -571,13 +520,13 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
             default:
                 showSkills(mExperter);
                 break;
-        }
+        }*/
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.Msg.REQUEST_IMAGE_USER) {
+        /*if (requestCode == Constants.Msg.REQUEST_IMAGE_USER) {
             if (resultCode == RESULT_OK) {
                 List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                 if (path != null && path.size() > 0) {
@@ -596,14 +545,14 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
                     msg.sendToTarget();
                 }
             }
-        }
+        }*/
     }
 
     /**
      * 初始化国家、语言、技能信息
      */
     private void initInfo() {
-        mSharedPre = mContext.getSharedPreferences(Constants.SHAERD_FILE_NAME, Context.MODE_PRIVATE);
+        /*mSharedPre = mContext.getSharedPreferences(Constants.SHAERD_FILE_NAME, Context.MODE_PRIVATE);
 
         String strInfoContent = Info.getInfoContent(mContext);
         if (strInfoContent != null && !TextUtils.isEmpty(strInfoContent)) {
@@ -617,14 +566,14 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
         }
         if (mInfo == null) {
             requestData();
-        }
+        }*/
     }
 
     /**
      * 填充国家、语言、技能相关信息，申请状态默认第一项
      */
-    private void setInfo(Experter experter) {
-        if (mInfo != null && mInfo.getCountry() != null && mInfo.getCountry().size() > 0) {
+    private void setInfo() {
+        /*if (mInfo != null && mInfo.getCountry() != null && mInfo.getCountry().size() > 0) {
             if (experter.getCountry_name() == null) {
                 String countrySetting = Locale.getDefault().getCountry();
                 int index = 0;
@@ -652,7 +601,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
             } else {
                 mIetLanguage.setText(experter.getLanguageName());
             }
-        }
+        }*/
     }
 
     /**
@@ -661,7 +610,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
      * @param strs
      */
     private void showWindow(String[] strs) {
-        if (mAlertDialog == null) {
+        /*if (mAlertDialog == null) {
             mLvInfo = new ListView(mContext);
             mAdpaterInfo = new ArrayAdapter(this, R.layout.item_list_info, strs);
             mLvInfo.setDivider(getResources().getDrawable(R.drawable.xml_list_divider));
@@ -708,7 +657,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
                 }
                 mAlertDialog.dismiss();
             }
-        });
+        });*/
     }
 
     /**
@@ -718,7 +667,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
      */
     private void requstApply(final boolean isUpdate) {
         //
-        if (mStore_photosList != null && mStore_photosList.size() > 0) {
+        /*if (mStore_photosList != null && mStore_photosList.size() > 0) {
             for (Iterator<String> it = mStore_photosList.iterator(); it.hasNext(); ) {
                 String path = it.next();
                 if (path != null && !path.startsWith(FLAG_URL)) {
@@ -775,18 +724,18 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
         } else {
             String applyUrl = ProtocolEncode.encodeExperterApply(mContext, mExperter);
             uploadExperterPost(applyUrl);
-        }
+        }*/
     }
 
     /**
      * 修改专家信息为审核中
      */
     private void updateExperterStatusPending() {
-        if (mSharedPre != null) {
+        /*if (mSharedPre != null) {
             SharedPreferences.Editor editor = mSharedPre.edit();
             editor.putInt(Constants.Shared_Experter.STATUS_CODE, Constants.Status.PENDING);
             editor.commit();
-        }
+        }*/
     }
 
     /**
@@ -795,7 +744,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
      * @param url
      */
     private void uploadExperterPost(String url) {
-        StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+        /*StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 mProgressHelper.dismissProgressDialog();
@@ -917,15 +866,15 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
         if (mQueue == null) {
             mQueue = Volley.newRequestQueue(mContext, new HurlStack());
         }
-        mQueue.add(request);
+        mQueue.add(request);*/
 
     }
 
     /**
      * 初始化 detail传过来的数据
      */
-    private void initExperterInfo(Experter experter) {
-        showNickNameInfo(experter);
+    private void initExperterInfo() {
+        /*showNickNameInfo(experter);
         mIetCountry.setText(experter.getCountry_name());
         mIetLanguage.setText(experter.getLanguageName());
         mIetPhoneNum.setText(experter.getTel());
@@ -979,78 +928,11 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
             if (sbOtherSkill != null && sbOtherSkill.length() > 0) {
                 mIetOtherSkill.setText(sbOtherSkill.substring(0, sbOtherSkill.length() - 1));
             }
-        }
+        }*/
     }
 
-    /**
-     * 加载店铺照片
-     *
-     * @param photoPathList
-     */
-    private void showStorePhotos(List<String> photoPathList) {
-        View.OnClickListener clickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
-                switch (v.getId()) {
-                    case R.id.custom_widget_del_iv:
-                        Message msg = mHalder.obtainMessage(Constants.Msg.MSG_DEL_STOREPHOTO);
-                        msg.obj = v.getTag();
-                        LogTool.d("showStorePhotos-->" + String.valueOf(v.getTag()));
-                        msg.sendToTarget();
-                        break;
-                }
-            }
-        };
-        mArrIvStorePhoto.clear();
 
-        if (photoPathList != null && photoPathList.size() > 0 && photoPathList.size() < MAX_NUM_STORE_PHOTO) {
-
-        } else if (photoPathList != null && photoPathList.size() > 0 && photoPathList.size() > MAX_NUM_STORE_PHOTO) {
-            photoPathList = photoPathList.subList(0, (MAX_NUM_STORE_PHOTO - 1));
-        }
-        mArrIvStorePhoto.addAll(addImgViewIntoScroll(photoPathList, clickListener));
-        if (mArrIvStorePhoto != null) {
-            mLlStorePhoto.removeAllViews();
-            if (mArrIvStorePhoto.size() < MAX_NUM_STORE_PHOTO) {
-                mNumStorePhoto = mArrIvStorePhoto.size();
-                mIvAddStorePhoto.setVisibility(View.VISIBLE);
-            } else {
-                mNumStorePhoto = MAX_NUM_STORE_PHOTO;
-                mIvAddStorePhoto.setVisibility(View.GONE);
-            }
-            for (IconImageView imageView : mArrIvStorePhoto) {
-                mLlStorePhoto.addView(imageView);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) getResources().getDimension(R.dimen.height_72), (int) getResources().getDimension(R.dimen.height_72));
-                params.setMargins(0, 0, 13, 0);
-                imageView.setLayoutParams(params);
-            }
-            mLlStorePhoto.addView(mIvAddStorePhoto);
-        }
-    }
-
-    private Vector<IconImageView> addImgViewIntoScroll(List<String> arrImagePath, View.OnClickListener clickListener) {
-        Vector<IconImageView> arrImageView = new Vector<>();
-        for (String path : arrImagePath) {
-            LogTool.d("path" + path);
-            if (!TextUtils.isEmpty(path) && path != null) {
-                IconImageView ivPhoto = new IconImageView(mContext);
-                ivPhoto.setTag(path);
-                ivPhoto.setIsIconGone(false);
-                ivPhoto.getmDelete().setTag(path);
-                ivPhoto.setmClickListener(clickListener);
-                Glide.with(mContext)
-                        .load(path)
-                        .placeholder(R.drawable.avatar_info)
-                        .error(R.drawable.avatar_info)
-                        .into(ivPhoto.getmImg());
-                arrImageView.add(ivPhoto);
-            }
-        }
-        return arrImageView;
-    }
-
-    private void showSkills(Experter experter) {
+    private void showSkills() {
         /*StringBuilder strSkill = new StringBuilder("");
         mIetSkill.setText(String.valueOf(strSkill));
         for (int i = 0; i < mCbSkill.length; i++) {
@@ -1089,10 +971,9 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
     /**
      * 加载注册的信息
      *
-     * @param experter
      */
-    private void showNickNameInfo(Experter experter) {
-        if (experter.getAvatar() != null && !TextUtils.isEmpty(experter.getAvatar())) {
+    private void showNickNameInfo() {
+        /*if (experter.getAvatar() != null && !TextUtils.isEmpty(experter.getAvatar())) {
             Glide.with(mContext)
                     .load(mExperter.getAvatar())
                     .asBitmap()
@@ -1109,7 +990,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
                     });
         }
         mIetFirstName.setText(experter.getFirst_name());
-        mIetLastName.setText(experter.getLast_name());
+        mIetLastName.setText(experter.getLast_name());*/
     }
 
     /**
@@ -1118,7 +999,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
      * @param avatarPath
      */
     private void uploadAvatar(final String avatarPath) {
-        String loginUrl = ProtocolEncode.encodeUploadPicture(mContext, avatarPath);
+        /*String loginUrl = ProtocolEncode.encodeUploadPicture(mContext, avatarPath);
         PhotoMultipartRequest imageUploadReq = new PhotoMultipartRequest<>(loginUrl, AvatarBean.class, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
@@ -1149,7 +1030,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
         if (mQueue == null) {
             mQueue = Volley.newRequestQueue(mContext, new HurlStack());
         }
-        mQueue.add(imageUploadReq);
+        mQueue.add(imageUploadReq);*/
     }
 
     /**
@@ -1161,47 +1042,12 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
         new CompressTask().execute(pictureList);
     }
 
-    /**
-     * 上传店铺照片
-     *
-     * @param list
-     * @param memberId
-     */
-    private void uploadPictures(List<Map<String, Object>> list, String memberId) {
-        String loginUrl = ProtocolEncode.encodeUploadPictures(mContext, memberId);
-        PictureMultUploadRequest imageUploadReq = new PictureMultUploadRequest<>(mContext, loginUrl, AvatarBean.class, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                volleyError.printStackTrace();
-                showDialog(getString(R.string.apply_upload_pictures), mContext.getString(R.string.lbConnectTimeout));
-            }
-        }, new Response.Listener<AvatarBean>() {
-            @Override
-            public void onResponse(AvatarBean avatarBean) {
-                Log.i("ashes", avatarBean.toString());
-                mSbResult.append("UPLOAD Pictures: \n");
-                mSbResult.append(avatarBean.toString());
-                mSbResult.append("\n");
-                if (avatarBean != null && "ok".equalsIgnoreCase(avatarBean.getStatus())) {
-                    if (avatarBean.getUrl() != null && avatarBean.getUrl().length > 0) {
-                        mArrStorePathUploadSuccess = avatarBean.getUrl();
-                        updateUserInfo(mUserBean);
-                    }
-                } else {
-                }
-            }
-        }, list);
-        if (mQueue == null) {
-            mQueue = Volley.newRequestQueue(mContext, new HurlStack());
-        }
-        mQueue.add(imageUploadReq);
-    }
 
     /**
      * 提交前判空提醒
      */
     private boolean checkInput() {
-        if ((mUserPhotoPath == null || TextUtils.isEmpty(mUserPhotoPath)) && (mExperter.getAvatar() == null || TextUtils.isEmpty(mExperter.getAvatar()))) {
+        /*if ((mUserPhotoPath == null || TextUtils.isEmpty(mUserPhotoPath)) && (mExperter.getAvatar() == null || TextUtils.isEmpty(mExperter.getAvatar()))) {
             DFNToast.Show(mContext, getString(R.string.apply_avatar) + getString(R.string.apply_check_input_null), Toast.LENGTH_SHORT);
             return false;
         }
@@ -1247,7 +1093,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
                 DFNToast.Show(mContext, getString(R.string.photo_store_apply) + getString(R.string.apply_check_input_null), Toast.LENGTH_SHORT);
                 return false;
             }
-        }
+        }*/
 
 
         /*else if(skill == null || TextUtils.isEmpty(skill)){
@@ -1261,7 +1107,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
      * 修改WAF信息
      */
     private void updateUserInfo(final UserInfoBean userInfoBean) {
-        if (userInfoBean == null) {
+        /*if (userInfoBean == null) {
             return;
         }
         String url = ProtocolEncode.encodeUpdateUserInfo(this, userInfoBean.getFirstname(), userInfoBean.getLastname());
@@ -1299,7 +1145,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
         if (mQueue == null) {
             mQueue = Volley.newRequestQueue(mContext, new HurlStack());
         }
-        mQueue.add(request);
+        mQueue.add(request);*/
     }
 
     /*
@@ -1326,14 +1172,14 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
             super.onPostExecute(result);
             //更新UI
             if (result != null && result.size() > 0) {
-                uploadPictures(result, mExperter.getMember_id());
+//                uploadPictures(result, mExperter.getMember_id());
             }
         }
     }
 
     private List<Map<String, Object>> compressPicture(List<String> mArrImgPath) {
         List<Map<String, Object>> list = new ArrayList<>();
-        for (String path : mArrImgPath) {
+        /*for (String path : mArrImgPath) {
             Map<String, Object> map = new HashMap<>();
             LogTool.d("compressPicture" + path);
             File imgFile = new File(path);
@@ -1344,7 +1190,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
             map.put(PictureMultUploadRequest.IMG_PATH, path);
             map.put(PictureMultUploadRequest.IMG_FILE, compressedImageFile);
             list.add(map);
-        }
+        }*/
         return list;
     }
 

@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.android.volley.RequestQueue;
 import com.systemteam.R;
-import com.systemteam.base.BaseActivity;
+import com.systemteam.BaseActivity;
 import com.systemteam.view.IconEditFullTextView;
 import com.systemteam.view.ProgressDialogHelper;
 
@@ -82,6 +82,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     protected void onDestroy() {
         super.onDestroy();
         mProgressHelper.dismissProgressDialog();
+    }
+
+    @Override
+    protected void initView() {
+
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     @Override

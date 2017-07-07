@@ -30,8 +30,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.systemteam.application.BikeApplication.APP_FOLDER_NAME;
-import static com.systemteam.application.BikeApplication.mSDCardPath;
+import static com.systemteam.BikeApplication.APP_FOLDER_NAME;
+import static com.systemteam.BikeApplication.mSDCardPath;
 
 /**
  * Created by GaoLei on 17/3/31.

@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.systemteam.R;
-import com.systemteam.base.BaseActivity;
+import com.systemteam.BaseActivity;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -208,7 +208,7 @@ public class UserActivity extends BaseActivity {
 			//BmobObject类型
 			Person person = new Person();
 			person.setObjectId("721fe0cdf2");
-			newUser.setBanker(person);
+//			newUser.setBanker(person);
 			//---------------------数组操作(add、addAll、addUnique、addAllUnique)---------------------------------------
 			//添加Object类型的数组,Object数组调用addAllUnique、addUnique方法后本地用户信息未支持去重
 			List<BankCard> cards =new ArrayList<BankCard>();
@@ -488,5 +488,15 @@ public class UserActivity extends BaseActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+	}
+
+	@Override
+	protected void initView() {
+
+	}
+
+	@Override
+	protected void initData() {
+
 	}
 }

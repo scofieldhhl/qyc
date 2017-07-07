@@ -23,21 +23,21 @@
             android:id="@+id/radioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="定位icon" >
+            android:contentDescription="@string/map_loaction_icon" >
 
             <RadioButton
                 android:id="@+id/defaulticon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="默认图标" >
+                android:text="@string/map_default_icon" >
             </RadioButton>
 
             <RadioButton
                 android:id="@+id/customicon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="自定义图标" >
+                android:text="@string/map_div_icon" >
             </RadioButton>
         </RadioGroup>
     </LinearLayout>

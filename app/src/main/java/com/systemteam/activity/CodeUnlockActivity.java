@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import com.systemteam.R;
-import com.systemteam.base.BaseActivity;
+import com.systemteam.BaseActivity;
 import com.systemteam.util.Utils;
 
 /**
@@ -203,6 +203,16 @@ public class CodeUnlockActivity extends BaseActivity {
         super.onDestroy();
         unlockSuccess = false;
         Log.d("gaolei", "CodeUnlockActivity------------onDestroy------------------");
+    }
+
+    @Override
+    protected void initView() {
+
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     public void finishActivity(View view) {

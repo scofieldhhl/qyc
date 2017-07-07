@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.systemteam.R;
 import com.systemteam.adapter.MyRouteAdapter;
 import com.systemteam.adapter.MyRouteDividerDecoration;
-import com.systemteam.base.BaseActivity;
+import com.systemteam.BaseActivity;
 import com.systemteam.bean.RouteRecord;
 import com.systemteam.database.RouteDBHelper;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
@@ -174,6 +174,16 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
 
     public void onDestroy() {
         super.onDestroy();
+
+    }
+
+    @Override
+    protected void initView() {
+
+    }
+
+    @Override
+    protected void initData() {
 
     }
 }

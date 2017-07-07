@@ -1,8 +1,6 @@
 package com.systemteam;
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -71,7 +69,7 @@ import com.systemteam.activity.MyRouteActivity;
 import com.systemteam.activity.NavigationActivity;
 import com.systemteam.activity.RouteDetailActivity;
 import com.systemteam.activity.WalletActivity;
-import com.systemteam.base.BaseActivity;
+import com.systemteam.activity.QRCodeScanActivity;
 import com.systemteam.bean.BikeInfo;
 import com.systemteam.callback.AllInterface;
 import com.systemteam.custom.LeftDrawerLayout;
@@ -83,6 +81,7 @@ import com.systemteam.user.UserActivity;
 import com.systemteam.util.LocationManager;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
+import com.systemteam.welcome.WelcomeActivity;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -96,7 +95,8 @@ import overlayutil.WalkingRouteOverlay;
 
 import static com.systemteam.bean.BikeInfo.infos;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener, OnGetRoutePlanResultListener, AllInterface.OnMenuSlideListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener,
+        OnGetRoutePlanResultListener, AllInterface.OnMenuSlideListener {
 
     private static final int REQUEST_CODE_SOME_FEATURES_PERMISSIONS = 101;
     private double currentLatitude, currentLongitude, changeLatitude, changeLongitude;
@@ -142,9 +142,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case DISMISS_SPLASH:
-                    Animator animator = AnimatorInflater.loadAnimator(MainActivity.this, R.animator.splash);
+                    /*Animator animator = AnimatorInflater.loadAnimator(MainActivity.this, R.animator.splash);
                     animator.setTarget(splash_img);
-                    animator.start();
+                    animator.start();*/
                     break;
             }
         }
@@ -158,6 +158,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         setContentView(R.layout.activity_main);
         checkSDK();
         LogTool.i("MainActivity---------onCreate---------------");
+        mContext = this;
+        checkLogin();
         setStatusBar();
         initMap();
         initView();
@@ -170,7 +172,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mLeftDrawerLayout.setOnMenuSlideListener(this);
 
         if (mMenuFragment == null) {
-            fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment = new LeftMenuFragment()).commit();
+            fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment =
+                    LeftMenuFragment.newInstance(mUser)).commit();
+        }
+    }
+
+    private void checkLogin(){
+        mUser = ((BikeApplication) this.getApplication()).getmUser();
+        if(mUser == null){
+            startActivity(new Intent(MainActivity.this, WelcomeActivity.class));
         }
     }
 
@@ -392,7 +402,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         shadowView.setVisibility(View.GONE);
     }
 
-    private void initView() {
+    @Override
+    protected void initData() {
+
+    }
+
+    @Override
+    protected void initView() {
 //        new SpeechUtil(this).startSpeech("欢迎光临");
         splash_img = (ImageView) findViewById(R.id.splash_img);
 //        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.guide_1);
@@ -451,9 +467,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mMapView.setOnClickListener(this);
         dragLocationIcon = BitmapDescriptorFactory.fromResource(R.mipmap.drag_location);
         bikeIcon = BitmapDescriptorFactory.fromResource(R.mipmap.bike_icon);
-//        handler.sendEmptyMessageDelayed(DISMISS_SPLASH, 3000);
+        handler.sendEmptyMessageDelayed(DISMISS_SPLASH, 3000);
     }
-
 
     public void getMyLocation() {
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
@@ -533,7 +548,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onGetWalkingRouteResult(final WalkingRouteResult result) {
         if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-            Toast.makeText(MainActivity.this, "抱歉，未找到结果", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, R.string.no_found, Toast.LENGTH_SHORT).show();
         }
         if (result.error == SearchResult.ERRORNO.AMBIGUOUS_ROURE_ADDR) {
             // 起终点或途经点地址有岐义，通过以下接口获取建议查询信息
@@ -563,7 +578,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                             overlay.zoomToSpan();
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Toast.makeText(MainActivity.this, "路径规划异常", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, R.string.error_line, Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -766,7 +781,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         @Override
         public void onFinish() {
-            book_countdown.setText("预约结束");
+            book_countdown.setText(R.string.end_book);
             Toast.makeText(MainActivity.this, getString(R.string.cancel_book_toast), Toast.LENGTH_SHORT).show();
         }
     };
@@ -853,7 +868,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     public void gotoCodeUnlock(View view) {
-        startActivity(new Intent(this, CodeUnlockActivity.class));
+//        startActivity(new Intent(this, CodeUnlockActivity.class));
+        startActivity(new Intent(this, QRCodeScanActivity.class));
     }
 
     public void gotoMyRoute(View view) {
@@ -1012,7 +1028,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             }
 
             if ((System.currentTimeMillis() - exitTime) > 2000) {
-                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.exist_app, Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
             } else {
 //                finish();
@@ -1053,16 +1069,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     protected void toastDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setMessage("确认要结束进程吗？");
-        builder.setTitle("提示");
-        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.exist);
+        builder.setTitle(R.string.tip);
+        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 Intent intent = new Intent(MainActivity.this, RouteService.class);
                 stopService(intent);
             }
         });
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
@@ -1077,7 +1093,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             int hasReadPermission = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
             int gpsPermission = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
             int readStatePermission = checkSelfPermission(Manifest.permission.READ_PHONE_STATE);
-//            int settingPermission = checkSelfPermission(Manifest.permission.WRITE_SETTINGS);
+            int cameraPermission = checkSelfPermission(Manifest.permission.CAMERA);
 
             List<String> permissions = new ArrayList<String>();
             if (hasWritePermission != PackageManager.PERMISSION_GRANTED) {
@@ -1098,12 +1114,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             if (readStatePermission != PackageManager.PERMISSION_GRANTED) {
                 permissions.add(Manifest.permission.READ_PHONE_STATE);
             }
-//            if (settingPermission != PackageManager.PERMISSION_GRANTED) {
-////                permissions.add(Manifest.permission.WRITE_SETTINGS);
-//            }
+            if (cameraPermission != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.CAMERA);
+            }
 
             if (!permissions.isEmpty()) {
-                requestPermissions(permissions.toArray(new String[permissions.size()]), REQUEST_CODE_SOME_FEATURES_PERMISSIONS);
+                requestPermissions(permissions.toArray(new String[permissions.size()]),
+                        REQUEST_CODE_SOME_FEATURES_PERMISSIONS);
             }
         }
     }

@@ -36,9 +36,11 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!-- 摄影机 -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
 
     <application
-        android:name=".application.BikeApplication"
+        android:name=".BikeApplication"
         android:allowBackup="true"
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
@@ -109,9 +111,13 @@
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL_VALUE}" />-->
 
-        <activity android:name=".activity.SplashActivity">
+        <activity android:name=".activity.SplashActivity"/>
+        <activity android:name=".activity.QRCodeScanActivity"/>
+        <activity
+            android:name=".welcome.WelcomeActivity"
+            android:windowSoftInputMode="adjustNothing"
+            android:screenOrientation="portrait"/>
 
-        </activity>
     </application>
 
 </manifest>

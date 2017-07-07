@@ -11,7 +11,7 @@
         android:id="@+id/et_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="请输入手机号码"
+        android:hint="@string/smssdk_write_mobile_phone"
         />
     
     <EditText 
@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_below="@id/et_number"
         android:layout_height="wrap_content"
-        android:hint="请输入验证码"
+        android:hint="@string/reg_write_identify_code"
         />
     
     <ListView

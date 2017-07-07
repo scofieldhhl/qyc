@@ -17,11 +17,13 @@ import java.util.List;
 
 public class RouteLineAdapter extends BaseAdapter {
 
+    private Context mContext;
     private List<? extends  RouteLine> routeLines;
     private LayoutInflater layoutInflater;
     private Type mtype;
 
     public RouteLineAdapter(Context context, List<?extends RouteLine> routeLines, Type type) {
+        this.mContext = context;
         this.routeLines = routeLines;
         layoutInflater = LayoutInflater.from( context);
         mtype = type;
@@ -60,14 +62,15 @@ public class RouteLineAdapter extends BaseAdapter {
             case  TRANSIT_ROUTE:
             case WALKING_ROUTE:
             case BIKING_ROUTE:
-                holder.name.setText("路线" + (position + 1));
+                holder.name.setText(mContext.getString(R.string.line_position, (position + 1)));
                 int time = routeLines.get(position).getDuration();
                 if ( time / 3600 == 0 ) {
-                    holder.lightNum.setText( "大约需要：" + time / 60 + "分钟" );
+                    holder.lightNum.setText(mContext.getString(R.string.line_time, time / 60));
                 } else {
-                    holder.lightNum.setText( "大约需要：" + time / 3600 + "小时" + (time % 3600) / 60 + "分钟" );
+                    holder.lightNum.setText(mContext.getString(R.string.line_time_hour,time / 3600,
+                            (time % 3600) / 60));
                 }
-                holder.dis.setText("距离大约是：" + routeLines.get(position).getDistance() + "米");
+                holder.dis.setText(mContext.getString(R.string.line_distance, routeLines.get(position).getDistance()));
                 break;
 
 //            case DRIVING_ROUTE:

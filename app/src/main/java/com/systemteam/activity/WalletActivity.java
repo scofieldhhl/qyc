@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.systemteam.R;
 import com.systemteam.adapter.ChargeAmountAdapter;
 import com.systemteam.adapter.ChargeAmountDividerDecoration;
-import com.systemteam.base.BaseActivity;
+import com.systemteam.BaseActivity;
 import com.systemteam.util.Utils;
 
 /**
@@ -47,6 +47,16 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         recyclerview_acount.addItemDecoration(new ChargeAmountDividerDecoration(10));
         String acount_ballance = getString(R.string.account_ballance);
         Utils.setSpannableStr(ballance, acount_ballance, acount_ballance.length() - 3, acount_ballance.length() - 2, 1.2f);
+    }
+
+    @Override
+    protected void initView() {
+
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     @Override

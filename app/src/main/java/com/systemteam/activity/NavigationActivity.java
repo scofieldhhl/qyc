@@ -25,7 +25,7 @@ import com.systemteam.R;
 import com.systemteam.adapter.PoiHostoryAdapter;
 import com.systemteam.adapter.PoiSuggestionAdapter;
 import com.systemteam.adapter.RecyclerViewDivider;
-import com.systemteam.base.BaseActivity;
+import com.systemteam.BaseActivity;
 import com.systemteam.provider.PoiObject;
 import com.systemteam.provider.ProviderUtil;
 import com.systemteam.util.LocationManager;
@@ -118,6 +118,16 @@ public class NavigationActivity extends BaseActivity implements
                                 .keyword(cs.toString()).city("北京"));
             }
         });
+
+    }
+
+    @Override
+    protected void initView() {
+
+    }
+
+    @Override
+    protected void initData() {
 
     }
 
