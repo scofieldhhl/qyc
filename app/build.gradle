@@ -8,8 +8,8 @@ android {
         release {
             keyAlias 'SystemStudio'
             keyPassword 'HUANGhl8811^'
-//            storeFile file('F:/studio/qyc/BiuBike/appkey/systemstudio.jks')
-            storeFile file('/Users/ws/git/qyc/qyc/appkey/systemstudio.jks')
+            storeFile file('F:/studio/qyc/appkey/systemstudio.jks')
+//            storeFile file('/Users/ws/git/qyc/qyc/appkey/systemstudio.jks')
             storePassword 'HUANGhl8811^'
         }
         compileSdkVersion 25
@@ -29,11 +29,10 @@ android {
         buildTypes {
             release {
                 debuggable false
-                zipAlignEnabled false
-                shrinkResources false
-                minifyEnabled false
+                zipAlignEnabled true
+                minifyEnabled true
                 // 移除无用的resource文件
-                shrinkResources false
+                shrinkResources true
                 proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
                 buildConfigField "boolean", "IS_ARRIVING", "false"//发布版时关闭调试
@@ -100,4 +99,6 @@ android {
         compile 'cn.bingoogolapple:bga-zbar:1.1.7@aar'
         // -------------------- 二维码 ----------------------------
     }
+}
+dependencies {
 }

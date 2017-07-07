@@ -67,9 +67,9 @@ import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.systemteam.activity.CodeUnlockActivity;
 import com.systemteam.activity.MyRouteActivity;
 import com.systemteam.activity.NavigationActivity;
+import com.systemteam.activity.QRCodeScanActivity;
 import com.systemteam.activity.RouteDetailActivity;
 import com.systemteam.activity.WalletActivity;
-import com.systemteam.activity.QRCodeScanActivity;
 import com.systemteam.bean.BikeInfo;
 import com.systemteam.callback.AllInterface;
 import com.systemteam.custom.LeftDrawerLayout;
@@ -1153,6 +1153,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
             default: {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
+            /*case Constant.REQUEST_CODE_WELCOME:
+                if(resultCode == RESULT_CANCELED){
+                    finish();
+                    System.exit(0);
+                }else {
+                    Bundle b=data.getExtras(); //data为B中回传的Intent
+                    String str=b.getString("str1");//str即为回传的值
+                }
+                break;*/
+            default:
+                break;
         }
     }
 

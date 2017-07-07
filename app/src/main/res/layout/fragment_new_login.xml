@@ -314,5 +314,4 @@
                 android:textSize="@dimen/text_12"/>
         </LinearLayout>
     </RelativeLayout>
-
 </RelativeLayout>

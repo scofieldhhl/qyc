@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.systemteam.user.MyUser;
 import com.systemteam.util.LogTool;
+import com.systemteam.R;
 import com.systemteam.view.ProgressDialogHelper;
 
 import java.lang.reflect.Field;

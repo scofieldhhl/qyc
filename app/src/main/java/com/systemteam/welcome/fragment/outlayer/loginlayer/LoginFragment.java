@@ -1,5 +1,6 @@
 package com.systemteam.welcome.fragment.outlayer.loginlayer;
 
+import com.systemteam.fragment.BaseFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,7 +16,6 @@ import android.widget.Toast;
 
 import com.systemteam.BikeApplication;
 import com.systemteam.R;
-import com.systemteam.fragment.BaseFragment;
 import com.systemteam.user.MyUser;
 
 import cn.bmob.v3.BmobUser;
@@ -29,7 +29,7 @@ import static com.systemteam.BaseActivity.loge;
 /**
  * 登录
  */
-public class LoginFragment extends BaseFragment{
+public class LoginFragment extends BaseFragment {
     private EditText mEtPhone, mEtPsd;
     private Button mBtnSend;
     private String mPhone, mPwd;
