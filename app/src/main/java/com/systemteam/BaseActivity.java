@@ -9,20 +9,20 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.systemteam.user.MyUser;
 import com.systemteam.util.LogTool;
-import com.systemteam.R;
 import com.systemteam.view.ProgressDialogHelper;
 
 import java.lang.reflect.Field;
@@ -34,7 +34,7 @@ import rx.subscriptions.CompositeSubscription;
 import static com.systemteam.util.Utils.dp2px;
 
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener{
 
     public int statusBarHeight = 0,titleHeight;
     protected Toolbar mToolbar;
@@ -48,6 +48,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected InputMethodManager mImm;
     protected BikeApplication mApplication;
     protected MyUser mUser;
+    protected ImageView mIvMenu, mIvSearch;
+    protected TextView mTvTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,27 +65,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         statusBarHeight = getStatusBarHeight();
         titleHeight=dp2px(this,50);
-    }
-
-    /**
-     * 设置沉浸式状态栏
-     */
-    protected void setStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            final ViewGroup linear_bar = (ViewGroup) findViewById(R.id.title_layout);
-            final int statusHeight = getStatusBarHeight();
-            linear_bar.post(new Runnable() {
-                @Override
-                public void run() {
-//                    int titleHeight = linear_bar.getHeight();
-                    Log.d("gaolei","titleHeight--------"+titleHeight);
-                    Log.d("gaolei","statusHeight--------"+statusHeight);
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) linear_bar.getLayoutParams();
-                    params.height = statusHeight + titleHeight;
-                    linear_bar.setLayoutParams(params);
-                }
-            });
-        }
     }
 
     protected void setStatusBarLayout() {
@@ -218,4 +199,49 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract void initView();
 
     protected abstract void initData();
+
+    protected void initTitle(Activity act, int titleId, int menuRes, int searchRes) {
+        setStatusBar();
+        mIvMenu = (ImageView) act.findViewById(R.id.menu_icon);
+        mIvSearch = (ImageView) act.findViewById(R.id.search_icon);
+        mTvTitle = (TextView) act.findViewById(R.id.title);
+        mIvMenu.setOnClickListener(this);
+        mIvSearch.setOnClickListener(this);
+        if (titleId == 0) {
+            mTvTitle.setText("");
+        } else {
+            mTvTitle.setText(titleId);
+        }
+        if (menuRes == 0) {
+            mIvMenu.setVisibility(View.GONE);
+        } else {
+            mIvMenu.setVisibility(View.VISIBLE);
+            mIvMenu.setImageResource(menuRes);
+        }
+        if (searchRes == 0) {
+            mIvSearch.setVisibility(View.GONE);
+        } else {
+            mIvSearch.setVisibility(View.VISIBLE);
+            mIvSearch.setImageResource(searchRes);
+        }
+    }
+
+    /**
+     * 设置沉浸式状态栏
+     */
+    protected void setStatusBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            final ViewGroup linear_bar = (ViewGroup) findViewById(R.id.title_layout);
+            final int statusHeight = getStatusBarHeight();
+            linear_bar.post(new Runnable() {
+                @Override
+                public void run() {
+//                    int titleHeight = linear_bar.getHeight();
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) linear_bar.getLayoutParams();
+                    params.height = statusHeight + titleHeight;
+                    linear_bar.setLayoutParams(params);
+                }
+            });
+        }
+    }
 }

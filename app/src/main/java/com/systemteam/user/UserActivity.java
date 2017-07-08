@@ -499,4 +499,9 @@ public class UserActivity extends BaseActivity {
 	protected void initData() {
 
 	}
+
+	@Override
+	public void onClick(View view) {
+
+	}
 }

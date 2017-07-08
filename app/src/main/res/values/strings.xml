@@ -215,4 +215,10 @@
     <string name="line_time_hour" formatted="false">大约需要：%d 小时 %d 分钟</string>
     <string name="line_distance" formatted="false">距离大约是：%d米</string>
     <!--line-->
+    <!--scan-->
+    <string name="title_scan">扫码启动</string>
+    <string name="scan_hint">请对准车牌上的二维码</string>
+    <string name="light_open">开灯</string>
+    <string name="light_close">关灯</string>
+    <!--scan-->
 </resources>

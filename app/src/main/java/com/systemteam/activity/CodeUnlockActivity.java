@@ -89,6 +89,11 @@ public class CodeUnlockActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onClick(View view) {
+
+    }
+
     class MyTextChangeWatcher implements TextWatcher {
         // 标示 绑定的EditText
         private int index;

@@ -186,4 +186,9 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
     protected void initData() {
 
     }
+
+    @Override
+    public void onClick(View view) {
+
+    }
 }

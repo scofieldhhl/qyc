@@ -127,6 +127,11 @@ public class RouteDetailActivity extends BaseActivity {
         settings.setScrollGesturesEnabled(true);
     }
 
+    @Override
+    public void onClick(View view) {
+
+    }
+
     public class MylocationListener implements BDLocationListener {
         //定位请求回调接口
         private boolean isFirstIn = true;

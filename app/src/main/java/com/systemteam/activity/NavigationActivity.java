@@ -263,4 +263,9 @@ public class NavigationActivity extends BaseActivity implements
         backFromSearchPlace(place_search_layout);
 
     }
+
+    @Override
+    public void onClick(View view) {
+
+    }
 }

@@ -5,27 +5,28 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.systemteam.BaseActivity;
 import com.systemteam.R;
+import com.systemteam.util.LogTool;
 
 import cn.bingoogolapple.qrcode.core.QRCodeView;
 import cn.bingoogolapple.qrcode.zbar.ZBarView;
 
 public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Delegate {
-    private static final String TAG = QRCodeScanActivity.class.getSimpleName();
     private static final int REQUEST_CODE_CHOOSE_QRCODE_FROM_GALLERY = 666;
 
+    private boolean isLightOpened = false;
     private QRCodeView mQRCodeView;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        mContext = this;
+        initTitle(this, R.string.title_scan, R.drawable.btn_return, 0);
         initView();
         initData();
     }
@@ -69,7 +70,7 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
 
     @Override
     public void onScanQRCodeSuccess(String result) {
-        Log.i(TAG, "result:" + result);
+        LogTool.d("result:" + result);
         Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
         vibrate();
         mQRCodeView.startSpot();
@@ -77,11 +78,15 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
 
     @Override
     public void onScanQRCodeOpenCameraError() {
-        Log.e(TAG, "打开相机出错");
+        LogTool.e("打开相机出错");
     }
 
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.menu_icon:
+                finish();
+                break;
             case R.id.tv_inputcode:
                 startActivity(new Intent(QRCodeScanActivity.this, CodeUnlockActivity.class));
                 break;
@@ -110,10 +115,18 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
                 mQRCodeView.stopCamera();
                 break;
             case R.id.open_flashlight:
-                mQRCodeView.openFlashlight();
+                if(isLightOpened){
+                    mQRCodeView.closeFlashlight();
+                    isLightOpened = false;
+                    ((TextView)findViewById(R.id.open_flashlight)).setText(R.string.light_open);
+                }else {
+                    mQRCodeView.openFlashlight();
+                    isLightOpened = true;
+                    ((TextView)findViewById(R.id.open_flashlight)).setText(R.string.light_close);
+                }
                 break;
             case R.id.close_flashlight:
-                mQRCodeView.closeFlashlight();
+
                 break;
             case R.id.scan_barcode:
                 mQRCodeView.changeToScanBarcodeStyle();

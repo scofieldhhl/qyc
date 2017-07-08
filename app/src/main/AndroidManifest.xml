@@ -112,7 +112,8 @@
             android:value="${UMENG_CHANNEL_VALUE}" />-->
 
         <activity android:name=".activity.SplashActivity"/>
-        <activity android:name=".activity.QRCodeScanActivity"/>
+        <activity android:name=".activity.QRCodeScanActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name=".welcome.WelcomeActivity"
             android:windowSoftInputMode="adjustNothing"

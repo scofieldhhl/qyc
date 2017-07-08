@@ -95,14 +95,14 @@ import overlayutil.WalkingRouteOverlay;
 
 import static com.systemteam.bean.BikeInfo.infos;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener,
-        OnGetRoutePlanResultListener, AllInterface.OnMenuSlideListener {
+public class MainActivity extends BaseActivity implements OnGetRoutePlanResultListener,
+        AllInterface.OnMenuSlideListener {
 
     private static final int REQUEST_CODE_SOME_FEATURES_PERMISSIONS = 101;
     private double currentLatitude, currentLongitude, changeLatitude, changeLongitude;
-    private ImageView splash_img, btn_locale, btn_refresh, menu_icon;
+    private ImageView splash_img, btn_locale, btn_refresh;
     public static TextView current_addr;
-    private TextView title, book_bt, cancel_book, end_route;
+    private TextView book_bt, cancel_book, end_route;
     private LinearLayout bike_layout, bike_distance_layout, bike_info_layout, confirm_cancel_layout;
     private TextView bike_code, bike_sound, book_countdown, prompt,
             textview_time, textview_distance, textview_price, unlock;
@@ -160,8 +160,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         LogTool.i("MainActivity---------onCreate---------------");
         mContext = this;
         checkLogin();
-        setStatusBar();
         initMap();
+        initTitle(this, R.string.bybike, R.mipmap.menu_icon, 0);
         initView();
         isServiceLive = Utils.isServiceWork(this, getPackageName() + ".service.RouteService");
         if (isServiceLive)
@@ -389,7 +389,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
             }
         }
 
-        LogTool.i("BaiduLocationApiDem : "+sb.toString());
+//        LogTool.i("BaiduLocationApiDem : "+sb.toString());
     }
 
     public void openMenu() {
@@ -435,9 +435,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         cancel_book = (TextView) findViewById(R.id.cancel_book);
         mLeftDrawerLayout = (LeftDrawerLayout) findViewById(R.id.id_drawerlayout);
         shadowView = (View) findViewById(R.id.shadow);
-        menu_icon = (ImageView) findViewById(R.id.menu_icon);
         bike_sound.setOnClickListener(this);
-        menu_icon.setOnClickListener(this);
         shadowView.setOnClickListener(this);
 //        mLeftDrawerLayout.setListener(this);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.dp2px(this, 50));
@@ -457,7 +455,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         btn_locale = (ImageView) findViewById(R.id.btn_locale);
         btn_refresh = (ImageView) findViewById(R.id.btn_refresh);
         end_route = (TextView) findViewById(R.id.end_route);
-        title = (TextView) findViewById(R.id.title);
         book_bt = (TextView) findViewById(R.id.book_bt);
         book_bt.setOnClickListener(this);
         cancel_book.setOnClickListener(this);
@@ -653,8 +650,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
             changeLongitude = Double.parseDouble(latlng(_regex2, _str));
             LatLng changeLL = new LatLng(changeLatitude, changeLongitude);
             startNodeStr = PlanNode.withLocation(changeLL);
-            LogTool.i("changeLatitude-----change--------" + changeLatitude);
-            LogTool.i("changeLongitude-----change--------" + changeLongitude);
+//            LogTool.i("changeLatitude-----change--------" + changeLatitude);
+//            LogTool.i("changeLongitude-----change--------" + changeLongitude);
         }
 
         public void onMapStatusChange(MapStatus mapStatus) {
@@ -919,7 +916,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
 
     private void backFromRouteDetail() {
         isFirstIn = true;
-        title.setText(getString(R.string.bybike));
+        mTvTitle.setText(getString(R.string.bybike));
         textview_time.setText(getString(R.string.foot));
         textview_distance.setText(getString(R.string.distance));
         textview_price.setText(getString(R.string.price));
@@ -934,7 +931,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         bike_layout.setVisibility(View.GONE);
         prompt.setVisibility(View.GONE);
         current_addr.setVisibility(View.VISIBLE);
-        menu_icon.setVisibility(View.VISIBLE);
+        mIvMenu.setVisibility(View.VISIBLE);
         book_bt.setVisibility(View.VISIBLE);
         unlock.setVisibility(View.VISIBLE);
         divider.setVisibility(View.VISIBLE);
@@ -954,7 +951,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
             Utils.showDialog(this);
             return;
         }
-        title.setText(getString(R.string.routing));
+        mTvTitle.setText(getString(R.string.routing));
         textview_time.setText(getString(R.string.bike_time));
         textview_distance.setText(getString(R.string.bike_distance));
         textview_price.setText(getString(R.string.bike_price));
@@ -970,7 +967,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         prompt.setVisibility(View.VISIBLE);
         bike_layout.setVisibility(View.VISIBLE);
         current_addr.setVisibility(View.GONE);
-        menu_icon.setVisibility(View.GONE);
+        mIvMenu.setVisibility(View.GONE);
         unlock.setVisibility(View.GONE);
         divider.setVisibility(View.GONE);
         btn_refresh.setVisibility(View.GONE);

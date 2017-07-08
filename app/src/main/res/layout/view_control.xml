@@ -4,14 +4,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:layout_alignParentBottom="true">
-
-    <TextView
-        android:id="@+id/tv_inputcode"
-        style="@style/AutoWrapTv"
-        android:padding="10dp"
-        android:layout_width="wrap_content"
-        android:text="@string/code_unlock"/>
+    android:layout_alignParentBottom="true"
+    android:layout_marginBottom="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,7 +37,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/start_spot_showrect"
@@ -89,14 +84,22 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/tv_inputcode"
+            style="@style/AutoWrapTv"
+            android:padding="10dp"
+            android:text="@string/code_unlock"/>
+
+        <TextView
             android:id="@+id/open_flashlight"
             style="@style/AutoWrapTv"
-            android:text="开灯" />
+            android:padding="10dp"
+            android:text="@string/light_open" />
 
         <TextView
             android:id="@+id/close_flashlight"
             style="@style/AutoWrapTv"
-            android:text="关灯" />
+            android:visibility="gone"
+            android:text="@string/light_close" />
 
         <TextView
             android:id="@+id/choose_qrcde_from_gallery"
