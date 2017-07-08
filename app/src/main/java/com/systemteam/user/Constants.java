@@ -5,7 +5,7 @@ package com.systemteam.user;
  */
 public class Constants {
 
-
+    public static final String APP_ID = "wxd930ea5d5a258f4f";
     public static final String REQUESTCODE = "requestcode";
     public static final String SHAERD_FILE_NAME = "shaerd_file_name";
     public static final String STATUS_CODE = "status_code";
@@ -47,5 +47,11 @@ public class Constants {
         public static final int MSG_DEL_STOREPHOTO = 0x128;
         public static final int MSG_WAIT = 0x129;
         public static final int MSG_INOF_NOTIFY = 0x130;
+    }
+
+    public static class ShowMsgActivity {
+        public static final String STitle = "showmsg_title";
+        public static final String SMessage = "showmsg_message";
+        public static final String BAThumbData = "showmsg_thumb_data";
     }
 }

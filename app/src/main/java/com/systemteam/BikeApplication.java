@@ -5,7 +5,9 @@ import android.os.Environment;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.iflytek.cloud.SpeechUtility;
-import com.systemteam.user.MyUser;
+import com.systemteam.bean.MyUser;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
@@ -42,7 +44,7 @@ public class BikeApplication extends Application {
 
         initDirs();
         initBmob();
-
+        regToWx();
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
     }
 
@@ -77,5 +79,11 @@ public class BikeApplication extends Application {
 		.setFileExpiration(5500)
 		.build();
 		Bmob.initialize(config);
+    }
+
+    private void regToWx(){
+        String APP_ID = "wx88888888";
+        IWXAPI api = WXAPIFactory.createWXAPI(this, APP_ID, true);
+        api.registerApp(APP_ID);
     }
 }

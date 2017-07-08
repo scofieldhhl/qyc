@@ -21,7 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
-import com.systemteam.user.MyUser;
+import com.systemteam.bean.MyUser;
 import com.systemteam.util.LogTool;
 import com.systemteam.view.ProgressDialogHelper;
 

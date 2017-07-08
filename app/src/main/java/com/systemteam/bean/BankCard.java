@@ -1,4 +1,4 @@
-package com.systemteam.user;
+package com.systemteam.bean;
 
 public class BankCard {
 	

@@ -5,6 +5,9 @@ android {
         useNewCruncher = false
     }
     signingConfigs {
+        debug {//wechat
+            storeFile file("../debug.keystore")
+        }
         release {
             keyAlias 'SystemStudio'
             keyPassword 'HUANGhl8811^'
@@ -36,11 +39,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-	lintOptions {
-		checkReleaseBuilds false
-		abortOnError false
-	}
-	/*productFlavors {//渠道包
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    /*productFlavors {//渠道包
 		kuan {
 			manifestPlaceholders = [UMENG_CHANNEL_VALUE: "kuan"]
 		}
@@ -61,38 +64,41 @@ android {
 }
 
 repositories {
-	maven { url "https://jitpack.io" }
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
-	compile fileTree(include: ['*.jar'], dir: 'libs')
-	androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-		exclude group: 'com.android.support', module: 'support-annotations'
-	})
-	compile 'com.android.support:appcompat-v7:25.1.0'
-//        compile 'com.android.support:support-v4:23.2.1'
-	testCompile 'junit:junit:4.12'
-	compile files('libs/baidumapapi_base_v4_1_1.jar')
-	compile files('libs/baidumapapi_map_v4_1_1.jar')
-	compile files('libs/nineoldandroids-2.4.0.jar')
-	compile 'com.android.support:recyclerview-v7:25.1.0'
-	compile files('libs/baidumapapi_util_v4_1_1.jar')
-	compile project(':xrecyclerview')
-	compile files('libs/BaiduNaviSDK_3.2.0.jar')
-	compile files('libs/httpmime-4.1.2.jar')
-	compile files('libs/Msc.jar')
-	compile files('libs/Sunflower.jar')
-	compile 'com.android.volley:volley:1.0.0'
-	compile 'cn.bmob.android:bmob-sdk:3.5.5'
-	//bmob-sms ：Bmob单独为短信服务提供的包
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    //        compile 'com.android.support:support-v4:23.2.1'
+    compile files('libs/baidumapapi_base_v4_1_1.jar')
+    compile files('libs/baidumapapi_map_v4_1_1.jar')
+    compile files('libs/nineoldandroids-2.4.0.jar')
+    compile files('libs/baidumapapi_util_v4_1_1.jar')
+    compile project(':xrecyclerview')
+    compile files('libs/BaiduNaviSDK_3.2.0.jar')
+    compile files('libs/httpmime-4.1.2.jar')
+    compile files('libs/Msc.jar')
+    compile files('libs/Sunflower.jar')
+    //bmob-sms ：Bmob单独为短信服务提供的包
 //        compile 'cn.bmob.android:bmob-sms:1.0.1'
-	compile 'com.umeng.analytics:analytics:latest.integration'
-	compile 'com.github.lovetuzitong:MultiImageSelector:1.2'
-	compile 'com.github.bumptech.glide:glide:3.7.0'
-	compile 'com.android.volley:volley:1.0.0'
-	compile 'org.greenrobot:eventbus:3.0.0'
-	// -------------------- 二维码 ----------------------------
-	compile 'cn.bingoogolapple:bga-qrcodecore:1.1.7@aar'
-	compile 'cn.bingoogolapple:bga-zbar:1.1.7@aar'
-	// -------------------- 二维码 ----------------------------
+    compile 'com.android.volley:volley:1.0.0'
+    // -------------------- 二维码 ----------------------------
+    // -------------------- 二维码 ----------------------------
+    //wechat
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:recyclerview-v7:25.1.0'
+    compile 'com.android.volley:volley:1.0.0'
+    compile 'cn.bmob.android:bmob-sdk:3.5.5'
+    compile 'com.umeng.analytics:analytics:latest.integration'
+    compile 'com.github.lovetuzitong:MultiImageSelector:1.2'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'cn.bingoogolapple:bga-qrcodecore:1.1.7@aar'
+    compile 'cn.bingoogolapple:bga-zbar:1.1.7@aar'
+    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    testCompile 'junit:junit:4.12'
 }

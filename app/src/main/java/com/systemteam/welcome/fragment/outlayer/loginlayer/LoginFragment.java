@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.systemteam.BikeApplication;
 import com.systemteam.R;
-import com.systemteam.user.MyUser;
+import com.systemteam.bean.MyUser;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;

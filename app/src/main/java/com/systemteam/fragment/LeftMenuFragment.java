@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.systemteam.R;
-import com.systemteam.user.MyUser;
+import com.systemteam.bean.MyUser;
 
 import static com.systemteam.util.Constant.BUNDLE_USER;
 

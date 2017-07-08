@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.systemteam.R;
 import com.systemteam.fragment.BaseFragment;
-import com.systemteam.user.MyUser;
+import com.systemteam.bean.MyUser;
 
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;

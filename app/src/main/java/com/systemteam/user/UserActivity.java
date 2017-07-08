@@ -11,6 +11,9 @@ import android.widget.ListView;
 
 import com.systemteam.R;
 import com.systemteam.BaseActivity;
+import com.systemteam.bean.BankCard;
+import com.systemteam.bean.MyUser;
+import com.systemteam.bean.Person;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

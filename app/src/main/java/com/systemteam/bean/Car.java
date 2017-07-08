@@ -1,4 +1,4 @@
-package com.systemteam.user;
+package com.systemteam.bean;
 
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.datatype.BmobDate;
