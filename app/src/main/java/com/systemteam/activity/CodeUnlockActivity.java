@@ -33,7 +33,6 @@ public class CodeUnlockActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_code_unlock);
-        Log.d("gaolei", "CodeUnlockActivity------------onCreate------------------");
 
 
 //        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.dp2px(this, 50));
@@ -41,8 +40,8 @@ public class CodeUnlockActivity extends BaseActivity {
 //        title_layout.setLayoutParams(layoutParams);
         setStatusBar();
 
-        editText1 = (EditText) findViewById(R.id.editText1);
-        editText2 = (EditText) findViewById(R.id.editText2);
+        editText1 = (EditText) findViewById(R.id.et_code);
+        /*editText2 = (EditText) findViewById(R.id.editText2);
         editText3 = (EditText) findViewById(R.id.editText3);
         editText4 = (EditText) findViewById(R.id.editText4);
         editText5 = (EditText) findViewById(R.id.editText5);
@@ -67,7 +66,7 @@ public class CodeUnlockActivity extends BaseActivity {
         editText3.setOnKeyListener(keyListener);
         editText4.setOnKeyListener(keyListener);
         editText5.setOnKeyListener(keyListener);
-        editText6.setOnKeyListener(keyListener);
+        editText6.setOnKeyListener(keyListener);*/
         new Utils(this).showIMM();
 //        ShowKeyboard(editText1);
     }

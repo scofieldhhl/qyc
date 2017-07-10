@@ -21,7 +21,7 @@
     <string name="code_prompt">在车锁和车头位置，已有车辆编码</string>
     <string name="unlock_im">立即解锁</string>
     <string name="wallet">我的钱包</string>
-    <string name="route">我的行程</string>
+    <string name="route">使用记录</string>
     <string name="invite_friend">邀请好友</string>
     <string name="feedback">问题反馈</string>
     <string name="guide">使用指南</string>
@@ -70,6 +70,7 @@
     <string name="exist_app">再按一次退出程序</string>
     <string name="exist">确认要结束进程吗？</string>
     <string name="tip">提示</string>
+
 
     <string name="demo_title_location">demo_title_location</string>
     <string name="demo_desc_location">demo_desc_location</string>
@@ -217,14 +218,103 @@
     <!--line-->
     <!--scan-->
     <string name="title_scan">扫码启动</string>
+    <string name="input_scan">请输入车牌号</string>
     <string name="scan_hint">请对准车牌上的二维码</string>
+    <string name="scan_break_hint1">请扫描二维码获取摇摇车编号</string>
     <string name="light_open">开灯</string>
     <string name="light_close">关灯</string>
+    <string name="input_limit">0/200</string>
     <!--scan-->
+
+    <!--break-->
+    <string name="break_lock_title">无法启动</string>
+    <string name="break_title">故障申报</string>
+    <string name="input_title">请描述现象并提交，XXX会尽快处理！</string>
+    <string name="break_content1">车子太脏</string>
+    <string name="break_content2">二维码失效</string>
+    <string name="break_content3">外壳损坏</string>
+    <string name="break_content4">视频问题</string>
+    <string name="break_content5">灯光问题</string>
+    <string name="break_content6">屏幕损坏</string>
+    <string name="break_content7">声音问题</string>
+    <string name="break_content8">其他</string>
+
+    <string name="break_lock1">1.App提示本车故障，请换其他XXX摇摇车。当前提示下，该车可能处于故障中，正在等待维修人员
+    前往维修，请更换其他XXX摇摇车。</string>
+    <string name="break_lock2">2.多次尝试仍开锁失败，请描述现象并提交，XXX会因为您的关怀会越来越好。</string>
+    <string name="break_hint">请输入问题描述，非常感谢您的反馈。</string>
+    <!--break-->
 
     <string name="errcode_success">发送成功</string>
     <string name="errcode_cancel">发送取消</string>
     <string name="errcode_deny">发送被拒绝</string>
     <string name="errcode_unsupported">不支持错误</string>
     <string name="errcode_unknown">发送返回</string>
+
+    <!-- Settings strings. -->
+    <string name="setting_pay">充值说明</string>
+    <string name="setting_protocol">用户协议</string>
+    <string name="pref_download_path_key">download_path_preference</string>
+    <string name="pref_download_path_title">下载路径</string>
+
+    <string name="pref_max_download_task_key">max_download_task_preference</string>
+    <string name="pref_max_download_task_title">最大下载任务</string>
+    <string name="pref_max_download_task_dlg">输入最大下载任务</string>
+    <string name="pref_max_download_task_default">3</string>
+    <string name="pref_max_download_task_max">5</string>
+    <string name="pref_max_download_task_hint">默认3，最大5</string>
+
+    <string name="pref_wifi_download_only_key">wifi_download_only_preference</string>
+    <string name="pref_wifi_download_only_title">仅wifi下载</string>
+    <string name="pref_wifi_download_only_dlg">打开仅wifi下载</string>
+    <string name="pref_wifi_download_only_default">false</string>
+
+    <string name="pref_downloadsettings_key">download_settings_key</string>
+    <string name="pref_downloadsettings_title">下载设置</string>
+
+    <string name="pref_generalsettings_key">general_settings_key</string>
+    <string name="pref_generalsettings_title">通用设置</string>
+
+    <string name="pref_smart_clipboard_key">smart_clipboard_preference</string>
+    <string name="pref_smart_clipboard_title">智能剪切板</string>
+    <string name="pref_smart_clipboard_default">true</string>
+
+    <string name="pref_language_of_keepvid_key">language_of_keepvid_preference</string>
+    <string name="pref_language_of_keepvid_title">语言</string>
+    <string name="pref_language_of_keepvid_summary">默认</string>
+
+    <string name="pref_subtitle_key">captions_preference</string>
+    <string name="pref_subtitle_title">字幕语言</string>
+    <string name="pref_subtitle_summary">默认</string>
+    <string name="pref_subtitle_defualt">默认</string>
+
+    <string name="pref_discover_location_key">discover_location_preference</string>
+    <string name="pref_discover_location_title">发布内容来源</string>
+    <string name="pref_discover_location_summary">默认</string>
+
+    <string name="pref_player_video_key">player_video_preference</string>
+    <string name="pref_player_video_title">默认视频播放器</string>
+    <string name="pref_player_video_pkg_key">pkg_player_video_preference</string>
+    <string name="pref_player_video_defualt">KV MediaPlayer</string>
+
+    <string name="pref_player_audio_key">player_audio_preference</string>
+    <string name="pref_player_audio_title">默认音频播放器</string>
+    <string name="pref_player_audio_pkg_key">pkg_player_audio_preference</string>
+    <string name="pref_player_audio_defualt">KV MediaPlayer</string>
+
+    <string name="pref_check_update_key">check_update_preference</string>
+    <string name="pref_check_update_title">检测更新</string>
+
+    <string name="pref_otherssettings_key">others_settings_key</string>
+    <string name="pref_otherssettings_title">其他</string>
+
+    <string name="pref_about_us_key">about_us_preference</string>
+    <string name="pref_about_us_title">关于我们</string>
+
+    <string name="pref_feed_back_key">feed_back_preference</string>
+    <string name="pref_feed_back_title">反馈</string>
+
+    <string name="pref_value_enabled">打开</string>
+    <string name="pref_value_disabled">关闭</string>
+    <!--Setting-->
 </resources>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tl_break"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/activity_vertical_margin"
+    android:background="@color/text_black_54"
+    android:stretchColumns="1">
+
+    <TableRow
+        android:id="@+id/tr_lock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            style="@style/setting_icon_style"
+            android:src="@mipmap/setting" />
+
+        <TextView
+            style="@style/menu_text_style"
+            android:text="@string/break_lock_title" />
+
+        <ImageView style="@style/menu_right_arrow_style" />
+    </TableRow>
+    <View style="@style/menu_divider_style" />
+
+    <TableRow
+        android:id="@+id/tr_break"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            style="@style/setting_icon_style"
+            android:src="@mipmap/setting" />
+
+        <TextView
+            style="@style/menu_text_style"
+            android:text="@string/break_title" />
+
+        <ImageView style="@style/menu_right_arrow_style" />
+    </TableRow>
+    <View style="@style/menu_divider_style" />
+
+    <TableRow
+        android:id="@+id/tr_pay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            style="@style/setting_icon_style"
+            android:src="@mipmap/setting" />
+
+        <TextView
+            style="@style/menu_text_style"
+            android:text="@string/setting_pay" />
+
+        <ImageView style="@style/menu_right_arrow_style" />
+    </TableRow>
+    <View style="@style/menu_divider_style" />
+
+    <TableRow
+        android:id="@+id/tr_protocol"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            style="@style/setting_icon_style"
+            android:src="@mipmap/setting" />
+
+        <TextView
+            style="@style/menu_text_style"
+            android:text="@string/setting_protocol" />
+
+        <ImageView style="@style/menu_right_arrow_style" />
+    </TableRow>
+    <View style="@style/menu_divider_style" />
+</TableLayout>

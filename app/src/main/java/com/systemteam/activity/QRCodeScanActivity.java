@@ -1,11 +1,16 @@
 package com.systemteam.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +37,14 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        LogTool.d("onResume");
+    }
+
+    @Override
     protected void onStart() {
+        LogTool.d("onStart");
         super.onStart();
         mQRCodeView.startCamera();
 //        mQRCodeView.startCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
@@ -42,6 +54,8 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
 
     @Override
     protected void onStop() {
+        LogTool.d("onStop");
+        mQRCodeView.closeFlashlight();
         mQRCodeView.stopCamera();
         super.onStop();
     }
@@ -88,7 +102,8 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
                 finish();
                 break;
             case R.id.tv_inputcode:
-                startActivity(new Intent(QRCodeScanActivity.this, CodeUnlockActivity.class));
+//                startActivity(new Intent(QRCodeScanActivity.this, CodeUnlockActivity.class));
+                showInputDialog();
                 break;
             case R.id.start_spot:
                 mQRCodeView.startSpot();
@@ -115,15 +130,7 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
                 mQRCodeView.stopCamera();
                 break;
             case R.id.open_flashlight:
-                if(isLightOpened){
-                    mQRCodeView.closeFlashlight();
-                    isLightOpened = false;
-                    ((TextView)findViewById(R.id.open_flashlight)).setText(R.string.light_open);
-                }else {
-                    mQRCodeView.openFlashlight();
-                    isLightOpened = true;
-                    ((TextView)findViewById(R.id.open_flashlight)).setText(R.string.light_close);
-                }
+                switchFlashlight();
                 break;
             case R.id.close_flashlight:
 
@@ -145,6 +152,22 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
 //                startActivityForResult(BGAPhotoPickerActivity.newIntent(this, null, 1, null, false), REQUEST_CODE_CHOOSE_QRCODE_FROM_GALLERY);
                 break;
         }
+    }
+
+    private void switchFlashlight(){
+        if(isLightOpened){
+            mQRCodeView.closeFlashlight();
+            isLightOpened = false;
+            ((TextView)findViewById(R.id.open_flashlight)).setText(R.string.light_open);
+        }else {
+            mQRCodeView.openFlashlight();
+            isLightOpened = true;
+            ((TextView)findViewById(R.id.open_flashlight)).setText(R.string.light_close);
+        }
+    }
+
+    private void unlockSucess(){
+
     }
 
 
@@ -256,5 +279,43 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
                 srcVOffset += 8;
             }
         }
+    }
+
+    public Dialog showInputDialog() {
+        final Dialog dialog = new Dialog(mContext, R.style.MyDialog);
+        //设置它的ContentView
+        dialog.setContentView(R.layout.activity_code_unlock);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.btn_unlock:
+                        String code = String.valueOf(((EditText) dialog.findViewById(R.id.et_code)).getText());
+                        if(!TextUtils.isEmpty(code) && code.length() > 5){
+                            //TODO 校验输入车牌的有效性
+                        }
+                        break;
+                    case R.id.iv_light:
+                        switchFlashlight();
+                        break;
+                    case R.id.menu_icon:
+                    case R.id.iv_scan:
+                        dialog.dismiss();
+                        break;
+                }
+            }
+        };
+        dialog.findViewById(R.id.btn_unlock).setOnClickListener(listener);
+        dialog.findViewById(R.id.iv_light).setOnClickListener(listener);
+        dialog.findViewById(R.id.menu_icon).setOnClickListener(listener);
+        dialog.findViewById(R.id.iv_scan).setOnClickListener(listener);
+        dialog.show();
+        return dialog;
     }
 }

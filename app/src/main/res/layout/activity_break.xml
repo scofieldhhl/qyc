@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_f4f3f3"
+    android:orientation="vertical"
+    tools:context="com.systemteam.activity.BreakActivity">
+    <include layout="@layout/layout_title"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:background="@color/white"
+                android:layout_marginBottom="10dp">
+                <ImageView
+                    android:id="@+id/iv_scan"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:background="@drawable/flashlight_circle_bg"
+                    android:src="@drawable/ic_scan" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/scan_break_hint1"
+                    android:textColor="@color/black_dd"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <include layout="@layout/layout_break"/>
+            <LinearLayout
+                android:id="@+id/ll_lock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textColor="@color/text_black_87"
+                    android:text="@string/break_lock1"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textColor="@color/text_black_87"
+                    android:text="@string/break_lock2"/>
+            </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_marginTop="10dp"
+                android:padding="@dimen/activity_horizontal_margin">
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp"
+                    android:textSize="@dimen/text_size_12"
+                    android:textColor="@color/text_black_87"
+                    android:text="@string/input_title" />
+                <EditText
+                    android:id="@+id/et_code"
+                    style="@style/code_edit_style"
+                    android:gravity="top|left"
+                    android:textSize="@dimen/text_size_14"
+                    android:inputType="text"
+                    android:layout_height="120dp"
+                    android:layout_width="match_parent"
+                    android:layout_below="@id/tv_title"
+                    android:hint="@string/break_hint"
+                    android:windowSoftInputMode="stateVisible" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:padding="5dp"
+                    android:textColor="@color/text_black_87"
+                    android:text="@string/input_limit"/>
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/btn_submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="30dp"
+                android:background="@drawable/bt_book_selector"
+                android:text="@string/confirm"
+                android:textColor="@color/white_dd"
+                android:onClick="doBreakSubmit"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

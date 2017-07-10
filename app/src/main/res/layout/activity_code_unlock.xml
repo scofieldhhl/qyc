@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/color_343333"
+        android:visibility="visible"
         android:gravity="bottom"
         android:orientation="vertical">
 
@@ -42,6 +43,7 @@
         android:layout_height="match_parent"
         android:background="@color/color_f4f3f3"
         android:orientation="vertical"
+        android:gravity="top"
         android:layout_below="@+id/title_layout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
@@ -49,46 +51,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
+            android:gravity="center_horizontal"
             android:background="@drawable/edge_shadow_bg"
             android:orientation="vertical">
 
-            <LinearLayout
+            <EditText
+                android:id="@+id/et_code"
+                style="@style/code_edit_style"
+                android:layout_margin="20dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/editText1"
-                    style="@style/code_edit_style"
-                    android:windowSoftInputMode="stateVisible" />
-
-                <EditText
-                    android:id="@+id/editText2"
-                    style="@style/code_edit_style" />
-
-                <EditText
-                    android:id="@+id/editText3"
-                    style="@style/code_edit_style" />
-
-                <EditText
-                    android:id="@+id/editText4"
-                    style="@style/code_edit_style" />
-
-                <EditText
-                    android:id="@+id/editText5"
-                    style="@style/code_edit_style" />
-
-                <EditText
-                    android:id="@+id/editText6"
-                    style="@style/code_edit_style" />
-
-            </LinearLayout>
-
+                android:hint="@string/input_scan"
+                android:windowSoftInputMode="stateVisible" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -98,6 +71,7 @@
                 android:textSize="16sp" />
 
             <Button
+                android:id="@+id/btn_unlock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -107,18 +81,32 @@
                 android:background="@drawable/bt_book_selector"
                 android:text="@string/unlock_im"
                 android:textColor="@color/white_dd"
-                android:onClick="unlockSucess"
                 android:textSize="18sp" />
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="15dp"
-                android:layout_marginTop="30dp"
-                android:onClick="switchFlashlight"
-                android:background="@drawable/flashlight_circle_bg"
-                android:src="@mipmap/flashlight_icon" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/iv_light"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:background="@drawable/flashlight_circle_bg"
+                    android:src="@mipmap/flashlight_icon" />
+
+                <ImageView
+                    android:id="@+id/iv_scan"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:background="@drawable/flashlight_circle_bg"
+                    android:src="@drawable/ic_scan" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

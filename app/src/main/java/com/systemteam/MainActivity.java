@@ -69,6 +69,7 @@ import com.systemteam.activity.MyRouteActivity;
 import com.systemteam.activity.NavigationActivity;
 import com.systemteam.activity.QRCodeScanActivity;
 import com.systemteam.activity.RouteDetailActivity;
+import com.systemteam.activity.SettingActivity;
 import com.systemteam.activity.WalletActivity;
 import com.systemteam.bean.BikeInfo;
 import com.systemteam.callback.AllInterface;
@@ -78,6 +79,7 @@ import com.systemteam.map.MyOrientationListener;
 import com.systemteam.map.RouteLineAdapter;
 import com.systemteam.service.RouteService;
 import com.systemteam.user.UserActivity;
+import com.systemteam.util.Constant;
 import com.systemteam.util.LocationManager;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
@@ -883,6 +885,18 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
 
     public void gotoNavigation(View view) {
         startActivity(new Intent(this, NavigationActivity.class));
+    }
+
+    public void gotoSetting(View view) {
+        Intent intent = new Intent(this, SettingActivity.class);
+        intent.putExtra(Constant.BUNDLE_TYPE_MENU, 0);
+        startActivity(intent);
+    }
+
+    public void gotoGuide(View view){
+        Intent intent = new Intent(this, SettingActivity.class);
+        intent.putExtra(Constant.BUNDLE_TYPE_MENU, 1);
+        startActivity(intent);
     }
 
     @Override

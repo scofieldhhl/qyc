@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -57,12 +56,12 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 //        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //透明状态栏
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             //透明导航栏
 //            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        }
+        }*/
         statusBarHeight = getStatusBarHeight();
         titleHeight=dp2px(this,50);
     }
@@ -173,7 +172,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     }
 
     protected void initToolBar(Activity act, int titleId) {
-        mToolbar = (Toolbar) act.findViewById(R.id.tb_toolbar);
+        mToolbar = (Toolbar) act.findViewById(R.id.toolbar);
         mToolbar.getVisibility();
         if (titleId == 0) {
             mToolbar.setTitle("");

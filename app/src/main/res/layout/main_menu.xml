@@ -21,7 +21,7 @@
             android:layout_centerInParent="true"
             android:clickable="false"
             android:scaleType="fitXY"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@drawable/avatar_profile_120dp" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -151,7 +151,8 @@
 
         <View style="@style/menu_divider_style" />
 
-        <LinearLayout style="@style/menu_layout_style">
+        <LinearLayout style="@style/menu_layout_style"
+            android:onClick="gotoGuide">
 
             <ImageView
                 style="@style/menu_icon_style"
@@ -192,7 +193,8 @@
 
         <View style="@style/menu_divider_style" />
 
-        <LinearLayout style="@style/menu_layout_style">
+        <LinearLayout style="@style/menu_layout_style"
+            android:onClick="gotoSetting">
 
             <ImageView
                 style="@style/menu_icon_style"
@@ -212,7 +214,8 @@
 
         <View style="@style/menu_divider_style" />
 
-        <LinearLayout style="@style/menu_layout_style">
+        <LinearLayout style="@style/menu_layout_style"
+            android:visibility="gone">
 
             <ImageView
                 style="@style/menu_icon_style"
@@ -231,7 +234,8 @@
         </LinearLayout>
         <View style="@style/menu_divider_style" />
 
-        <LinearLayout style="@style/menu_layout_style">
+        <LinearLayout style="@style/menu_layout_style"
+            android:visibility="gone">
 
             <ImageView
                 style="@style/menu_icon_style"
@@ -249,7 +253,8 @@
             <ImageView style="@style/menu_right_arrow_style" />
         </LinearLayout>
         <View style="@style/menu_divider_style" />
-        <LinearLayout style="@style/menu_layout_style">
+        <LinearLayout style="@style/menu_layout_style"
+            android:visibility="gone">
 
             <ImageView
                 style="@style/menu_icon_style"
