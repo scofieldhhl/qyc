@@ -88,7 +88,6 @@ dependencies {
     // -------------------- 二维码 ----------------------------
     //wechat
     compile 'com.android.volley:volley:1.0.0'
-    compile 'com.android.volley:volley:1.0.0'
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.android.support:recyclerview-v7:25.1.0'
     compile 'cn.bmob.android:bmob-sdk:3.5.5'

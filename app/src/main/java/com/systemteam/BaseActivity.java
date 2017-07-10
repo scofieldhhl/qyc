@@ -37,6 +37,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     public int statusBarHeight = 0,titleHeight;
     protected Toolbar mToolbar;
+    protected TextView mToolbarTitle;
     protected Context mContext;
     protected SharedPreferences mSharedPre;
     protected String params;
@@ -173,19 +174,21 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     protected void initToolBar(Activity act, int titleId) {
         mToolbar = (Toolbar) act.findViewById(R.id.toolbar);
+        mToolbarTitle = (TextView) act.findViewById(R.id.toolbar_title);
         mToolbar.getVisibility();
+        mToolbar.setTitle("");
         if (titleId == 0) {
-            mToolbar.setTitle("");
+            mToolbarTitle.setText("");
         } else {
             int titleColor = act.getResources().getColor(R.color.white);
-            mToolbar.setTitleTextColor(titleColor);
-            mToolbar.setTitle(titleId);
+            mToolbarTitle.setTextColor(titleColor);
+            mToolbarTitle.setText(titleId);
         }
 
 
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
-            mToolbar.setNavigationIcon(R.drawable.btn_return);
+            mToolbar.setNavigationIcon(R.mipmap.return_icon);
         }
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
