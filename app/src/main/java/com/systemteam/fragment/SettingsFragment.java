@@ -13,7 +13,10 @@ package com.systemteam.fragment;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+
+import com.systemteam.R;
 
 /**
  */
@@ -24,6 +27,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Load the preferences from an XML resource
+        addPreferencesFromResource(R.xml.preferences);
+        PreferenceManager.setDefaultValues(getActivity(), R.xml.preferences, false);
     }
 
     @Override

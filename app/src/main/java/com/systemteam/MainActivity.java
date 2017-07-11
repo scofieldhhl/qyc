@@ -1,6 +1,7 @@
 package com.systemteam;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -17,6 +18,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -163,7 +165,8 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         mContext = this;
         checkLogin();
         initMap();
-        initTitle(this, R.string.bybike, R.mipmap.menu_icon, 0);
+//        initTitle(this, R.string.bybike, R.mipmap.menu_icon, 0);
+        initToolBar(this, R.string.bybike);
         initView();
         isServiceLive = Utils.isServiceWork(this, getPackageName() + ".service.RouteService");
         if (isServiceLive)
@@ -177,6 +180,28 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
             fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment =
                     LeftMenuFragment.newInstance(mUser)).commit();
         }
+    }
+
+    protected void initToolBar(Activity act, int titleId) {
+        mToolbar = (Toolbar) act.findViewById(R.id.toolbar);
+        mToolbarTitle = (TextView) act.findViewById(R.id.toolbar_title);
+        mToolbar.getVisibility();
+        mToolbar.setTitle("");
+        if (titleId == 0) {
+            mToolbarTitle.setText("");
+        } else {
+            mToolbarTitle.setText(titleId);
+        }
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+            mToolbar.setNavigationIcon(R.mipmap.menu_icon);
+        }
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMenu();
+            }
+        });
     }
 
     private void checkLogin(){

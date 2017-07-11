@@ -5,6 +5,7 @@
     <dimen name="text_size">16sp</dimen>
     <dimen name="bike_layout_margin">10sp</dimen>
 
+    <dimen name="toolbar_title_size">18sp</dimen>
     <dimen name="text_size_24">24sp</dimen>
     <dimen name="text_size_20">20sp</dimen>
     <dimen name="text_size_18">18sp</dimen>

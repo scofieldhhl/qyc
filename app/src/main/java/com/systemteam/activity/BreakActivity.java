@@ -19,7 +19,7 @@ public class BreakActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        initTitle(this, R.string.break_title, R.mipmap.refresh_icon, 0);
+        initToolBar(this, R.string.break_title);
     }
 
     @Override

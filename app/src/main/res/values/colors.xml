@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3F51B5</color>
-    <color name="red">#ff0000</color>
-    <color name="green">#00ff00</color>
-    <color name="blue">#0000ff</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="color_toolbar_bg">#343333</color>
     <color name="color_343333">#343333</color>
     <color name="color_323232">#323232</color>
     <color name="color_aa343333">#aa343333</color>
@@ -13,6 +11,9 @@
     <color name="color_cc343333">#cc343333</color>
     <color name="color_dd343333">#dd343333</color>
     <color name="color_f6f6f6">#f6f6f6</color>
+    <color name="red">#ff0000</color>
+    <color name="green">#00ff00</color>
+    <color name="blue">#0000ff</color>
     <color name="white">#ffffff</color>
     <color name="white_bb">#bbffffff</color>
     <color name="white_dd">#ddffffff</color>

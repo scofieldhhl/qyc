@@ -51,13 +51,13 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet);
-        setStatusBar();
         initView();
         initData();
     }
 
     @Override
     protected void initView() {
+        initToolBar(this, R.string.wallet);
         recyclerview_acount = (RecyclerView) findViewById(R.id.recyclerview_acount);
         ballance = (TextView) findViewById(R.id.ballance);
         wechat = (ImageView) findViewById(R.id.wechat);

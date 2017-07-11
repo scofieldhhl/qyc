@@ -1,48 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_f6f6f6"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/title_layout"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/color_343333"
-        android:gravity="bottom"
-        android:orientation="vertical">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp">
-
-            <ImageView
-                android:id="@+id/menu_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:clickable="true"
-                android:onClick="finishActivity"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:src="@mipmap/return_icon" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/wallet"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-        </RelativeLayout>
-    </LinearLayout>
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/color_toolbar_bg"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/toolbar_title_size" />
+    </android.support.v7.widget.Toolbar>
 
     <LinearLayout
         android:id="@+id/charge_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title_layout"
+        android:layout_below="@id/toolbar"
         android:layout_margin="15dp"
         android:background="@drawable/edge_shadow_bg"
         android:orientation="vertical"
