@@ -2,39 +2,28 @@
 <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <RelativeLayout
-        android:id="@+id/rl_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:background="@color/color_f4f3f3">
     <android.support.v7.widget.Toolbar
-        android:id="@+id/tb_toolbar"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentTop="true"
-        android:background="@color/toolbar_bg"
-        android:titleTextColor="@android:color/white"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />
-        <RelativeLayout
-            android:id="@+id/iv_savelayout"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="?attr/actionBarSize">
-            <ImageView
-                android:id="@+id/iv_save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/ic_done_white"/>
-        </RelativeLayout>
-    </RelativeLayout>
+        android:background="@color/color_toolbar_bg"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/toolbar_title_size" />
+    </android.support.v7.widget.Toolbar>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/rl_toolbar"
+        android:layout_below="@id/toolbar"
         android:fadeScrollbars="false">
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,85 +32,41 @@
 
             <include
                 layout="@layout/layout_experter_info_avatar"></include>
-
-                <LinearLayout
-                    android:id="@+id/ll_apply_skill"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/activity_vertical_margin"
-                    android:paddingRight="@dimen/activity_vertical_margin"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_marginBottom="@dimen/item_spacing">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="38dp"
-                        android:background="@color/text_black_30"/>
-                    <RelativeLayout
-                        android:id="@+id/rl_skill"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/ll_apply_skill">
-
-                        <com.systemteam.view.IconEditTextView
-                            android:id="@+id/iet_skill_apply"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:enable="false"
-                            android:focusable="false"
-                            android:visibility="gone"/>
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <View style="@style/spacing_line"
-                            android:layout_alignParentTop="true"/>
-                        <TextView
-                            android:id="@+id/tv_title_sKillinfo"
-                            style="@style/tv_size14_height_32"
-                            android:layout_alignParentTop="true"
-                            android:text=""/>
-                        <ImageView
-                            android:id="@+id/icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/tv_title_sKillinfo"
-                            android:layout_alignParentLeft="true"
-                            android:layout_marginTop="12dp"
-                            android:layout_marginLeft="12dp"
-                            android:src="@drawable/ic_delete_white"/>
-                        <LinearLayout
-                            android:id="@+id/ll_skills_selection"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/tv_title_sKillinfo"
-                            android:layout_toRightOf="@id/icon"
-                            android:layout_marginLeft="24dp"
-                            android:orientation="vertical">
-
-                        </LinearLayout>
-                    </RelativeLayout>
-
-                    <com.systemteam.view.IconEditTextView
-                        android:id="@+id/iet_skill_other"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:edtHint=""
-                        app:maxLength="100"
-                        app:edtIcon="@drawable/ic_delete_white"
-                        app:isHideIcon="true"/>
-                </LinearLayout>
-            <TextView
-                android:id="@+id/tv_result"
+            <com.systemteam.view.IconEditTextView
+                android:layout_marginTop="10dp"
+                android:id="@+id/iet_name"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                android:singleLine="false"/>
+                android:layout_height="wrap_content"
+                app:edtHint="name"
+                app:maxLength="100"
+                app:edtIcon="@drawable/ic_mail_black"/>
+
+            <com.systemteam.view.IconEditTextView
+                android:layout_marginTop="10dp"
+                android:id="@+id/iet_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:edtHint="name"
+                app:maxLength="100"
+                app:edtIcon="@drawable/ic_mail_black"/>
+
+            <com.systemteam.view.IconEditTextView
+                android:layout_marginTop="10dp"
+                android:id="@+id/iet_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:edtHint="name"
+                app:maxLength="100"
+                app:edtIcon="@drawable/ic_mail_black"/>
+
+            <com.systemteam.view.IconEditTextView
+                android:layout_marginTop="10dp"
+                android:id="@+id/iet_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:edtHint="name"
+                app:maxLength="100"
+                app:edtIcon="@drawable/ic_mail_black"/>
         </LinearLayout>
     </ScrollView>
 

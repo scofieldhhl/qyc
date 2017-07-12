@@ -11,7 +11,6 @@ import android.os.Message;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.text.TextUtils;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -31,8 +30,8 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.gson.Gson;
-import com.systemteam.R;
 import com.systemteam.BaseActivity;
+import com.systemteam.R;
 import com.systemteam.util.LogTool;
 import com.systemteam.view.IconEditTextView;
 import com.systemteam.view.ProgressDialogHelper;
@@ -44,14 +43,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.bean.Image;
+
+import static com.systemteam.util.Constant.REQUEST_IMAGE;
 
 /**
  * @author scofield.hhl@gmail.com
  * @Description
  * @time 2016/6/16
  */
-public class ExperterApplyActivity extends BaseActivity implements View.OnClickListener,
+public class ApplyActivity extends BaseActivity implements View.OnClickListener,
         CompoundButton.OnCheckedChangeListener {
     private final String FLAG_URL = "http:";
     private final int MAX_NUM_STORE_PHOTO = 4;
@@ -176,15 +178,14 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apply);
         initToolBar(this, R.string.app_name);
+        mContext = this;
         imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        EventBus.getDefault().register(this);
         initView();
         initInfo();
     }
 
     protected void initView() {
-        mIvSave = (ImageView) findViewById(R.id.iv_save);
-        mIvUserPhoto = (ImageView) findViewById(R.id.iv_user_photo);
+        /*mIvUserPhoto = (ImageView) findViewById(R.id.iv_user_photo);
         mIvDelPhoto = (ImageView) findViewById(R.id.iv_del_photo);
         mIvAddPhoto = (ImageView) findViewById(R.id.iv_add_photo);
         mIvClose = (ImageView) findViewById(R.id.iv_close);
@@ -195,18 +196,17 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
 
         mIvCountrySelect.setOnClickListener(this);
         mIvLanguageSelect.setOnClickListener(this);
-        iv_savelayout = (RelativeLayout) findViewById(R.id.iv_savelayout);
         mRlCountry.setOnClickListener(this);
         mRlLanguage.setOnClickListener(this);
         iv_savelayout.setOnClickListener(this);
 
-        mIetFirstName = (IconEditTextView) findViewById(R.id.iet_firstname_apply);
-        mIetLastName = (IconEditTextView) findViewById(R.id.iet_lastname_apply);
+        *//*mIetFirstName = (IconEditTextView) findViewById(R.id.iet_firstname_apply);
+        mIetLastName = (IconEditTextView) findViewById(R.id.iet_lastname_apply);*//*
         mIetCountry.setOnClickListener(this);
         mIetLanguage.setOnClickListener(this);
-        mIetSkill = (IconEditTextView) findViewById(R.id.iet_skill_apply);
+        *//*mIetSkill = (IconEditTextView) findViewById(R.id.iet_skill_apply);
         mLlSkillSelection = (LinearLayout) findViewById(R.id.ll_skills_selection);
-        mIetOtherSkill = (IconEditTextView) findViewById(R.id.iet_skill_other);
+        mIetOtherSkill = (IconEditTextView) findViewById(R.id.iet_skill_other);*//*
 
         mRlUploadResult = (RelativeLayout) findViewById(R.id.rl_upload_result);
         mRlUploadResult.setVisibility(View.GONE);
@@ -238,7 +238,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
 
         mIetPhoneNum.setEnable(true);
         mIetWhatsapp.setEnable(true);
-        mIetPrice.setEnable(true);
+        mIetPrice.setEnable(true);*/
 
     }
 
@@ -375,7 +375,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
                 selector.showCamera(true);
                 selector.single();
                 selector.clip(true);//增加裁剪
-                selector.start(ExperterApplyActivity.this, Constants.Msg.REQUEST_IMAGE_USER);
+                selector.start(ApplyActivity.this, Constants.Msg.REQUEST_IMAGE_USER);
 
                 break;
             case R.id.iv_add_store_photo:
@@ -561,7 +561,7 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
                 mHalder.sendEmptyMessage(Constants.Msg.MSG_INOF_NOTIFY);
             } catch (Exception e) {
                 mInfo = null;
-                e.printStackTrace();
+                 e.printStackTrace();
             }
         }
         if (mInfo == null) {
@@ -1207,5 +1207,13 @@ public class ExperterApplyActivity extends BaseActivity implements View.OnClickL
         final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
         int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
         return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
+
+    public void doSelectPicture(View view){
+        MultiImageSelector.create(mContext)
+                .showCamera(true)
+                .count(1)
+                .single()
+                .start(ApplyActivity.this, REQUEST_IMAGE);
     }
 }

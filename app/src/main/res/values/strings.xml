@@ -134,6 +134,7 @@
     <string name="account_tip_login_ing">登录中...</string>
     <string name="account_tip_register_ing">创建账户中...</string>
     <string name="account_tip_change_name_failed">名称修改失败</string>
+    <string name="account_avatar">头像</string>
     <string name="account_tip_change_avatar_failed">头像上传失败</string>
     <string name="account_tip_change_name_success">名称修改成功</string>
     <string name="account_tip_change_avatar_success">头像上传成功</string>
@@ -148,6 +149,11 @@
     <string name="account_hint_password">密码</string>
     <string name="account_hint_confirm_password">确认密码</string>
     <string name="account_hint_name">姓名</string>
+    <string name="account_hint_nickname">昵称</string>
+    <string name="account_hint_phone">手机号</string>
+    <string name="account_hint_sex">性别</string>
+    <string name="man">男</string>
+    <string name="woman">女</string>
     <string name="account_hint_first_name">名字</string>
     <string name="account_hint_last_name">姓氏</string>
     <string name="account_reg_email_registered">该邮箱已被注册！</string>

@@ -4,58 +4,46 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/activity_vertical_margin"
-    android:background="@color/white"
     android:stretchColumns="1">
+    <include
+        layout="@layout/layout_experter_info_avatar"></include>
 
     <TableRow
-        android:id="@+id/tr_lock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-        <ImageView
-            style="@style/setting_icon_style"
-            android:src="@mipmap/setting" />
 
         <TextView
             style="@style/menu_text_style"
             android:textColor="@color/text_black_54"
-            android:text="@string/break_lock_title" />
+            android:text="@string/account_hint_nickname" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            style="@style/menu_text_style"
+            android:textColor="@color/text_black_54"
+            android:gravity="right"
+            android:text="" />
 
         <ImageView style="@style/menu_right_arrow_style" />
     </TableRow>
     <View style="@style/menu_divider_style" />
 
     <TableRow
-        android:id="@+id/tr_break"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            style="@style/setting_icon_style"
-            android:src="@mipmap/setting" />
-
         <TextView
             style="@style/menu_text_style"
+            android:layout_height="48dp"
             android:textColor="@color/text_black_54"
-            android:text="@string/break_title" />
-
-        <ImageView style="@style/menu_right_arrow_style" />
-    </TableRow>
-    <View style="@style/menu_divider_style" />
-
-    <TableRow
-        android:id="@+id/tr_pay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            style="@style/setting_icon_style"
-            android:src="@mipmap/setting" />
+            android:text="@string/account_hint_phone" />
 
         <TextView
+            android:id="@+id/tv_phone"
             style="@style/menu_text_style"
             android:textColor="@color/text_black_54"
-            android:text="@string/setting_pay" />
+            android:gravity="right"
+            android:text="" />
 
         <ImageView style="@style/menu_right_arrow_style" />
     </TableRow>
@@ -66,16 +54,50 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            style="@style/setting_icon_style"
-            android:src="@mipmap/setting" />
-
         <TextView
             style="@style/menu_text_style"
             android:textColor="@color/text_black_54"
-            android:text="@string/setting_protocol" />
+            android:text="@string/account_hint_sex" />
+
+        <TextView
+            android:id="@+id/tv_sex"
+            style="@style/menu_text_style"
+            android:textColor="@color/text_black_54"
+            android:gravity="right"
+            android:text="" />
 
         <ImageView style="@style/menu_right_arrow_style" />
     </TableRow>
     <View style="@style/menu_divider_style" />
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            style="@style/menu_text_style"
+            android:textColor="@color/text_black_54"
+            android:text="@string/account_hint_email" />
+
+        <TextView
+            android:id="@+id/tv_email"
+            style="@style/menu_text_style"
+            android:textColor="@color/text_black_54"
+            android:gravity="right"
+            android:text="" />
+
+        <ImageView style="@style/menu_right_arrow_style" />
+    </TableRow>
+    <View style="@style/menu_divider_style" />
+
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="30dp"
+        android:background="@drawable/bt_book_selector"
+        android:text="@string/confirm"
+        android:textColor="@color/white_dd"
+        android:onClick="doSubmit"
+        android:textSize="18sp" />
 </TableLayout>

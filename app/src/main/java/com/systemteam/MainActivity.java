@@ -80,7 +80,7 @@ import com.systemteam.fragment.LeftMenuFragment;
 import com.systemteam.map.MyOrientationListener;
 import com.systemteam.map.RouteLineAdapter;
 import com.systemteam.service.RouteService;
-import com.systemteam.user.UserActivity;
+import com.systemteam.user.UserInfoActivity;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LocationManager;
 import com.systemteam.util.LogTool;
@@ -905,7 +905,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
     }
 
     public void gotoUser(View view) {
-        startActivity(new Intent(this, UserActivity.class));
+        startActivity(new Intent(this, UserInfoActivity.class));
     }
 
     public void gotoNavigation(View view) {
