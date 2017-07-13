@@ -3,16 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.systemteam.MainActivity">
     <item
-        android:id="@+id/id_map_common"
+        android:id="@+id/id_break"
         android:title="@string/break_title"
         android:icon="@drawable/account_portrait"
         app:showAsAction="never" />
     <item
-        android:id="@+id/id_map_site"
+        android:id="@+id/id_lock"
         android:title="@string/break_lock_title"
         app:showAsAction="never" />
     <item
-        android:id="@+id/id_map_traffic"
+        android:id="@+id/id_portrait"
         android:title="@string/break_portrait"
         app:showAsAction="never" />
 </menu>

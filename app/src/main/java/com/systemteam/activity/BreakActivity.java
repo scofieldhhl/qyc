@@ -2,24 +2,41 @@ package com.systemteam.activity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
 
 import com.systemteam.BaseActivity;
 import com.systemteam.R;
 
-public class BreakActivity extends BaseActivity {
+import static com.systemteam.util.Constant.BUNDLE_TYPE_MENU;
 
+public class BreakActivity extends BaseActivity {
+    private int mType = -1;
+    private LinearLayout mLlLock;
+    private TableLayout mTlBreak;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_break);
         mContext = this;
+        mType = getIntent().getIntExtra(BUNDLE_TYPE_MENU, 0);
         initView();
         initData();
     }
 
     @Override
     protected void initView() {
-        initToolBar(this, R.string.break_title);
+        mTlBreak = (TableLayout) findViewById(R.id.tl_break);
+        mLlLock = (LinearLayout) findViewById(R.id.ll_lock);
+        if(mType == 0){
+            initToolBar(this, R.string.break_lock_title);
+            mTlBreak.setVisibility(View.GONE);
+            mLlLock.setVisibility(View.VISIBLE);
+        }else {
+            initToolBar(this, R.string.break_title);
+            mTlBreak.setVisibility(View.VISIBLE);
+            mLlLock.setVisibility(View.GONE);
+        }
     }
 
     @Override

@@ -23,6 +23,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -66,6 +67,7 @@ import com.baidu.mapapi.search.route.RoutePlanSearch;
 import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
+import com.systemteam.activity.BreakActivity;
 import com.systemteam.activity.CodeUnlockActivity;
 import com.systemteam.activity.MyRouteActivity;
 import com.systemteam.activity.NavigationActivity;
@@ -820,8 +822,27 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.id_portrait:
+                Utils.showDialog(MainActivity.this, getString(R.string.tip), getString(R.string.break_portrait));
+                break;
+            case R.id.id_lock:
+                Intent intent = new Intent(MainActivity.this, BreakActivity.class);
+                intent.putExtra(Constant.BUNDLE_TYPE_MENU, 0);
+                startActivity(intent);
+                break;
+            case R.id.id_break:
+                Intent intentBreak = new Intent(MainActivity.this, BreakActivity.class);
+                intentBreak.putExtra(Constant.BUNDLE_TYPE_MENU, 1);
+                startActivity(intentBreak);
+                break;
+        }
+        return true;
+    }
 
-    // 供路线选择的Dialog
+        // 供路线选择的Dialog
     class MyTransitDlg extends Dialog {
 
         private List<? extends RouteLine> mtransitRouteLines;
