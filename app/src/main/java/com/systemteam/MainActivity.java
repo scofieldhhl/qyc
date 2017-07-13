@@ -714,6 +714,11 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         mBaiduMap.setMapStatus(u);
     }
 
+    /**
+     * 添加坐标点
+     * @param _latitude
+     * @param _longitude
+     */
     private void addOverLayout(double _latitude, double _longitude) {
         //先清除图层
         mBaiduMap.clear();

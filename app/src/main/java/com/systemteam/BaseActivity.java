@@ -1,7 +1,10 @@
 package com.systemteam;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
@@ -23,6 +26,7 @@ import com.android.volley.RequestQueue;
 import com.systemteam.bean.MyUser;
 import com.systemteam.util.LogTool;
 import com.systemteam.view.ProgressDialogHelper;
+import com.systemteam.welcome.WelcomeActivity;
 
 import java.lang.reflect.Field;
 
@@ -247,4 +251,27 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    protected void checkUser(final Activity act){
+        if(((BikeApplication)act.getApplication()).getmUser() == null){
+            AlertDialog alertDialog = new AlertDialog.Builder(act).create();
+            alertDialog.setTitle(act.getString(R.string.tip));
+            alertDialog.setMessage(act.getString(R.string.user_no));
+            alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, act.getString(R.string.confirm),
+                    new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(act, WelcomeActivity.class));
+                        }
+                    });
+            alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, act.getString(R.string.cancel),
+                    new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+            alertDialog.show();
+        }
+    }
 }

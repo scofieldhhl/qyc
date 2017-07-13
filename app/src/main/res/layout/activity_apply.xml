@@ -28,6 +28,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
             android:orientation="vertical">
 
             <include
@@ -37,7 +39,7 @@
                 android:id="@+id/iet_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:edtHint="name"
+                app:edtHint="@string/account_hint_name"
                 app:maxLength="100"
                 app:edtIcon="@drawable/ic_mail_black"/>
 
@@ -46,8 +48,19 @@
                 android:id="@+id/iet_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:edtHint="name"
+                app:edtHint="@string/account_hint_phone"
                 app:maxLength="100"
+                app:edtIcon="@drawable/ic_mail_black"/>
+
+            <com.systemteam.view.IconEditTextView
+                android:layout_marginTop="10dp"
+                android:id="@+id/iet_sex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:edtHint="@string/account_hint_sex"
+                app:maxLength="100"
+                app:enable="false"
+                android:clickable="true"
                 app:edtIcon="@drawable/ic_mail_black"/>
 
             <com.systemteam.view.IconEditTextView
@@ -55,7 +68,7 @@
                 android:id="@+id/iet_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:edtHint="name"
+                app:edtHint="@string/account_hint_email"
                 app:maxLength="100"
                 app:edtIcon="@drawable/ic_mail_black"/>
 
@@ -64,9 +77,21 @@
                 android:id="@+id/iet_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:edtHint="name"
+                app:edtHint="@string/address"
                 app:maxLength="100"
                 app:edtIcon="@drawable/ic_mail_black"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="20dp"
+                android:background="@drawable/bt_book_selector"
+                android:text="@string/account_submit"
+                android:textColor="@color/white_dd"
+                android:onClick="doSignOut"
+                android:textSize="18sp" />
         </LinearLayout>
     </ScrollView>
 

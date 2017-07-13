@@ -5,10 +5,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.systemteam.R;
 import com.systemteam.bean.MyUser;
+
+import cn.bmob.v3.BmobUser;
 
 import static com.systemteam.util.Constant.BUNDLE_USER;
 
@@ -18,6 +21,7 @@ import static com.systemteam.util.Constant.BUNDLE_USER;
 
 public class LeftMenuFragment extends BaseFragment {
 
+    private LinearLayout mLLMycar;
     public LeftMenuFragment(){
     }
 
@@ -37,6 +41,7 @@ public class LeftMenuFragment extends BaseFragment {
 
     @Override
     protected void initView(View view) {
+        mLLMycar = (LinearLayout) view.findViewById(R.id.ll_mycar);
         if(mUser != null){
             ((TextView) view.findViewById(R.id.user_name)).setText(mUser.getUsername());
         }
@@ -52,7 +57,19 @@ public class LeftMenuFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        initData();
+    }
+
+    @Override
     protected void initData() {
+        mUser = BmobUser.getCurrentUser(MyUser.class);
+        if(mUser != null){
+            if(mUser.getType() == 1){
+                mLLMycar.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @Override

@@ -7,7 +7,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,11 +22,13 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.systemteam.BaseActivity;
 import com.systemteam.BikeApplication;
 import com.systemteam.R;
+import com.systemteam.bean.MyUser;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import cn.bmob.v3.BmobUser;
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
@@ -30,7 +37,7 @@ import static com.systemteam.util.Constant.REQUEST_IMAGE;
 public class UserInfoActivity extends BaseActivity {
     private String mAvatarPath;
     private ImageView mIvUserPhoto, mIvAddPhoto;
-    private TextView mTvName, mTvPhone, mTvSex, mTvEmail, mTvAddress;
+    private TextView mTvName, mTvPhone, mTvSex, mTvEmail, mTvAddress, mTvApply;
     private static class MyHandler extends Handler {
         private WeakReference<UserInfoActivity> mActivity;
 
@@ -76,7 +83,6 @@ public class UserInfoActivity extends BaseActivity {
         setContentView(R.layout.activity_info);
         mContext = this;
         initView();
-        initData();
     }
 
     @Override
@@ -88,20 +94,47 @@ public class UserInfoActivity extends BaseActivity {
         mTvPhone = (TextView) findViewById(R.id.tv_phone);
         mTvSex = (TextView) findViewById(R.id.tv_sex);
         mTvEmail = (TextView) findViewById(R.id.tv_email);
+        mTvApply = (TextView) findViewById(R.id.tv_apply);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initData();
     }
 
     @Override
     protected void initData() {
         mUser = ((BikeApplication) this.getApplication()).getmUser();
-        if(mUser != null){
-            mTvName.setText(mUser.getUsername());
-            mTvPhone.setText(mUser.getMobilePhoneNumber());
-            if(mUser.getSex() != null){
-                mTvSex.setText(mUser.getSex() ? R.string.man : R.string.woman);
+        initInfo(mUser);
+    }
+
+    private void initInfo(MyUser user){
+        if(user != null){
+            mTvName.setText(user.getUsername());
+            mTvPhone.setText(user.getMobilePhoneNumber());
+            if(user.getSex() != null){
+                mTvSex.setText(user.getSex() ? R.string.man : R.string.woman);
             }else {
                 mTvSex.setText(R.string.man);
             }
-            mTvName.setText(mUser.getEmail());
+            mTvEmail.setText(user.getEmail());
+        }else {
+            mTvName.setText("");
+            mTvPhone.setText("");
+            mTvSex.setText("");
+            mTvEmail.setText("");
+        }
+
+        if(user != null && user.getType() != null && user.getType().intValue() == 1){
+            mTvApply.setVisibility(View.GONE);
+        }else {
+            String strApply =  getString(R.string.merchant_apply);
+            SpannableString mMoreFeatrue = new SpannableString(strApply);
+            mMoreFeatrue.setSpan(new UnderlineSpan(), 0, strApply.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            mMoreFeatrue.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.common_blue_main)),
+                    0, strApply.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            mTvApply.setText(mMoreFeatrue);
         }
     }
 
@@ -112,6 +145,12 @@ public class UserInfoActivity extends BaseActivity {
 
     public void doSubmit(View view){
         startActivity(new Intent(UserInfoActivity.this, ApplyActivity.class));
+    }
+
+    public void doSignOut(View view){
+        BmobUser.logOut();
+        mUser = ((BikeApplication) this.getApplication()).getmUser();
+        initInfo(mUser);
     }
 
     public void doSelectPicture(View view){

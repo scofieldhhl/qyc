@@ -89,15 +89,4 @@
     </TableRow>
     <View style="@style/menu_divider_style" />
 
-    <Button
-        android:id="@+id/btn_submit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="30dp"
-        android:background="@drawable/bt_book_selector"
-        android:text="@string/confirm"
-        android:textColor="@color/white_dd"
-        android:onClick="doSubmit"
-        android:textSize="18sp" />
 </TableLayout>
