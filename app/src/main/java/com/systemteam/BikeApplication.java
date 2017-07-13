@@ -4,7 +4,7 @@ import android.app.Application;
 import android.os.Environment;
 
 import com.baidu.mapapi.SDKInitializer;
-import com.iflytek.cloud.SpeechUtility;
+import com.liulishuo.share.ShareBlock;
 import com.systemteam.bean.MyUser;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -15,8 +15,6 @@ import java.io.File;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobConfig;
 import cn.bmob.v3.BmobUser;
-
-import static com.iflytek.cloud.SpeechConstant.APPID;
 
 public class BikeApplication extends Application {
 
@@ -40,12 +38,14 @@ public class BikeApplication extends Application {
         //百度地图
         SDKInitializer.initialize(getApplicationContext());
         //科大讯飞初始化
-        SpeechUtility.createUtility(this, APPID +"=58f9ff61");
+//        SpeechUtility.createUtility(this, APPID +"=58f9ff61");
 
         initDirs();
         initBmob();
         regToWx();
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
+        //TODO 第三方登录ID
+        ShareBlock.getInstance().initShare("", "", "", "");
     }
 
     private boolean initDirs() {

@@ -1,6 +1,5 @@
 package com.systemteam.welcome.fragment.outlayer.loginlayer;
 
-import com.systemteam.fragment.BaseFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,9 +13,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.liulishuo.share.model.ILoginManager;
+import com.liulishuo.share.model.PlatformActionListener;
+import com.liulishuo.share.qq.QQLoginManager;
+import com.liulishuo.share.wechat.WechatLoginManager;
+import com.liulishuo.share.weibo.WeiboLoginManager;
 import com.systemteam.BikeApplication;
 import com.systemteam.R;
 import com.systemteam.bean.MyUser;
+import com.systemteam.fragment.BaseFragment;
+
+import java.util.HashMap;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
@@ -64,6 +71,15 @@ public class LoginFragment extends BaseFragment {
                 }
                 testLogin();
                 break;
+            case R.id.iv_qq:
+                onLoginQQ(v);
+                break;
+            case R.id.iv_weibo:
+                onLoginWeibo(v);
+                break;
+            case R.id.iv_wechat:
+                onLoginWechat(v);
+                break;
         }
     }
 
@@ -77,6 +93,9 @@ public class LoginFragment extends BaseFragment {
         mEtPsd = (EditText) view.findViewById(R.id.et_psw);
         mBtnSend = (Button) view.findViewById(R.id.btn_login);
         mBtnSend.setOnClickListener(this);
+        view.findViewById(R.id.iv_qq).setOnClickListener(this);
+        view.findViewById(R.id.iv_wechat).setOnClickListener(this);
+        view.findViewById(R.id.iv_weibo).setOnClickListener(this);
     }
 
     @Override
@@ -148,5 +167,65 @@ public class LoginFragment extends BaseFragment {
         log("username："+username+",\nage："+age+",\nsex："+ sex);
         log("hobby:"+(hobby!=null?hobby.toString():"为null")+"\ncards:"+(cards!=null ?cards.toString():"为null"));
         log("banker:"+(banker!=null?banker.toString():"为null")+"\nmainCard:"+(mainCard!=null ?mainCard.toString():"为null"));*/
+    }
+
+    public void onLoginWeibo(View view){
+        ILoginManager iLoginManager = new WeiboLoginManager(getActivity());
+        iLoginManager.login(new PlatformActionListener() {
+            @Override
+            public void onComplete(HashMap<String, Object> userInfo) {
+                //TODO
+            }
+
+            @Override
+            public void onError() {
+
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        });
+    }
+
+    public void onLoginWechat(View view){
+        ILoginManager iLoginManager = new WechatLoginManager(getActivity());
+        iLoginManager.login(new PlatformActionListener() {
+            @Override
+            public void onComplete(HashMap<String, Object> userInfo) {
+                //TODO
+            }
+
+            @Override
+            public void onError() {
+                //TODO
+            }
+
+            @Override
+            public void onCancel() {
+                //TODO
+            }
+        });
+    }
+
+    public void onLoginQQ(View view){
+        ILoginManager iLoginManager = new QQLoginManager(getActivity());
+        iLoginManager.login(new PlatformActionListener() {
+            @Override
+            public void onComplete(HashMap<String, Object> userInfo) {
+                //TODO
+            }
+
+            @Override
+            public void onError() {
+                //TODO
+            }
+
+            @Override
+            public void onCancel() {
+                //TODO
+            }
+        });
     }
 }

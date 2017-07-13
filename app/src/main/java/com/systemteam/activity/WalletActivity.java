@@ -123,9 +123,9 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         msg.description = "text";
 
         SendMessageToWX.Req req = new SendMessageToWX.Req();
-        req.transaction = buildTransaction("text"); // transaction�ֶ�����Ψһ��ʶһ������
+        req.transaction = buildTransaction("text");
         req.message = msg;
-        req.scene = SendMessageToWX.Req.WXSceneSession;;
+        req.scene = SendMessageToWX.Req.WXSceneSession;
 
         api.sendReq(req);
         finish();

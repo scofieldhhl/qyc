@@ -187,6 +187,7 @@
                         android:id="@+id/iv_weibo"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
+                        android:onClick="onLoginWeibo"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/welcome_logo_weibo"/>
 
@@ -213,6 +214,7 @@
                         android:id="@+id/iv_wechat"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
+                        android:onClick="onLoginWechat"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/welcome_logo_wechat"/>
 
@@ -232,7 +234,6 @@
                     android:id="@+id/rl_qq"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     android:layout_weight="1"
                     android:orientation="horizontal">
 
