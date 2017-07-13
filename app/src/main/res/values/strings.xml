@@ -239,6 +239,7 @@
     <!--scan-->
 
     <!--break-->
+    <string name="break_portrait">客服服务</string>
     <string name="break_lock_title">无法启动</string>
     <string name="break_title">故障申报</string>
     <string name="input_title">请描述现象并提交，XXX会尽快处理！</string>

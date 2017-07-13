@@ -300,6 +300,7 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
                         if(!TextUtils.isEmpty(code) && code.length() > 5){
                             //TODO 校验输入车牌的有效性
                         }
+                        startActivity(new Intent(mContext, ActiveActivity.class));
                         break;
                     case R.id.iv_light:
                         switchFlashlight();

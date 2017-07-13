@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_f4f3f3"
+    android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/color_toolbar_bg"
+
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/toolbar_title_size" />
+    </android.support.v7.widget.Toolbar>
+
+    <com.bcgdv.asia.lib.ticktock.TickTockView
+        android:id="@+id/view_ticktock_countdown"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true"
+        app:tickText="03:00"
+        app:tickAutoFitText="false"
+        app:tickMiddleColor="#333333"
+        app:tickMoveCounterClockwise="true"
+        app:tickTextSize="50sp"
+        app:tickTextColor="#CCCCCC"
+        app:tickDotRadius="6dp"
+        app:tickEmptyRingColor="@android:color/white"
+        app:tickFillRingColor="@color/colorPrimary"
+        app:tickRingThickness="3dp" />
+
+    <include layout="@layout/layout_floatbutton"/>
+</RelativeLayout>

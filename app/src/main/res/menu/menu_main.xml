@@ -4,31 +4,15 @@
     tools:context="com.systemteam.MainActivity">
     <item
         android:id="@+id/id_map_common"
-        android:title="@string/map_common"
+        android:title="@string/break_title"
+        android:icon="@drawable/account_portrait"
         app:showAsAction="never" />
     <item
         android:id="@+id/id_map_site"
-        android:title="@string/map_site"
+        android:title="@string/break_lock_title"
         app:showAsAction="never" />
     <item
         android:id="@+id/id_map_traffic"
-        android:title="@string/map_traffic"
+        android:title="@string/break_portrait"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/id_map_mlocation"
-        android:title="@string/map_mlocation"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/id_map_model_common"
-        android:title="@string/map_common_model"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/id_map_model_following"
-        android:title="@string/map_follow"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/id_map_model_compass"
-        android:title="罗盘模式"
-        app:showAsAction="never" />
-
 </menu>

@@ -136,11 +136,12 @@
             android:screenOrientation="behind" />
         <activity android:name=".activity.BreakActivity" />
         <activity android:name=".activity.SettingActivity" />
-        <activity android:name=".user.UserInfoActivity"></activity>
-        <activity android:name=".user.ApplyActivity"/>
+        <activity android:name=".user.UserInfoActivity" />
+        <activity android:name=".user.ApplyActivity" />
         <activity
-            android:configChanges="orientation|screenSize"
-            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity" />
+            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity android:name=".activity.ActiveActivity"></activity>
     </application>
 
 </manifest>
