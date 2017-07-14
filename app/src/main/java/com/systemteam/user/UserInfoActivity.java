@@ -1,34 +1,29 @@
 package com.systemteam.user;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.systemteam.BaseActivity;
 import com.systemteam.BikeApplication;
 import com.systemteam.R;
 import com.systemteam.bean.MyUser;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.UpdateListener;
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
@@ -51,25 +46,7 @@ public class UserInfoActivity extends BaseActivity {
             super.handleMessage(msg);
             switch (msg.what){
                 case 1:
-                    if (!TextUtils.isEmpty(theActivity.mAvatarPath)) {
-                        File file = new File(theActivity.mAvatarPath);
-                        if (file.exists()) {
-                            Glide.with(theActivity)
-                                    .load(theActivity.mAvatarPath)
-                                    .asBitmap()
-                                    .placeholder(R.drawable.account_default_head_portrait)
-                                    .centerCrop()
-                                    .into(new BitmapImageViewTarget(theActivity.mIvUserPhoto) {
-                                        @Override
-                                        protected void setResource(Bitmap resource) {
-                                            RoundedBitmapDrawable circularBitmapDrawable =
-                                                    RoundedBitmapDrawableFactory.create(theActivity.getResources(), resource);
-                                            circularBitmapDrawable.setCircular(true);
-                                            theActivity.mIvUserPhoto.setImageDrawable(circularBitmapDrawable);
-                                        }
-                                    });
-                        }
-                    }
+                    theActivity.loadAvatar(theActivity, theActivity.mAvatarPath, theActivity.mIvUserPhoto);
                     break;
             }
         }
@@ -170,8 +147,29 @@ public class UserInfoActivity extends BaseActivity {
                 if (path != null && path.size() > 0) {
                     mAvatarPath = path.get(0);
                     mHandler.sendEmptyMessage(1);
+                    updateUserPhoto(mAvatarPath);
                 }
             }
+        }
+    }
+
+    private void updateUserPhoto(String path) {
+        MyUser bmobUser = BmobUser.getCurrentUser(MyUser.class);
+        if (bmobUser != null) {
+            MyUser newUser = new MyUser();
+            newUser.setPhotoPath(path);
+            addSubscription(newUser.update(bmobUser.getObjectId(),new UpdateListener() {
+
+                @Override
+                public void done(BmobException e) {
+                    if(e==null){
+                    }else{
+                        loge(e);
+                    }
+                }
+            }));
+        } else {
+            checkUser(this);
         }
     }
 }

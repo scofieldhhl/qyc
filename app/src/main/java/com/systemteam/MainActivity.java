@@ -504,6 +504,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
 
     @Override
     public void onClick(View view) {
+        checkUser(this);
         switch (view.getId()) {
             case R.id.book_bt:
                 bike_info_layout.setVisibility(View.VISIBLE);
@@ -824,6 +825,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
+        checkUser(this);
         switch (item.getItemId()){
             case R.id.id_portrait:
                 Utils.showDialog(MainActivity.this, getString(R.string.tip), getString(R.string.break_portrait));

@@ -2,12 +2,9 @@ package com.systemteam.user;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -15,8 +12,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.systemteam.BaseActivity;
 import com.systemteam.BikeApplication;
 import com.systemteam.R;
@@ -24,7 +19,6 @@ import com.systemteam.bean.MyUser;
 import com.systemteam.view.IconEditTextView;
 import com.systemteam.view.ProgressDialogHelper;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
@@ -60,25 +54,7 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener,
             super.handleMessage(msg);
             switch (msg.what){
                 case 1:
-                    if (!TextUtils.isEmpty(theActivity.mAvatarPath)) {
-                        File file = new File(theActivity.mAvatarPath);
-                        if (file.exists()) {
-                            Glide.with(theActivity)
-                                    .load(theActivity.mAvatarPath)
-                                    .asBitmap()
-                                    .placeholder(R.drawable.account_default_head_portrait)
-                                    .centerCrop()
-                                    .into(new BitmapImageViewTarget(theActivity.mIvUserPhoto) {
-                                        @Override
-                                        protected void setResource(Bitmap resource) {
-                                            RoundedBitmapDrawable circularBitmapDrawable =
-                                                    RoundedBitmapDrawableFactory.create(theActivity.getResources(), resource);
-                                            circularBitmapDrawable.setCircular(true);
-                                            theActivity.mIvUserPhoto.setImageDrawable(circularBitmapDrawable);
-                                        }
-                                    });
-                        }
-                    }
+                    theActivity.loadAvatar(theActivity, theActivity.mAvatarPath, theActivity.mIvUserPhoto);
                     break;
             }
         }

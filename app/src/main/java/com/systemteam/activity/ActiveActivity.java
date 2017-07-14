@@ -11,11 +11,13 @@ import com.systemteam.R;
 import java.util.Calendar;
 
 public class ActiveActivity extends BaseActivity {
-    TickTockView mCountDown, mCountUp;
+    TickTockView mCountDown;
+    private int mMinute, mSecode;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_active);
+        mContext = this;
         initToolBar(this, R.string.bybike);
         initView();
         initData();
@@ -33,13 +35,6 @@ public class ActiveActivity extends BaseActivity {
                     int hours = (int) ((timeRemaining / (1000 * 60 * 60)) % 24);
                     int days = (int) (timeRemaining / (1000 * 60 * 60 * 24));
                     boolean hasDays = days > 0;
-                    /*return String.format("%1$02d%4$s %2$02d%5$s %3$02d%6$s",
-                            hasDays ? days : hours,
-                            hasDays ? hours : minutes,
-                            hasDays ? minutes : seconds,
-                            hasDays ? "d" : "h",
-                            hasDays ? "h" : "m",
-                            hasDays ? "m" : "s");*/
                     return String.format("%1$02d%3$s %2$02d%4$s",
                             hasDays ? hours : minutes,
                             hasDays ? minutes : seconds,
@@ -48,39 +43,19 @@ public class ActiveActivity extends BaseActivity {
                 }
             });
         }
-
-        /*if (mCountUp != null) {
-            mCountUp.setOnTickListener(new TickTockView.OnTickListener() {
-                SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss");
-                Date date = new Date();
-                @Override
-                public String getText(long timeRemaining) {
-                    date.setTime(System.currentTimeMillis());
-                    return format.format(date);
-                }
-            });
-        }*/
     }
 
     @Override
     protected void initData() {
+        mMinute = 3;
+        mSecode = 0;
 
-    }
-
-    @Override
-    public void onClick(View v) {
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 Calendar end = Calendar.getInstance();
-                end.add(Calendar.MINUTE, 3);
-                end.add(Calendar.SECOND, 0);
+                end.add(Calendar.MINUTE, mMinute);
+                end.add(Calendar.SECOND, mSecode);
 
                 Calendar start = Calendar.getInstance();
                 start.add(Calendar.MINUTE, -1);
@@ -92,9 +67,19 @@ public class ActiveActivity extends BaseActivity {
     }
 
     @Override
+    public void onClick(View v) {
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
-        mCountDown.stop();
-//        mCountUp.stop();
     }
+
+
 }

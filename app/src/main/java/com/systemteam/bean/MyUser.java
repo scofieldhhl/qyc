@@ -14,6 +14,7 @@ public class MyUser extends BmobUser {
 	private Integer status;	//0申请中 1商户
 	private Integer earn;	//收益
 	private Integer coupon; //优惠券数
+	private String photoPath;//
 
 	public Integer getAge() {
 		return age;
@@ -85,6 +86,14 @@ public class MyUser extends BmobUser {
 
 	public void setCoupon(Integer coupon) {
 		this.coupon = coupon;
+	}
+
+	public String getPhotoPath() {
+		return photoPath;
+	}
+
+	public void setPhotoPath(String photoPath) {
+		this.photoPath = photoPath;
 	}
 
 	@Override

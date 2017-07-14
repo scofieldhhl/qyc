@@ -7,8 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -22,12 +25,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.systemteam.activity.BreakActivity;
 import com.systemteam.bean.MyUser;
+import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.systemteam.view.ProgressDialogHelper;
 import com.systemteam.welcome.WelcomeActivity;
 
+import java.io.File;
 import java.lang.reflect.Field;
 
 import cn.bmob.v3.exception.BmobException;
@@ -44,8 +51,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected TextView mToolbarTitle;
     protected Context mContext;
     protected SharedPreferences mSharedPre;
-    protected String params;
-    public RequestQueue mQueue;
     protected ProgressDialogHelper mProgressHelper;
     protected boolean CheckNetwork = true;
     protected static boolean isOfflineResponse = false;
@@ -86,6 +91,11 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     /**
      * 获取状态栏的高度
      *
@@ -109,10 +119,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     }
 
     //bmob
-    public static String TAG = "bmob";
     protected ListView mListview;
     protected BaseAdapter mAdapter;
-
     private CompositeSubscription mCompositeSubscription;
 
     /**
@@ -206,7 +214,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     protected abstract void initData();
 
-    protected void initTitle(Activity act, int titleId, int menuRes, int searchRes) {
+    /*protected void initTitle(Activity act, int titleId, int menuRes, int searchRes) {
         setStatusBar();
         mIvMenu = (ImageView) act.findViewById(R.id.menu_icon);
         mIvSearch = (ImageView) act.findViewById(R.id.search_icon);
@@ -230,7 +238,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             mIvSearch.setVisibility(View.VISIBLE);
             mIvSearch.setImageResource(searchRes);
         }
-    }
+    }*/
 
     /**
      * 设置沉浸式状态栏
@@ -262,16 +270,51 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             startActivity(new Intent(act, WelcomeActivity.class));
+                            act.finish();
                         }
                     });
-            alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, act.getString(R.string.cancel),
+            /*alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, act.getString(R.string.cancel),
                     new DialogInterface.OnClickListener() {
 
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                         }
-                    });
+                    });*/
             alertDialog.show();
+        }
+    }
+
+    public void gotoBreak(View view){
+        Intent intentBreak = new Intent(mContext, BreakActivity.class);
+        intentBreak.putExtra(Constant.BUNDLE_TYPE_MENU, 1);
+        startActivity(intentBreak);
+    }
+
+    public void gotoBreakLock(View view){
+        Intent intent = new Intent(mContext, BreakActivity.class);
+        intent.putExtra(Constant.BUNDLE_TYPE_MENU, 0);
+        startActivity(intent);
+    }
+
+    public void loadAvatar(final Context context, String path, final ImageView imageView){
+        if (!TextUtils.isEmpty(path)) {
+            File file = new File(path);
+            if (file.exists()) {
+                Glide.with(context)
+                        .load(path)
+                        .asBitmap()
+                        .placeholder(R.drawable.account_default_head_portrait)
+                        .centerCrop()
+                        .into(new BitmapImageViewTarget(imageView) {
+                            @Override
+                            protected void setResource(Bitmap resource) {
+                                RoundedBitmapDrawable circularBitmapDrawable =
+                                        RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+                                circularBitmapDrawable.setCircular(true);
+                                imageView.setImageDrawable(circularBitmapDrawable);
+                            }
+                        });
+            }
         }
     }
 }

@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.systemteam.BaseActivity;
 import com.systemteam.R;
 import com.systemteam.bean.MyUser;
 
@@ -22,6 +24,8 @@ import static com.systemteam.util.Constant.BUNDLE_USER;
 public class LeftMenuFragment extends BaseFragment {
 
     private LinearLayout mLLMycar;
+    private ImageView mPhoto;
+    private TextView mTvName, mTvVersion;
     public LeftMenuFragment(){
     }
 
@@ -42,18 +46,9 @@ public class LeftMenuFragment extends BaseFragment {
     @Override
     protected void initView(View view) {
         mLLMycar = (LinearLayout) view.findViewById(R.id.ll_mycar);
-        if(mUser != null){
-            ((TextView) view.findViewById(R.id.user_name)).setText(mUser.getUsername());
-        }
-        try {
-            String pkName = mContext.getPackageName();
-            String versionName = mContext.getPackageManager().getPackageInfo(pkName, 0).versionName;
-            versionName = versionName.substring(0, versionName.lastIndexOf("."));
-            ((TextView) view.findViewById(R.id.tv_version)).setText(versionName);
-        } catch (Exception e) {
-
-        }
-
+        mTvName = (TextView) view.findViewById(R.id.user_name);
+        mPhoto = (ImageView) view.findViewById(R.id.user_photo);
+        mTvVersion = (TextView) view.findViewById(R.id.tv_version);
     }
 
     @Override
@@ -66,6 +61,17 @@ public class LeftMenuFragment extends BaseFragment {
     protected void initData() {
         mUser = BmobUser.getCurrentUser(MyUser.class);
         if(mUser != null){
+            (mTvName).setText(mUser.getUsername());
+            ((BaseActivity)getActivity()).loadAvatar(getActivity(), mUser.getPhotoPath(), mPhoto);
+        }
+        try {
+            String pkName = mContext.getPackageName();
+            String versionName = mContext.getPackageManager().getPackageInfo(pkName, 0).versionName;
+            mTvVersion.setText(versionName);
+        } catch (Exception e) {
+
+        }
+        if(mUser != null && mUser.getType() != null){
             if(mUser.getType() == 1){
                 mLLMycar.setVisibility(View.VISIBLE);
             }

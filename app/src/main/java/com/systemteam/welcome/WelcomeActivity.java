@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -21,10 +20,6 @@ import com.systemteam.welcome.utils.DisplayUtil;
 import com.systemteam.welcome.view.ParentViewPager;
 
 
-/**
- * 小红书欢迎引导界面第二版
- * Created by zhongdaxia
- */
 public class WelcomeActivity extends FragmentActivity {
 
     private final int FRAGMENT_WELCOMEANIM = 0;
@@ -152,7 +147,7 @@ public class WelcomeActivity extends FragmentActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (isExit == false) {
+            /*if (isExit == false) {
                 isExit = true;
                 Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
                 mHandler.postDelayed(new Runnable() {
@@ -164,7 +159,8 @@ public class WelcomeActivity extends FragmentActivity {
             } else {
                 finish();
                 System.exit(0);
-            }
+            }*/
+            finish();
         }
         return false;
     }

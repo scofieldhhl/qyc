@@ -38,7 +38,7 @@ public class CodeUnlockActivity extends BaseActivity {
 //        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.dp2px(this, 50));
 //        layoutParams.setMargins(0, statusBarHeight, 0, 0);//4个参数按顺序分别是左上右下
 //        title_layout.setLayoutParams(layoutParams);
-        setStatusBar();
+//        setStatusBar();
 
         editText1 = (EditText) findViewById(R.id.et_code);
         /*editText2 = (EditText) findViewById(R.id.editText2);

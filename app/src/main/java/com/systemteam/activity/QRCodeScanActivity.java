@@ -31,7 +31,6 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
         mContext = this;
-        initTitle(this, R.string.title_scan, R.drawable.btn_return, 0);
         initView();
         initData();
     }
@@ -68,6 +67,7 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
 
     @Override
     protected void initView() {
+        initToolBar(this, R.string.title_scan);
         mQRCodeView = (ZBarView) findViewById(R.id.zbarview);
         mQRCodeView.setDelegate(this);
     }
