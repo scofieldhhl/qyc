@@ -1,10 +1,13 @@
 package com.systemteam.activity;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.text.TextUtils;
@@ -18,12 +21,13 @@ import com.systemteam.BaseActivity;
 import com.systemteam.R;
 import com.systemteam.util.LogTool;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.bingoogolapple.qrcode.core.QRCodeView;
 import cn.bingoogolapple.qrcode.zbar.ZBarView;
 
 public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Delegate {
-    private static final int REQUEST_CODE_CHOOSE_QRCODE_FROM_GALLERY = 666;
-
     private boolean isLightOpened = false;
     private QRCodeView mQRCodeView;
 
@@ -38,22 +42,18 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
     @Override
     protected void onResume() {
         super.onResume();
-        LogTool.d("onResume");
     }
 
     @Override
     protected void onStart() {
-        LogTool.d("onStart");
         super.onStart();
         mQRCodeView.startCamera();
-//        mQRCodeView.startCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
-
         mQRCodeView.showScanRect();
+        mQRCodeView.startSpot();
     }
 
     @Override
     protected void onStop() {
-        LogTool.d("onStop");
         mQRCodeView.closeFlashlight();
         mQRCodeView.stopCamera();
         super.onStop();
@@ -74,7 +74,7 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
 
     @Override
     protected void initData() {
-
+        checkSDK();
     }
 
     private void vibrate() {
@@ -87,7 +87,6 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
         LogTool.d("result:" + result);
         Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
         vibrate();
-        mQRCodeView.startSpot();
     }
 
     @Override
@@ -318,5 +317,21 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
         dialog.findViewById(R.id.iv_scan).setOnClickListener(listener);
         dialog.show();
         return dialog;
+    }
+
+    private void checkSDK(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int cameraPermission = checkSelfPermission(Manifest.permission.CAMERA);
+
+            List<String> permissions = new ArrayList<String>();
+            if (cameraPermission != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.CAMERA);
+            }
+
+            if (!permissions.isEmpty()) {
+                requestPermissions(permissions.toArray(new String[permissions.size()]),
+                        REQUEST_CODE_SOME_FEATURES_PERMISSIONS);
+            }
+        }
     }
 }

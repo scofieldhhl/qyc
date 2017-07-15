@@ -104,7 +104,6 @@ import static com.systemteam.bean.BikeInfo.infos;
 public class MainActivity extends BaseActivity implements OnGetRoutePlanResultListener,
         AllInterface.OnMenuSlideListener {
 
-    private static final int REQUEST_CODE_SOME_FEATURES_PERMISSIONS = 101;
     private double currentLatitude, currentLongitude, changeLatitude, changeLongitude;
     private ImageView splash_img, btn_locale, btn_refresh;
     public static TextView current_addr;
@@ -983,7 +982,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
 
     private void backFromRouteDetail() {
         isFirstIn = true;
-        mTvTitle.setText(getString(R.string.bybike));
+//        mTvTitle.setText(getString(R.string.bybike));
         textview_time.setText(getString(R.string.foot));
         textview_distance.setText(getString(R.string.distance));
         textview_price.setText(getString(R.string.price));
@@ -998,7 +997,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         bike_layout.setVisibility(View.GONE);
         prompt.setVisibility(View.GONE);
         current_addr.setVisibility(View.VISIBLE);
-        mIvMenu.setVisibility(View.VISIBLE);
+//        mIvMenu.setVisibility(View.VISIBLE);
         book_bt.setVisibility(View.VISIBLE);
         unlock.setVisibility(View.VISIBLE);
         divider.setVisibility(View.VISIBLE);
@@ -1018,7 +1017,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
             Utils.showDialog(this);
             return;
         }
-        mTvTitle.setText(getString(R.string.routing));
+//        mTvTitle.setText(getString(R.string.routing));
         textview_time.setText(getString(R.string.bike_time));
         textview_distance.setText(getString(R.string.bike_distance));
         textview_price.setText(getString(R.string.bike_price));
@@ -1034,7 +1033,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         prompt.setVisibility(View.VISIBLE);
         bike_layout.setVisibility(View.VISIBLE);
         current_addr.setVisibility(View.GONE);
-        mIvMenu.setVisibility(View.GONE);
+//        mIvMenu.setVisibility(View.GONE);
         unlock.setVisibility(View.GONE);
         divider.setVisibility(View.GONE);
         btn_refresh.setVisibility(View.GONE);
@@ -1157,29 +1156,21 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
             int hasReadPermission = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
             int gpsPermission = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
             int readStatePermission = checkSelfPermission(Manifest.permission.READ_PHONE_STATE);
-            int cameraPermission = checkSelfPermission(Manifest.permission.CAMERA);
 
             List<String> permissions = new ArrayList<String>();
             if (hasWritePermission != PackageManager.PERMISSION_GRANTED) {
                 permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            } else {
-//                preferencesUtility.setString("storage", "true");
             }
 
             if (hasReadPermission != PackageManager.PERMISSION_GRANTED) {
                 permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
 
-            } else {
-//                preferencesUtility.setString("storage", "true");
             }
             if (gpsPermission != PackageManager.PERMISSION_GRANTED) {
                 permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
             }
             if (readStatePermission != PackageManager.PERMISSION_GRANTED) {
                 permissions.add(Manifest.permission.READ_PHONE_STATE);
-            }
-            if (cameraPermission != PackageManager.PERMISSION_GRANTED) {
-                permissions.add(Manifest.permission.CAMERA);
             }
 
             if (!permissions.isEmpty()) {

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
@@ -46,6 +47,7 @@ import static com.systemteam.util.Utils.dp2px;
 
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener{
 
+    protected final int REQUEST_CODE_SOME_FEATURES_PERMISSIONS = 101;
     public int statusBarHeight = 0,titleHeight;
     protected Toolbar mToolbar;
     protected TextView mToolbarTitle;
@@ -57,8 +59,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected InputMethodManager mImm;
     protected BikeApplication mApplication;
     protected MyUser mUser;
-    protected ImageView mIvMenu, mIvSearch;
-    protected TextView mTvTitle;
+//    protected ImageView mIvMenu, mIvSearch;
+//    protected TextView mTvTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -314,6 +316,25 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                                 imageView.setImageDrawable(circularBitmapDrawable);
                             }
                         });
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                for (int i = 0; i < permissions.length; i++) {
+                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        System.out.println("Permissions --> " + "Permission Granted: " + permissions[i]);
+                    } else if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                        System.out.println("Permissions --> " + "Permission Denied: " + permissions[i]);
+                    }
+                }
+            }
+            break;
+            default: {
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }
         }
     }

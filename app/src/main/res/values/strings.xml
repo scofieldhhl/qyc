@@ -217,9 +217,9 @@
     <!--menu main map-->
 
     <!--cost-->
-    <string name="cost_time" formatted="false">s% 分钟</string>
-    <string name="cost_distance" formatted="false">s% 米</string>
-    <string name="cost_num" formatted="false">s% 元</string>
+    <string name="cost_time" formatted="false">%1$s 分钟</string>
+    <string name="cost_distance" formatted="false">%1$s 米</string>
+    <string name="cost_num" formatted="false">%1$s 元</string>
     <!--cost-->
 
     <!--line-->
