@@ -251,10 +251,12 @@ public static java.lang.String TABLENAME;
 -keep class com.tencent.mm.opensdk.** {*;}
 -keep class com.tencent.wxop.** {*;}
 -keep class com.tencent.mm.sdk.** {*;}
+-dontwarn com.tencent.connect.**
+-keep class com.tencent.connect.** {*;}
 #wechat
 
 #alipay
--libraryjars libs/alipaySdk-20170623-proguard.jar
+#-libraryjars libs/alipaySdk-20170623-proguard.jar
 -keep class com.alipay.android.app.IAlixPay{*;}
 -keep class com.alipay.android.app.IAlixPay$Stub{*;}
 -keep class com.alipay.android.app.IRemoteServiceCallback{*;}
@@ -262,3 +264,17 @@ public static java.lang.String TABLENAME;
 -keep class com.alipay.sdk.app.PayTask{ public *;}
 -keep class com.alipay.sdk.app.AuthTask{ public *;}
 #alipay
+
+#Other
+-dontwarn rx.**
+-dontwarn okio.**
+-dontwarn com.squareup.okhttp.*
+-dontwarn retrofit.appengine.UrlFetchClient
+-keepattributes *Annotation*
+-keep class retrofit.** { *; }
+-keepclasseswithmembers class * { @retrofit.http.* <methods>;}
+-keepattributes Signature
+
+-dontwarn com.zhy.m.permission.**
+-keep class com.zhy.m.permission.** { *;}
+#Other

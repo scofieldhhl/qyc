@@ -105,7 +105,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         AllInterface.OnMenuSlideListener {
 
     private double currentLatitude, currentLongitude, changeLatitude, changeLongitude;
-    private ImageView splash_img, btn_locale, btn_refresh;
+    private ImageView splash_img, btn_locale, btn_refresh, mIvScan;
     public static TextView current_addr;
     private TextView book_bt, cancel_book, end_route;
     private LinearLayout bike_layout, bike_distance_layout, bike_info_layout, confirm_cancel_layout;
@@ -454,7 +454,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         textview_price = (TextView) findViewById(R.id.textview_price);
         unlock = (TextView) findViewById(R.id.unlock);
         divider = (View) findViewById(R.id.divider);
-
+        mIvScan = (ImageView) findViewById(R.id.iv_scan);
 
         bike_code = (TextView) findViewById(R.id.bike_code);
         bike_sound = (TextView) findViewById(R.id.bike_sound);
@@ -999,7 +999,8 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         current_addr.setVisibility(View.VISIBLE);
 //        mIvMenu.setVisibility(View.VISIBLE);
         book_bt.setVisibility(View.VISIBLE);
-        unlock.setVisibility(View.VISIBLE);
+//        unlock.setVisibility(View.VISIBLE);
+        mIvScan.setVisibility(View.VISIBLE);
         divider.setVisibility(View.VISIBLE);
         btn_refresh.setVisibility(View.VISIBLE);
         btn_locale.setVisibility(View.VISIBLE);
@@ -1034,7 +1035,9 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         bike_layout.setVisibility(View.VISIBLE);
         current_addr.setVisibility(View.GONE);
 //        mIvMenu.setVisibility(View.GONE);
-        unlock.setVisibility(View.GONE);
+//        unlock.setVisibility(View.GONE);
+        mIvScan.setVisibility(View.GONE);
+
         divider.setVisibility(View.GONE);
         btn_refresh.setVisibility(View.GONE);
 

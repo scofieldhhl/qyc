@@ -13,17 +13,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.liulishuo.share.model.ILoginManager;
-import com.liulishuo.share.model.PlatformActionListener;
-import com.liulishuo.share.qq.QQLoginManager;
-import com.liulishuo.share.wechat.WechatLoginManager;
-import com.liulishuo.share.weibo.WeiboLoginManager;
 import com.systemteam.BikeApplication;
 import com.systemteam.R;
 import com.systemteam.bean.MyUser;
 import com.systemteam.fragment.BaseFragment;
-
-import java.util.HashMap;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
@@ -170,7 +163,7 @@ public class LoginFragment extends BaseFragment {
     }
 
     public void onLoginWeibo(View view){
-        ILoginManager iLoginManager = new WeiboLoginManager(getActivity());
+        /*ILoginManager iLoginManager = new WeiboLoginManager(getActivity());
         iLoginManager.login(new PlatformActionListener() {
             @Override
             public void onComplete(HashMap<String, Object> userInfo) {
@@ -186,11 +179,11 @@ public class LoginFragment extends BaseFragment {
             public void onCancel() {
 
             }
-        });
+        });*/
     }
 
     public void onLoginWechat(View view){
-        ILoginManager iLoginManager = new WechatLoginManager(getActivity());
+        /*ILoginManager iLoginManager = new WechatLoginManager(getActivity());
         iLoginManager.login(new PlatformActionListener() {
             @Override
             public void onComplete(HashMap<String, Object> userInfo) {
@@ -206,11 +199,11 @@ public class LoginFragment extends BaseFragment {
             public void onCancel() {
                 //TODO
             }
-        });
+        });*/
     }
 
     public void onLoginQQ(View view){
-        ILoginManager iLoginManager = new QQLoginManager(getActivity());
+        /*ILoginManager iLoginManager = new QQLoginManager(getActivity());
         iLoginManager.login(new PlatformActionListener() {
             @Override
             public void onComplete(HashMap<String, Object> userInfo) {
@@ -226,6 +219,6 @@ public class LoginFragment extends BaseFragment {
             public void onCancel() {
                 //TODO
             }
-        });
+        });*/
     }
 }

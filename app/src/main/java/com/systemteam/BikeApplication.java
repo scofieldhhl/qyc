@@ -4,10 +4,7 @@ import android.app.Application;
 import android.os.Environment;
 
 import com.baidu.mapapi.SDKInitializer;
-import com.liulishuo.share.ShareBlock;
 import com.systemteam.bean.MyUser;
-import com.tencent.mm.opensdk.openapi.IWXAPI;
-import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
@@ -45,7 +42,7 @@ public class BikeApplication extends Application {
         regToWx();
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
         //TODO 第三方登录ID
-        ShareBlock.getInstance().initShare("", "", "", "");
+//        ShareBlock.getInstance().initShare("", "", "", "");
     }
 
     private boolean initDirs() {
@@ -82,8 +79,8 @@ public class BikeApplication extends Application {
     }
 
     private void regToWx(){
-        String APP_ID = "wx88888888";
+        /*String APP_ID = "wx88888888";
         IWXAPI api = WXAPIFactory.createWXAPI(this, APP_ID, true);
-        api.registerApp(APP_ID);
+        api.registerApp(APP_ID);*/
     }
 }
