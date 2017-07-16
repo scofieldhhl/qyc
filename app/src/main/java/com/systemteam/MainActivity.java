@@ -69,6 +69,7 @@ import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.systemteam.activity.BreakActivity;
 import com.systemteam.activity.CodeUnlockActivity;
+import com.systemteam.car.MyCarActivity;
 import com.systemteam.activity.MyRouteActivity;
 import com.systemteam.activity.NavigationActivity;
 import com.systemteam.activity.QRCodeScanActivity;
@@ -920,7 +921,13 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
 
     public void gotoCodeUnlock(View view) {
 //        startActivity(new Intent(this, CodeUnlockActivity.class));
-        startActivity(new Intent(this, QRCodeScanActivity.class));
+        Intent intent = new Intent(this, QRCodeScanActivity.class);
+        intent.putExtra(Constant.BUNDLE_KEY_UNLOCK, true);
+        startActivity(intent);
+    }
+
+    public void gotoMycar(View view) {
+        startActivity(new Intent(this, MyCarActivity.class));
     }
 
     public void gotoMyRoute(View view) {

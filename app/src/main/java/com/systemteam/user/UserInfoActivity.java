@@ -88,6 +88,7 @@ public class UserInfoActivity extends BaseActivity {
 
     private void initInfo(MyUser user){
         if(user != null){
+            loadAvatar(mContext, user.getPhotoPath(), mIvUserPhoto);
             mTvName.setText(user.getUsername());
             mTvPhone.setText(user.getMobilePhoneNumber());
             if(user.getSex() != null){

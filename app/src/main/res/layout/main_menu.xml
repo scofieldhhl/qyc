@@ -112,7 +112,8 @@
             android:orientation="vertical"
             android:visibility="gone">
             <LinearLayout
-                style="@style/menu_layout_style">
+                style="@style/menu_layout_style"
+                android:onClick="gotoMycar">
                 <ImageView
                     style="@style/menu_icon_style"
                     android:src="@mipmap/route" />

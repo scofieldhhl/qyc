@@ -94,6 +94,7 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener,
     private void initInfo(MyUser user){
         if(user != null){
             mIetName.setText(user.getUsername());
+            loadAvatar(mContext, user.getPhotoPath(), mIvUserPhoto);
             mIetPhone.setText(user.getMobilePhoneNumber());
             if(user.getSex() != null){
                 mIetSex.setText(getString(user.getSex() ? R.string.man : R.string.woman));

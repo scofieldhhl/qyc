@@ -141,7 +141,12 @@
         <activity
             android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
             android:configChanges="orientation|screenSize" />
-        <activity android:name=".activity.ActiveActivity"></activity>
+        <activity android:name=".activity.ActiveActivity" />
+        <activity
+            android:name=".car.MyCarActivity"
+            android:label="@string/title_activity_my_car"
+            android:theme="@style/Custom.AppTheme.NoActionBar" />
+        <activity android:name=".car.NewCarActivity"></activity>
     </application>
 
 </manifest>

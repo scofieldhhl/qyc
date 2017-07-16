@@ -83,6 +83,7 @@ dependencies {
     compile files('libs/Sunflower.jar')
     //bmob-sms ：Bmob单独为短信服务提供的包
 //        compile 'cn.bmob.android:bmob-sms:1.0.1'
+    //    compile 'com.echodjb.shareloginlib:share:0.6'
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.android.support:recyclerview-v7:25.1.0'
@@ -94,7 +95,6 @@ dependencies {
     compile 'cn.bingoogolapple:bga-qrcodecore:1.1.7@aar'
     compile 'cn.bingoogolapple:bga-zbar:1.1.7@aar'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-//    compile 'com.echodjb.shareloginlib:share:0.6'
     compile 'com.bcgdv.asia.lib:ticktock:1.3'
     compile 'com.getbase:floatingactionbutton:1.10.1'
     testCompile 'junit:junit:4.12'

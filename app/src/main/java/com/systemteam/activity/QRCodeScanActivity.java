@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.systemteam.BaseActivity;
 import com.systemteam.R;
+import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ import cn.bingoogolapple.qrcode.zbar.ZBarView;
 public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Delegate {
     private boolean isLightOpened = false;
     private QRCodeView mQRCodeView;
+    private String mCarNo;
+    private boolean isUnLock = false;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +72,11 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
         super.onDestroy();
     }
 
+    private void exist(String code){
+        setResult(RESULT_OK, new Intent().putExtra(Constant.BUNDLE_KEY_CODE, code)); //intent为A传来的带有Bundle的intent，当然也可以自己定义新的Bundle
+        finish();//此处一定要调用finish()方法
+    }
+
     @Override
     protected void initView() {
         initToolBar(this, R.string.title_scan);
@@ -79,6 +87,7 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
     @Override
     protected void initData() {
         checkSDK();
+        isUnLock = getIntent().getBooleanExtra(Constant.BUNDLE_KEY_UNLOCK, false);
     }
 
     private void vibrate() {
@@ -91,6 +100,7 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
         LogTool.d("result:" + result);
         Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
         vibrate();
+        exist(result);
     }
 
     @Override
@@ -303,7 +313,9 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
                         if(!TextUtils.isEmpty(code) && code.length() > 5){
                             //TODO 校验输入车牌的有效性
                         }
-                        startActivity(new Intent(mContext, ActiveActivity.class));
+                        if(isUnLock)
+                            startActivity(new Intent(mContext, ActiveActivity.class));
+                        exist(code);
                         break;
                     case R.id.iv_light:
                         switchFlashlight();

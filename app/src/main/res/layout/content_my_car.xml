@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_ededed">
-
+    tools:context="com.systemteam.car.MyCarActivity">
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -22,6 +22,14 @@
             android:textSize="@dimen/toolbar_title_size" />
     </android.support.v7.widget.Toolbar>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@android:drawable/ic_dialog_email" />
     <com.jcodecraeer.xrecyclerview.XRecyclerView
         android:id="@+id/recyclerview_route"
         android:layout_width="match_parent"
@@ -30,14 +38,4 @@
         android:layout_margin="15dp"
         android:overScrollMode="never"
         android:scrollbars="none" />
-    <TextView
-        android:id="@+id/no_route"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        android:text="@string/no_route"
-        android:textColor="@color/color_989898"
-        android:textSize="16sp" />
-
 </RelativeLayout>
