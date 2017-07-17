@@ -19,9 +19,15 @@ import com.systemteam.R;
 import com.systemteam.adapter.MyCarAdapter;
 import com.systemteam.adapter.MyRouteDividerDecoration;
 import com.systemteam.bean.Car;
+import com.systemteam.bean.MyUser;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 
 public class MyCarActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, MyCarAdapter.OnItemClickListener {
@@ -32,6 +38,7 @@ public class MyCarActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_car);
+        mContext = this;
         initView();
         initData();
     }
@@ -59,12 +66,13 @@ public class MyCarActivity extends BaseActivity
 
     @Override
     protected void initData() {
+        initCarList();
         routeRecyclerView = (XRecyclerView) findViewById(R.id.recyclerview_route);
 //        no_route = (TextView) findViewById(R.id.no_route);
         routeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 //        routeList = getAllPoints();
-        routeList = new ArrayList<Car>();
+        routeList = new ArrayList<>();
 
         routeList = loadPage();
         if (routeList != null) {
@@ -170,5 +178,26 @@ public class MyCarActivity extends BaseActivity
     @Override
     public void onItemClick(View v, int position) {
 
+    }
+
+    private void initCarList() {
+        MyUser user = BmobUser.getCurrentUser(MyUser.class);
+        BmobQuery<Car> query = new BmobQuery<>();
+        query.addWhereEqualTo("author", user.getObjectId());
+        addSubscription(query.findObjects(new FindListener<Car>() {
+
+            @Override
+            public void done(List<Car> object, BmobException e) {
+                if(e==null){
+                    toast("查询成功:" + object.size());
+                    routeList = object;
+                    routeAdapter = new MyCarAdapter(mContext, routeList);
+                    routeRecyclerView.setAdapter(routeAdapter);
+                    routeRecyclerView.addItemDecoration(new MyRouteDividerDecoration(10));
+                }else{
+                    loge(e);
+                }
+            }
+        }));
     }
 }

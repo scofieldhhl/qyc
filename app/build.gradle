@@ -11,8 +11,8 @@ android {
         release {
             keyAlias 'SystemStudio'
             keyPassword 'HUANGhl8811^'
-            storeFile file('F:/studio/qyc/appkey/systemstudio.jks')
-//            storeFile file('/Users/ws/git/qyc/qyc/appkey/systemstudio.jks')
+//            storeFile file('F:/studio/qyc/appkey/systemstudio.jks')
+            storeFile file('/Users/ws/git/qyc/qyc/appkey/systemstudio.jks')
             storePassword 'HUANGhl8811^'
         }
     }
@@ -23,7 +23,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
-        versionName "0.9.1beat"
+        versionName "0.7.17beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a"

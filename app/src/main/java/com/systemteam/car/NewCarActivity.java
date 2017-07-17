@@ -5,11 +5,22 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.model.LatLng;
 import com.systemteam.BaseActivity;
 import com.systemteam.R;
 import com.systemteam.activity.QRCodeScanActivity;
 import com.systemteam.bean.Car;
 import com.systemteam.bean.MyUser;
+import com.systemteam.util.LocationManager;
 import com.systemteam.util.Utils;
 
 import java.util.List;
@@ -29,6 +40,11 @@ public class NewCarActivity extends BaseActivity {
     private TextView mTvCode;
     private String mCarNo;
     private Car mCar = null;
+    private MapView mMapView;
+    private BaiduMap mBaiduMap;
+    private double mLatitude; //纬度
+    private double mLongitude;
+    public MyLocationListenner myListener = new MyLocationListenner();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +59,24 @@ public class NewCarActivity extends BaseActivity {
     protected void initView() {
         initToolBar(NewCarActivity.this, R.string.new_car);
         mTvCode = (TextView) findViewById(R.id.tv_title_code);
+        mMapView = (MapView) findViewById(R.id.id_bmapView);
+        if (!Utils.isGpsOPen(this)) {
+            Utils.showDialog(this);
+            return;
+        }
+        mBaiduMap = mMapView.getMap();
+        // 开启定位图层
+        mBaiduMap.setMyLocationEnabled(true);
+        // 定位初始化
+        LocationClient mlocationClient = new LocationClient(this);
+        mlocationClient.registerLocationListener(myListener);
+        LocationClientOption option = new LocationClientOption();
+        option.setOpenGps(true); // 打开gps
+        option.setCoorType("bd09ll"); // 设置坐标类型
+        option.setScanSpan(1000);//设置onReceiveLocation()获取位置的频率
+        option.setIsNeedAddress(true);//如想获得具体位置就需要设置为true
+        mlocationClient.setLocOption(option);
+        mlocationClient.start();
     }
 
     @Override
@@ -74,6 +108,7 @@ public class NewCarActivity extends BaseActivity {
         if (requestCode == REQUEST_CODE && data !=null) {
             mCarNo = data.getStringExtra(BUNDLE_KEY_CODE);
             mTvCode.setText(mCarNo);
+            findViewById(R.id.btn_submit).setVisibility(View.VISIBLE);
         }
     }
 
@@ -83,7 +118,7 @@ public class NewCarActivity extends BaseActivity {
         if(mCar == null){
             mCar = new Car();
             mCar.setCarNo(mCarNo);
-            mCar.setPosition(new BmobGeoPoint());
+            mCar.setPosition(new BmobGeoPoint(mLongitude, mLatitude));
             mCar.setAuthor(user);
             addSubscription(mCar.save(new SaveListener<String>() {
                 @Override
@@ -105,7 +140,7 @@ public class NewCarActivity extends BaseActivity {
             }
         }else {
             mCar.setCarNo(mCarNo);
-            mCar.setPosition(new BmobGeoPoint());
+            mCar.setPosition(new BmobGeoPoint(mLongitude, mLatitude));
             mCar.setAuthor(user);
             addSubscription(mCar.update(new UpdateListener() {
                 @Override
@@ -138,5 +173,34 @@ public class NewCarActivity extends BaseActivity {
                 }
             }
         }));
+    }
+
+    /**
+     * 定位SDK监听函数
+     */
+    public class MyLocationListenner implements BDLocationListener {
+
+        @Override
+        public void onReceiveLocation(BDLocation bdLocation) {
+            // map view 销毁后不在处理新接收的位置
+            if (bdLocation == null || mMapView == null) {
+                return;
+            }
+            mLatitude = bdLocation.getLatitude();
+            mLongitude = bdLocation.getLongitude();
+            log("mLongitude: " + mLongitude + "  mLatitude: " + mLatitude );
+            MyLocationData locData = new MyLocationData.Builder()
+                    .accuracy(bdLocation.getRadius())
+                    .latitude(bdLocation.getLatitude())
+                    .longitude(bdLocation.getLongitude()).build();
+            mBaiduMap.setMyLocationData(locData);
+            LocationManager.getInstance().setAddress(bdLocation.getAddrStr());
+            LatLng ll = new LatLng(bdLocation.getLatitude(),
+                    bdLocation.getLongitude());
+            MapStatus.Builder builder = new MapStatus.Builder();
+            //地图缩放比设置为18
+            builder.target(ll).zoom(18.0f);
+            mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+        }
     }
 }
