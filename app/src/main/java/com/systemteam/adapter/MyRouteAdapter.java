@@ -1,11 +1,9 @@
 package com.systemteam.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.systemteam.R;
 import com.systemteam.bean.RouteRecord;
@@ -16,14 +14,9 @@ import java.util.List;
  * Created by gaolei on 17/1/18.
  */
 
-public class MyRouteAdapter extends RecyclerView.Adapter<MyRouteAdapter.MyViewHolder> {
+public class MyRouteAdapter extends BaseAdapter {
 
-    public Context context;
-    int selectPosition = 0;
-    OnItemClickListener listener;
-    List<RouteRecord> list;
-
-    public MyRouteAdapter(Context context, List<RouteRecord> list) {
+    public MyRouteAdapter(Context context, List<Object> list) {
         this.context = context;
         this.list = list;
     }
@@ -46,7 +39,7 @@ public class MyRouteAdapter extends RecyclerView.Adapter<MyRouteAdapter.MyViewHo
 
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.itemView.setTag(position);
-        RouteRecord routeRecord=list.get(position);
+        RouteRecord routeRecord=(RouteRecord)list.get(position);
         holder.bike_time.setText(context.getString(R.string.cost_time, routeRecord.getCycle_time()));
         holder.bike_distance.setText(context.getString(R.string.cost_distance, routeRecord.getCycle_distance()));
         holder.bike_price.setText(context.getString(R.string.cost_num, routeRecord.getCycle_price()));
@@ -56,22 +49,6 @@ public class MyRouteAdapter extends RecyclerView.Adapter<MyRouteAdapter.MyViewHo
     @Override
     public int getItemCount() {
         return list.size();
-    }
-
-    class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView bike_time,bike_distance,bike_price,bike_date;
-
-        public MyViewHolder(View view) {
-            super(view);
-            bike_time = (TextView) view.findViewById(R.id.bike_time);
-            bike_distance = (TextView) view.findViewById(R.id.bike_distance);
-            bike_price = (TextView) view.findViewById(R.id.bike_price);
-            bike_date = (TextView) view.findViewById(R.id.bike_date);
-        }
-    }
-
-    public interface OnItemClickListener {
-        public void onItemClick(View v, int position);
     }
 
     public void setOnClickListener(OnItemClickListener listener) {

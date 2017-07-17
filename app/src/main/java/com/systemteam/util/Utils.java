@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.PowerManager;
@@ -107,9 +106,10 @@ public class Utils {
         return outMetrics.widthPixels;
     }
 
-    public static void setSpannableStr(TextView textView, String str, int startIndex, int endIndex, float proporation) {
+    public static void setSpannableStr(TextView textView, String str, int startIndex, int endIndex,
+                                       float proporation, int color) {
         SpannableString spannableString = new SpannableString(str);
-        ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#393939"));
+        ForegroundColorSpan colorSpan = new ForegroundColorSpan(color);
         spannableString.setSpan(colorSpan, startIndex, endIndex, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         RelativeSizeSpan sizeSpan01 = new RelativeSizeSpan(proporation);
         spannableString.setSpan(sizeSpan01, startIndex, endIndex, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);

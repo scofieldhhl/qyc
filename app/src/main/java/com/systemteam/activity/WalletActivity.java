@@ -1,8 +1,11 @@
 package com.systemteam.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,7 +16,10 @@ import com.systemteam.BaseActivity;
 import com.systemteam.R;
 import com.systemteam.adapter.ChargeAmountAdapter;
 import com.systemteam.adapter.ChargeAmountDividerDecoration;
+import com.systemteam.bean.MyUser;
 import com.systemteam.util.Utils;
+
+import cn.bmob.v3.BmobUser;
 
 /**
  * Created by gaolei on 16/12/29.
@@ -39,6 +45,18 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     @Override
     protected void initView() {
         initToolBar(this, R.string.wallet);
+        mToolbar.inflateMenu(R.menu.menu_toolbar_wallet);
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_detail:
+//                        startActivity(new Intent(WalletActivity.this, SearchActivity.class));
+                        break;
+                }
+                return true;
+            }
+        });
         recyclerview_acount = (RecyclerView) findViewById(R.id.recyclerview_acount);
         ballance = (TextView) findViewById(R.id.ballance);
         wechat = (ImageView) findViewById(R.id.wechat);
@@ -53,16 +71,34 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         recyclerview_acount.setAdapter(adapter);
         adapter.setOnClickListener(this);
         recyclerview_acount.addItemDecoration(new ChargeAmountDividerDecoration(10));
-        String acount_ballance = getString(R.string.account_ballance);
-        Utils.setSpannableStr(ballance, acount_ballance, acount_ballance.length() - 3,
-                acount_ballance.length() - 2, 1.2f);
+
         mBtnBook = (Button) findViewById(R.id.btn_book);
         mBtnBook.setOnClickListener(this);
+
+        mUser = BmobUser.getCurrentUser(MyUser.class);
+        if(mUser != null && mUser.getType() != null && mUser.getType().intValue() == 1){
+            String str1 = getString(R.string.account_withdraw);
+            String str2 =  getString(R.string.account_ballance, str1);
+            int index = str2.indexOf(str1);
+            Utils.setSpannableStr(ballance, str2, index, str2.length(), 0.6f,
+                    getResources().getColor(R.color.common_blue_main));
+        }else {
+
+            String acount_ballance = getString(R.string.account_ballance, "");
+            Utils.setSpannableStr(ballance, acount_ballance, acount_ballance.length() - 3,
+                    acount_ballance.length() - 2, 1.2f, Color.parseColor("#393939"));
+        }
     }
 
     @Override
     protected void initData() {
 
+    }
+
+    public void doApply(View view){
+        if(mUser != null && mUser.getType() != null && mUser.getType().intValue() == 1){
+
+        }
     }
 
     @Override

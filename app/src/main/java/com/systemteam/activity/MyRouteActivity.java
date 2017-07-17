@@ -25,7 +25,7 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
 
     XRecyclerView routeRecyclerView;
     MyRouteAdapter routeAdapter;
-    List<RouteRecord> routeList;
+    List<Object> routeList;
     String TABLE_NAME = "cycle_route";
     int PageId = 0, PageSize = 10;
     long itemCount = 0;
@@ -43,7 +43,7 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
     @Override
     public void onItemClick(View v, int position) {
         Intent intent = new Intent(MyRouteActivity.this, RouteDetailActivity.class);
-        RouteRecord routeRecord = routeList.get(position);
+        RouteRecord routeRecord = (RouteRecord)routeList.get(position);
 //        bundle.putParcelable("routeContent",routeRecord );
         Log.d("gaolei", "getCycle_date------pass-------" + routeRecord.getCycle_date());
         Log.d("gaolei", "getCycle_points----pass---------" + routeRecord.getCycle_points());
@@ -56,7 +56,7 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
         startActivity(intent);
     }
 
-    public List<RouteRecord> getAllPoints() {
+    public List<Object> getAllPoints() {
         String sql = "select * from cycle_route order by route_id DESC ";
         RouteDBHelper helper = new RouteDBHelper(this);
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -85,7 +85,7 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
      * SQL:Select * From TABLE_NAME Limit 9 Offset 10;
      * 表示从TABLE_NAME表获取数据，跳过10行，取9行
      */
-    public List<RouteRecord> loadPage() {
+    public List<Object> loadPage() {
         if (routeList.size() >= itemCount) {
             routeRecyclerView.setNoMore(true);
             return null;
@@ -141,7 +141,7 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
         routeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 //        routeList = getAllPoints();
-        routeList = new ArrayList<RouteRecord>();
+        routeList = new ArrayList<>();
 
         RouteDBHelper helper = new RouteDBHelper(this);
         db = helper.getWritableDatabase();

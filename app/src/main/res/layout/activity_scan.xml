@@ -24,6 +24,7 @@
         android:id="@+id/zbarview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
         app:qrcv_animTime="1000"
         app:qrcv_barCodeTipText="@string/scan_hint"
         app:qrcv_barcodeRectHeight="140dp"

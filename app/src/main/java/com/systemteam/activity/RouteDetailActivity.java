@@ -22,11 +22,11 @@ import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
-import com.systemteam.R;
-import com.systemteam.BaseActivity;
-import com.systemteam.bean.RoutePoint;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.systemteam.BaseActivity;
+import com.systemteam.R;
+import com.systemteam.bean.RoutePoint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,56 +51,8 @@ public class RouteDetailActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_detail);
-        setStatusBar();
-        route_detail_mapview = (MapView) findViewById(R.id.route_detail_mapview);
-        total_time = (TextView) findViewById(R.id.total_time);
-        total_distance = (TextView) findViewById(R.id.total_distance);
-        total_price = (TextView) findViewById(R.id.total_pricce);
-        routeBaiduMap = route_detail_mapview.getMap();
-        route_detail_mapview.showZoomControls(false);
-        startBmp = BitmapDescriptorFactory.fromResource(R.mipmap.route_start);
-        endBmp = BitmapDescriptorFactory.fromResource(R.mipmap.route_end);
-        initMap();
-
-        Intent intent = getIntent();
-        String time = intent.getStringExtra("totalTime");
-        String distance = intent.getStringExtra("totalDistance");
-        String price = intent.getStringExtra("totalPrice");
-        routePointsStr = intent.getStringExtra("routePoints");
-        routePoints = new Gson().fromJson(routePointsStr, new TypeToken<List<RoutePoint>>() {
-        }.getType());
-
-
-        List<LatLng> points = new ArrayList<LatLng>();
-
-        for (int i = 0; i < routePoints.size(); i++) {
-            RoutePoint point = routePoints.get(i);
-            LatLng latLng = new LatLng(point.getRouteLat(), point.getRouteLng());
-            Log.d("gaolei", "point.getRouteLat()----show-----" + point.getRouteLat());
-            Log.d("gaolei", "point.getRouteLng()----show-----" + point.getRouteLng());
-            points.add(latLng);
-        }
-        if (points.size() > 2) {
-            OverlayOptions ooPolyline = new PolylineOptions().width(10)
-                    .color(0xFF36D19D).points(points);
-            routeBaiduMap.addOverlay(ooPolyline);
-            RoutePoint startPoint = routePoints.get(0);
-            LatLng startPosition = new LatLng(startPoint.getRouteLat(), startPoint.getRouteLng());
-
-            MapStatus.Builder builder = new MapStatus.Builder();
-            builder.target(startPosition).zoom(18.0f);
-            routeBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
-
-            RoutePoint endPoint = routePoints.get(routePoints.size() - 1);
-            LatLng endPosition = new LatLng(endPoint.getRouteLat(), endPoint.getRouteLng());
-            addOverLayout(startPosition, endPosition);
-        }
-
-        total_time.setText("骑行时长：" + time + "分钟");
-        total_distance.setText("骑行距离：" + distance + "米");
-        total_price.setText("余额支付：" + price + "元");
-
-
+        initView();
+        initData();
     }
 
     private void initMap() {
@@ -167,7 +119,6 @@ public class RouteDetailActivity extends BaseActivity {
                 .icon(endBmp);
         // 在地图上添加Marker，并显示
         routeBaiduMap.addOverlay(options2);
-
     }
 
     public void onDestroy() {
@@ -179,12 +130,58 @@ public class RouteDetailActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        mContext = this;
 
+        route_detail_mapview = (MapView) findViewById(R.id.route_detail_mapview);
+        total_time = (TextView) findViewById(R.id.total_time);
+        total_distance = (TextView) findViewById(R.id.total_distance);
+        total_price = (TextView) findViewById(R.id.total_pricce);
+        routeBaiduMap = route_detail_mapview.getMap();
+        route_detail_mapview.showZoomControls(false);
+        startBmp = BitmapDescriptorFactory.fromResource(R.mipmap.route_start);
+        endBmp = BitmapDescriptorFactory.fromResource(R.mipmap.route_end);
+        initMap();
     }
 
     @Override
     protected void initData() {
+        Intent intent = getIntent();
+        String time = intent.getStringExtra("totalTime");
+        String distance = intent.getStringExtra("totalDistance");
+        String price = intent.getStringExtra("totalPrice");
+        routePointsStr = intent.getStringExtra("routePoints");
+        routePoints = new Gson().fromJson(routePointsStr, new TypeToken<List<RoutePoint>>() {
+        }.getType());
 
+
+        List<LatLng> points = new ArrayList<LatLng>();
+
+        for (int i = 0; i < routePoints.size(); i++) {
+            RoutePoint point = routePoints.get(i);
+            LatLng latLng = new LatLng(point.getRouteLat(), point.getRouteLng());
+            Log.d("gaolei", "point.getRouteLat()----show-----" + point.getRouteLat());
+            Log.d("gaolei", "point.getRouteLng()----show-----" + point.getRouteLng());
+            points.add(latLng);
+        }
+        if (points.size() > 2) {
+            OverlayOptions ooPolyline = new PolylineOptions().width(10)
+                    .color(0xFF36D19D).points(points);
+            routeBaiduMap.addOverlay(ooPolyline);
+            RoutePoint startPoint = routePoints.get(0);
+            LatLng startPosition = new LatLng(startPoint.getRouteLat(), startPoint.getRouteLng());
+
+            MapStatus.Builder builder = new MapStatus.Builder();
+            builder.target(startPosition).zoom(18.0f);
+            routeBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+
+            RoutePoint endPoint = routePoints.get(routePoints.size() - 1);
+            LatLng endPosition = new LatLng(endPoint.getRouteLat(), endPoint.getRouteLng());
+            addOverLayout(startPosition, endPosition);
+        }
+
+        total_time.setText("骑行时长：" + time + "分钟");
+        total_distance.setText("骑行距离：" + distance + "米");
+        total_price.setText("余额支付：" + price + "元");
     }
 
     public void finishActivity(View view) {

@@ -7,7 +7,7 @@
     <LinearLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="?attr/actionBarSize"
         android:background="@color/color_343333"
         android:gravity="bottom"
         android:orientation="vertical">

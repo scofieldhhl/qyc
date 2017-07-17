@@ -60,6 +60,7 @@
                 style="@style/code_edit_style"
                 android:layout_margin="20dp"
                 android:layout_width="match_parent"
+                android:windowSoftInputMode="stateAlwaysVisible"
                 android:hint="@string/input_scan" />
             <!--android:windowSoftInputMode="stateVisible"-->
             <TextView

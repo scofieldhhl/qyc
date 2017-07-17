@@ -1,11 +1,9 @@
 package com.systemteam.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.systemteam.R;
 import com.systemteam.bean.Car;
@@ -16,12 +14,7 @@ import java.util.List;
  * Created by gaolei on 17/1/18.
  */
 
-public class MyCarAdapter extends RecyclerView.Adapter<MyCarAdapter.MyViewHolder> {
-
-    public Context context;
-    OnItemClickListener listener;
-    List<Object> list;
-
+public class MyCarAdapter extends BaseAdapter {
     public MyCarAdapter(Context context, List<Object> list) {
         this.context = context;
         this.list = list;
@@ -30,10 +23,10 @@ public class MyCarAdapter extends RecyclerView.Adapter<MyCarAdapter.MyViewHolder
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = null;
         switch (viewType){
-            case 0:
+            case TYPE_TITLE:
                 view = LayoutInflater.from(context).inflate(R.layout.item_my_car, null);
                 break;
-            case 1:
+            case TYPE_CONTENT:
                 view = LayoutInflater.from(context).inflate(R.layout.item_my_car, null);
                 break;
         }
@@ -54,7 +47,7 @@ public class MyCarAdapter extends RecyclerView.Adapter<MyCarAdapter.MyViewHolder
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.itemView.setTag(position);
         switch(position){
-            case 0:
+            case TYPE_TITLE:
                 holder.bike_time.setText("编号");
                 holder.bike_distance.setText("收益");
                 holder.bike_price.setText("状态");
@@ -71,33 +64,8 @@ public class MyCarAdapter extends RecyclerView.Adapter<MyCarAdapter.MyViewHolder
     }
 
     @Override
-    public int getItemViewType(int position) {
-        return super.getItemViewType(position);
-    }
-
-
-    @Override
     public int getItemCount() {
         return list.size();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView bike_time,bike_distance,bike_price,bike_date;
-
-        public MyViewHolder(View view) {
-            super(view);
-            bike_time = (TextView) view.findViewById(R.id.bike_time);
-            bike_distance = (TextView) view.findViewById(R.id.bike_distance);
-            bike_price = (TextView) view.findViewById(R.id.bike_price);
-            bike_date = (TextView) view.findViewById(R.id.bike_date);
-        }
-    }
-
-    public interface OnItemClickListener {
-        public void onItemClick(View v, int position);
-    }
-
-    public void setOnClickListener(OnItemClickListener listener) {
-        this.listener = listener;
-    }
 }

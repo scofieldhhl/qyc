@@ -2,6 +2,7 @@ package com.systemteam.activity;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,6 +14,7 @@ import android.os.Vibrator;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +29,8 @@ import java.util.List;
 
 import cn.bingoogolapple.qrcode.core.QRCodeView;
 import cn.bingoogolapple.qrcode.zbar.ZBarView;
+
+import static com.systemteam.util.Utils.imm;
 
 public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Delegate {
     private boolean isLightOpened = false;
@@ -80,6 +84,7 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
     @Override
     protected void initView() {
         initToolBar(this, R.string.title_scan);
+        mImm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         mQRCodeView = (ZBarView) findViewById(R.id.zbarview);
         mQRCodeView.setDelegate(this);
     }
@@ -309,6 +314,8 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.btn_unlock:
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
+                        mImm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
                         String code = String.valueOf(((EditText) dialog.findViewById(R.id.et_code)).getText());
                         if(!TextUtils.isEmpty(code) && code.length() > 5){
                             //TODO 校验输入车牌的有效性
@@ -322,6 +329,7 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
                         break;
                     case R.id.menu_icon:
                     case R.id.iv_scan:
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
                         dialog.dismiss();
                         break;
                 }
@@ -332,6 +340,7 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
         dialog.findViewById(R.id.menu_icon).setOnClickListener(listener);
         dialog.findViewById(R.id.iv_scan).setOnClickListener(listener);
         dialog.show();
+        mImm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
         return dialog;
     }
 
