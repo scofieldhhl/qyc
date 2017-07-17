@@ -19,13 +19,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textview_time"
-
-                style="@style/text_style"
-                android:text="@string/bike_time"
-                android:textSize="18sp" />
-
-            <TextView
                 android:id="@+id/bike_time"
                 style="@style/text_style"
                 android:textColor="@color/color_393939"
@@ -40,12 +33,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textview_distance"
-                style="@style/text_style"
-                android:text="@string/bike_distance"
-                android:textSize="18sp" />
-
-            <TextView
                 android:id="@+id/bike_distance"
                 style="@style/text_style"
                 android:textColor="@color/color_393939"
@@ -57,12 +44,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textview_price"
-                style="@style/text_style"
-                android:text="@string/bike_price"
-                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/bike_price"

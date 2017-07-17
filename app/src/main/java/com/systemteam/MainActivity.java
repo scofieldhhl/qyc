@@ -69,7 +69,6 @@ import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.systemteam.activity.BreakActivity;
 import com.systemteam.activity.CodeUnlockActivity;
-import com.systemteam.car.MyCarActivity;
 import com.systemteam.activity.MyRouteActivity;
 import com.systemteam.activity.NavigationActivity;
 import com.systemteam.activity.QRCodeScanActivity;
@@ -77,7 +76,9 @@ import com.systemteam.activity.RouteDetailActivity;
 import com.systemteam.activity.SettingActivity;
 import com.systemteam.activity.WalletActivity;
 import com.systemteam.bean.BikeInfo;
+import com.systemteam.bean.Car;
 import com.systemteam.callback.AllInterface;
+import com.systemteam.car.MyCarActivity;
 import com.systemteam.custom.LeftDrawerLayout;
 import com.systemteam.fragment.LeftMenuFragment;
 import com.systemteam.map.MyOrientationListener;
@@ -97,10 +98,15 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobGeoPoint;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import overlayutil.OverlayManager;
 import overlayutil.WalkingRouteOverlay;
 
 import static com.systemteam.bean.BikeInfo.infos;
+import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 
 public class MainActivity extends BaseActivity implements OnGetRoutePlanResultListener,
         AllInterface.OnMenuSlideListener {
@@ -152,6 +158,16 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
                     animator.setTarget(splash_img);
                     animator.start();*/
                     break;
+                case MSG_RESPONSE_SUCCESS:
+                    List<Car> list = (List<Car>) msg.obj;
+                    if(list != null && list.size() > 0){
+                        List<BikeInfo> listBike = new ArrayList<>();
+                        for(Car car : list){//TODO 两层for循环效率低
+                            listBike.add(new BikeInfo(car.getPosition().getLatitude(), car.getPosition().getLongitude(), R.mipmap.bike_mobai, "001",
+                                    "100米", car.getCarNo()));
+                        }
+                        addInfosOverlay(listBike);
+                    }
             }
         }
     };
@@ -747,6 +763,27 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         infos.add(bikeInfo);
         addInfosOverlay(infos);
         initNearestBike(bikeInfo, new LatLng(_latitude - 0.0005, _longitude - 0.0005));
+        //loading car
+        loadCarlistNear(_latitude, _longitude);
+    }
+
+    private void loadCarlistNear(double _latitude, double _longitude){
+        BmobQuery<Car> query = new BmobQuery<>();
+        query.addWhereNear("position", new BmobGeoPoint(_longitude, _latitude));
+        addSubscription(query.findObjects(new FindListener<Car>() {
+
+            @Override
+            public void done(List<Car> object, BmobException e) {
+                if(e==null){
+                    toast("查询成功:" + object.size());
+                    Message msg = handler.obtainMessage(Constant.MSG_RESPONSE_SUCCESS);
+                    msg.obj = object;
+                    msg.sendToTarget();
+                }else{
+                    loge(e);
+                }
+            }
+        }));
     }
 
     private void initMarkerClickEvent() {

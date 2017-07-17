@@ -19,17 +19,24 @@ import java.util.List;
 public class MyCarAdapter extends RecyclerView.Adapter<MyCarAdapter.MyViewHolder> {
 
     public Context context;
-    int selectPosition = 0;
     OnItemClickListener listener;
-    List<Car> list;
+    List<Object> list;
 
-    public MyCarAdapter(Context context, List<Car> list) {
+    public MyCarAdapter(Context context, List<Object> list) {
         this.context = context;
         this.list = list;
     }
 
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.my_route_item, null);
+        View view = null;
+        switch (viewType){
+            case 0:
+                view = LayoutInflater.from(context).inflate(R.layout.item_my_car, null);
+                break;
+            case 1:
+                view = LayoutInflater.from(context).inflate(R.layout.item_my_car, null);
+                break;
+        }
         MyViewHolder holder = new MyViewHolder(view);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,12 +53,28 @@ public class MyCarAdapter extends RecyclerView.Adapter<MyCarAdapter.MyViewHolder
 
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.itemView.setTag(position);
-        Car Car=list.get(position);
-        holder.bike_time.setText(context.getString(R.string.cost_time, Car.getCarNo()));
-        holder.bike_distance.setText(context.getString(R.string.cost_distance, String.valueOf(Car.getEarn())));
-        holder.bike_price.setText(context.getString(R.string.cost_num, String.valueOf(Car.getStatus())));
-        holder.bike_date.setText(Car.getUpdatedAt());
+        switch(position){
+            case 0:
+                holder.bike_time.setText("编号");
+                holder.bike_distance.setText("收益");
+                holder.bike_price.setText("状态");
+                holder.bike_date.setVisibility(View.GONE);
+                break;
+            default:
+                Car Car= (Car) list.get(position);
+                holder.bike_time.setText(Car.getCarNo());
+                holder.bike_distance.setText(String.valueOf(Car.getEarn() == null ? 0.0 : Car.getEarn()));
+                holder.bike_price.setText(String.valueOf(Car.getStatus() == null ? 0 : Car.getStatus()));
+                holder.bike_date.setText(Car.getUpdatedAt());
+                break;
+        }
     }
+
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
+    }
+
 
     @Override
     public int getItemCount() {

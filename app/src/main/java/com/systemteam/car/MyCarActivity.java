@@ -33,7 +33,7 @@ public class MyCarActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, MyCarAdapter.OnItemClickListener {
     XRecyclerView routeRecyclerView;
     MyCarAdapter routeAdapter;
-    List<Car> routeList;
+    List<Object> routeList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,23 +66,12 @@ public class MyCarActivity extends BaseActivity
 
     @Override
     protected void initData() {
-        initCarList();
         routeRecyclerView = (XRecyclerView) findViewById(R.id.recyclerview_route);
 //        no_route = (TextView) findViewById(R.id.no_route);
         routeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 //        routeList = getAllPoints();
         routeList = new ArrayList<>();
-
-        routeList = loadPage();
-        if (routeList != null) {
-            routeAdapter = new MyCarAdapter(this, routeList);
-            routeRecyclerView.setAdapter(routeAdapter);
-            routeRecyclerView.addItemDecoration(new MyRouteDividerDecoration(10));
-            routeAdapter.setOnClickListener(this);
-        }else{
-//            no_route.setVisibility(View.VISIBLE);
-        }
 
         routeRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
         routeRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallScale);
@@ -106,6 +95,12 @@ public class MyCarActivity extends BaseActivity
                 routeAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initCarList();
     }
 
     @Override
@@ -190,7 +185,8 @@ public class MyCarActivity extends BaseActivity
             public void done(List<Car> object, BmobException e) {
                 if(e==null){
                     toast("查询成功:" + object.size());
-                    routeList = object;
+                    routeList.add("");
+                    routeList.addAll(object);
                     routeAdapter = new MyCarAdapter(mContext, routeList);
                     routeRecyclerView.setAdapter(routeAdapter);
                     routeRecyclerView.addItemDecoration(new MyRouteDividerDecoration(10));

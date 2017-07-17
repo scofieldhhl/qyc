@@ -21,6 +21,7 @@ import com.systemteam.activity.QRCodeScanActivity;
 import com.systemteam.bean.Car;
 import com.systemteam.bean.MyUser;
 import com.systemteam.util.LocationManager;
+import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
 
 import java.util.List;
@@ -123,7 +124,7 @@ public class NewCarActivity extends BaseActivity {
             addSubscription(mCar.save(new SaveListener<String>() {
                 @Override
                 public void done(String s, BmobException e) {
-                    log("SaveListener: " + s);
+                    LogTool.d("SaveListener: " + s);
                     if(e==null){
                         toast("注册成功:" +s.toString());
                     }else{
@@ -188,7 +189,7 @@ public class NewCarActivity extends BaseActivity {
             }
             mLatitude = bdLocation.getLatitude();
             mLongitude = bdLocation.getLongitude();
-            log("mLongitude: " + mLongitude + "  mLatitude: " + mLatitude );
+            LogTool.d("mLongitude: " + mLongitude + "  mLatitude: " + mLatitude );
             MyLocationData locData = new MyLocationData.Builder()
                     .accuracy(bdLocation.getRadius())
                     .latitude(bdLocation.getLatitude())

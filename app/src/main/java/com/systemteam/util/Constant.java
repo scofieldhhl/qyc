@@ -13,4 +13,6 @@ public class Constant {
     public static final int  REQUEST_IMAGE = 100;
     public static final int  REQUEST_CODE = 101;
 
+    public static final int MSG_RESPONSE_SUCCESS = 0x123;
+
 }
