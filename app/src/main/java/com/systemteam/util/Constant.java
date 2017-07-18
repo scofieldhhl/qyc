@@ -5,7 +5,7 @@ package com.systemteam.util;
  */
 
 public class Constant {
-    public static final String  gaodeKey="4eeb3dc8226242574fa33daa767126b2";
+    public static final float COST_BASE = 1.0f;
     public static final String  BUNDLE_USER = "key_user";
     public static final String  BUNDLE_TYPE_MENU = "key_type";
     public static final String  BUNDLE_KEY_CODE = "key_code";
@@ -14,5 +14,7 @@ public class Constant {
     public static final int  REQUEST_CODE = 101;
 
     public static final int MSG_RESPONSE_SUCCESS = 0x123;
+
+    public static final String SHAERD_FILE_NAME = "shared_file_name";
 
 }

@@ -87,8 +87,7 @@
         </LinearLayout>
         <View style="@style/menu_divider_style" />
         <LinearLayout
-            style="@style/menu_layout_style"
-            android:visibility="gone">
+            style="@style/menu_layout_style">
 
             <ImageView
                 style="@style/menu_icon_style"
@@ -103,9 +102,14 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
 
-            <ImageView style="@style/menu_right_arrow_style" />
-        </LinearLayout>
+            <TextView
+                android:id="@+id/tv_coupon"
+                android:padding="10dp"
+                style="@style/menu_text_style" />
 
+            <!--<ImageView style="@style/menu_right_arrow_style" />-->
+        </LinearLayout>
+        <View style="@style/menu_divider_style" />
         <LinearLayout
             android:id="@+id/ll_mycar"
             style="@style/menu_layout_style"

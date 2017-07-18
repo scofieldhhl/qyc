@@ -13,7 +13,7 @@ public class MyUser extends BmobUser {
 	private MyUser superUser;//
 	private Integer status;	//0申请中 1商户
 	private Integer earn;	//收益
-	private Integer coupon; //优惠券数
+	private Integer coupon = 3; //优惠券数
 	private String photoPath;//
 
 	public Integer getAge() {

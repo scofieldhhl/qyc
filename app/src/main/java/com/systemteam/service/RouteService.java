@@ -17,7 +17,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.baidu.location.BDLocation;
@@ -29,6 +28,7 @@ import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
+import com.google.gson.Gson;
 import com.systemteam.MainActivity;
 import com.systemteam.R;
 import com.systemteam.activity.RouteDetailActivity;
@@ -36,10 +36,12 @@ import com.systemteam.bean.RoutePoint;
 import com.systemteam.callback.AllInterface;
 import com.systemteam.database.RouteDBHelper;
 import com.systemteam.map.MyOrientationListener;
+import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
+
+import static com.systemteam.util.Constant.COST_BASE;
 
 
 //        当前位置:我的异常网» Android » Android使用百度LBS SDK（4）记录和显示行走轨迹
@@ -99,7 +101,7 @@ public class RouteService extends Service {
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("gaolei", "RouteService--------onStartCommand---------------");
+        LogTool.d("RouteService--------onStartCommand---------------");
         initLocation();//初始化LocationgClient
         initNotification();
         Utils.acquireWakeLock(this);
@@ -174,12 +176,12 @@ public class RouteService extends Service {
 
 
     public IBinder onBind(Intent intent) {
-        Log.d("gaolei", "onBind-------------");
+        LogTool.d("onBind-------------");
         return null;
     }
 
     public boolean onUnBind(Intent intent) {
-        Log.d("gaolei", "onBind-------------");
+        LogTool.d("onBind-------------");
         return false;
     }
 
@@ -188,10 +190,10 @@ public class RouteService extends Service {
         super.onDestroy();
         mlocationClient.stop();
         myOrientationListener.stop();
-        Log.d("gaolei", "RouteService----0nDestroy---------------");
+        LogTool.d("RouteService----0nDestroy---------------");
         Gson gson = new Gson();
         String routeListStr = gson.toJson(routPointList);
-        Log.d("gaolei", "RouteService----routeListStr-------------" + routeListStr);
+        LogTool.d("RouteService----routeListStr-------------" + routeListStr);
         Bundle bundle = new Bundle();
         bundle.putString("totalTime", totalTime + "");
         bundle.putString("totalDistance", totalDistance + "");
@@ -218,11 +220,12 @@ public class RouteService extends Service {
         public void onReceiveLocation(BDLocation bdLocation) {
             if (null == bdLocation) return;
             //"4.9E-324"表示目前所处的环境（室内或者是网络状况不佳）造成无法获取到经纬度
-            if ("4.9E-324".equals(String.valueOf(bdLocation.getLatitude())) || "4.9E-324".equals(String.valueOf(bdLocation.getLongitude()))) {
+            if ("4.9E-324".equals(String.valueOf(bdLocation.getLatitude())) ||
+                    "4.9E-324".equals(String.valueOf(bdLocation.getLongitude()))) {
                 return;
             }//过滤百度定位失败
 
-            Log.d("gaolei", "RouteService---------getAddrStr()-------------" + bdLocation.getAddrStr());
+            LogTool.d("RouteService---------getAddrStr()-------------" + bdLocation.getAddrStr());
             double routeLat = bdLocation.getLatitude();
             double routeLng = bdLocation.getLongitude();
             RoutePoint routePoint = new RoutePoint();
@@ -242,7 +245,7 @@ public class RouteService extends Service {
                     LatLng currentLatLng = new LatLng(routeLat, routeLng);
                     if (routeLat > 0 && routeLng > 0) {
                         double distantce = DistanceUtil.getDistance(lastLatLng, currentLatLng);
-//                        Log.d("gaolei", "distantce--------------" + distantce);
+//                        LogTool.d("distantce--------------" + distantce);
                         if (distantce > 5) {
                             routPointList.add(routePoint);
                             totalDistance += distantce;
@@ -252,16 +255,16 @@ public class RouteService extends Service {
             }
 
             totalTime = (int) (System.currentTimeMillis() - beginTime) / 1000 / 60;
-            totalPrice = (float) (Math.floor(totalTime / 30) * 0.5 + 0.5);
-//            Log.d("gaolei", "biginTime--------------" + beginTime);
-            Log.d("gaolei", "totalTime--------------" + totalTime);
-            Log.d("gaolei", "totalDistance--------------" + totalDistance);
-            startNotifi(totalTime + "分钟", totalDistance + "米", totalPrice + "元");
+//            totalPrice = (float) (Math.floor(totalTime / 30) * COST_BASE + COST_BASE);
+            totalPrice = COST_BASE;
+            startNotifi(getString(R.string.cost_time, String.valueOf(totalTime)),
+                    getString(R.string.cost_distance, String.valueOf(totalDistance)),
+                    getString(R.string.cost_num, String.valueOf(totalPrice)));
             Intent intent = new Intent("com.locationreceiver");
             Bundle bundle = new Bundle();
-            bundle.putString("totalTime", totalTime + "分钟");
-            bundle.putString("totalDistance", totalDistance + "米");
-            bundle.putString("totalPrice", totalPrice + "元");
+            bundle.putString("totalTime", getString(R.string.cost_time, String.valueOf(totalTime)));
+            bundle.putString("totalDistance", getString(R.string.cost_distance, String.valueOf(totalDistance)));
+            bundle.putString("totalPrice", getString(R.string.cost_num, String.valueOf(totalPrice)));
             intent.putExtras(bundle);
             sendBroadcast(intent);
         }

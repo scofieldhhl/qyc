@@ -16,6 +16,7 @@ import com.systemteam.BaseActivity;
 import com.systemteam.BikeApplication;
 import com.systemteam.R;
 import com.systemteam.bean.MyUser;
+import com.systemteam.util.Constant;
 import com.systemteam.view.IconEditTextView;
 import com.systemteam.view.ProgressDialogHelper;
 
@@ -87,7 +88,7 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     protected void initData() {
-        mSharedPre = mContext.getSharedPreferences(Constants.SHAERD_FILE_NAME, Context.MODE_PRIVATE);
+        mSharedPre = mContext.getSharedPreferences(Constant.SHAERD_FILE_NAME, Context.MODE_PRIVATE);
         initInfo(((BikeApplication)this.getApplication()).getmUser());
     }
 

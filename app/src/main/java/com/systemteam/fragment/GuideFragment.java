@@ -66,11 +66,19 @@ public class GuideFragment extends BaseFragment{
             case R.id.tr_lock:
                 type = 0;
                 break;
+            case R.id.tr_pay:
+                type = 2;
+                break;
+            case R.id.tr_protocol:
+                type = 3;
+                break;
         }
         if(type == 0 || type == 1){
             Intent intent = new Intent(getActivity(), BreakActivity.class);
             intent.putExtra(Constant.BUNDLE_TYPE_MENU, type);
             startActivity(intent);
+        }else {
+
         }
     }
 

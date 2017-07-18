@@ -2,15 +2,15 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-    <PreferenceCategory
+    <!--<PreferenceCategory
         android:key="@string/pref_downloadsettings_key"
         android:title="@string/pref_downloadsettings_title">
-        <!--<com.keepvid.studio.view.IconListPreference
+        <com.keepvid.studio.view.IconListPreference
             android:key="@string/pref_download_path_key"
             android:negativeButtonText="@string/cancel"
-            android:title="@string/pref_download_path_title" />-->
+            android:title="@string/pref_download_path_title" />
 
-        <!--<EditTextPreference
+        <EditTextPreference
             android:defaultValue="@string/pref_max_download_task_default"
             android:dialogLayout="@layout/dialog_setting_maxtask"
             android:dialogTitle="@string/pref_max_download_task_dlg"
@@ -26,9 +26,9 @@
             android:dialogTitle="@string/pref_wifi_download_only_dlg"
             android:key="@string/pref_wifi_download_only_key"
             android:title="@string/pref_wifi_download_only_title"
-            android:widgetLayout="@layout/layout_checkbox_switcher" />-->
+            android:widgetLayout="@layout/layout_checkbox_switcher" />
 
-    </PreferenceCategory>
+    </PreferenceCategory>-->
 
     <PreferenceCategory
         android:key="@string/pref_generalsettings_key"

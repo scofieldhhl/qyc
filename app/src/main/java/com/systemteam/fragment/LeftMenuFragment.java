@@ -25,7 +25,7 @@ public class LeftMenuFragment extends BaseFragment {
 
     private LinearLayout mLLMycar;
     private ImageView mPhoto;
-    private TextView mTvName, mTvVersion;
+    private TextView mTvName, mTvVersion, mTvCoupon;
     public LeftMenuFragment(){
     }
 
@@ -49,6 +49,7 @@ public class LeftMenuFragment extends BaseFragment {
         mTvName = (TextView) view.findViewById(R.id.user_name);
         mPhoto = (ImageView) view.findViewById(R.id.user_photo);
         mTvVersion = (TextView) view.findViewById(R.id.tv_version);
+        mTvCoupon = (TextView) view.findViewById(R.id.tv_coupon);
     }
 
     @Override
@@ -63,6 +64,7 @@ public class LeftMenuFragment extends BaseFragment {
         if(mUser != null){
             (mTvName).setText(mUser.getUsername());
             ((BaseActivity)getActivity()).loadAvatar(getActivity(), mUser.getPhotoPath(), mPhoto);
+            mTvCoupon.setText(mUser.getCoupon() == null ? "0" : String.valueOf(mUser.getCoupon()));
         }
         try {
             String pkName = mContext.getPackageName();

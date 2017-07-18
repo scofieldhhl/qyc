@@ -30,8 +30,6 @@ import java.util.List;
 import cn.bingoogolapple.qrcode.core.QRCodeView;
 import cn.bingoogolapple.qrcode.zbar.ZBarView;
 
-import static com.systemteam.util.Utils.imm;
-
 public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Delegate {
     private boolean isLightOpened = false;
     private QRCodeView mQRCodeView;
@@ -314,7 +312,7 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.btn_unlock:
-                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
+                        mImm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
                         mImm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
                         String code = String.valueOf(((EditText) dialog.findViewById(R.id.et_code)).getText());
                         if(!TextUtils.isEmpty(code) && code.length() > 5){
@@ -329,7 +327,7 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
                         break;
                     case R.id.menu_icon:
                     case R.id.iv_scan:
-                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
+                        mImm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
                         dialog.dismiss();
                         break;
                 }
