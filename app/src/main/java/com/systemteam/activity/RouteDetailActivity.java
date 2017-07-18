@@ -179,9 +179,12 @@ public class RouteDetailActivity extends BaseActivity {
             addOverLayout(startPosition, endPosition);
         }
 
-        total_time.setText("骑行时长：" + time + "分钟");
-        total_distance.setText("骑行距离：" + distance + "米");
-        total_price.setText("余额支付：" + price + "元");
+        total_time.setText(getString(R.string.bike_time)+ " ：" +
+                getString(R.string.cost_time, String.valueOf(time)));
+        total_distance.setText(getString(R.string.bike_distance)+ " ：" +
+                getString(R.string.cost_distance, String.valueOf(distance)));
+        total_price.setText(getString(R.string.bike_price)+ " ：" + 
+                getString(R.string.cost_num, String.valueOf(price)));
     }
 
     public void finishActivity(View view) {

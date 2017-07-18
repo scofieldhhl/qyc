@@ -24,7 +24,7 @@ public class BikeInfo implements Serializable {
      */
     private int imgId;
     /**
-     * 商家名称
+     * 商家名称(编码)
      */
     private String name;
     /**

@@ -108,6 +108,7 @@ import overlayutil.WalkingRouteOverlay;
 
 import static com.systemteam.bean.BikeInfo.infos;
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
+import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
 import static com.systemteam.util.Constant.DISMISS_SPLASH;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
@@ -117,12 +118,10 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
 
     private double currentLatitude, currentLongitude, changeLatitude, changeLongitude;
     private ImageView splash_img, btn_locale, btn_refresh, mIvScan;
-    public static TextView current_addr;
-    private TextView book_bt, cancel_book, end_route;
+    private TextView book_bt, cancel_book, end_route, current_addr, bike_distance, bike_time, bike_price;
     private LinearLayout bike_layout, bike_distance_layout, bike_info_layout, confirm_cancel_layout;
     private TextView bike_code, bike_sound, book_countdown, prompt,
             textview_time, textview_distance, textview_price, unlock;
-    public static TextView bike_distance, bike_time, bike_price;
     private long exitTime = 0;
     private View divider;
     private boolean isFirstIn;
@@ -177,7 +176,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
                         List<BikeInfo> listBike = new ArrayList<>();
                         for(Car car : list){//TODO 两层for循环效率低
                             listBike.add(new BikeInfo(car.getPosition().getLatitude(), car.getPosition().getLongitude(),
-                                    R.mipmap.bike_mobai, "001", "100米", car.getCarNo()));
+                                    R.mipmap.bike_mobai, car.getCarNo(), "100米", "100"));
                         }
                         theActivity.addInfosOverlay(listBike);
                     }
@@ -770,14 +769,14 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         // 在地图上添加Marker，并显示
         mBaiduMap.addOverlay(options);
         infos.clear();
-        infos.add(new BikeInfo(_latitude - new Random().nextInt(5) * 0.0005, _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_mobai, "001",
-                "100米", "1分钟"));
-        infos.add(new BikeInfo(_latitude - new Random().nextInt(5) * 0.0005, _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_youbai, "002",
-                "200米", "2分钟"));
-        infos.add(new BikeInfo(_latitude - new Random().nextInt(5) * 0.0005, _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_ofo, "003",
-                "300米", "3分钟"));
-        infos.add(new BikeInfo(_latitude - new Random().nextInt(5) * 0.0005, _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_xiaolan, "004",
-                "400米", "4分钟"));
+        infos.add(new BikeInfo(_latitude - new Random().nextInt(5) * 0.0005,
+                _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_mobai, "001", "100米", "1分钟"));
+        infos.add(new BikeInfo(_latitude - new Random().nextInt(5) * 0.0005,
+                _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_youbai, "002", "200米", "2分钟"));
+        infos.add(new BikeInfo(_latitude - new Random().nextInt(5) * 0.0005,
+                _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_ofo, "003", "300米", "3分钟"));
+        infos.add(new BikeInfo(_latitude - new Random().nextInt(5) * 0.0005,
+                _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_xiaolan, "004", "400米", "4分钟"));
         BikeInfo bikeInfo = new BikeInfo(_latitude - 0.0005, _longitude - 0.0005, R.mipmap.bike_xiaolan, "005",
                 "50米", "0.5分钟");
         infos.add(bikeInfo);
@@ -1084,6 +1083,9 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         }
 
         Intent intent = new Intent(this, RouteService.class);
+        if(bInfo != null){
+            intent.putExtra(BUNDLE_KEY_CODE, bInfo.getName());
+        }
         startService(intent);
         MyLocationConfiguration configuration
                 = new MyLocationConfiguration(locationMode, true, mIconLocation);

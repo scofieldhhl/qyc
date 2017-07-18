@@ -19,6 +19,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
+import android.text.TextUtils;
 import android.widget.RemoteViews;
 
 import com.baidu.location.BDLocation;
@@ -45,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
+import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
 import static com.systemteam.util.Constant.COST_BASE;
 import static com.systemteam.util.Constant.FORMAT_TIME;
 import static com.systemteam.util.Constant.TIME_ONCE_ACTIVE;
@@ -88,6 +90,8 @@ public class RouteService extends Service {
     public  long beginTime = 0, totalTime = 0;
     Notification notification;
     RemoteViews contentView;
+    private boolean isBikeUsing = false;
+    private String mCarNo = "";
 
     public void setiUpdateLocation(AllInterface.IUpdateLocation iUpdateLocation) {
         this.iUpdateLocation = iUpdateLocation;
@@ -108,6 +112,12 @@ public class RouteService extends Service {
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         LogTool.d("RouteService--------onStartCommand---------------");
+        if(intent != null){
+            String key = intent.getStringExtra(BUNDLE_KEY_CODE);
+            if(key != null && !TextUtils.isEmpty(key)){
+                mCarNo = key;
+            }
+        }
 //        initLocation();//初始化LocationgClient
         initNotification();
         initCountDownTimer();
@@ -172,6 +182,7 @@ public class RouteService extends Service {
     }
 
     private void startNotifi(String time, String distance, String price) {
+        isBikeUsing = true;
         startForeground(1, notification);
         contentView.setTextViewText(R.id.bike_time, time);
         contentView.setTextViewText(R.id.bike_distance, distance);
@@ -215,6 +226,7 @@ public class RouteService extends Service {
             insertData(routeListStr);
         Utils.releaseWakeLock();
         stopForeground(true);
+        isBikeUsing = false;
     }
 
 
@@ -278,9 +290,7 @@ public class RouteService extends Service {
         }
     }
 
-    public static class NetWorkReceiver extends BroadcastReceiver
-
-    {
+    public static class NetWorkReceiver extends BroadcastReceiver{
         public NetWorkReceiver() {
         }
 
@@ -334,7 +344,9 @@ public class RouteService extends Service {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                countDownTimer.start();
+                if(!isBikeUsing){
+                    countDownTimer.start();
+                }
             }
         }, 0);
     }
@@ -350,14 +362,14 @@ public class RouteService extends Service {
             totalPrice = COST_BASE;
             String timeLeft = String.format(Locale.US, FORMAT_TIME, min,
                     secode < 10 ? "0" + secode : String.valueOf(secode));
-            startNotifi(timeLeft,
-                    getString(R.string.cost_distance, String.valueOf(totalDistance)),
+//            mCarNo = getString(R.string.cost_distance, String.valueOf(totalDistance));
+            startNotifi(timeLeft, mCarNo,
                     getString(R.string.cost_num, String.valueOf(totalPrice)));
             Intent intent = new Intent(ACTION_BROADCAST_ACTIVE);
             intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
             Bundle bundle = new Bundle();
             bundle.putString("totalTime", timeLeft);
-            bundle.putString("totalDistance", getString(R.string.cost_distance, String.valueOf(totalDistance)));
+            bundle.putString("totalDistance", mCarNo);
             bundle.putString("totalPrice", getString(R.string.cost_num, String.valueOf(totalPrice)));
             intent.putExtras(bundle);
             sendBroadcast(intent);

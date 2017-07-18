@@ -122,7 +122,7 @@
                 <TextView
                     android:id="@+id/textview_price"
                     style="@style/text_style"
-                    android:text="@string/each_hour" />
+                    android:text="@string/bike_price" />
 
                 <TextView
                     android:id="@+id/bike_price"

@@ -42,7 +42,7 @@
     <string name="net_none">现已进入无网世界</string>
 
     <string name="bike_time">使用时长</string>
-    <string name="bike_distance">骑行距离</string>
+    <string name="bike_distance">车辆编号</string>
     <string name="bike_price">花费</string>
     <string name="routing_prompt">使用时间结束后，自动结束计费~</string>
     <string name="book_prompt">预约车辆在您靠近时，点击解锁~</string>
