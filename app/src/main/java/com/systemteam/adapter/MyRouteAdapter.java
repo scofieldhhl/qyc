@@ -41,7 +41,8 @@ public class MyRouteAdapter extends BaseAdapter {
         holder.itemView.setTag(position);
         RouteRecord routeRecord=(RouteRecord)list.get(position);
         holder.bike_time.setText(context.getString(R.string.cost_time, routeRecord.getCycle_time()));
-        holder.bike_distance.setText(context.getString(R.string.cost_distance, routeRecord.getCycle_distance()));
+//        holder.bike_distance.setText(context.getString(R.string.cost_distance, routeRecord.getCycle_distance()));
+        holder.bike_distance.setText(routeRecord.getCycle_distance());
         holder.bike_price.setText(context.getString(R.string.cost_num, routeRecord.getCycle_price()));
         holder.bike_date.setText(routeRecord.getCycle_date());
     }

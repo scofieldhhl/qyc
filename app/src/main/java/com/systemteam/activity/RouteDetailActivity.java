@@ -181,9 +181,10 @@ public class RouteDetailActivity extends BaseActivity {
 
         total_time.setText(getString(R.string.bike_time)+ " ：" +
                 getString(R.string.cost_time, String.valueOf(time)));
-        total_distance.setText(getString(R.string.bike_distance)+ " ：" +
-                getString(R.string.cost_distance, String.valueOf(distance)));
-        total_price.setText(getString(R.string.bike_price)+ " ：" + 
+//        total_distance.setText(getString(R.string.bike_distance)+ " ：" +
+//                getString(R.string.cost_distance, String.valueOf(distance)));
+        total_distance.setText(getString(R.string.bike_distance)+ " ：" + String.valueOf(distance));
+        total_price.setText(getString(R.string.bike_price)+ " ：" +
                 getString(R.string.cost_num, String.valueOf(price)));
     }
 

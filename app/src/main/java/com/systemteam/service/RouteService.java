@@ -84,7 +84,7 @@ public class RouteService extends Service {
     //定位图层显示方式
     private MyLocationConfiguration.LocationMode locationMode;
     AllInterface.IUpdateLocation iUpdateLocation;
-    public ArrayList<RoutePoint> routPointList = new ArrayList<RoutePoint>();
+    public ArrayList<RoutePoint> routPointList = new ArrayList<>();
     public  int totalDistance = 0;
     public  float totalPrice = 0;
     public  long beginTime = 0, totalTime = 0;
@@ -222,8 +222,9 @@ public class RouteService extends Service {
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-        if (routPointList.size() > 2)
-            insertData(routeListStr);
+        /*if (routPointList.size() > 2)
+            insertData(routeListStr);*/
+        insertData(routeListStr);
         Utils.releaseWakeLock();
         stopForeground(true);
         isBikeUsing = false;
@@ -378,7 +379,6 @@ public class RouteService extends Service {
         @Override
         public void onFinish() {
             stopSelf();
-            releaseCountDownTimer();
         }
     };
 
