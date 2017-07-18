@@ -73,7 +73,7 @@
     <string name="exist">确认要结束进程吗？</string>
     <string name="tip">提示</string>
     <string name="new_car">新增摇摇车</string>
-
+    <string name="detail">详细</string>
 
     <string name="demo_title_location">demo_title_location</string>
     <string name="demo_desc_location">demo_desc_location</string>
@@ -216,6 +216,7 @@
     <string name="map_mlocation">我的位置</string>
     <string name="map_common_model">普通模式</string>
     <string name="map_follow">跟随模式</string>
+    <string name="map_luo">罗盘模式</string>
     <!--menu main map-->
 
     <!--cost-->

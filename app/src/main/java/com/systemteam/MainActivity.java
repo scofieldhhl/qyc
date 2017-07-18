@@ -163,8 +163,8 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
                     if(list != null && list.size() > 0){
                         List<BikeInfo> listBike = new ArrayList<>();
                         for(Car car : list){//TODO 两层for循环效率低
-                            listBike.add(new BikeInfo(car.getPosition().getLatitude(), car.getPosition().getLongitude(), R.mipmap.bike_mobai, "001",
-                                    "100米", car.getCarNo()));
+                            listBike.add(new BikeInfo(car.getPosition().getLatitude(), car.getPosition().getLongitude(),
+                                    R.mipmap.bike_mobai, "001", "100米", car.getCarNo()));
                         }
                         addInfosOverlay(listBike);
                     }

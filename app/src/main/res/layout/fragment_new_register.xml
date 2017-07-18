@@ -26,7 +26,7 @@
 
         <TextView
             android:id="@+id/tv_country"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="10dip"
@@ -106,6 +106,7 @@
         android:textSize="16sp"
         android:padding="5dp"
         android:paddingLeft="12dp"
+        android:paddingRight="12dp"
         android:maxLength="6"
         android:drawablePadding="8dp"
         android:hint="@string/reg_write_identify_code"

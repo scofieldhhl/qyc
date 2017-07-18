@@ -56,30 +56,6 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
         startActivity(intent);
     }
 
-    public List<Object> getAllPoints() {
-        String sql = "select * from cycle_route order by route_id DESC ";
-        RouteDBHelper helper = new RouteDBHelper(this);
-        SQLiteDatabase db = helper.getWritableDatabase();
-
-        Cursor cursor = db.rawQuery(sql, null);
-        while (cursor.moveToNext()) {
-            RouteRecord point = new RouteRecord();
-            point.setCycle_date(cursor.getString(cursor
-                    .getColumnIndex("cycle_date")));
-            point.setCycle_time(cursor.getString(cursor
-                    .getColumnIndex("cycle_time")));
-            point.setCycle_distance(cursor.getString(cursor
-                    .getColumnIndex("cycle_distance")));
-            point.setCycle_price(cursor.getString(cursor
-                    .getColumnIndex("cycle_price")));
-            point.setCycle_points(cursor.getString(cursor
-                    .getColumnIndex("cycle_points")));
-            routeList.add(point);
-        }
-        return routeList;
-    }
-
-
     /*
      * 读取指定ID的分页数据
      * SQL:Select * From TABLE_NAME Limit 9 Offset 10;

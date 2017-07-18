@@ -43,7 +43,7 @@ public class ProtocolPreferences {
 
     public static void setUserInfo(Context context, String info) {
         SharedPreferences preferences = context.getSharedPreferences(DB_PROTOCOL, 0);
-        preferences.edit().putString(PROTOCOL_USER_INFO, info).commit();
+        preferences.edit().putString(PROTOCOL_USER_INFO, info).apply();
     }
 
     public static String getUserInfo(Context context) {
@@ -53,7 +53,7 @@ public class ProtocolPreferences {
 
     public static void setRegInfo(Context context, String info) {
         SharedPreferences preferences = context.getSharedPreferences(DB_PROTOCOL, 0);
-        preferences.edit().putString(PROTOCOL_REGISTER_INFO, info).commit();
+        preferences.edit().putString(PROTOCOL_REGISTER_INFO, info).apply();
     }
 
     public static String getRegInfo(Context context) {
@@ -63,7 +63,7 @@ public class ProtocolPreferences {
 
     public static void setExpert_Phone_Number(Context context, String phoneNumber) {
         SharedPreferences preferences = context.getSharedPreferences(DB_PROTOCOL, 0);
-        preferences.edit().putString(Expert_PHONE_NUMBER, phoneNumber).commit();
+        preferences.edit().putString(Expert_PHONE_NUMBER, phoneNumber).apply();
     }
 
     public static String getExpert_Phone_Number(Context context) {
@@ -74,7 +74,7 @@ public class ProtocolPreferences {
 
     public static void setPotocolLoginTimestamp(Context context, String time) {
         SharedPreferences preferences = context.getSharedPreferences(DB_PROTOCOL, 0);
-        preferences.edit().putString(PROTOCOL_LOGIN_TIMESTAMP, time).commit();
+        preferences.edit().putString(PROTOCOL_LOGIN_TIMESTAMP, time).apply();
     }
 
     public static String getPotocolLoginTimestamp(Context context) {
@@ -84,7 +84,7 @@ public class ProtocolPreferences {
 
     public static void setAccountInfo(Context context, String info) {
         SharedPreferences preferences = context.getSharedPreferences(DB_PROTOCOL, 0);
-        preferences.edit().putString(PROTOCOL_ACCOUNT_INFO, info).commit();
+        preferences.edit().putString(PROTOCOL_ACCOUNT_INFO, info).apply();
     }
 
     public static String getAccountInof(Context context) {
@@ -94,7 +94,7 @@ public class ProtocolPreferences {
 
     public static void setImId(Context context, String ID) {
         SharedPreferences preferences = context.getSharedPreferences(DB_PROTOCOL, 0);
-        preferences.edit().putString(IM_ID, ID).commit();
+        preferences.edit().putString(IM_ID, ID).apply();
     }
 
     public static String getImId(Context context) {
@@ -109,12 +109,12 @@ public class ProtocolPreferences {
 
     public static void setImSig(Context context, String imSig) {
         SharedPreferences preferences = context.getSharedPreferences(DB_PROTOCOL, 0);
-        preferences.edit().putString(IM_SIG, imSig).commit();
+        preferences.edit().putString(IM_SIG, imSig).apply();
     }
 
     public static void setReqTime(Context context, String time) {
         SharedPreferences preferences = context.getSharedPreferences(DB_PROTOCOL, 0);
-        preferences.edit().putString(PROTOCOL_REQTIME, time).commit();
+        preferences.edit().putString(PROTOCOL_REQTIME, time).apply();
     }
 
     public static String getReqTime(Context context) {
@@ -124,7 +124,7 @@ public class ProtocolPreferences {
 
     public static void setPromotionStatus(Context context, String status) {
         SharedPreferences preferences = context.getSharedPreferences(DB_PROTOCOL, 0);
-        preferences.edit().putString(PROTOCOL_PROMOTION, status).commit();
+        preferences.edit().putString(PROTOCOL_PROMOTION, status).apply();
     }
 
     public static String getPromotionStatus(Context context) {
@@ -134,7 +134,7 @@ public class ProtocolPreferences {
 
     public static void setDesktopGuideStatus(Context context, String status) {
         SharedPreferences preferences = context.getSharedPreferences(DB_PROTOCOL, 0);
-        preferences.edit().putString(PROTOCOL_DESKTOPGUIDE, status).commit();
+        preferences.edit().putString(PROTOCOL_DESKTOPGUIDE, status).apply();
     }
 
     public static String getDesktopGuideStatus(Context context) {
@@ -144,7 +144,7 @@ public class ProtocolPreferences {
 
     public static void setPromotionUrl(Context context, String url) {
         SharedPreferences preferences = context.getSharedPreferences(DB_PROTOCOL, 0);
-        preferences.edit().putString(PROTOCOL_PROURL, url).commit();
+        preferences.edit().putString(PROTOCOL_PROURL, url).apply();
     }
 
     public static String getPromotionUrl(Context context) {
@@ -162,7 +162,7 @@ public class ProtocolPreferences {
                 DB_PROTOCOL, Context.MODE_PRIVATE);
         SharedPreferences.Editor e = sp.edit();
         e.putLong(PROTOCOL_TIME, time);
-        e.commit();
+        e.apply();
     }
 
     /**
@@ -184,7 +184,7 @@ public class ProtocolPreferences {
 
     public static void setCollectedEmail(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(DB_PROTOCOL, 0);
-        preferences.edit().putBoolean(EMAIL_COLLECT, true).commit();
+        preferences.edit().putBoolean(EMAIL_COLLECT, true).apply();
     }
 
     public static boolean isConn(Context context) {
@@ -211,7 +211,7 @@ public class ProtocolPreferences {
 
     public static void setProtocolUUID(Context context, String uuid) {
         SharedPreferences preferences = context.getSharedPreferences(DB_PROTOCOL, 0);
-        preferences.edit().putString(PROTOCOL_UUID, uuid).commit();
+        preferences.edit().putString(PROTOCOL_UUID, uuid).apply();
     }
 
     public static String getProtocolUUID(Context context) {
@@ -221,7 +221,7 @@ public class ProtocolPreferences {
 
     public static void setTokenRequest(Context context, String token) {
         SharedPreferences preferences = context.getSharedPreferences(DB_PROTOCOL, 0);
-        preferences.edit().putString(TOKEN_REQUEST, token).commit();
+        preferences.edit().putString(TOKEN_REQUEST, token).apply();
     }
 
     public static String getTokenRequest(Context context) {
@@ -231,7 +231,7 @@ public class ProtocolPreferences {
 
     public static void setTokenRefresh(Context context, String token) {
         SharedPreferences preferences = context.getSharedPreferences(DB_PROTOCOL, 0);
-        preferences.edit().putString(TOKEN_REFRESH, token).commit();
+        preferences.edit().putString(TOKEN_REFRESH, token).apply();
     }
 
     public static String getTokenRefresh(Context context) {
@@ -241,7 +241,7 @@ public class ProtocolPreferences {
 
     public static void setTokenAccess(Context context, String token) {
         SharedPreferences preferences = context.getSharedPreferences(DB_PROTOCOL, 0);
-        preferences.edit().putString(TOKEN_ACCESS, token).commit();
+        preferences.edit().putString(TOKEN_ACCESS, token).apply();
     }
 
     public static String getTokenAccess(Context context) {
@@ -253,7 +253,7 @@ public class ProtocolPreferences {
         if (!id.equals(getMemberId(context))) {
         }
         SharedPreferences preferences = context.getSharedPreferences(DB_PROTOCOL, 0);
-        preferences.edit().putString(MEMBER_ID, id).commit();
+        preferences.edit().putString(MEMBER_ID, id).apply();
         if (protocolPrefCallback != null) {
             protocolPrefCallback.SaveMemberId();
         }
@@ -283,7 +283,7 @@ public class ProtocolPreferences {
 
     public static void setCashDesc(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(DB_PROTOCOL, 0);
-        preferences.edit().putBoolean(DB_CASH_DESC, true).commit();
+        preferences.edit().putBoolean(DB_CASH_DESC, true).apply();
     }
 
     public static boolean getSPCashDesc(Context context) {
@@ -293,7 +293,7 @@ public class ProtocolPreferences {
 
     public static void setIMIdChatTo(Context context, String id) {
         SharedPreferences preferences = context.getSharedPreferences(DB_PROTOCOL, 0);
-        preferences.edit().putString(PROTOCOL_TARGET_IM_ID, id).commit();
+        preferences.edit().putString(PROTOCOL_TARGET_IM_ID, id).apply();
     }
 
     public static String getIMIdChatTo(Context context) {

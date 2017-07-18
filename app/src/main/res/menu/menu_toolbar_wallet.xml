@@ -5,6 +5,6 @@
     <item
         android:id="@+id/action_detail"
         android:icon="@drawable/ic_mail_blue_24dp"
-        android:title="search"
+        android:title="@string/detail"
         app:showAsAction="ifRoom" />
 </menu>

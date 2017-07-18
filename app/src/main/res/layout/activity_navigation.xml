@@ -221,7 +221,6 @@
         <View
             style="@style/transaction_type_divider"
             android:layout_marginTop="10dp" />
-             />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview_poi_history"

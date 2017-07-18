@@ -28,7 +28,7 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/id_map_model_compass"
-        android:title="罗盘模式"
+        android:title="@string/map_luo"
         app:showAsAction="never" />
 
 </menu>

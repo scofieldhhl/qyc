@@ -75,6 +75,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }*/
         statusBarHeight = getStatusBarHeight();
         titleHeight=dp2px(this,50);
+        mImm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     protected void setStatusBarLayout() {
