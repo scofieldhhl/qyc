@@ -14,7 +14,8 @@
     <string name="unlock_auto">自动解锁</string>
     <string name="bike_code">车辆编码</string>
     <string name="book_countdown">保留倒计时</string>
-    <string name="bike_sound">车辆发声</string>
+    <!--<string name="bike_sound">车辆发声</string>-->
+    <string name="bike_sound">立即解锁</string>
     <string name="cancel_book">取消预约</string>
     <string name="cancel_book_toast">超过预约时间，系统已自动结束</string>
     <string name="code_unlock">输码解锁</string>

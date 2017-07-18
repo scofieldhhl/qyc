@@ -50,6 +50,7 @@
             android:id="@+id/route_detail_mapview"
             android:layout_width="fill_parent"
             android:layout_height="240dp"
+            android:visibility="gone"
             android:clickable="true" />
         <TextView
             android:id="@+id/total_time"

@@ -2,9 +2,11 @@ package com.systemteam;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -75,7 +77,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }*/
         statusBarHeight = getStatusBarHeight();
         titleHeight=dp2px(this,50);
-        mImm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        mImm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     protected void setStatusBarLayout() {
@@ -320,4 +322,16 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    protected void registerBroadcast(String action, BroadcastReceiver receiver){
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(action);  //添加要收到的广播
+        registerReceiver(receiver, intentFilter);
+    }
+
+    protected void unRegisterBroadcast(BroadcastReceiver receiver){
+        if(receiver != null){
+            unregisterReceiver(receiver);
+            receiver = null;
+        }
+    }
 }

@@ -92,6 +92,7 @@ import com.systemteam.util.Utils;
 import com.systemteam.welcome.WelcomeActivity;
 import com.umeng.analytics.MobclickAgent;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -106,7 +107,10 @@ import overlayutil.OverlayManager;
 import overlayutil.WalkingRouteOverlay;
 
 import static com.systemteam.bean.BikeInfo.infos;
+import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
+import static com.systemteam.util.Constant.DISMISS_SPLASH;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
+import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 
 public class MainActivity extends BaseActivity implements OnGetRoutePlanResultListener,
         AllInterface.OnMenuSlideListener {
@@ -149,10 +153,19 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
     private BaiduMap mBaiduMap;
     private float mCurrentX;
     private boolean isFirstLoc = true; // 是否首次定位
-    private final int DISMISS_SPLASH = 0;
-    Handler handler = new Handler() {
+
+    private static class MyHandler extends Handler {
+        private WeakReference<MainActivity> mActivity;
+
+        public MyHandler(MainActivity activity) {
+            mActivity = new WeakReference<>(activity);
+        }
+
+        @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
+            final MainActivity theActivity = mActivity.get();
+            super.handleMessage(msg);
+            switch (msg.what){
                 case DISMISS_SPLASH:
                     /*Animator animator = AnimatorInflater.loadAnimator(MainActivity.this, R.animator.splash);
                     animator.setTarget(splash_img);
@@ -166,11 +179,17 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
                             listBike.add(new BikeInfo(car.getPosition().getLatitude(), car.getPosition().getLongitude(),
                                     R.mipmap.bike_mobai, "001", "100米", car.getCarNo()));
                         }
-                        addInfosOverlay(listBike);
+                        theActivity.addInfosOverlay(listBike);
                     }
+                    break;
+                case MSG_UPDATE_UI:
+                    theActivity.bikeOnUsing();
+                    break;
             }
         }
-    };
+    }
+    private MyHandler mHandler = new MyHandler(this);
+    private LocationReceiver mReciver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,9 +202,9 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         mContext = this;
         checkLogin();
         initMap();
-//        initTitle(this, R.string.bybike, R.mipmap.menu_icon, 0);
         initToolBar(this, R.string.bybike);
         initView();
+        initData();
         isServiceLive = Utils.isServiceWork(this, getPackageName() + ".service.RouteService");
         if (isServiceLive)
             beginService();
@@ -449,7 +468,8 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
 
     @Override
     protected void initData() {
-
+        mReciver = new LocationReceiver();
+        registerBroadcast(ACTION_BROADCAST_ACTIVE, mReciver);
     }
 
     @Override
@@ -509,7 +529,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         mMapView.setOnClickListener(this);
         dragLocationIcon = BitmapDescriptorFactory.fromResource(R.mipmap.drag_location);
         bikeIcon = BitmapDescriptorFactory.fromResource(R.mipmap.bike_icon);
-        handler.sendEmptyMessageDelayed(DISMISS_SPLASH, 3000);
+        mHandler.sendEmptyMessageDelayed(DISMISS_SPLASH, 3000);
     }
 
     public void getMyLocation() {
@@ -776,7 +796,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
             public void done(List<Car> object, BmobException e) {
                 if(e==null){
                     toast("查询成功:" + object.size());
-                    Message msg = handler.obtainMessage(Constant.MSG_RESPONSE_SUCCESS);
+                    Message msg = mHandler.obtainMessage(Constant.MSG_RESPONSE_SUCCESS);
                     msg.obj = object;
                     msg.sendToTarget();
                 }else{
@@ -1062,7 +1082,16 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
             Utils.showDialog(this);
             return;
         }
-//        mTvTitle.setText(getString(R.string.routing));
+
+        Intent intent = new Intent(this, RouteService.class);
+        startService(intent);
+        MyLocationConfiguration configuration
+                = new MyLocationConfiguration(locationMode, true, mIconLocation);
+        //设置定位图层配置信息，只有先允许定位图层后设置定位图层配置信息才会生
+    }
+
+    private void bikeOnUsing(){
+        //        mTvTitle.setText(getString(R.string.routing));
         textview_time.setText(getString(R.string.bike_time));
         textview_distance.setText(getString(R.string.bike_distance));
         textview_price.setText(getString(R.string.bike_price));
@@ -1100,11 +1129,6 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         mBaiduMap.clear();
         if (isServiceLive)
             mlocationClient.requestLocation();
-        Intent intent = new Intent(this, RouteService.class);
-        startService(intent);
-        MyLocationConfiguration configuration
-                = new MyLocationConfiguration(locationMode, true, mIconLocation);
-        //设置定位图层配置信息，只有先允许定位图层后设置定位图层配置信息才会生
     }
 
     @Override
@@ -1126,6 +1150,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         mMapView = null;
         countDownTimer.cancel();
         isFirstIn = true;
+        unregisterReceiver(mReciver);
         LogTool.i("MainActivity------------onDestroy------------------");
     }
 
@@ -1154,9 +1179,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
     }
 
 
-    public static class LocationReceiver extends BroadcastReceiver {
-        public LocationReceiver() {
-        }
+    class LocationReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -1167,13 +1190,10 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
                 bike_time.setText(time);
                 bike_distance.setText(distance);
                 bike_price.setText(price);
-//                LogTool.i("MainActivity-------TopActivity---------true");
-//                LogTool.i("MainActivity-------time:" + time);
-//                LogTool.i("MainActivity-------distance:" + distance);
-//                LogTool.i("MainActivity-------price:" + price);
             } else {
                 LogTool.i("MainActivity-------TopActivity---------false");
             }
+            mHandler.sendEmptyMessage(MSG_UPDATE_UI);
         }
     }
 

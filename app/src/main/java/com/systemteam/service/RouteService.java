@@ -15,6 +15,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.widget.RemoteViews;
@@ -40,8 +42,12 @@ import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
+import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
 import static com.systemteam.util.Constant.COST_BASE;
+import static com.systemteam.util.Constant.FORMAT_TIME;
+import static com.systemteam.util.Constant.TIME_ONCE_ACTIVE;
 
 
 //        当前位置:我的异常网» Android » Android使用百度LBS SDK（4）记录和显示行走轨迹
@@ -95,15 +101,16 @@ public class RouteService extends Service {
 //        SQLiteDatabase sqliteDatabase = dbHelper.getReadableDatabase();
         totalTime = 0;
         totalDistance = 0;
-        totalPrice = 0;
+        totalPrice = COST_BASE;
         routPointList.clear();
 
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         LogTool.d("RouteService--------onStartCommand---------------");
-        initLocation();//初始化LocationgClient
+//        initLocation();//初始化LocationgClient
         initNotification();
+        initCountDownTimer();
         Utils.acquireWakeLock(this);
         // 开启轨迹记录线程
         return super.onStartCommand(intent, flags, startId);
@@ -188,8 +195,9 @@ public class RouteService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mlocationClient.stop();
-        myOrientationListener.stop();
+        releaseCountDownTimer();
+//        mlocationClient.stop();
+//        myOrientationListener.stop();
         LogTool.d("RouteService----0nDestroy---------------");
         Gson gson = new Gson();
         String routeListStr = gson.toJson(routPointList);
@@ -320,5 +328,52 @@ public class RouteService extends Service {
         // 第三个参数：ContentValues对象
         sqliteDatabase.insert("cycle_route", null, values);
         sqliteDatabase.close();
+    }
+
+    private void initCountDownTimer(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                countDownTimer.start();
+            }
+        }, 0);
+    }
+
+    private CountDownTimer countDownTimer = new CountDownTimer(TIME_ONCE_ACTIVE, 1000) {
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            long min = millisUntilFinished / 60000;
+            long secode = (millisUntilFinished / 1000) % 60;
+//            totalTime = (int) (System.currentTimeMillis() - beginTime) / 1000 / 60;
+//            totalPrice = (float) (Math.floor(totalTime / 30) * COST_BASE + COST_BASE);
+            totalPrice = COST_BASE;
+            String timeLeft = String.format(Locale.US, FORMAT_TIME, min,
+                    secode < 10 ? "0" + secode : String.valueOf(secode));
+            startNotifi(timeLeft,
+                    getString(R.string.cost_distance, String.valueOf(totalDistance)),
+                    getString(R.string.cost_num, String.valueOf(totalPrice)));
+            Intent intent = new Intent(ACTION_BROADCAST_ACTIVE);
+            intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+            Bundle bundle = new Bundle();
+            bundle.putString("totalTime", timeLeft);
+            bundle.putString("totalDistance", getString(R.string.cost_distance, String.valueOf(totalDistance)));
+            bundle.putString("totalPrice", getString(R.string.cost_num, String.valueOf(totalPrice)));
+            intent.putExtras(bundle);
+            sendBroadcast(intent);
+        }
+
+        @Override
+        public void onFinish() {
+            stopSelf();
+            releaseCountDownTimer();
+        }
+    };
+
+    private void releaseCountDownTimer(){
+        if(countDownTimer != null){
+            countDownTimer.onFinish();
+            countDownTimer.cancel();
+        }
     }
 }

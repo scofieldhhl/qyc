@@ -1,5 +1,8 @@
 package com.systemteam.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -7,12 +10,20 @@ import android.view.View;
 import com.bcgdv.asia.lib.ticktock.TickTockView;
 import com.systemteam.BaseActivity;
 import com.systemteam.R;
+import com.systemteam.service.RouteService;
+import com.systemteam.util.Utils;
 
 import java.util.Calendar;
+
+import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
+import static com.systemteam.util.Constant.TIME_ONCE_ACTIVE;
+import static com.systemteam.util.Constant.TIME_ONCE_ACTIVE_STR;
 
 public class ActiveActivity extends BaseActivity {
     TickTockView mCountDown;
     private int mMinute, mSecode;
+    private String mTime = TIME_ONCE_ACTIVE_STR;
+    LocationReceiver mReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +41,7 @@ public class ActiveActivity extends BaseActivity {
             mCountDown.setOnTickListener(new TickTockView.OnTickListener() {
                 @Override
                 public String getText(long timeRemaining) {
-                    int seconds = (int) (timeRemaining / 1000) % 60;
+                    /*int seconds = (int) (timeRemaining / 1000) % 60;
                     int minutes = (int) ((timeRemaining / (1000 * 60)) % 60);
                     int hours = (int) ((timeRemaining / (1000 * 60 * 60)) % 24);
                     int days = (int) (timeRemaining / (1000 * 60 * 60 * 24));
@@ -39,7 +50,8 @@ public class ActiveActivity extends BaseActivity {
                             hasDays ? hours : minutes,
                             hasDays ? minutes : seconds,
                             hasDays ? " :" : " :",
-                            hasDays ? "" : "");
+                            hasDays ? "" : "");*/
+                    return mTime;
                 }
             });
         }
@@ -47,8 +59,10 @@ public class ActiveActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        mMinute = 3;
-        mSecode = 0;
+        mMinute = (int)TIME_ONCE_ACTIVE / 60000;
+        mSecode = (int)(TIME_ONCE_ACTIVE / 1000) % 60;
+        mReceiver = new LocationReceiver();
+        registerBroadcast(ACTION_BROADCAST_ACTIVE, mReceiver);
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -64,6 +78,9 @@ public class ActiveActivity extends BaseActivity {
                 }
             }
         }, 1000);
+
+        Intent intent = new Intent(this, RouteService.class);
+        startService(intent);
     }
 
     @Override
@@ -81,5 +98,19 @@ public class ActiveActivity extends BaseActivity {
         super.onStop();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unRegisterBroadcast(mReceiver);
+    }
 
+    public class LocationReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Utils.isTopActivity(context)) {
+                mTime = intent.getStringExtra("totalTime");
+            }
+        }
+    }
 }

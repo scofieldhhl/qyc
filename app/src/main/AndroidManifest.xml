@@ -79,11 +79,11 @@
         </activity>
         <activity android:name=".user.UserActivity" />
 
-        <receiver android:name=".MainActivity$LocationReceiver">
+        <!--<receiver android:name=".MainActivity$LocationReceiver">
             <intent-filter>
                 <action android:name="com.locationreceiver" />
             </intent-filter>
-        </receiver>
+        </receiver>-->
         <receiver
             android:name=".service.RouteService$NetWorkReceiver"
             android:label="NetworkConnection">
