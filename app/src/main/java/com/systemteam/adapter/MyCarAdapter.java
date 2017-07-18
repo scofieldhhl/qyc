@@ -46,14 +46,14 @@ public class MyCarAdapter extends BaseAdapter {
 
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.itemView.setTag(position);
-        switch(position){
+        switch(getItemViewType(position)){
             case TYPE_TITLE:
                 holder.bike_time.setText("编号");
                 holder.bike_distance.setText("收益");
                 holder.bike_price.setText("状态");
                 holder.bike_date.setVisibility(View.GONE);
                 break;
-            default:
+            case TYPE_CONTENT:
                 Car Car= (Car) list.get(position);
                 holder.bike_time.setText(Car.getCarNo());
                 holder.bike_distance.setText(String.valueOf(Car.getEarn() == null ? 0.0 : Car.getEarn()));

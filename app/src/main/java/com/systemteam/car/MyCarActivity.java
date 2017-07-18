@@ -100,6 +100,9 @@ public class MyCarActivity extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
+        if(routeList != null){
+            routeList.clear();
+        }
         initCarList();
     }
 
