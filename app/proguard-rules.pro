@@ -188,12 +188,10 @@ public static java.lang.String TABLENAME;
 -keep class com.parse.*{ *; }
 -dontwarn com.parse.**
 -dontwarn com.squareup.picasso.**
--keepclasseswithmembernames class * {
-    native <methods>;
-}
+-keepclasseswithmembernames class * { native <methods>; }
 #picasso
 
-#Bmob
+#Bmob start
 -ignorewarnings
 
 -keepattributes Signature,*Annotation*
@@ -203,9 +201,7 @@ public static java.lang.String TABLENAME;
 -keep class cn.bmob.v3.** {*;}
 
 # 确保JavaBean不被混淆-否则gson将无法将数据解析成具体对象
--keep class * extends cn.bmob.v3.BmobObject {
-    *;
-}
+-keep class * extends cn.bmob.v3.BmobObject {*;}
 -keep class com.systemteam.bean.BankCard{*;}
 -keep class com.systemteam.bean.MyUser{*;}
 -keep class com.systemteam.bean.Person{*;}
@@ -245,7 +241,7 @@ public static java.lang.String TABLENAME;
 -keep class com.android.internal.http.multipart.**{*;}
 -keep class org.apache.commons.**{*;}
 -keep class org.apache.http.**{*;}
-#Bmob
+#Bmob end
 
 #wechat
 -keep class com.tencent.mm.opensdk.** {*;}
@@ -278,3 +274,14 @@ public static java.lang.String TABLENAME;
 -dontwarn com.zhy.m.permission.**
 -keep class com.zhy.m.permission.** { *;}
 #Other
+
+# greendao 3 start
+-keep class de.greenrobot.dao.** {*;}
+-keepclassmembers class * extends org.greenrobot.greendao.AbstractDao {
+public static java.lang.String TABLENAME; }
+-keep class **$Properties
+# If you do not use SQLCipher:
+-dontwarn org.greenrobot.greendao.database.**
+# If you do not use Rx:
+-dontwarn rx.**
+# greendao 3 end
