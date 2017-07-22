@@ -1,29 +1,56 @@
 package com.systemteam.activity;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.View;
+import android.widget.TextView;
 
-import com.bcgdv.asia.lib.ticktock.TickTockView;
 import com.systemteam.BaseActivity;
 import com.systemteam.R;
 import com.systemteam.service.RouteService;
 import com.systemteam.util.Utils;
 
-import java.util.Calendar;
+import java.lang.ref.WeakReference;
 
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
-import static com.systemteam.util.Constant.TIME_ONCE_ACTIVE;
+import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 import static com.systemteam.util.Constant.TIME_ONCE_ACTIVE_STR;
 
 public class ActiveActivity extends BaseActivity {
-    TickTockView mCountDown;
-    private int mMinute, mSecode;
     private String mTime = TIME_ONCE_ACTIVE_STR;
-    LocationReceiver mReceiver;
+    private LocationReceiver mReceiver;
+    private TextView mTvTick;
+    private boolean isFinished = false;
+    private static class MyHandler extends Handler {
+        private WeakReference<ActiveActivity> mActivity;
+
+        public MyHandler(ActiveActivity activity) {
+            mActivity = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            final ActiveActivity theActivity = mActivity.get();
+            super.handleMessage(msg);
+            switch (msg.what){
+                case MSG_UPDATE_UI:
+                    if(theActivity.isFinished){
+                        theActivity.mTvTick.setText(theActivity.getString(R.string.play_onemore));
+                    }else {
+                        theActivity.mTvTick.setText((String)msg.obj);
+                    }
+                    break;
+            }
+        }
+    }
+
+    private MyHandler mHandler = new MyHandler(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,51 +63,14 @@ public class ActiveActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        mCountDown = (TickTockView) findViewById(R.id.view_ticktock_countdown);
-        if (mCountDown != null) {
-            mCountDown.setOnTickListener(new TickTockView.OnTickListener() {
-                @Override
-                public String getText(long timeRemaining) {
-                    /*int seconds = (int) (timeRemaining / 1000) % 60;
-                    int minutes = (int) ((timeRemaining / (1000 * 60)) % 60);
-                    int hours = (int) ((timeRemaining / (1000 * 60 * 60)) % 24);
-                    int days = (int) (timeRemaining / (1000 * 60 * 60 * 24));
-                    boolean hasDays = days > 0;
-                    return String.format("%1$02d%3$s %2$02d%4$s",
-                            hasDays ? hours : minutes,
-                            hasDays ? minutes : seconds,
-                            hasDays ? " :" : " :",
-                            hasDays ? "" : "");*/
-                    return mTime;
-                }
-            });
-        }
+        mTvTick = (TextView) findViewById(R.id.view_ticktock_countdown);
     }
 
     @Override
     protected void initData() {
-        mMinute = (int)TIME_ONCE_ACTIVE / 60000;
-        mSecode = (int)(TIME_ONCE_ACTIVE / 1000) % 60;
         mReceiver = new LocationReceiver();
         registerBroadcast(ACTION_BROADCAST_ACTIVE, mReceiver);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Calendar end = Calendar.getInstance();
-                end.add(Calendar.MINUTE, mMinute);
-                end.add(Calendar.SECOND, mSecode);
-
-                Calendar start = Calendar.getInstance();
-                start.add(Calendar.MINUTE, -1);
-                if (mCountDown != null) {
-                    mCountDown.start(start, end);
-                }
-            }
-        }, 1000);
-
-        Intent intent = new Intent(this, RouteService.class);
-        startService(intent);
+        startService(new Intent(this, RouteService.class));
     }
 
     @Override
@@ -110,7 +100,44 @@ public class ActiveActivity extends BaseActivity {
         public void onReceive(Context context, Intent intent) {
             if (Utils.isTopActivity(context)) {
                 mTime = intent.getStringExtra("totalTime");
+                Message msg = mHandler.obtainMessage(MSG_UPDATE_UI);
+                msg.obj = mTime;
+                msg.sendToTarget();
+                if(getString(R.string.time_end).equalsIgnoreCase(mTime)){
+                    isFinished = true;
+                    mHandler.sendEmptyMessageDelayed(MSG_UPDATE_UI, 3*1000);
+                }
             }
         }
+    }
+
+    public void doDone(View view){
+        if(!isFinished){
+            toastDialog();
+        }else {
+            startService(new Intent(this, RouteService.class));
+            isFinished = false;
+        }
+    }
+
+    protected void toastDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ActiveActivity.this);
+        builder.setMessage(R.string.exist);
+        builder.setTitle(R.string.tip);
+        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                Intent intent = new Intent(ActiveActivity.this, RouteService.class);
+                stopService(intent);
+                isFinished = true;
+                mHandler.sendEmptyMessageDelayed(MSG_UPDATE_UI, 3*1000);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 }

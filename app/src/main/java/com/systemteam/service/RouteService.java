@@ -353,7 +353,7 @@ public class RouteService extends Service {
     }
 
     private CountDownTimer countDownTimer = new CountDownTimer(TIME_ONCE_ACTIVE, 1000) {
-
+        private Handler handler = new Handler();
         @Override
         public void onTick(long millisUntilFinished) {
             long min = millisUntilFinished / 60000;
@@ -361,26 +361,36 @@ public class RouteService extends Service {
 //            totalTime = (int) (System.currentTimeMillis() - beginTime) / 1000 / 60;
 //            totalPrice = (float) (Math.floor(totalTime / 30) * COST_BASE + COST_BASE);
             totalPrice = COST_BASE;
-            String timeLeft = String.format(Locale.US, FORMAT_TIME, min,
+            final String timeLeft = String.format(Locale.US, FORMAT_TIME, min,
                     secode < 10 ? "0" + secode : String.valueOf(secode));
 //            mCarNo = getString(R.string.cost_distance, String.valueOf(totalDistance));
             startNotifi(timeLeft, mCarNo,
                     getString(R.string.cost_num, String.valueOf(totalPrice)));
-            Intent intent = new Intent(ACTION_BROADCAST_ACTIVE);
-            intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-            Bundle bundle = new Bundle();
-            bundle.putString("totalTime", timeLeft);
-            bundle.putString("totalDistance", mCarNo);
-            bundle.putString("totalPrice", getString(R.string.cost_num, String.valueOf(totalPrice)));
-            intent.putExtras(bundle);
-            sendBroadcast(intent);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    sendBroadcast(timeLeft);
+                }
+            }, 1000);
         }
 
         @Override
         public void onFinish() {
+            sendBroadcast(getString(R.string.time_end));
             stopSelf();
         }
     };
+
+    private void sendBroadcast(String time){
+        Intent intent = new Intent(ACTION_BROADCAST_ACTIVE);
+        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+        Bundle bundle = new Bundle();
+        bundle.putString("totalTime", time);
+        bundle.putString("totalDistance", mCarNo);
+        bundle.putString("totalPrice", getString(R.string.cost_num, String.valueOf(totalPrice)));
+        intent.putExtras(bundle);
+        sendBroadcast(intent);
+    }
 
     private void releaseCountDownTimer(){
         if(countDownTimer != null){

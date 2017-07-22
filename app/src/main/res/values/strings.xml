@@ -75,6 +75,9 @@
     <string name="tip">提示</string>
     <string name="new_car">新增摇摇车</string>
     <string name="detail">详细</string>
+    <string name="play_onemore">再玩一次</string>
+    <string name="time_start">03 : 00</string>
+    <string name="time_end">00 : 00</string>
 
     <string name="demo_title_location">demo_title_location</string>
     <string name="demo_desc_location">demo_desc_location</string>
