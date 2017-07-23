@@ -86,7 +86,7 @@
                     android:layout_toLeftOf="@+id/tv_forgetpsw"
                     android:layout_toRightOf="@+id/tv_pswtitle"
                     android:background="@null"
-                    android:hint="@string/welcomanim_title_psw_hint"
+                    android:hint="@string/reg_write_identify_code"
                     android:inputType="textPassword"
                     android:singleLine="true"
                     android:maxLength="20"
@@ -100,7 +100,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:text="@string/welcomanim_title_forgetpsw"
+                    android:text="@string/welcomanim_title_getcode"
                     android:textColor="@color/tab_message"
                     android:textSize="@dimen/text_18"/>
                 <ImageView
@@ -235,6 +235,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:visibility="gone"
                     android:orientation="horizontal">
 
                     <ImageView

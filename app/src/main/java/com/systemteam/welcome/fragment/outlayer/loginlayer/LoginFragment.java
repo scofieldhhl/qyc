@@ -51,12 +51,13 @@ public class LoginFragment extends BaseFragment {
         mImm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
         mPhone = String.valueOf(mEtPhone.getText());
         mPwd = String.valueOf(mEtPsd.getText());
-        if(TextUtils.isEmpty(mPhone)){
-            Toast.makeText(getActivity(), R.string.smssdk_write_mobile_phone, Toast.LENGTH_SHORT).show();
-            return;
-        }
         switch (v.getId()){
             case R.id.btn_login:
+                if(TextUtils.isEmpty(mPhone)){
+                    Toast.makeText(getActivity(), R.string.smssdk_write_mobile_phone,
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if(TextUtils.isEmpty(mPwd)){
                     Toast.makeText(mContext, R.string.welcomanim_title_psw_hint,
                             Toast.LENGTH_SHORT).show();
@@ -72,6 +73,9 @@ public class LoginFragment extends BaseFragment {
                 break;
             case R.id.iv_wechat:
                 onLoginWechat(v);
+                break;
+            case R.id.tv_forgetpsw:
+                mEtPsd.setText(String.valueOf(System.currentTimeMillis()).substring(0, 6));
                 break;
         }
     }
@@ -89,6 +93,7 @@ public class LoginFragment extends BaseFragment {
         view.findViewById(R.id.iv_qq).setOnClickListener(this);
         view.findViewById(R.id.iv_wechat).setOnClickListener(this);
         view.findViewById(R.id.iv_weibo).setOnClickListener(this);
+        view.findViewById(R.id.tv_forgetpsw).setOnClickListener(this);
     }
 
     @Override
@@ -101,6 +106,7 @@ public class LoginFragment extends BaseFragment {
      */
     private void testLogin() {
         final BmobUser user = new BmobUser();
+        user.setUsername(mPhone);
         user.setMobilePhoneNumber(mPhone);
         user.setPassword(mPwd);
         //login回调
@@ -132,6 +138,8 @@ public class LoginFragment extends BaseFragment {
             public void onNext(BmobUser bmobUser) {
                 toast(mContext, bmobUser.getUsername() + "登陆成功");
                 testGetCurrentUser();
+                ((BikeApplication)getActivity().getApplication()).getmUser();
+                getActivity().finish();
             }
         });
     }
@@ -221,4 +229,5 @@ public class LoginFragment extends BaseFragment {
             }
         });*/
     }
+
 }

@@ -61,11 +61,7 @@ public class LeftMenuFragment extends BaseFragment {
     @Override
     protected void initData() {
         mUser = BmobUser.getCurrentUser(MyUser.class);
-        if(mUser != null){
-            (mTvName).setText(mUser.getUsername());
-            ((BaseActivity)getActivity()).loadAvatar(getActivity(), mUser.getPhotoPath(), mPhoto);
-            mTvCoupon.setText(mUser.getCoupon() == null ? "0" : String.valueOf(mUser.getCoupon()));
-        }
+        initInfo(mUser);
         try {
             String pkName = mContext.getPackageName();
             String versionName = mContext.getPackageManager().getPackageInfo(pkName, 0).versionName;
@@ -78,6 +74,19 @@ public class LeftMenuFragment extends BaseFragment {
                 mLLMycar.setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    private void initInfo(MyUser user){
+        if(user != null){
+            (mTvName).setText(user.getUsername());
+            ((BaseActivity)getActivity()).loadAvatar(getActivity(), user.getPhotoPath(), mPhoto);
+            mTvCoupon.setText(mUser.getCoupon() == null ? "0" : String.valueOf(mUser.getCoupon()));
+        }else {
+            (mTvName).setText("");
+            ((BaseActivity)getActivity()).loadAvatar(getActivity(), "", mPhoto);
+            mTvCoupon.setText("");
+        }
+
     }
 
     @Override

@@ -456,13 +456,17 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
     }
 
     public void openMenu() {
+        if(!checkUser(this))
+            return;
         mLeftDrawerLayout.openDrawer();
         shadowView.setVisibility(View.VISIBLE);
     }
 
     public void closeMenu() {
-        mLeftDrawerLayout.closeDrawer();
-        shadowView.setVisibility(View.GONE);
+        if(mLeftDrawerLayout != null){
+            mLeftDrawerLayout.closeDrawer();
+            shadowView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -539,7 +543,6 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
 
     @Override
     public void onClick(View view) {
-        checkUser(this);
         switch (view.getId()) {
             case R.id.book_bt:
                 bike_info_layout.setVisibility(View.VISIBLE);
@@ -585,7 +588,6 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
             case R.id.shadow:
                 closeMenu();
                 LogTool.i("shadow-----click--------closeMenu()");
-
                 break;
         }
     }
@@ -881,21 +883,22 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        checkUser(this);
-        switch (item.getItemId()){
-            case R.id.id_portrait:
-                Utils.showDialog(MainActivity.this, getString(R.string.tip), getString(R.string.break_portrait));
-                break;
-            case R.id.id_lock:
-                Intent intent = new Intent(MainActivity.this, BreakActivity.class);
-                intent.putExtra(Constant.BUNDLE_TYPE_MENU, 0);
-                startActivity(intent);
-                break;
-            case R.id.id_break:
-                Intent intentBreak = new Intent(MainActivity.this, BreakActivity.class);
-                intentBreak.putExtra(Constant.BUNDLE_TYPE_MENU, 1);
-                startActivity(intentBreak);
-                break;
+        if(checkUser(this)){
+            switch (item.getItemId()){
+                case R.id.id_portrait:
+                    Utils.showDialog(MainActivity.this, getString(R.string.tip), getString(R.string.break_portrait));
+                    break;
+                case R.id.id_lock:
+                    Intent intent = new Intent(MainActivity.this, BreakActivity.class);
+                    intent.putExtra(Constant.BUNDLE_TYPE_MENU, 0);
+                    startActivity(intent);
+                    break;
+                case R.id.id_break:
+                    Intent intentBreak = new Intent(MainActivity.this, BreakActivity.class);
+                    intentBreak.putExtra(Constant.BUNDLE_TYPE_MENU, 1);
+                    startActivity(intentBreak);
+                    break;
+            }
         }
         return true;
     }
@@ -976,6 +979,8 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
     }
 
     public void gotoCodeUnlock(View view) {
+        if(!checkUser(this))
+            return;
 //        startActivity(new Intent(this, CodeUnlockActivity.class));
         Intent intent = new Intent(this, QRCodeScanActivity.class);
         intent.putExtra(Constant.BUNDLE_KEY_UNLOCK, true);
@@ -983,49 +988,49 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
     }
 
     public void gotoMycar(View view) {
+        if(!checkUser(this))
+            return;
         startActivity(new Intent(this, MyCarActivity.class));
     }
 
     public void gotoMyRoute(View view) {
+        if(!checkUser(this))
+            return;
         startActivity(new Intent(this, MyRouteActivity.class));
     }
 
     public void gotoWallet(View view) {
+        if(!checkUser(this))
+            return;
         startActivity(new Intent(this, WalletActivity.class));
     }
 
     public void gotoUser(View view) {
+        if(!checkUser(this))
+            return;
         startActivity(new Intent(this, UserInfoActivity.class));
     }
 
     public void gotoNavigation(View view) {
+        if(!checkUser(this))
+            return;
         startActivity(new Intent(this, NavigationActivity.class));
     }
 
     public void gotoSetting(View view) {
+        if(!checkUser(this))
+            return;
         Intent intent = new Intent(this, SettingActivity.class);
         intent.putExtra(Constant.BUNDLE_TYPE_MENU, 0);
         startActivity(intent);
     }
 
     public void gotoGuide(View view){
+        if(!checkUser(this))
+            return;
         Intent intent = new Intent(this, SettingActivity.class);
         intent.putExtra(Constant.BUNDLE_TYPE_MENU, 1);
         startActivity(intent);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mMapView.onPause();
-        MobclickAgent.onPageEnd("MainScreen");
-        MobclickAgent.onPause(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        LogTool.i("MainActivity------------onStart------------------");
     }
 
     protected void onRestart() {
@@ -1140,6 +1145,25 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         MobclickAgent.onPageStart("MainScreen");
         MobclickAgent.onResume(this);
     }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mMapView.onPause();
+        MobclickAgent.onPageEnd("MainScreen");
+        MobclickAgent.onPause(this);
+        closeMenu();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LogTool.i("MainActivity------------onStart------------------");
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LogTool.d("onStop");
+    }
 
     @Override
     protected void onDestroy() {
@@ -1153,7 +1177,6 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         countDownTimer.cancel();
         isFirstIn = true;
         unregisterReceiver(mReciver);
-        LogTool.i("MainActivity------------onDestroy------------------");
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {

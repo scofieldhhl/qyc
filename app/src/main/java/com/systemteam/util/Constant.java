@@ -15,9 +15,11 @@ public class Constant {
     public static final int  REQUEST_IMAGE = 100;
     public static final int  REQUEST_CODE = 101;
 
+    public static final int DISMISS_SPLASH = 0x122;
     public static final int MSG_RESPONSE_SUCCESS = 0x123;
     public static final int MSG_UPDATE_UI = 0x124;
-    public static final int DISMISS_SPLASH = 0x125;
+    public static final int MSG_LOGOOUT = 0x125;
+
 
     public static final String SHAERD_FILE_NAME = "shared_file_name";
     public static final String ACTION_BROADCAST_ACTIVE = "com.locationreceiver";

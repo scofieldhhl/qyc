@@ -31,7 +31,7 @@
         android:layout_centerInParent="true"
         android:background="@drawable/shape_round_textview"
         android:onClick="doDone"
-        android:text="03 : 00"
+        android:text="@string/time_start"
         android:gravity="center"
         android:textSize="35sp"
         android:textColor="@android:color/white" />

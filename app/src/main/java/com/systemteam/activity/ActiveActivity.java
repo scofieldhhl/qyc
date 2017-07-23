@@ -121,7 +121,7 @@ public class ActiveActivity extends BaseActivity {
     }
 
     protected void toastDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(ActiveActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setMessage(R.string.exist);
         builder.setTitle(R.string.tip);
         builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {

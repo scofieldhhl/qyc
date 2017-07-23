@@ -168,9 +168,11 @@ public class LeftDrawerLayout extends ViewGroup {
 
     public void closeDrawer() {
         View menuView = mLeftMenuView;
-        mLeftMenuOnScrren = 0.f;
-        mHelper.smoothSlideViewTo(menuView, -menuView.getWidth(), menuView.getTop());
-        invalidate();
+        if(menuView != null){
+            mLeftMenuOnScrren = 0.f;
+            mHelper.smoothSlideViewTo(menuView, -menuView.getWidth(), menuView.getTop());
+            invalidate();
+        }
     }
 
     public void openDrawer() {

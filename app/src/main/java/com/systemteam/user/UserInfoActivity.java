@@ -1,5 +1,7 @@
 package com.systemteam.user;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +29,7 @@ import cn.bmob.v3.listener.UpdateListener;
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
+import static com.systemteam.util.Constant.MSG_LOGOOUT;
 import static com.systemteam.util.Constant.REQUEST_IMAGE;
 
 public class UserInfoActivity extends BaseActivity {
@@ -47,6 +50,10 @@ public class UserInfoActivity extends BaseActivity {
             switch (msg.what){
                 case 1:
                     theActivity.loadAvatar(theActivity, theActivity.mAvatarPath, theActivity.mIvUserPhoto);
+                    break;
+                case MSG_LOGOOUT:
+                    theActivity.initData();
+                    theActivity.finish();
                     break;
             }
         }
@@ -126,9 +133,23 @@ public class UserInfoActivity extends BaseActivity {
     }
 
     public void doSignOut(View view){
-        BmobUser.logOut();
-        mUser = ((BikeApplication) this.getApplication()).getmUser();
-        initInfo(mUser);
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage(R.string.sign_out_tip);
+        builder.setTitle(R.string.tip);
+        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                BmobUser.logOut();
+                ((BikeApplication) UserInfoActivity.this.getApplication()).setmUser(null);
+                mHandler.sendEmptyMessage(MSG_LOGOOUT);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 
     public void doSelectPicture(View view){

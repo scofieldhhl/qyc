@@ -182,6 +182,7 @@
     <string name="welcomanim_title_phone">+86</string>
     <string name="welcomanim_title_psw">密码</string>
     <string name="welcomanim_title_forgetpsw">忘记密码?</string>
+    <string name="welcomanim_title_getcode">获取验证码</string>
     <string name="welcomanim_title_psw_hint">请输入用户密码</string>
     <string name="welcomanim_title_social">使用社交账号快速登录</string>
     <string name="welcomanim_title_social_weibo">微博登录</string>
@@ -210,6 +211,7 @@
     <string name="check_update">检查新版本</string>
     <string name="about">关于我们</string>
     <string name="sign_out">退出登录</string>
+    <string name="sign_out_tip">确认登出？</string>
     <string name="withdraw">结算</string>
     <!--menu-->
 

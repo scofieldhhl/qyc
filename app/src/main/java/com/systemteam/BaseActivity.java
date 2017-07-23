@@ -263,7 +263,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    protected void checkUser(final Activity act){
+    protected boolean checkUser(final Activity act){
         if(((BikeApplication)act.getApplication()).getmUser() == null){
             AlertDialog alertDialog = new AlertDialog.Builder(act).create();
             alertDialog.setTitle(act.getString(R.string.tip));
@@ -274,7 +274,10 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             startActivity(new Intent(act, WelcomeActivity.class));
-                            act.finish();
+                            if(act instanceof MainActivity){
+                            }else {
+                                act.finish();
+                            }
                         }
                     });
             /*alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, act.getString(R.string.cancel),
@@ -285,7 +288,9 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                         }
                     });*/
             alertDialog.show();
+            return false;
         }
+        return true;
     }
 
     public void gotoBreak(View view){
