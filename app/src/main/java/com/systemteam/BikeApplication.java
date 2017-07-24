@@ -5,6 +5,7 @@ import android.os.Environment;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.systemteam.bean.MyUser;
+import com.systemteam.database.db.DbCore;
 import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
@@ -43,6 +44,7 @@ public class BikeApplication extends Application {
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
         //TODO 第三方登录ID
 //        ShareBlock.getInstance().initShare("", "", "", "");
+        DbCore.init(this);
     }
 
     private boolean initDirs() {

@@ -8,10 +8,8 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -36,18 +34,23 @@ import com.systemteam.MainActivity;
 import com.systemteam.R;
 import com.systemteam.activity.RouteDetailActivity;
 import com.systemteam.bean.RoutePoint;
+import com.systemteam.bean.RouteRecord;
 import com.systemteam.callback.AllInterface;
-import com.systemteam.database.RouteDBHelper;
+import com.systemteam.database.db.DBManager;
 import com.systemteam.map.MyOrientationListener;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
+
+import cn.bmob.v3.BmobUser;
 
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
 import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
 import static com.systemteam.util.Constant.COST_BASE;
+import static com.systemteam.util.Constant.EARN_RATE_DEFAULT;
 import static com.systemteam.util.Constant.FORMAT_TIME;
 import static com.systemteam.util.Constant.TIME_ONCE_ACTIVE;
 
@@ -92,6 +95,7 @@ public class RouteService extends Service {
     RemoteViews contentView;
     private boolean isBikeUsing = false;
     private String mCarNo = "";
+    private String mTime;
 
     public void setiUpdateLocation(AllInterface.IUpdateLocation iUpdateLocation) {
         this.iUpdateLocation = iUpdateLocation;
@@ -214,8 +218,9 @@ public class RouteService extends Service {
         String routeListStr = gson.toJson(routPointList);
         LogTool.d("RouteService----routeListStr-------------" + routeListStr);
         Bundle bundle = new Bundle();
-        bundle.putString("totalTime", totalTime + "");
-        bundle.putString("totalDistance", totalDistance + "");
+//        bundle.putString("totalTime", totalTime + "");
+        bundle.putString("totalTime", mTime);
+        bundle.putString("totalDistance", mCarNo + "");
         bundle.putString("totalPrice", totalPrice + "");
         bundle.putString("routePoints", routeListStr);
         Intent intent = new Intent(this, RouteDetailActivity.class);
@@ -228,6 +233,7 @@ public class RouteService extends Service {
         Utils.releaseWakeLock();
         stopForeground(true);
         isBikeUsing = false;
+        mTime = "";
     }
 
 
@@ -322,7 +328,7 @@ public class RouteService extends Service {
     }
 
     public void insertData(String routeListStr) {
-        ContentValues values = new ContentValues();
+        /*ContentValues values = new ContentValues();
         // 向该对象中插入键值对，其中键是列名，值是希望插入到这一列的值，值必须和数据当中的数据类型一致
         values.put("cycle_date", Utils.getDateFromMillisecond(beginTime));
         values.put("cycle_time", totalTime);
@@ -338,7 +344,21 @@ public class RouteService extends Service {
         // 第二个参数：SQl不允许一个空列，如果ContentValues是空的，那么这一列被明确的指明为NULL值
         // 第三个参数：ContentValues对象
         sqliteDatabase.insert("cycle_route", null, values);
-        sqliteDatabase.close();
+        sqliteDatabase.close();*/
+        RouteRecord record = new RouteRecord();
+        record.setCycle_date(Utils.getDateFromMillisecond(beginTime));
+        record.setCycle_time(String.valueOf(mTime));
+        record.setCycle_distance(String.valueOf(totalDistance));
+        record.setCycle_price(String.valueOf(totalPrice));
+        record.setCycle_points(routeListStr);
+        record.setUserId(BmobUser.getCurrentUser().getObjectId());
+        record.setCarNo(mCarNo);
+        record.setCost(totalPrice);
+        record.setTime(new Date());
+        record.setTimeUse(String.valueOf(mTime));
+        record.setEarnRate(EARN_RATE_DEFAULT);
+        record.setEarn(totalPrice * EARN_RATE_DEFAULT);
+        new DBManager().save(record);
     }
 
     private void initCountDownTimer(){
@@ -372,6 +392,11 @@ public class RouteService extends Service {
                     sendBroadcast(timeLeft);
                 }
             }, 1000);
+
+            long millUse = TIME_ONCE_ACTIVE - millisUntilFinished;
+            secode = (millUse / 1000) % 60;
+            mTime = String.format(Locale.US, FORMAT_TIME, millUse / 60000,
+                    secode < 10 ? "0" + secode : String.valueOf(secode));
         }
 
         @Override

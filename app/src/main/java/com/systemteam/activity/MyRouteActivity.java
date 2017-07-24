@@ -17,6 +17,7 @@ import com.systemteam.bean.RouteRecord;
 import com.systemteam.database.RouteDBHelper;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
+import com.systemteam.database.db.DBManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +63,7 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
      * 表示从TABLE_NAME表获取数据，跳过10行，取9行
      */
     public List<Object> loadPage() {
-        if (routeList.size() >= itemCount) {
+        /*if (routeList.size() >= itemCount) {
             routeRecyclerView.setNoMore(true);
             return null;
         }
@@ -90,7 +91,9 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
             routeList.add(point);
         }
         PageId++;
-        cursor.close();
+        cursor.close();*/
+        routeList.clear();
+        routeList.addAll(new DBManager().getAllRouteRecord());
         return routeList;
 
     }

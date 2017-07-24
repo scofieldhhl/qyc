@@ -5,6 +5,7 @@ package com.systemteam.util;
  */
 
 public class Constant {
+    public static final float EARN_RATE_DEFAULT = 0.3f;
     public static final long TIME_ONCE_ACTIVE = 3 * 60 * 1000;
     public static final String TIME_ONCE_ACTIVE_STR = "03 : 00";
     public static final float COST_BASE = 1.0f;

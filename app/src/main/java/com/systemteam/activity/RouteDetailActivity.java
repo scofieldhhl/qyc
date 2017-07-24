@@ -179,8 +179,9 @@ public class RouteDetailActivity extends BaseActivity {
             addOverLayout(startPosition, endPosition);
         }
 
-        total_time.setText(getString(R.string.bike_time)+ " ：" +
-                getString(R.string.cost_time, String.valueOf(time)));
+//        total_time.setText(getString(R.string.bike_time)+ " ：" +
+//                getString(R.string.cost_time, String.valueOf(time)));
+        total_time.setText(getString(R.string.bike_time)+ " ：" + time);
 //        total_distance.setText(getString(R.string.bike_distance)+ " ：" +
 //                getString(R.string.cost_distance, String.valueOf(distance)));
         total_distance.setText(getString(R.string.bike_distance)+ " ：" + String.valueOf(distance));

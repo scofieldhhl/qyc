@@ -17,6 +17,7 @@ package com.systemteam.database.db;
 
 
 import com.systemteam.dao.BikeInfoDao;
+import com.systemteam.dao.RouteRecordDao;
 
 /**
  * @Description 获取表 Helper 的工具类
@@ -24,18 +25,29 @@ import com.systemteam.dao.BikeInfoDao;
  * @time 2016/12/2
  */
 public class DbUtil {
-    private static DBHelper sTaskModelHelper;
+    private static BikeInfoDBHelper sBikeHelper;
 
-
-    private static BikeInfoDao getTaskModelDao() {
+    private static BikeInfoDao getBikeInfoDao() {
         return DbCore.getDaoSession().getBikeInfoDao();
     }
 
-    public static DBHelper getTaskModelHelperHelper() {
-        if (sTaskModelHelper == null) {
-            sTaskModelHelper = new DBHelper(getTaskModelDao());
+    public static BikeInfoDBHelper getBikeInfoHelper() {
+        if (sBikeHelper == null) {
+            sBikeHelper = new BikeInfoDBHelper(getBikeInfoDao());
         }
-        return sTaskModelHelper;
+        return sBikeHelper;
+    }
+
+    private static RouteRecordDBHelper sRouteHelper;
+    private static RouteRecordDao getRouteRecordDao() {
+        return DbCore.getDaoSession().getRouteRecordDao();
+    }
+
+    public static RouteRecordDBHelper getRouteRecordDaoHelper() {
+        if (sRouteHelper == null) {
+            sRouteHelper = new RouteRecordDBHelper(getRouteRecordDao());
+        }
+        return sRouteHelper;
     }
 
 

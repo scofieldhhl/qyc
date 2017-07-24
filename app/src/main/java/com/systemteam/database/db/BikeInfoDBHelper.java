@@ -25,10 +25,10 @@ import org.greenrobot.greendao.AbstractDao;
  * @author scofield.hhl@gmail.com
  * @time 2016/12/2
  */
-public class DBHelper extends BaseDbHelper<BikeInfo, Long> {
+public class BikeInfoDBHelper extends BaseDbHelper<BikeInfo, Long> {
 
 
-    public DBHelper(AbstractDao dao) {
+    public BikeInfoDBHelper(AbstractDao dao) {
         super(dao);
     }
 }
