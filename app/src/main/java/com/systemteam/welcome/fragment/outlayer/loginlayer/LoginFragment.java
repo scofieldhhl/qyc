@@ -1,6 +1,7 @@
 package com.systemteam.welcome.fragment.outlayer.loginlayer;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.systemteam.BikeApplication;
+import com.systemteam.MainActivity;
 import com.systemteam.R;
 import com.systemteam.bean.MyUser;
 import com.systemteam.fragment.BaseFragment;
@@ -139,6 +141,7 @@ public class LoginFragment extends BaseFragment {
                 toast(mContext, bmobUser.getUsername() + "登陆成功");
                 testGetCurrentUser();
                 ((BikeApplication)getActivity().getApplication()).getmUser();
+                startActivity(new Intent(getActivity(), MainActivity.class));
                 getActivity().finish();
             }
         });

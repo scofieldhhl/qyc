@@ -50,15 +50,23 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="S64Fn6drcdAGvYxq2AW0ikTOBVKInQXO" />
-
         <activity
-            android:name=".MainActivity"
-            android:launchMode="singleTask">
+            android:name=".activity.SplashActivity"
+            android:theme="@style/AppTheme.splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTask">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
         </activity>
         <activity
             android:name=".activity.CodeUnlockActivity"
@@ -112,7 +120,6 @@
             android:value="${UMENG_CHANNEL_VALUE}" />
         -->
 
-        <activity android:name=".activity.SplashActivity" />
         <activity
             android:name=".activity.QRCodeScanActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
