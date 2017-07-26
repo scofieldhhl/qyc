@@ -175,6 +175,19 @@
     <string name="user_no">尚未登录请先登录，立即前往登录界面？</string>
     <string name="apply_check_input_null">%s内容不能为空！</string>
     <string name="address">地址</string>
+    <string name="agree">同意</string>
+    <string name="disagree">不同意</string>
+    <string name="notice_apply">申请商户须知</string>
+    <string name="notice_apply_content">
+        1.\n
+        2.\n
+        3.\n
+        4.\n
+        5.\n
+        6.\n
+        7.\n
+        8.\n
+    </string>
     <!--login-->
 
     <!--welcom-->

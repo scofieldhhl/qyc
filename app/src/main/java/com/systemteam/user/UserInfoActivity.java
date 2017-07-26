@@ -89,7 +89,7 @@ public class UserInfoActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        mUser = ((BikeApplication) this.getApplication()).getmUser();
+        mUser = BmobUser.getCurrentUser(MyUser.class);
         initInfo(mUser);
     }
 
@@ -129,7 +129,21 @@ public class UserInfoActivity extends BaseActivity {
     }
 
     public void doSubmit(View view){
-        startActivity(new Intent(UserInfoActivity.this, ApplyActivity.class));
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle(R.string.notice_apply);
+        builder.setMessage(R.string.notice_apply_content);
+        builder.setPositiveButton(R.string.agree, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                startActivity(new Intent(UserInfoActivity.this, ApplyActivity.class));
+            }
+        });
+        builder.setNegativeButton(R.string.disagree, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 
     public void doSignOut(View view){
