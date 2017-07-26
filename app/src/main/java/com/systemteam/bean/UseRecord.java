@@ -1,6 +1,8 @@
 package com.systemteam.bean;
 
-public class UseRecord {
+import cn.bmob.v3.BmobObject;
+
+public class UseRecord extends BmobObject{
     private Long id;
     private String userId;
     private String carNo;

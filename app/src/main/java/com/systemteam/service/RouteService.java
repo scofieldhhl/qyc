@@ -19,6 +19,7 @@ import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -33,23 +34,36 @@ import com.google.gson.Gson;
 import com.systemteam.MainActivity;
 import com.systemteam.R;
 import com.systemteam.activity.RouteDetailActivity;
+import com.systemteam.bean.Car;
+import com.systemteam.bean.MyUser;
 import com.systemteam.bean.RoutePoint;
 import com.systemteam.bean.RouteRecord;
+import com.systemteam.bean.UseRecord;
 import com.systemteam.callback.AllInterface;
 import com.systemteam.database.db.DBManager;
 import com.systemteam.map.MyOrientationListener;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
+import com.systemteam.welcome.WelcomeActivity;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
+import static com.systemteam.BaseActivity.loge;
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
 import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
-import static com.systemteam.util.Constant.COST_BASE;
+import static com.systemteam.util.Constant.COST_BASE_DEFAULT;
 import static com.systemteam.util.Constant.EARN_RATE_DEFAULT;
 import static com.systemteam.util.Constant.FORMAT_TIME;
 import static com.systemteam.util.Constant.TIME_ONCE_ACTIVE;
@@ -89,13 +103,15 @@ public class RouteService extends Service {
     AllInterface.IUpdateLocation iUpdateLocation;
     public ArrayList<RoutePoint> routPointList = new ArrayList<>();
     public  int totalDistance = 0;
-    public  float totalPrice = 0;
+    private float totalPrice = COST_BASE_DEFAULT;
     public  long beginTime = 0, totalTime = 0;
     Notification notification;
     RemoteViews contentView;
     private boolean isBikeUsing = false;
     private String mCarNo = "";
+    private Car mCar;
     private String mTime;
+    private MyUser mUser;
 
     public void setiUpdateLocation(AllInterface.IUpdateLocation iUpdateLocation) {
         this.iUpdateLocation = iUpdateLocation;
@@ -109,7 +125,7 @@ public class RouteService extends Service {
 //        SQLiteDatabase sqliteDatabase = dbHelper.getReadableDatabase();
         totalTime = 0;
         totalDistance = 0;
-        totalPrice = COST_BASE;
+        totalPrice = COST_BASE_DEFAULT;
         routPointList.clear();
 
     }
@@ -120,7 +136,14 @@ public class RouteService extends Service {
             String key = intent.getStringExtra(BUNDLE_KEY_CODE);
             if(key != null && !TextUtils.isEmpty(key)){
                 mCarNo = key;
+                checkCarExist(key);
             }
+        }
+        mUser = BmobUser.getCurrentUser(MyUser.class);
+        if(mUser == null){
+            Toast.makeText(this, R.string.user_no, Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, WelcomeActivity.class));
+            return super.onStartCommand(intent, flags, startId);
         }
 //        initLocation();//初始化LocationgClient
         initNotification();
@@ -282,8 +305,7 @@ public class RouteService extends Service {
             }
 
             totalTime = (int) (System.currentTimeMillis() - beginTime) / 1000 / 60;
-//            totalPrice = (float) (Math.floor(totalTime / 30) * COST_BASE + COST_BASE);
-            totalPrice = COST_BASE;
+//            totalPrice = (float) (Math.floor(totalTime / 30) * COST_BASE_DEFAULT + COST_BASE_DEFAULT);
             startNotifi(getString(R.string.cost_time, String.valueOf(totalTime)),
                     getString(R.string.cost_distance, String.valueOf(totalDistance)),
                     getString(R.string.cost_num, String.valueOf(totalPrice)));
@@ -328,6 +350,7 @@ public class RouteService extends Service {
     }
 
     public void insertData(String routeListStr) {
+        newUseRecord(mTime);
         /*ContentValues values = new ContentValues();
         // 向该对象中插入键值对，其中键是列名，值是希望插入到这一列的值，值必须和数据当中的数据类型一致
         values.put("cycle_date", Utils.getDateFromMillisecond(beginTime));
@@ -367,6 +390,7 @@ public class RouteService extends Service {
             public void run() {
                 if(!isBikeUsing){
                     countDownTimer.start();
+                    balance();
                 }
             }
         }, 0);
@@ -379,8 +403,7 @@ public class RouteService extends Service {
             long min = millisUntilFinished / 60000;
             long secode = (millisUntilFinished / 1000) % 60;
 //            totalTime = (int) (System.currentTimeMillis() - beginTime) / 1000 / 60;
-//            totalPrice = (float) (Math.floor(totalTime / 30) * COST_BASE + COST_BASE);
-            totalPrice = COST_BASE;
+//            totalPrice = (float) (Math.floor(totalTime / 30) * COST_BASE_DEFAULT + COST_BASE_DEFAULT);
             final String timeLeft = String.format(Locale.US, FORMAT_TIME, min,
                     secode < 10 ? "0" + secode : String.valueOf(secode));
 //            mCarNo = getString(R.string.cost_distance, String.valueOf(totalDistance));
@@ -422,5 +445,91 @@ public class RouteService extends Service {
             countDownTimer.onFinish();
             countDownTimer.cancel();
         }
+    }
+
+    private CompositeSubscription mCompositeSubscription;
+
+    /**
+     * 解决Subscription内存泄露问题
+     * @param s
+     */
+    protected void addSubscription(Subscription s) {
+        if (this.mCompositeSubscription == null) {
+            this.mCompositeSubscription = new CompositeSubscription();
+        }
+        this.mCompositeSubscription.add(s);
+    }
+
+    private void balance(){
+        //1.扣费
+        if(mUser == null){
+            return;
+        }
+        MyUser newUser = new MyUser();
+        if(mUser.getCoupon() != null && mUser.getCoupon().intValue() > 0){
+            totalPrice = 0;
+            newUser.setCoupon(mUser.getCoupon().intValue() - 1);
+        }else {
+            totalPrice = COST_BASE_DEFAULT;
+            newUser.setBalance(mUser.getBalance().floatValue() - totalPrice);
+        }
+        addSubscription(newUser.update(mUser.getObjectId(),new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if(e==null){
+                }else{
+                    loge(e);
+                }
+            }
+        }));
+        //2.修改car收益
+        if(mCar == null){
+            return;
+        }
+        mEarn = totalPrice * EARN_RATE_DEFAULT;
+        Car newCar = new Car();
+        newCar.setIncome(newCar.getIncome() + COST_BASE_DEFAULT);
+        newCar.setEarn(newCar.getEarn() + mEarn);
+        addSubscription(newCar.update(mCar.getObjectId(), new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+
+            }
+        }));
+    }
+
+    private void checkCarExist(String carNo) {
+        BmobQuery<Car> query = new BmobQuery<>();
+        query.addWhereEqualTo("carNo", carNo);
+        addSubscription(query.findObjects(new FindListener<Car>() {
+
+            @Override
+            public void done(List<Car> object, BmobException e) {
+                if(e==null){
+                    if(object != null && object.size() > 0){
+                        mCar = object.get(0);
+                    }
+                }else{
+                    loge(e);
+                }
+            }
+        }));
+    }
+    float mEarn = COST_BASE_DEFAULT * EARN_RATE_DEFAULT;
+    private void newUseRecord(String timeUse){
+        //2.增加使用记录
+        UseRecord record = new UseRecord();
+        record.setUserId(mUser.getObjectId());
+        record.setCarNo(mCarNo);
+        record.setCost(COST_BASE_DEFAULT);
+        record.setEarn(mEarn);
+        record.setEarnRate(EARN_RATE_DEFAULT);
+        record.setTimeUse(timeUse);
+        addSubscription(record.save(new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
+
+            }
+        }));
     }
 }

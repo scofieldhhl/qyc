@@ -9,10 +9,10 @@ public class MyUser extends BmobUser {
 	private Boolean sex;
 	private Integer type;	//0用户 1商户
 	private String mark;	//
-	private Integer balance;//
+	private Float balance;//
 	private MyUser superUser;//
 	private Integer status;	//0申请中 1商户
-	private Integer earn;	//收益
+	private Float earn;	//收益
 	private Integer coupon = 3; //优惠券数
 	private String photoPath;//
 
@@ -48,11 +48,11 @@ public class MyUser extends BmobUser {
 		this.mark = mark;
 	}
 
-	public Integer getBalance() {
+	public Float getBalance() {
 		return balance;
 	}
 
-	public void setBalance(Integer balance) {
+	public void setBalance(Float balance) {
 		this.balance = balance;
 	}
 
@@ -72,11 +72,11 @@ public class MyUser extends BmobUser {
 		this.status = status;
 	}
 
-	public Integer getEarn() {
+	public Float getEarn() {
 		return earn;
 	}
 
-	public void setEarn(Integer earn) {
+	public void setEarn(Float earn) {
 		this.earn = earn;
 	}
 

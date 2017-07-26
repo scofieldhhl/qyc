@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.systemteam.activity.BreakActivity;
+import com.systemteam.activity.WalletActivity;
 import com.systemteam.bean.MyUser;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
@@ -43,6 +44,7 @@ import cn.bmob.v3.exception.BmobException;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
+import static com.systemteam.util.Constant.COST_BASE_DEFAULT;
 import static com.systemteam.util.Utils.dp2px;
 
 
@@ -337,6 +339,28 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         if(receiver != null){
             unregisterReceiver(receiver);
             receiver = null;
+        }
+    }
+
+    protected boolean checkBalance(MyUser user,final Activity activity){
+        if((user.getCoupon() == null || user.getCoupon().intValue() == 0) &&
+                (user.getBalance() == null || user.getBalance().floatValue() == 0
+                        || user.getBalance().floatValue() < COST_BASE_DEFAULT)) {
+            AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+            alertDialog.setTitle(activity.getString(R.string.tip));
+            alertDialog.setMessage(activity.getString(R.string.ballance_no));
+            alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, activity.getString(R.string.confirm),
+                    new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(activity, WalletActivity.class));
+                        }
+                    });
+            alertDialog.show();
+            return false;
+        }else {
+            return true;
         }
     }
 }

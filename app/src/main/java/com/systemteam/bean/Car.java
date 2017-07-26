@@ -9,16 +9,16 @@ public class Car extends BmobObject {
 	private static final long serialVersionUID = 1L;
 	private String carNo;
 	private Integer carType;
-	private Integer price;
+	private Float price;
 	private String name;
 	private BmobDate dateValid;
 	private MyUser author;
 	private String address;
-	private Integer income;
+	private Float income;		//收入
 	private Integer status;
 	private BmobGeoPoint position;
 	private String password;
-	private Integer earn;
+	private Float earn;		//收益
 
 	public String getCarNo() {
 		return carNo;
@@ -36,11 +36,11 @@ public class Car extends BmobObject {
 		this.carType = carType;
 	}
 
-	public Integer getPrice() {
+	public Float getPrice() {
 		return price;
 	}
 
-	public void setPrice(Integer price) {
+	public void setPrice(Float price) {
 		this.price = price;
 	}
 
@@ -76,11 +76,11 @@ public class Car extends BmobObject {
 		this.address = address;
 	}
 
-	public Integer getIncome() {
+	public Float getIncome() {
 		return income;
 	}
 
-	public void setIncome(Integer income) {
+	public void setIncome(Float income) {
 		this.income = income;
 	}
 
@@ -108,11 +108,11 @@ public class Car extends BmobObject {
 		this.password = password;
 	}
 
-	public Integer getEarn() {
+	public Float getEarn() {
 		return earn;
 	}
 
-	public void setEarn(Integer earn) {
+	public void setEarn(Float earn) {
 		this.earn = earn;
 	}
 }

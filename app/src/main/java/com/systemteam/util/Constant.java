@@ -5,10 +5,13 @@ package com.systemteam.util;
  */
 
 public class Constant {
+    //默认值
     public static final float EARN_RATE_DEFAULT = 0.3f;
+    public static final float COST_BASE_DEFAULT = 1.0f;
     public static final long TIME_ONCE_ACTIVE = 3 * 60 * 1000;
+    public static final int COUPON_DEFAULT = 3;
+
     public static final String TIME_ONCE_ACTIVE_STR = "03 : 00";
-    public static final float COST_BASE = 1.0f;
     public static final String  BUNDLE_USER = "key_user";
     public static final String  BUNDLE_TYPE_MENU = "key_type";
     public static final String  BUNDLE_KEY_CODE = "key_code";

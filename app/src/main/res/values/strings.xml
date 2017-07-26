@@ -31,6 +31,7 @@
     <string name="account_ballance">账户余额&#160;0&#160;元  %s</string>
     <string name="account_withdraw">&#160;&#160;&#160;&#160;提现</string>
     <string name="transaction_type">请选择交易类型</string>
+    <string name="ballance_no">账户余额不足，现在前往充值</string>
     <string name="charge_im">马上充值</string>
     <string name="routing">使用中</string>
     <string name="price">1元</string>

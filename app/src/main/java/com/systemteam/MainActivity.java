@@ -583,7 +583,9 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
                 openMenu();
                 break;
             case R.id.bike_sound:
-                beginService();
+                if (checkBalance(mUser, MainActivity.this)) {
+                    beginService();
+                }
                 break;
             case R.id.shadow:
                 closeMenu();

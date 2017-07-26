@@ -1,6 +1,7 @@
 package com.systemteam.welcome.fragment.outlayer.loginlayer;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -13,9 +14,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.systemteam.MainActivity;
 import com.systemteam.R;
-import com.systemteam.fragment.BaseFragment;
 import com.systemteam.bean.MyUser;
+import com.systemteam.fragment.BaseFragment;
 
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
@@ -78,6 +80,7 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            startActivity(new Intent(getActivity(), MainActivity.class));
                             getActivity().finish();
                         }
                     }, 500);
