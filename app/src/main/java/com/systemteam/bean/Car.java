@@ -19,6 +19,7 @@ public class Car extends BmobObject {
 	private BmobGeoPoint position;
 	private String password;
 	private Float earn;		//收益
+	private String mark;	//标注or故障描述
 
 	public String getCarNo() {
 		return carNo;
@@ -114,5 +115,13 @@ public class Car extends BmobObject {
 
 	public void setEarn(Float earn) {
 		this.earn = earn;
+	}
+
+	public String getMark() {
+		return mark;
+	}
+
+	public void setMark(String mark) {
+		this.mark = mark;
 	}
 }

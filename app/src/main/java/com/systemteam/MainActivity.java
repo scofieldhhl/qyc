@@ -584,6 +584,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
                 break;
             case R.id.bike_sound:
                 if (checkBalance(mUser, MainActivity.this)) {
+                    //TODO 检查车的状态是否是可用状态
                     beginService();
                 }
                 break;

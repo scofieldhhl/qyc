@@ -27,7 +27,7 @@ public class DBManager {
 
     public List<RouteRecord> getAllRouteRecord() {
         Query<RouteRecord> query = mRouteRecordHelper.queryBuilder()
-                .orderAsc(RouteRecordDao.Properties.Time)
+                .orderDesc(RouteRecordDao.Properties.Time)
                 .build();
         return query.list();
     }

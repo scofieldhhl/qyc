@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.systemteam.R;
 import com.systemteam.bean.Car;
+import com.systemteam.util.Constant;
 
 import java.util.List;
 
@@ -48,9 +49,9 @@ public class MyCarAdapter extends BaseAdapter {
         holder.itemView.setTag(position);
         switch(getItemViewType(position)){
             case TYPE_TITLE:
-                holder.bike_time.setText("编号");
-                holder.bike_distance.setText("收益");
-                holder.bike_price.setText("状态");
+                holder.bike_time.setText(context.getString(R.string.carNo));
+                holder.bike_distance.setText(context.getString(R.string.earn));
+                holder.bike_price.setText(context.getString(R.string.status));
                 holder.bike_date.setVisibility(View.GONE);
                 break;
             case TYPE_CONTENT:
@@ -58,6 +59,22 @@ public class MyCarAdapter extends BaseAdapter {
                 holder.bike_time.setText(Car.getCarNo());
                 holder.bike_distance.setText(String.valueOf(Car.getEarn() == null ? 0.0 : Car.getEarn()));
                 holder.bike_price.setText(String.valueOf(Car.getStatus() == null ? 0 : Car.getStatus()));
+                if(Car.getStatus() == null){
+                    holder.bike_price.setText(context.getString(R.string.status_normal));
+                }else {
+                    int status = Car.getStatus().intValue();
+                    switch (status){
+                        case Constant.STATUS_NORMAL:
+                            holder.bike_price.setText(context.getString(R.string.status_normal));
+                            break;
+                        case Constant.BREAK_STATUS_LOCK:
+                            holder.bike_price.setText(context.getString(R.string.status_lock));
+                            break;
+                        default:
+                            holder.bike_price.setText(context.getString(R.string.status_break));
+                            break;
+                    }
+                }
                 holder.bike_date.setText(Car.getUpdatedAt());
                 break;
         }

@@ -80,6 +80,14 @@
     <string name="time_start">03 : 00</string>
     <string name="time_end">00 : 00</string>
 
+    <string name="status_normal">正常</string>
+    <string name="status_lock">无法开锁</string>
+    <string name="status_break">故障</string>
+
+    <string name="carNo">编号</string>
+    <string name="earn">收益</string>
+    <string name="status">状态</string>
+
     <string name="demo_title_location">demo_title_location</string>
     <string name="demo_desc_location">demo_desc_location</string>
     <string name="demo_title_geocode">demo_title_geocode</string>
@@ -279,6 +287,12 @@
     前往维修，请更换其他XXX摇摇车。</string>
     <string name="break_lock2">2.多次尝试仍开锁失败，请描述现象并提交，XXX会因为您的关怀会越来越好。</string>
     <string name="break_hint">请输入问题描述，非常感谢您的反馈。</string>
+    <string name="break_carNo">故障车编号：</string>
+    <string name="break_carNo_no">请先扫描或提交故障车车牌上的编号！</string>
+    <string name="break_car_no">错误的车牌编号，或请稍后重试！</string>
+    <string name="break_submit_success">感谢您的反馈，我们会及时处理！</string>
+    <string name="submit_success">请稍后重试！</string>
+    <string name="submit_faile">提交失败，请检查网络是否正确链接或稍后重试！</string>
     <!--break-->
 
     <string name="errcode_success">发送成功</string>

@@ -12,6 +12,7 @@
         android:layout_height="wrap_content">
 
         <CheckBox
+            android:id="@+id/cb1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -26,6 +27,7 @@
             android:text="@string/break_content1"
             android:textSize="13sp" />
         <CheckBox
+            android:id="@+id/cb2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -45,6 +47,7 @@
         android:layout_height="wrap_content">
 
         <CheckBox
+            android:id="@+id/cb3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -59,6 +62,7 @@
             android:text="@string/break_content3"
             android:textSize="13sp" />
         <CheckBox
+            android:id="@+id/cb4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -78,6 +82,7 @@
         android:layout_height="wrap_content">
 
         <CheckBox
+            android:id="@+id/cb5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -92,6 +97,7 @@
             android:text="@string/break_content5"
             android:textSize="13sp" />
         <CheckBox
+            android:id="@+id/cb6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -111,6 +117,7 @@
         android:layout_height="wrap_content">
 
         <CheckBox
+            android:id="@+id/cb7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -125,6 +132,7 @@
             android:text="@string/break_content7"
             android:textSize="13sp" />
         <CheckBox
+            android:id="@+id/cb8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"

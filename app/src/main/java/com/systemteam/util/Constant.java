@@ -11,6 +11,10 @@ public class Constant {
     public static final long TIME_ONCE_ACTIVE = 3 * 60 * 1000;
     public static final int COUPON_DEFAULT = 3;
 
+    public static final int STATUS_NORMAL = 0;
+    public static final int BREAK_STATUS_LOCK = -1;
+    public static final int BREAK_STATUS = -2;
+
     public static final String TIME_ONCE_ACTIVE_STR = "03 : 00";
     public static final String  BUNDLE_USER = "key_user";
     public static final String  BUNDLE_TYPE_MENU = "key_type";
