@@ -10,11 +10,13 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -90,7 +92,10 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
     @Override
     protected void initData() {
         checkSDK();
-        isUnLock = getIntent().getBooleanExtra(Constant.BUNDLE_KEY_UNLOCK, false);
+        isUnLock = getIntent().getBooleanExtra(Constant.BUNDLE_KEY_UNLOCK, false);//是否是解锁还是获取编号
+        if(!isUnLock){
+            ((TextView)findViewById(R.id.tv_inputcode)).setText(R.string.code_manual);
+        }
     }
 
     private void vibrate() {
@@ -314,13 +319,19 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
                     case R.id.btn_unlock:
                         mImm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
                         mImm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-                        String code = String.valueOf(((EditText) dialog.findViewById(R.id.et_code)).getText());
+                        final String code = String.valueOf(((EditText) dialog.findViewById(R.id.et_code)).getText());
                         if(!TextUtils.isEmpty(code) && code.length() > 5){
                             //TODO 校验输入车牌的有效性
                         }
-                        if(isUnLock)
-                            startActivity(new Intent(mContext, ActiveActivity.class));
-                        exist(code);
+                        dialog.dismiss();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(isUnLock)
+                                    startActivity(new Intent(mContext, ActiveActivity.class));
+                                exist(code);
+                            }
+                        }, 100);
                         break;
                     case R.id.iv_light:
                         switchFlashlight();
@@ -337,8 +348,11 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
         dialog.findViewById(R.id.iv_light).setOnClickListener(listener);
         dialog.findViewById(R.id.menu_icon).setOnClickListener(listener);
         dialog.findViewById(R.id.iv_scan).setOnClickListener(listener);
+        if(!isUnLock){
+            ((Button)dialog.findViewById(R.id.btn_unlock)).setText(R.string.confirm);
+        }
         dialog.show();
-        mImm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+//        mImm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
         return dialog;
     }
 

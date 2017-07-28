@@ -2,6 +2,8 @@ package com.systemteam.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
@@ -15,6 +17,7 @@ import com.systemteam.R;
 import com.systemteam.bean.Car;
 import com.systemteam.util.Constant;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
@@ -24,6 +27,7 @@ import cn.bmob.v3.listener.UpdateListener;
 
 import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
 import static com.systemteam.util.Constant.BUNDLE_TYPE_MENU;
+import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 import static com.systemteam.util.Constant.REQUEST_CODE;
 
 public class BreakActivity extends BaseActivity {
@@ -35,6 +39,26 @@ public class BreakActivity extends BaseActivity {
     private CheckBox[] mCbArray;
     private Car mCar;
     private EditText mEtDescription;
+    private static class MyHandler extends Handler {
+        private WeakReference<BreakActivity> mActivity;
+
+        public MyHandler(BreakActivity activity) {
+            mActivity = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            final BreakActivity theActivity = mActivity.get();
+            super.handleMessage(msg);
+            switch (msg.what){
+                case MSG_RESPONSE_SUCCESS:
+                    theActivity.doSubmit();
+                    break;
+            }
+        }
+    }
+
+    private MyHandler mHandler = new MyHandler(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +97,7 @@ public class BreakActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        checkCarExist(mCarNo);
+
     }
 
     @Override
@@ -86,11 +110,18 @@ public class BreakActivity extends BaseActivity {
     }
 
     public void doBreakSubmit(View view){
+        mProgressHelper.showProgressDialog(getString(R.string.submiting));
+        checkCarExist(mCarNo);
+    }
+
+    private void doSubmit(){
         if(mCarNo == null || TextUtils.isEmpty(mCarNo)){
+            mProgressHelper.dismissProgressDialog();
             toast(getString(R.string.break_carNo_no));
             return;
         }else {
             if(mCar == null){
+                mProgressHelper.dismissProgressDialog();
                 toast(getString(R.string.break_car_no));
                 return;
             }
@@ -114,6 +145,7 @@ public class BreakActivity extends BaseActivity {
             addSubscription(newCar.update(mCar.getObjectId(), new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
+                    mProgressHelper.dismissProgressDialog();
                     if(e==null){
                         toast(getString(R.string.break_submit_success));
                     }else{
@@ -149,8 +181,11 @@ public class BreakActivity extends BaseActivity {
                 if(e==null){
                     if(object != null && object.size() > 0){
                         mCar = object.get(0);
+                        mHandler.sendEmptyMessage(MSG_RESPONSE_SUCCESS);
                     }
                 }else{
+                    mProgressHelper.dismissProgressDialog();
+                    toast(getString(R.string.response_faile));
                     loge(e);
                 }
             }

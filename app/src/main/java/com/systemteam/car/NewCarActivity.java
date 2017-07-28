@@ -55,6 +55,7 @@ public class NewCarActivity extends BaseActivity {
     private double mLongitude;
     private Button mBtnSubmit;
     public MyLocationListenner myListener = new MyLocationListenner();
+    private LocationClient mlocationClient;
 
     private static class MyHandler extends Handler {
         private WeakReference<NewCarActivity> mActivity;
@@ -90,6 +91,17 @@ public class NewCarActivity extends BaseActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 退出时销毁定位
+        mlocationClient.stop();
+        // 关闭定位图层
+        mBaiduMap.setMyLocationEnabled(false);
+        mMapView.onDestroy();
+        mMapView = null;
+    }
+
+    @Override
     protected void initView() {
         initToolBar(NewCarActivity.this, R.string.new_car);
         mTvCode = (TextView) findViewById(R.id.tv_title_code);
@@ -104,7 +116,7 @@ public class NewCarActivity extends BaseActivity {
         // 开启定位图层
         mBaiduMap.setMyLocationEnabled(true);
         // 定位初始化
-        LocationClient mlocationClient = new LocationClient(this);
+        mlocationClient = new LocationClient(this);
         mlocationClient.registerLocationListener(myListener);
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true); // 打开gps

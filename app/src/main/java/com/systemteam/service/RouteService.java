@@ -240,6 +240,9 @@ public class RouteService extends Service {
         Gson gson = new Gson();
         String routeListStr = gson.toJson(routPointList);
         LogTool.d("RouteService----routeListStr-------------" + routeListStr);
+        if(mTime.equalsIgnoreCase("02 : 58") || mTime.equalsIgnoreCase("02 : 59")){
+            mTime = getString(R.string.time_start);
+        }
         Bundle bundle = new Bundle();
 //        bundle.putString("totalTime", totalTime + "");
         bundle.putString("totalTime", mTime);
