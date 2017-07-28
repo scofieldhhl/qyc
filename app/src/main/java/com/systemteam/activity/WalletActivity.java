@@ -78,13 +78,15 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         mUser = BmobUser.getCurrentUser(MyUser.class);
         if(mUser != null && mUser.getType() != null && mUser.getType().intValue() == 1){
             String str1 = getString(R.string.account_withdraw);
-            String str2 =  getString(R.string.account_ballance, str1);
+            String str2 =  getString(R.string.account_ballance,
+                    mUser.getBalance() == null ? 0f : mUser.getBalance().floatValue(), str1);
             int index = str2.indexOf(str1);
             Utils.setSpannableStr(ballance, str2, index, str2.length(), 0.6f,
                     getResources().getColor(R.color.common_blue_main));
         }else {
 
-            String acount_ballance = getString(R.string.account_ballance, "");
+            String acount_ballance = getString(R.string.account_ballance,
+                    mUser.getBalance() == null ? 0f : mUser.getBalance().floatValue(), "");
             Utils.setSpannableStr(ballance, acount_ballance, acount_ballance.length() - 3,
                     acount_ballance.length() - 2, 1.2f, Color.parseColor("#393939"));
         }
