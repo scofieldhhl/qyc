@@ -1,5 +1,7 @@
 package com.systemteam.car;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -28,9 +30,11 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 public class MyCarActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MyCarAdapter.OnItemClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MyCarAdapter.OnItemClickListener,
+        MyCarAdapter.OnItemLongClickListener{
     XRecyclerView routeRecyclerView;
     MyCarAdapter routeAdapter;
     List<Object> routeList;
@@ -72,6 +76,11 @@ public class MyCarActivity extends BaseActivity
 
 //        routeList = getAllPoints();
         routeList = new ArrayList<>();
+        routeAdapter = new MyCarAdapter(mContext, routeList);
+        routeAdapter.setOnClickListener(MyCarActivity.this);
+        routeAdapter.setOnLongClickListener(MyCarActivity.this);
+        routeRecyclerView.setAdapter(routeAdapter);
+        routeRecyclerView.addItemDecoration(new MyRouteDividerDecoration(10));
 
         routeRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
         routeRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallScale);
@@ -179,6 +188,7 @@ public class MyCarActivity extends BaseActivity
     }
 
     private void initCarList() {
+        mProgressHelper.showProgressDialog(getString(R.string.initing));
         MyUser user = BmobUser.getCurrentUser(MyUser.class);
         BmobQuery<Car> query = new BmobQuery<>();
         query.addWhereEqualTo("author", user.getObjectId());
@@ -186,15 +196,66 @@ public class MyCarActivity extends BaseActivity
 
             @Override
             public void done(List<Car> object, BmobException e) {
+                mProgressHelper.dismissProgressDialog();
                 if(e==null){
-                    toast("查询成功:" + object.size());
+                    routeList.clear();
                     routeList.add("");
                     routeList.addAll(object);
-                    routeAdapter = new MyCarAdapter(mContext, routeList);
-                    routeRecyclerView.setAdapter(routeAdapter);
-                    routeRecyclerView.addItemDecoration(new MyRouteDividerDecoration(10));
+                    routeAdapter.notifyDataSetChanged();
                 }else{
+                    toast(getString(R.string.initing_fail));
                     loge(e);
+                }
+            }
+        }));
+    }
+
+    @Override
+    public void onItemLongClick(View v, final int position) {
+        AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
+        alertDialog.setTitle(R.string.notice);
+        alertDialog.setMessage(getString(R.string.del_tip_car));
+        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, mContext.getString(R.string.del_comfirm),
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            doUpdate((Car) routeList.get(position));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, mContext.getString(R.string.del_cancel),
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+        alertDialog.show();
+    }
+
+    private void doUpdate(Car car){
+        if(car == null){
+            return;
+        }
+        mProgressHelper.showProgressDialog(getString(R.string.submiting));
+        Car newCar = new Car();
+        newCar.setAuthor(null);
+        newCar.setEarn(0f);
+        newCar.setIncome(0f);
+        newCar.setPosition(null);
+        addSubscription(newCar.delete(car.getObjectId(), new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                mProgressHelper.dismissProgressDialog();
+                if(e == null){
+                    toast(getString(R.string.del_success));
+                    initCarList();
+                }else {
+                    toast(getString(R.string.submit_faile));
                 }
             }
         }));

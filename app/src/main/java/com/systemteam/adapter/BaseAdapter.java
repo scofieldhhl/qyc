@@ -13,6 +13,7 @@ public class BaseAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     public Context context;
     OnItemClickListener listener;
+    OnItemLongClickListener longClickListener;
     List<Object> list;
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -43,7 +44,15 @@ public class BaseAdapter extends RecyclerView.Adapter<MyViewHolder> {
         public void onItemClick(View v, int position);
     }
 
+    public interface OnItemLongClickListener {
+        public void onItemLongClick(View v, int position);
+    }
+
     public void setOnClickListener(OnItemClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setOnLongClickListener(OnItemLongClickListener listener){
+        this.longClickListener = listener;
     }
 }

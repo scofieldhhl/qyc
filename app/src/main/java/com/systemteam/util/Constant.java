@@ -15,6 +15,8 @@ public class Constant {
     public static final int BREAK_STATUS_LOCK = -1;
     public static final int BREAK_STATUS = -2;
 
+    public static final float SCALING_MAP = 18.0f;
+
     public static final String TIME_ONCE_ACTIVE_STR = "03 : 00";
     public static final String  BUNDLE_USER = "key_user";
     public static final String  BUNDLE_TYPE_MENU = "key_type";

@@ -2,7 +2,11 @@ package com.systemteam.car;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
@@ -20,10 +24,12 @@ import com.systemteam.R;
 import com.systemteam.activity.QRCodeScanActivity;
 import com.systemteam.bean.Car;
 import com.systemteam.bean.MyUser;
+import com.systemteam.util.Constant;
 import com.systemteam.util.LocationManager;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
@@ -35,6 +41,8 @@ import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
 import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
+import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
+import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 import static com.systemteam.util.Constant.REQUEST_CODE;
 
 public class NewCarActivity extends BaseActivity {
@@ -45,8 +53,33 @@ public class NewCarActivity extends BaseActivity {
     private BaiduMap mBaiduMap;
     private double mLatitude; //纬度
     private double mLongitude;
+    private Button mBtnSubmit;
     public MyLocationListenner myListener = new MyLocationListenner();
 
+    private static class MyHandler extends Handler {
+        private WeakReference<NewCarActivity> mActivity;
+
+        public MyHandler(NewCarActivity activity) {
+            mActivity = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            final NewCarActivity theActivity = mActivity.get();
+            super.handleMessage(msg);
+            switch (msg.what){
+                case MSG_RESPONSE_SUCCESS:
+                    theActivity.saveNewCar();
+                    break;
+                case MSG_UPDATE_UI:
+                    theActivity.initInfo(theActivity.mCarNo);
+                    break;
+            }
+        }
+    }
+
+    private MyHandler mHandler = new MyHandler(this);
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +93,9 @@ public class NewCarActivity extends BaseActivity {
     protected void initView() {
         initToolBar(NewCarActivity.this, R.string.new_car);
         mTvCode = (TextView) findViewById(R.id.tv_title_code);
+        mBtnSubmit = (Button) findViewById(R.id.btn_submit);
         mMapView = (MapView) findViewById(R.id.id_bmapView);
+        mMapView.setVisibility(View.GONE);
         if (!Utils.isGpsOPen(this)) {
             Utils.showDialog(this);
             return;
@@ -85,6 +120,19 @@ public class NewCarActivity extends BaseActivity {
 
     }
 
+    private void initInfo(String carNo){
+        if(carNo != null && !TextUtils.isEmpty(carNo)){
+            mTvCode.setText(getString(R.string.carNo_scan, mCarNo));
+            mBtnSubmit.setVisibility(View.VISIBLE);
+            mMapView.setVisibility(View.VISIBLE);
+        }else {
+            mCar = null;
+            mTvCode.setText(getString(R.string.scan_break_hint1));
+            mBtnSubmit.setVisibility(View.GONE);
+            mMapView.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -95,7 +143,8 @@ public class NewCarActivity extends BaseActivity {
     }
 
     public void doSubmit(View view) {
-        saveNewCar();
+        mProgressHelper.showProgressDialog(getString(R.string.submiting));
+        checkExist(mCarNo);
     }
 
     public void gotoScan(View view) {
@@ -108,14 +157,12 @@ public class NewCarActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && data !=null) {
             mCarNo = data.getStringExtra(BUNDLE_KEY_CODE);
-            mTvCode.setText(mCarNo);
-            findViewById(R.id.btn_submit).setVisibility(View.VISIBLE);
+            mHandler.sendEmptyMessage(MSG_UPDATE_UI);
         }
     }
 
     private void saveNewCar() {
         MyUser user = BmobUser.getCurrentUser(MyUser.class);
-        checkExist();
         if(mCar == null){
             mCar = new Car();
             mCar.setCarNo(mCarNo);
@@ -124,20 +171,24 @@ public class NewCarActivity extends BaseActivity {
             addSubscription(mCar.save(new SaveListener<String>() {
                 @Override
                 public void done(String s, BmobException e) {
-                    LogTool.d("SaveListener: " + s);
+                    mProgressHelper.dismissProgressDialog();
                     if(e==null){
-                        toast("注册成功:" +s.toString());
+                        toast(getString(R.string.add_success));
+                        mCarNo = null;
+                        mHandler.sendEmptyMessage(MSG_UPDATE_UI);
                     }else{
                         loge(e);
+                        toast(getString(R.string.submit_faile));
                     }
                 }
             }));
         }else if(mCar.getAuthor() != null){
+            mProgressHelper.dismissProgressDialog();
             if(user.getObjectId().equalsIgnoreCase(mCar.getAuthor().getObjectId())){
-                toast("该摇摇车已被激活");
+                toast(getString(R.string.have_added));
             }else {
                 Utils.showDialog(NewCarActivity.this, getString(R.string.tip),
-                        "该摇摇车已被其他商户激活，有什么问题及时联系客服！");
+                        getString(R.string.own_other));
             }
         }else {
             mCar.setCarNo(mCarNo);
@@ -146,10 +197,14 @@ public class NewCarActivity extends BaseActivity {
             addSubscription(mCar.update(new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
+                    mProgressHelper.dismissProgressDialog();
                     if(e==null){
-                        toast("成功:");
+                        toast(getString(R.string.activate_success));
+                        mCarNo = null;
+                        mHandler.sendEmptyMessage(MSG_UPDATE_UI);
                     }else{
                         loge(e);
+                        toast(getString(R.string.submit_faile));
                     }
                 }
             }));
@@ -157,20 +212,22 @@ public class NewCarActivity extends BaseActivity {
 
     }
 
-    private void checkExist() {
+    private void checkExist(String carNo) {
         BmobQuery<Car> query = new BmobQuery<>();
-        query.addWhereEqualTo("carNo", mCarNo);
+        query.addWhereEqualTo("carNo", carNo);
         addSubscription(query.findObjects(new FindListener<Car>() {
 
             @Override
             public void done(List<Car> object, BmobException e) {
                 if(e==null){
-                    toast("查询密码成功:" + object.size());
                     if(object != null && object.size() > 0){
                         mCar = object.get(0);
                     }
+                    mHandler.sendEmptyMessage(MSG_RESPONSE_SUCCESS);
                 }else{
                     loge(e);
+                    toast(getString(R.string.response_faile));
+                    mProgressHelper.dismissProgressDialog();
                 }
             }
         }));
@@ -200,7 +257,7 @@ public class NewCarActivity extends BaseActivity {
                     bdLocation.getLongitude());
             MapStatus.Builder builder = new MapStatus.Builder();
             //地图缩放比设置为18
-            builder.target(ll).zoom(18.0f);
+            builder.target(ll).zoom(Constant.SCALING_MAP);
             mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
         }
     }

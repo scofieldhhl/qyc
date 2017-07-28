@@ -264,6 +264,7 @@
     <string name="input_scan">请输入车牌号</string>
     <string name="scan_hint">请对准车牌上的二维码</string>
     <string name="scan_break_hint1">请扫描二维码获取摇摇车编号</string>
+    <string name="carNo_scan">车辆编号: %s</string>
     <string name="light_open">开灯</string>
     <string name="light_close">关灯</string>
     <string name="input_limit">0/200</string>
@@ -292,8 +293,24 @@
     <string name="break_car_no">错误的车牌编号，或请稍后重试！</string>
     <string name="break_submit_success">感谢您的反馈，我们会及时处理！</string>
     <string name="submit_success">请稍后重试！</string>
-    <string name="submit_faile">提交失败，请检查网络是否正确链接或稍后重试！</string>
+    <string name="submit_faile">提交失败，请检查网络是否正确连接或稍后重试！</string>
+    <string name="response_faile">服务器响应失败，请检查网络是否正确连接或稍后重试！</string>
+    <string name="response_success">提交成功！</string>
     <!--break-->
+    <string name="submiting">正在提交，请稍后……</string>
+    <string name="initing">正在初始化数据……</string>
+    <string name="initing_fail">初始化失败，请检查网络是否正确连接或稍后重试！</string>
+    <string name="notice">注意</string>
+    <!--add-->
+    <string name="del_tip_car">您确定需要删除？这辆车的收益一并会被清除，确定需要这样做？</string>
+    <string name="del_comfirm">确定删除</string>
+    <string name="del_cancel">取消删除</string>
+    <string name="del_success">删除成功！</string>
+    <string name="add_success">添加成功！</string>
+    <string name="activate_success">已成功激活！</string>
+    <string name="have_added">该摇摇车已添加，请勿重复添加！</string>
+    <string name="own_other">该摇摇车已被其他商户激活，如若有疑问请及时联系客服！</string>
+    <!--add-->
 
     <string name="errcode_success">发送成功</string>
     <string name="errcode_cancel">发送取消</string>

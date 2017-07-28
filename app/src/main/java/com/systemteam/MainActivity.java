@@ -352,7 +352,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
                         bdLocation.getLongitude());
                 MapStatus.Builder builder = new MapStatus.Builder();
                 //地图缩放比设置为18
-                builder.target(ll).zoom(18.0f);
+                builder.target(ll).zoom(Constant.SCALING_MAP);
                 mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
                 changeLatitude = bdLocation.getLatitude();
                 changeLongitude = bdLocation.getLongitude();
@@ -608,7 +608,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
             routeOverlay.removeFromMap();
         MapStatus.Builder builder = new MapStatus.Builder();
         //地图缩放比设置为18
-        builder.target(currentLL).zoom(18.0f);
+        builder.target(currentLL).zoom(Constant.SCALING_MAP);
         mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
     }
 

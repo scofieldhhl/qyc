@@ -1,6 +1,7 @@
 package com.systemteam.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,9 +38,19 @@ public class MyCarAdapter extends BaseAdapter {
             public void onClick(View view) {
 
                 int position = (int) view.getTag();
-                if (listener != null) {
+                if (listener != null && getItemViewType(position) != TYPE_TITLE) {
                     listener.onItemClick(view, position);
                 }
+            }
+        });
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                int position = (int) view.getTag();
+                if (longClickListener != null && getItemViewType(position) != TYPE_TITLE) {
+                    longClickListener.onItemLongClick(view, position);
+                }
+                return false;
             }
         });
         return holder;
@@ -66,12 +77,15 @@ public class MyCarAdapter extends BaseAdapter {
                     switch (status){
                         case Constant.STATUS_NORMAL:
                             holder.bike_price.setText(context.getString(R.string.status_normal));
+                            holder.bike_price.setTextColor(ContextCompat.getColor(context, R.color.color_393939));
                             break;
                         case Constant.BREAK_STATUS_LOCK:
                             holder.bike_price.setText(context.getString(R.string.status_lock));
+                            holder.bike_price.setTextColor(ContextCompat.getColor(context, R.color.red));
                             break;
                         default:
                             holder.bike_price.setText(context.getString(R.string.status_break));
+                            holder.bike_price.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
                             break;
                     }
                 }
