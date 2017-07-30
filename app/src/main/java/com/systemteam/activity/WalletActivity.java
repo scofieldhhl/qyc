@@ -41,6 +41,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet);
+        mContext = this;
         initView();
         initData();
     }

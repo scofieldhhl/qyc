@@ -319,6 +319,11 @@
 
     <!--withdraw-->
     <string name="withdraw_title">提现</string>
+    <string name="bankcard_title">新增账户</string>
+    <string name="bankcard_no_hint">请先完善银行账号信息</string>
+    <string name="bankcard_no_notice">注意：添加银行账号信息时，请务必确认该银行账户持有人姓名和预留电话与注册商户的真实姓名和电话保持一致！</string>
+    <string name="bank_name_hint">请输入银行名称</string>
+    <string name="bank_num_hint">请输入银行账号</string>
     <!--withdraw-->
     <string name="errcode_success">发送成功</string>
     <string name="errcode_cancel">发送取消</string>
