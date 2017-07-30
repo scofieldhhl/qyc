@@ -1,7 +1,9 @@
 package com.systemteam.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +19,7 @@ import com.systemteam.R;
 import com.systemteam.adapter.ChargeAmountAdapter;
 import com.systemteam.adapter.ChargeAmountDividerDecoration;
 import com.systemteam.bean.MyUser;
+import com.systemteam.util.Constant;
 import com.systemteam.util.Utils;
 
 import cn.bmob.v3.BmobUser;
@@ -51,7 +54,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_detail:
-//                        startActivity(new Intent(WalletActivity.this, SearchActivity.class));
+                        startActivity(new Intent(WalletActivity.this, BalanceDetailActivity.class));
                         break;
                 }
                 return true;
@@ -82,7 +85,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                     mUser.getBalance() == null ? 0f : mUser.getBalance().floatValue(), str1);
             int index = str2.indexOf(str1);
             Utils.setSpannableStr(ballance, str2, index, str2.length(), 0.6f,
-                    getResources().getColor(R.color.common_blue_main));
+                    ContextCompat.getColor(mContext, R.color.common_blue_main));
         }else {
 
             String acount_ballance = getString(R.string.account_ballance,
@@ -98,8 +101,9 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     }
 
     public void doApply(View view){
-        if(mUser != null && mUser.getType() != null && mUser.getType().intValue() == 1){
-
+        if(mUser != null && mUser.getType() != null &&
+                mUser.getType().intValue() == Constant.USER_TYPE_CUSTOMER){
+            startActivity(new Intent(WalletActivity.this, WithdrawActivity.class));
         }
     }
 

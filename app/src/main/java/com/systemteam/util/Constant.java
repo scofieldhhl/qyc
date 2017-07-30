@@ -15,6 +15,9 @@ public class Constant {
     public static final int BREAK_STATUS_LOCK = -1;
     public static final int BREAK_STATUS = -2;
 
+    public static final int USER_TYPE_CUSTOMER = 1;
+    public static final int USER_TYPE_NORMAL = 0;
+
     public static final float SCALING_MAP = 18.0f;
 
     public static final String TIME_ONCE_ACTIVE_STR = "03 : 00";

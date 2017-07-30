@@ -50,6 +50,7 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="S64Fn6drcdAGvYxq2AW0ikTOBVKInQXO" />
+
         <activity
             android:name=".activity.SplashActivity"
             android:theme="@style/AppTheme.splash">
@@ -62,11 +63,14 @@
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask">
-            <!--<intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
         </activity>
         <activity
             android:name=".activity.CodeUnlockActivity"
@@ -87,11 +91,13 @@
         </activity>
         <activity android:name=".user.UserActivity" />
 
-        <!--<receiver android:name=".MainActivity$LocationReceiver">
+        <!--
+        <receiver android:name=".MainActivity$LocationReceiver">
             <intent-filter>
                 <action android:name="com.locationreceiver" />
             </intent-filter>
-        </receiver>-->
+        </receiver>
+        -->
         <receiver
             android:name=".service.RouteService$NetWorkReceiver"
             android:label="NetworkConnection">
@@ -153,7 +159,9 @@
             android:name=".car.MyCarActivity"
             android:label="@string/title_activity_my_car"
             android:theme="@style/Custom.AppTheme.NoActionBar" />
-        <activity android:name=".car.NewCarActivity"></activity>
+        <activity android:name=".car.NewCarActivity" />
+        <activity android:name=".activity.BalanceDetailActivity" />
+        <activity android:name=".activity.WithdrawActivity"></activity>
     </application>
 
 </manifest>
