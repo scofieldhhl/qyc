@@ -12,6 +12,14 @@ public class BankCard extends BmobObject{
 	private String mark;		//备注
 	private Integer status;		//状态
 
+	public BankCard(String num, String bankName, MyUser user, String userName, String phone){
+		this.cardNumber = num;
+		this.bankName = bankName;
+		this.author = user;
+		this.userName = userName;
+		this.phone = phone;
+	}
+
 	public String getCardNumber() {
 		return cardNumber;
 	}

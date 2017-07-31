@@ -32,6 +32,8 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 
+import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
+
 public class MyCarActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, MyCarAdapter.OnItemClickListener,
         MyCarAdapter.OnItemLongClickListener{
@@ -80,13 +82,14 @@ public class MyCarActivity extends BaseActivity
         routeAdapter.setOnClickListener(MyCarActivity.this);
         routeAdapter.setOnLongClickListener(MyCarActivity.this);
         routeRecyclerView.setAdapter(routeAdapter);
-        routeRecyclerView.addItemDecoration(new MyRouteDividerDecoration(10));
+        routeRecyclerView.addItemDecoration(new MyRouteDividerDecoration(1));
 
         routeRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
         routeRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallScale);
         routeRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
         routeRecyclerView.setPullRefreshEnabled(false);
-//        View header = LayoutInflater.from(this).inflate(R.layout.recyclerview_header, (ViewGroup)findViewById(android.R.id.content),false);
+//        View header = LayoutInflater.from(this).inflate(R.layout.recyclerview_header,
+//                (ViewGroup)findViewById(android.R.id.content),false);
 //        routeRecyclerView.addHeaderView(header);
 
         routeRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
@@ -191,7 +194,7 @@ public class MyCarActivity extends BaseActivity
         mProgressHelper.showProgressDialog(getString(R.string.initing));
         MyUser user = BmobUser.getCurrentUser(MyUser.class);
         BmobQuery<Car> query = new BmobQuery<>();
-        query.addWhereEqualTo("author", user.getObjectId());
+        query.addWhereEqualTo(REQUEST_KEY_BY_USER, user.getObjectId());
         addSubscription(query.findObjects(new FindListener<Car>() {
 
             @Override
@@ -199,8 +202,10 @@ public class MyCarActivity extends BaseActivity
                 mProgressHelper.dismissProgressDialog();
                 if(e==null){
                     routeList.clear();
-                    routeList.add("");
-                    routeList.addAll(object);
+                    if(object != null && object.size() > 0){
+                        routeList.add("");
+                        routeList.addAll(object);
+                    }
                     routeAdapter.notifyDataSetChanged();
                 }else{
                     toast(getString(R.string.initing_fail));

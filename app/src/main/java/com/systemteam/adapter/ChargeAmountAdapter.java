@@ -11,10 +11,6 @@ import android.widget.TextView;
 
 import com.systemteam.R;
 
-/**
- * Created by gaolei on 17/1/18.
- */
-
 public class ChargeAmountAdapter extends RecyclerView.Adapter<ChargeAmountAdapter.MyViewHolder> {
 
     public Context context;

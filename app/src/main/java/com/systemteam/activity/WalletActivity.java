@@ -24,6 +24,9 @@ import com.systemteam.util.Utils;
 
 import cn.bmob.v3.BmobUser;
 
+import static com.systemteam.util.Constant.BUNDLE_KEY_AMOUNT;
+import static com.systemteam.util.Constant.REQUEST_CODE;
+
 /**
  * Created by gaolei on 16/12/29.
  */
@@ -37,7 +40,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     RelativeLayout wechat_layout, alipay_layout;
     Button mBtnBook;
     boolean isPayByWechat = true;
-
+    //TODO 计算商户提现额度
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet);
@@ -79,6 +82,9 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         mBtnBook = (Button) findViewById(R.id.btn_book);
         mBtnBook.setOnClickListener(this);
 
+    }
+
+    private void initBalance(){
         mUser = BmobUser.getCurrentUser(MyUser.class);
         if(mUser != null && mUser.getType() != null && mUser.getType().intValue() == 1){
             String str1 = getString(R.string.account_withdraw);
@@ -98,13 +104,28 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
 
     @Override
     protected void initData() {
+        initBalance();
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case REQUEST_CODE:
+                if(resultCode == RESULT_OK){
+                    initBalance();
+                }
+                break;
+        }
     }
 
     public void doApply(View view){
         if(mUser != null && mUser.getType() != null &&
                 mUser.getType().intValue() == Constant.USER_TYPE_CUSTOMER){
-            startActivity(new Intent(WalletActivity.this, WithdrawActivity.class));
+            Intent intent = new Intent(WalletActivity.this, WithdrawActivity.class);
+            mUser.setEarn(mUser.getBalance());//TODO 计算商户提现额度
+            intent.putExtra(BUNDLE_KEY_AMOUNT, mUser.getEarn());
+            startActivityForResult(intent, Constant.REQUEST_CODE);
         }
     }
 

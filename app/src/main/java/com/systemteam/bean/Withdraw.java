@@ -1,29 +1,56 @@
 package com.systemteam.bean;
 
 import cn.bmob.v3.BmobObject;
-import cn.bmob.v3.datatype.BmobDate;
 /**
  * 提现bean
  * @Description
  */
 public class Withdraw extends BmobObject{
 	private static final long serialVersionUID = 1L;
-	private BankCard card;		//银行账户
+	private MyUser author;		//客户
+	private BankCard bankCard;		//银行账户
 	private String cardNumber;	//账号号码
 	private String bankName;	//银行名称
 	private String userName;	//姓名
 	private String phone;		//手机
-	private Float total;		//提现额度
-	private BmobDate applyDate;	//提现申请时间
+	private Float amout;		//提现额度
 	private Integer status;		//状态0：申请， 10提现成功， 其他
 	private String mark;		//备注
 
-	public BankCard getCard() {
-		return card;
+	public Withdraw(MyUser user, BankCard card, Float amout){
+		this.author = user;
+		this.bankCard = card;
+		this.amout = amout;
+		if(card != null){
+			this.cardNumber = card.getCardNumber();
+			this.bankName = card.getBankName();
+			this.userName = card.getUserName();
+			this.phone = card.getPhone();
+		}
 	}
 
-	public void setCard(BankCard card) {
-		this.card = card;
+	public MyUser getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(MyUser author) {
+		this.author = author;
+	}
+
+	public BankCard getBankCard() {
+		return bankCard;
+	}
+
+	public void setBankCard(BankCard bankCard) {
+		this.bankCard = bankCard;
+	}
+
+	public Float getAmout() {
+		return amout;
+	}
+
+	public void setAmout(Float amout) {
+		this.amout = amout;
 	}
 
 	public String getCardNumber() {
@@ -56,22 +83,6 @@ public class Withdraw extends BmobObject{
 
 	public void setPhone(String phone) {
 		this.phone = phone;
-	}
-
-	public Float getTotal() {
-		return total;
-	}
-
-	public void setTotal(Float total) {
-		this.total = total;
-	}
-
-	public BmobDate getApplyDate() {
-		return applyDate;
-	}
-
-	public void setApplyDate(BmobDate applyDate) {
-		this.applyDate = applyDate;
 	}
 
 	public Integer getStatus() {

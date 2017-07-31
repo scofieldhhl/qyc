@@ -68,7 +68,8 @@
     <style name="info_layout_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">10dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
         <item name="android:background">@drawable/edge_shadow_bg</item>
     </style>
 
@@ -116,6 +117,15 @@
         <item name="android:singleLine">true</item>
         <item name="android:inputType">number</item>
         <item name="android:background">@drawable/code_edit_bg</item>
+    </style>
+
+    <style name="xrecyclerview_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:overScrollMode">never</item>
+        <item name="android:scrollbars">none</item>
     </style>
 
     <style name="transaction_type_divider">
@@ -286,5 +296,16 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:background">@color/color_f4f3f3</item>
+        <item name="android:paddingBottom">15dp</item>
+    </style>
+
+    <style name="button_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_margin">15dp</item>
+        <item name="android:background">@drawable/bt_book_selector</item>
+        <item name="android:textColor">@color/white_dd</item>
+        <item name="android:textSize">18sp</item>
     </style>
 </resources>

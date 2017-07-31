@@ -49,15 +49,24 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <com.systemteam.view.IconEditTextView
+            android:layout_marginTop="10dp"
+            android:id="@+id/iet_username"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:padding="10dp"
-            android:text="@string/bankcard_no_notice"
-            android:gravity="center"
-            android:textColor="@color/red"
-            android:textSize="14sp" />
+            app:edtHint="@string/account_hint_name"
+            app:maxLength="100"
+            app:edtIcon="@drawable/ic_mail_black"/>
+        <com.systemteam.view.IconEditTextView
+            android:layout_marginTop="10dp"
+            android:id="@+id/iet_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:edtHint="@string/account_hint_phone"
+            app:maxLength="100"
+            app:enable="false"
+            android:clickable="false"
+            app:edtIcon="@drawable/ic_mail_black"/>
         <com.systemteam.view.IconEditTextView
             android:layout_marginTop="10dp"
             android:id="@+id/iet_cardname"
@@ -77,15 +86,19 @@
             app:isNumeric="true"
             app:edtIcon="@drawable/ic_mail_black"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="10dp"
+            android:text="@string/bankcard_no_notice"
+            android:gravity="center"
+            android:textColor="@color/red"
+            android:textSize="14sp" />
+
         <Button
             android:id="@+id/btn_unlock"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="30dp"
-            android:background="@drawable/bt_book_selector"
-            android:text="@string/confirm"
-            android:textColor="@color/white_dd"
-            android:textSize="18sp" />
+            style="@style/button_style"
+            android:text="@string/confirm"/>
     </LinearLayout>
 </RelativeLayout>

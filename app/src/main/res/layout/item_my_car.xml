@@ -9,7 +9,7 @@
         android:id="@+id/route_detail_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/bike_layout_margin"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -57,9 +57,7 @@
     <View
         android:id="@+id/detail_divider"
         style="@style/route_detail_divider"
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/route_detail_layout"
-        />
+        android:layout_below="@id/route_detail_layout"/>
 
     <TextView
         android:id="@+id/bike_date"
@@ -70,7 +68,6 @@
         android:layout_below="@id/detail_divider"
         android:text=""
         android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        />
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"/>
 </RelativeLayout>

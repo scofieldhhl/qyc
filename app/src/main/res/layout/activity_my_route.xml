@@ -17,12 +17,9 @@
 
     <com.jcodecraeer.xrecyclerview.XRecyclerView
         android:id="@+id/recyclerview_route"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"
-        android:layout_margin="15dp"
-        android:overScrollMode="never"
-        android:scrollbars="none" />
+        style="@style/xrecyclerview_style"
+        android:layout_below="@id/toolbar"/>
+
     <TextView
         android:id="@+id/no_route"
         android:layout_width="wrap_content"

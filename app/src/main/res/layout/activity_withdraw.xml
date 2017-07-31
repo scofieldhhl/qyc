@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/activity_base_bg_gray"
+    android:orientation="vertical"
     tools:context="com.systemteam.activity.WithdrawActivity">
 
     <android.support.v7.widget.Toolbar
@@ -15,13 +16,70 @@
             android:id="@+id/toolbar_title"
             style="@style/toolbar_title" />
     </android.support.v7.widget.Toolbar>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/bg_cashout"
+        android:orientation="horizontal"
+        android:padding="@dimen/activity_horizontal_margin">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_title_cash"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/withdraw_title_hint"
+                android:layout_alignParentTop="true"
+                android:textColor="@android:color/white"/>
 
+            <TextView
+                android:id="@+id/tv_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_below="@id/tv_title_cash"
+                android:layout_marginTop="8dp"
+                android:textSize="35sp"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
+        <Button
+            style="@style/button_style"
+            android:layout_width="100dp"
+            android:layout_margin="0dp"
+            android:layout_height="50dp"
+            android:onClick="doSubmit"
+            android:text="@string/account_submit"/>
+    </LinearLayout>
     <TableLayout
+        android:id="@+id/tl_bankcard"
         style="@style/info_layout_style"
-        android:layout_below="@id/toolbar"
-        android:padding="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_vertical_margin"
+        android:layout_marginTop="10dp"
         android:stretchColumns="1">
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_cardinfo"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="left"
+                android:layout_weight="1"/>
+            <ImageView
+                android:id="@+id/iv_edit"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:onClick="doBankEdit"
+                android:src="@drawable/ic_mail_black"/>
+        </LinearLayout>
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -40,7 +98,8 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
             <TextView
                 style="@style/info_text_style_title"
@@ -49,22 +108,6 @@
             <TextView
                 android:id="@+id/tv_phone"
                 style="@style/info_text_style" />
-
-        </TableRow>
-
-        <View style="@style/menu_divider_style" />
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                style="@style/info_text_style_title"
-                android:text="@string/bank_hint" />
-
-            <TextView
-                android:id="@+id/tv_cardname"
-                style="@style/info_text_style"/>
 
         </TableRow>
 
@@ -85,4 +128,29 @@
         </TableRow>
         <View style="@style/menu_divider_style" />
     </TableLayout>
-</RelativeLayout>
+    <LinearLayout
+        style="@style/info_layout_style"
+        android:background="@null"
+        android:orientation="horizontal">
+        <View style="@style/menu_divider_style"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="@color/text_black_54"/>
+        <TextView
+            style="@style/info_text_style"
+            android:padding="3dp"
+            android:textSize="12sp"
+            android:textColor="@color/text_black_54"
+            android:layout_height="wrap_content"
+            android:text="@string/withdraw_record"/>
+        <View style="@style/menu_divider_style"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="@color/text_black_54"/>
+    </LinearLayout>
+    <com.jcodecraeer.xrecyclerview.XRecyclerView
+        android:id="@+id/recyclerview_route"
+        style="@style/xrecyclerview_style"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+</LinearLayout>
