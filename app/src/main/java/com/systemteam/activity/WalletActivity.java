@@ -24,8 +24,12 @@ import com.systemteam.util.Utils;
 
 import cn.bmob.v3.BmobUser;
 
+import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_COST;
+import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_EARN;
+import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_WITHDRAW;
 import static com.systemteam.util.Constant.BUNDLE_KEY_AMOUNT;
 import static com.systemteam.util.Constant.REQUEST_CODE;
+import static com.systemteam.util.Constant.WITHDRAW_AMOUNT_DEFAULT;
 
 /**
  * Created by gaolei on 16/12/29.
@@ -40,6 +44,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     RelativeLayout wechat_layout, alipay_layout;
     Button mBtnBook;
     boolean isPayByWechat = true;
+    private float mAmout = 0f, mAllEarn, mAllWithDraw, mAllCost;
     //TODO 计算商户提现额度
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,9 +92,13 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     private void initBalance(){
         mUser = BmobUser.getCurrentUser(MyUser.class);
         if(mUser != null && mUser.getType() != null && mUser.getType().intValue() == 1){
+            requestAllEarn();
+            mAmout = mAllEarn - mAllWithDraw - mAllCost;
+            if(mAmout < 0){
+                mAmout = 0f;
+            }
             String str1 = getString(R.string.account_withdraw);
-            String str2 =  getString(R.string.account_ballance,
-                    mUser.getBalance() == null ? 0f : mUser.getBalance().floatValue(), str1);
+            String str2 =  getString(R.string.account_ballance, mAmout, str1);
             int index = str2.indexOf(str1);
             Utils.setSpannableStr(ballance, str2, index, str2.length(), 0.6f,
                     ContextCompat.getColor(mContext, R.color.common_blue_main));
@@ -100,6 +109,23 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
             Utils.setSpannableStr(ballance, acount_ballance, acount_ballance.length() - 3,
                     acount_ballance.length() - 2, 1.2f, Color.parseColor("#393939"));
         }
+    }
+
+    private void requestAllEarn(){
+        //TODO 计算总收益
+        mAllEarn = mUser.getBalance();
+        requestAllWithdraw();
+    }
+
+    private void requestAllWithdraw(){
+        //TODO 计算以提现
+        mAllWithDraw = new java.util.Random().nextFloat();
+        requesAllCost();
+    }
+
+    private void requesAllCost(){
+        //TODO 计算消费
+        mAllCost = new java.util.Random().nextFloat();
     }
 
     @Override
@@ -122,10 +148,17 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     public void doApply(View view){
         if(mUser != null && mUser.getType() != null &&
                 mUser.getType().intValue() == Constant.USER_TYPE_CUSTOMER){
-            Intent intent = new Intent(WalletActivity.this, WithdrawActivity.class);
-            mUser.setEarn(mUser.getBalance());//TODO 计算商户提现额度
-            intent.putExtra(BUNDLE_KEY_AMOUNT, mUser.getEarn());
-            startActivityForResult(intent, Constant.REQUEST_CODE);
+            if(mAmout > WITHDRAW_AMOUNT_DEFAULT){
+                Intent intent = new Intent(WalletActivity.this, WithdrawActivity.class);
+                intent.putExtra(BUNDLE_KEY_AMOUNT, mAmout);
+                intent.putExtra(BUNDLE_KEY_ALL_EARN, mAllEarn);
+                intent.putExtra(BUNDLE_KEY_ALL_WITHDRAW, mAllWithDraw);
+                intent.putExtra(BUNDLE_KEY_ALL_COST, mAllCost);
+                startActivityForResult(intent, Constant.REQUEST_CODE);
+            }else {
+                Utils.showDialog(mContext, getString(R.string.tip), getString(R.string.withdraw_refund,
+                        WITHDRAW_AMOUNT_DEFAULT));
+            }
         }
     }
 

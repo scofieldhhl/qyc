@@ -36,6 +36,9 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
+import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_COST;
+import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_EARN;
+import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_WITHDRAW;
 import static com.systemteam.util.Constant.BUNDLE_KEY_AMOUNT;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 import static com.systemteam.util.Constant.MSG_WITHDRAW_SUCCESS;
@@ -48,7 +51,7 @@ public class WithdrawActivity extends BaseActivity implements MyCarAdapter.OnIte
     private BankCard mBankCard;
     private TextView mTvUserName, mTvPhone, mTvCard, mTvInfo;
     private boolean isSave = false;
-    private float mAmout = 0f;
+    private float mAmout = 0f, mAllEarn, mAllWithDraw, mAllCost;
     private Withdraw mWithdraw;
     private boolean isWithDrawSuccess = false;
     XRecyclerView routeRecyclerView;
@@ -94,7 +97,7 @@ public class WithdrawActivity extends BaseActivity implements MyCarAdapter.OnIte
         mTvUserName = (TextView) findViewById(R.id.tv_name);
         mTvPhone = (TextView) findViewById(R.id.tv_phone);
         mTvCard = (TextView) findViewById(R.id.tv_cardnum);
-        mTvInfo = (TextView) findViewById(R.id.tv_cardinfo);
+        mTvInfo = (TextView) findViewById(R.id.tv_title_info);
 
         routeRecyclerView = (XRecyclerView) findViewById(R.id.recyclerview_route);
         routeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -128,6 +131,9 @@ public class WithdrawActivity extends BaseActivity implements MyCarAdapter.OnIte
     @Override
     protected void initData() {
         mAmout = getIntent().getFloatExtra(BUNDLE_KEY_AMOUNT, 0f);
+        mAllEarn = getIntent().getFloatExtra(BUNDLE_KEY_ALL_EARN, 0f);
+        mAllWithDraw = getIntent().getFloatExtra(BUNDLE_KEY_ALL_WITHDRAW, 0f);
+        mAllCost = getIntent().getFloatExtra(BUNDLE_KEY_ALL_COST, 0f);
         refreshAmout();
         mUser = BmobUser.getCurrentUser(MyUser.class);
         requestInfo();
@@ -136,6 +142,7 @@ public class WithdrawActivity extends BaseActivity implements MyCarAdapter.OnIte
 
     private void refreshAmout(){
         ((TextView) findViewById(R.id.tv_amount)).setText(getString(R.string.amout_format, mAmout));
+        mTvInfo.setText(getString(R.string.withdraw_title_info, mAllEarn, mAllWithDraw, mAllCost));
     }
 
     @Override
@@ -322,7 +329,8 @@ public class WithdrawActivity extends BaseActivity implements MyCarAdapter.OnIte
 
     private boolean checkWithdrawEnable(){
         if(mAmout < WITHDRAW_AMOUNT_DEFAULT){
-            Utils.showDialog(mContext, getString(R.string.tip), getString(R.string.withdraw_refund));
+            Utils.showDialog(mContext, getString(R.string.tip), getString(R.string.withdraw_refund,
+                    WITHDRAW_AMOUNT_DEFAULT));
             return false;
         }else if(routeList.size() <= 1){
             return true;
@@ -342,6 +350,7 @@ public class WithdrawActivity extends BaseActivity implements MyCarAdapter.OnIte
                 mProgressHelper.dismissProgressDialog();
                 if(e==null){
                     isWithDrawSuccess = true;
+                    mAllWithDraw += mAmout;
                     mAmout = 0f;
                     Utils.showDialog(mContext, getString(R.string.submit_success),
                         getString(R.string.withdraw_success_content, WITHDRAW_DAYS_DEFAULT));
