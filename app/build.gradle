@@ -12,8 +12,8 @@ android {
         release {
             keyAlias 'SystemStudio'
             keyPassword 'HUANGhl8811^'
-//            storeFile file('D:/appkey/systemstudio.jks')
-            storeFile file('/Users/ws/scofield/appkey/systemstudio.jks')
+            storeFile file('D:/appkey/systemstudio.jks')
+//            storeFile file('/Users/ws/scofield/appkey/systemstudio.jks')
             storePassword 'HUANGhl8811^'
         }
     }
@@ -87,10 +87,6 @@ dependencies {
     compile files('libs/httpmime-4.1.2.jar')
     compile files('libs/Msc.jar')
     compile files('libs/Sunflower.jar')
-    //bmob-sms ：Bmob单独为短信服务提供的包
-
-    //        compile 'cn.bmob.android:bmob-sms:1.0.1'
-
     //    compile 'com.echodjb.shareloginlib:share:0.6'
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.android.support:appcompat-v7:25.1.0'

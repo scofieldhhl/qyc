@@ -12,12 +12,12 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.systemteam.MainActivity;
 import com.systemteam.R;
 import com.systemteam.bean.MyUser;
 import com.systemteam.fragment.BaseFragment;
+import com.systemteam.util.Utils;
 
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
@@ -49,22 +49,42 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
         mPhone = String.valueOf(mEtPhone.getText());
         mPwd = String.valueOf(mEtPsd.getText());
         if(TextUtils.isEmpty(mPhone)){
-            Toast.makeText(getActivity(), R.string.smssdk_write_mobile_phone, Toast.LENGTH_SHORT).show();
+
+            return;
+        }
+        if(!Utils.isMobile(mPhone)){
+            toast(mContext, mContext.getString(R.string.smssdk_mobile_phone_error));
             return;
         }
         switch (v.getId()){
             case R.id.btn_next:
-                mEtPsd.setText(String.valueOf(System.currentTimeMillis()));
+                requestSMSCode(mContext, mPhone);
                 break;
             case R.id.btn_login:
                 if(TextUtils.isEmpty(mPwd)){
-                    Toast.makeText(mContext, R.string.reg_write_identify_code,
-                            Toast.LENGTH_SHORT).show();
+                    toast(mContext, mContext.getString(R.string.reg_write_identify_code));
                     return;
                 }
-                registerUser();
+                registerUser(mContext, mPhone, mPwd);
                 break;
         }
+    }
+
+
+
+    @Override
+    protected void initView(View view) {
+        mEtPhone = (EditText) view.findViewById(R.id.et_write_phone);
+        mEtPsd = (EditText) view.findViewById(R.id.et_put_identify);
+        mBtnSend = (Button) view.findViewById(R.id.btn_next);
+        mBtnRegister = (Button) view.findViewById(R.id.btn_login);
+        mBtnSend.setOnClickListener(this);
+        mBtnRegister.setOnClickListener(this);
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     private void registerUser(){
@@ -72,7 +92,7 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
         myUser.setUsername(mPhone);
         myUser.setPassword(mPwd);
         myUser.setMobilePhoneNumber(mPhone);
-        addSubscription(myUser.signUp(new SaveListener<MyUser>() {
+        addSubscription(myUser.signOrLogin(mPwd, new SaveListener<MyUser>() {
             @Override
             public void done(MyUser s, BmobException e) {
                 if(e==null){
@@ -90,20 +110,5 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
                 }
             }
         }));
-    }
-
-    @Override
-    protected void initView(View view) {
-        mEtPhone = (EditText) view.findViewById(R.id.et_write_phone);
-        mEtPsd = (EditText) view.findViewById(R.id.et_put_identify);
-        mBtnSend = (Button) view.findViewById(R.id.btn_next);
-        mBtnRegister = (Button) view.findViewById(R.id.btn_login);
-        mBtnSend.setOnClickListener(this);
-        mBtnRegister.setOnClickListener(this);
-    }
-
-    @Override
-    protected void initData() {
-
     }
 }

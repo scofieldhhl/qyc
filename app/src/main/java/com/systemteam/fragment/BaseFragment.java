@@ -1,7 +1,9 @@
 package com.systemteam.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,10 +11,20 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.systemteam.MainActivity;
+import com.systemteam.R;
 import com.systemteam.bean.MyUser;
+import com.systemteam.util.LogTool;
+import com.systemteam.util.Utils;
 
+import cn.bmob.v3.BmobSMS;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListener;
+import cn.bmob.v3.listener.SaveListener;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
+
+import static com.systemteam.BaseActivity.loge;
 
 /**
  * 类描述：
@@ -53,4 +65,52 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     protected abstract void initView(View view);
     protected abstract void initData();
+
+    protected void requestSMSCode(final Context context, String phone){
+        /*BmobSMS.requestSMSCode(context, phone, "模板名称", new RequestSMSCodeListener() {
+            @Override
+            public void done(Integer integer, cn.bmob.sms.exception.BmobException e) {
+                if(e==null){//验证码发送成功
+                    Log.i("smile", "短信id："+smsId);//用于查询本次短信发送详情
+                }
+            }
+        });*/
+        toast(context, mContext.getString(R.string.SMS_send));
+        BmobSMS.requestSMSCode(phone,"短信模板", new QueryListener<Integer>() {
+
+            @Override
+            public void done(Integer smsId,BmobException ex) {
+                if(ex==null){//验证码发送成功
+                    LogTool.i("短信id："+smsId);//用于查询本次短信发送详情
+                }else {
+                    Utils.showDialog(context, context.getString(R.string.notice),
+                            context.getString(R.string.SMS_failed));
+                }
+            }
+        });
+    }
+
+    protected void registerUser(final Context context, String phone, String psd){
+        MyUser myUser = new MyUser();
+        myUser.setPassword(psd);
+        myUser.setMobilePhoneNumber(phone);
+        addSubscription(myUser.signOrLogin(psd, new SaveListener<MyUser>() {
+            @Override
+            public void done(MyUser s, BmobException e) {
+                if(e==null){
+                    toast(context, mContext.getString(R.string.reg_success));
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            startActivity(new Intent(getActivity(), MainActivity.class));
+                            getActivity().finish();
+                        }
+                    }, 500);
+                }else{
+                    toast(context, mContext.getString(R.string.reg_failed));
+                    loge(e);
+                }
+            }
+        }));
+    }
 }

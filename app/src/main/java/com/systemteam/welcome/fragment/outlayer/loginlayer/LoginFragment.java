@@ -12,13 +12,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.systemteam.BikeApplication;
 import com.systemteam.MainActivity;
 import com.systemteam.R;
 import com.systemteam.bean.MyUser;
 import com.systemteam.fragment.BaseFragment;
+import com.systemteam.util.Utils;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
@@ -35,6 +35,7 @@ public class LoginFragment extends BaseFragment {
     private EditText mEtPhone, mEtPsd;
     private Button mBtnSend;
     private String mPhone, mPwd;
+    private boolean isLoginByPsd = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -56,16 +57,22 @@ public class LoginFragment extends BaseFragment {
         switch (v.getId()){
             case R.id.btn_login:
                 if(TextUtils.isEmpty(mPhone)){
-                    Toast.makeText(getActivity(), R.string.smssdk_write_mobile_phone,
-                            Toast.LENGTH_SHORT).show();
+                    toast(mContext, mContext.getString(R.string.smssdk_write_mobile_phone));
+                    return;
+                }
+                if(!Utils.isMobile(mPhone)){
+                    toast(mContext, mContext.getString(R.string.smssdk_mobile_phone_error));
                     return;
                 }
                 if(TextUtils.isEmpty(mPwd)){
-                    Toast.makeText(mContext, R.string.welcomanim_title_psw_hint,
-                            Toast.LENGTH_SHORT).show();
+                    toast(mContext, mContext.getString(R.string.welcomanim_title_psw_hint));
                     return;
                 }
-                testLogin();
+                if(isLoginByPsd){
+                    testLogin();
+                }else{
+                    registerUser(mContext, mPhone, mPwd);
+                }
                 break;
             case R.id.iv_qq:
                 onLoginQQ(v);
@@ -77,7 +84,8 @@ public class LoginFragment extends BaseFragment {
                 onLoginWechat(v);
                 break;
             case R.id.tv_forgetpsw:
-                mEtPsd.setText(String.valueOf(System.currentTimeMillis()).substring(0, 6));
+                requestSMSCode(mContext, mPhone);
+                isLoginByPsd = false;
                 break;
         }
     }
@@ -111,19 +119,6 @@ public class LoginFragment extends BaseFragment {
         user.setUsername(mPhone);
         user.setMobilePhoneNumber(mPhone);
         user.setPassword(mPwd);
-        //login回调
-		/*user.login(new SaveListener<BmobUser>() {
-
-			@Override
-			public void done(BmobUser bmobUser, BmobException e) {
-				if(e==null){
-					toast(user.getUsername() + "登陆成功");
-					testGetCurrentUser();
-				}else{
-					loge(e);
-				}
-			}
-		});*/
         //v3.5.0开始新增加的rx风格的Api
         user.loginObservable(BmobUser.class).subscribe(new Subscriber<BmobUser>() {
             @Override

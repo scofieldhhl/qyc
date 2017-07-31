@@ -226,9 +226,12 @@
     <string name="country_no">+86</string>
     <string name="reg_write_identify_code">请输入短信验证码</string>
     <string name="smssdk_write_mobile_phone">请填写手机号码</string>
+    <string name="smssdk_mobile_phone_error">手机输入有误，请重新输入！</string>
     <string name="reg_send_ver">发送</string>
     <string name="reg_next">验证并登录</string>
     <string name="reg_success">登录成功，欢迎使用！</string>
+    <string name="SMS_send">验证码已发送，请注意查收！</string>
+    <string name="SMS_failed">验证码发送失败，请稍后重试！</string>
     <string name="reg_failed">验证登录失败，请检查手机号或验证码是否正确输入！</string>
     <string name="skip">跳过</string>
     <!--welcom-->
