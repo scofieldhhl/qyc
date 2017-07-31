@@ -7,19 +7,19 @@ import cn.bmob.v3.datatype.BmobGeoPoint;
 public class Car extends BmobObject {
 
 	private static final long serialVersionUID = 1L;
-	private String carNo;
-	private Integer carType;
-	private Float price;
-	private String name;
-	private BmobDate dateValid;
-	private MyUser author;
-	private String address;
-	private Float income;		//收入
-	private Integer status;
-	private BmobGeoPoint position;
-	private String password;
-	private Float earn;		//收益
-	private String mark;	//标注or故障描述
+	private String carNo;		//编号
+	private Integer carType;	//类型
+	private Float price;		//价格
+	private String name;		//车名称
+	private BmobDate dateValid;	//绑定激活日期
+	private MyUser author;		//商户
+	private String address;		//地址
+	private BmobGeoPoint position;//GPS定位（经纬度信息）
+	private Float income;		//使用总收入
+	private Integer status;		//状态 0正常，-1无法开锁，0<-1：故障
+	private String password;	//启动密码
+	private Float earn;			//商户总收益
+	private String mark;		//备注or故障描述
 
 	public String getCarNo() {
 		return carNo;

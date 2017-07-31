@@ -4,11 +4,13 @@ import cn.bmob.v3.BmobObject;
 
 public class BankCard extends BmobObject{
 	private static final long serialVersionUID = 1L;
-	private String cardNumber;
-	private String bankName;
-	private MyUser author;
-	private String mark;
-	private Integer status;
+	private String cardNumber;	//账号号码
+	private String bankName;	//银行名称
+	private MyUser author;		//用户
+	private String userName;	//姓名
+	private String phone;		//手机
+	private String mark;		//备注
+	private Integer status;		//状态
 
 	public String getCardNumber() {
 		return cardNumber;
@@ -45,5 +47,21 @@ public class BankCard extends BmobObject{
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 }

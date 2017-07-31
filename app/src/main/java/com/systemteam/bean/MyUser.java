@@ -5,16 +5,16 @@ import cn.bmob.v3.BmobUser;
 public class MyUser extends BmobUser {
 
 	private static final long serialVersionUID = 1L;
-	private Integer age;
-	private Boolean sex;
-	private Integer type;	//0用户 1商户
-	private String mark;	//
-	private Float balance;//
-	private MyUser superUser;//
+	private Integer age;	//年龄
+	private Boolean sex;	//性别
+	private Integer type;	//0用户 1商户 2维修or维护人员
+	private String mark;	//备注
+	private Float balance;	//账户余额
+	private MyUser superUser;//上级用户
 	private Integer status;	//0申请中 1商户
-	private Float earn;	//收益
+	private Float earn;		//收益
 	private Integer coupon = 3; //优惠券数
-	private String photoPath;//
+	private String photoPath;//头像路径
 
 	public Integer getAge() {
 		return age;
