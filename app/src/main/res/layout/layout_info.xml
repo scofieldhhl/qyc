@@ -13,16 +13,12 @@
         android:layout_height="wrap_content">
 
         <TextView
-            style="@style/menu_text_style"
-            android:textColor="@color/text_black_54"
+            style="@style/info_text_style_title"
             android:text="@string/account_hint_nickname" />
 
         <TextView
             android:id="@+id/tv_name"
-            style="@style/menu_text_style"
-            android:textColor="@color/text_black_54"
-            android:gravity="right"
-            android:text="" />
+            style="@style/info_text_style"/>
 
         <ImageView style="@style/menu_right_arrow_style" />
     </TableRow>
@@ -33,17 +29,12 @@
         android:layout_height="wrap_content">
 
         <TextView
-            style="@style/menu_text_style"
-            android:layout_height="48dp"
-            android:textColor="@color/text_black_54"
+            style="@style/info_text_style_title"
             android:text="@string/account_hint_phone" />
 
         <TextView
             android:id="@+id/tv_phone"
-            style="@style/menu_text_style"
-            android:textColor="@color/text_black_54"
-            android:gravity="right"
-            android:text="" />
+            style="@style/info_text_style"/>
 
         <ImageView style="@style/menu_right_arrow_style" />
     </TableRow>
@@ -55,16 +46,12 @@
         android:layout_height="wrap_content">
 
         <TextView
-            style="@style/menu_text_style"
-            android:textColor="@color/text_black_54"
+            style="@style/info_text_style_title"
             android:text="@string/account_hint_sex" />
 
         <TextView
             android:id="@+id/tv_sex"
-            style="@style/menu_text_style"
-            android:textColor="@color/text_black_54"
-            android:gravity="right"
-            android:text="" />
+            style="@style/info_text_style"/>
 
         <ImageView style="@style/menu_right_arrow_style" />
     </TableRow>
@@ -74,16 +61,12 @@
         android:layout_height="wrap_content">
 
         <TextView
-            style="@style/menu_text_style"
-            android:textColor="@color/text_black_54"
+            style="@style/info_text_style_title"
             android:text="@string/account_hint_email" />
 
         <TextView
             android:id="@+id/tv_email"
-            style="@style/menu_text_style"
-            android:textColor="@color/text_black_54"
-            android:gravity="right"
-            android:text="" />
+            style="@style/info_text_style"/>
 
         <ImageView style="@style/menu_right_arrow_style" />
     </TableRow>

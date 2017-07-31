@@ -167,7 +167,7 @@
     <string name="account_hint_confirm_password">确认密码</string>
     <string name="account_hint_name">姓名</string>
     <string name="account_hint_nickname">昵称</string>
-    <string name="account_hint_phone">手机号</string>
+    <string name="account_hint_phone">手机</string>
     <string name="account_hint_sex">性别</string>
     <string name="man">男</string>
     <string name="woman">女</string>
@@ -324,6 +324,8 @@
     <string name="bankcard_no_notice">注意：添加银行账号信息时，请务必确认该银行账户持有人姓名和预留电话与注册商户的真实姓名和电话保持一致！</string>
     <string name="bank_name_hint">请输入银行名称</string>
     <string name="bank_num_hint">请输入银行账号</string>
+    <string name="bank_hint">银行</string>
+    <string name="cardnum_hint">账号</string>
     <!--withdraw-->
     <string name="errcode_success">发送成功</string>
     <string name="errcode_cancel">发送取消</string>

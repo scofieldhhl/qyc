@@ -215,7 +215,7 @@ public class UserActivity extends BaseActivity {
 			//---------------------数组操作(add、addAll、addUnique、addAllUnique)---------------------------------------
 			//添加Object类型的数组,Object数组调用addAllUnique、addUnique方法后本地用户信息未支持去重
 			List<BankCard> cards =new ArrayList<BankCard>();
-			cards.add(new BankCard("建行", "111"));
+//			cards.add(new BankCard("建行", "111"));
 			newUser.addAll("cards", cards);
 //			添加String类型的数组--String数组支持去重
 			newUser.addAllUnique("hobby", Arrays.asList("游泳"));
