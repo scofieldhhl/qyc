@@ -193,9 +193,9 @@
     <string name="user_no">尚未登录请先登录，立即前往登录界面？</string>
     <string name="apply_check_input_null">%s内容不能为空！</string>
     <string name="apply_name_hint">真实姓名</string>
-    <string name="apply_tip_name">商户提现需要真实姓名</string>
+    <string name="apply_tip_name">商户提现需要填写真实姓名</string>
     <string name="apply_tip_email">邮箱非必填,可用于找回密码</string>
-    <string name="apply_tip_address">请确认设备运送目的地</string>
+    <string name="apply_tip_address">请正确填写设备运送目的地</string>
     <string name="address">地址</string>
     <string name="agree">同意</string>
     <string name="disagree">不同意</string>
@@ -341,6 +341,7 @@
     <string name="bankcard_no_notice">注意：编辑银行账号信息时，请务必确认该银行账户持有人姓名和预留电话与注册商户的真实姓名和电话保持一致！</string>
     <string name="bank_name_hint">请输入银行名称</string>
     <string name="bank_num_hint">请输入银行账号</string>
+    <string name="bankcard_title_info">个人银行账号信息</string>
     <string name="bank_hint">银行</string>
     <string name="cardnum_hint">账号</string>
     <string name="userName_no">姓名不能为空！</string>

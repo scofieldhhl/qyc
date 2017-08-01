@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="24dp"
+        android:paddingRight="36dp"
         android:layout_toRightOf="@id/custom_widget_icon"
         android:background="@drawable/bg_edttext_selector"
         android:textColor="@color/text_black_87"

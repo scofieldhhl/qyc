@@ -41,8 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginLeft="40dp"
-        android:onClick="doSwitchSex">
+        android:layout_marginLeft="40dp">
         <RadioButton
             android:id="@+id/rb_man"
             style="@style/CustomRadioTheme"
