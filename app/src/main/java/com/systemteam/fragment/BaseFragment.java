@@ -16,6 +16,7 @@ import com.systemteam.R;
 import com.systemteam.bean.MyUser;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
+import com.systemteam.view.ProgressDialogHelper;
 
 import cn.bmob.v3.BmobSMS;
 import cn.bmob.v3.exception.BmobException;
@@ -37,6 +38,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     protected Context mContext;
     protected InputMethodManager mImm;
     private CompositeSubscription mCompositeSubscription;
+    protected ProgressDialogHelper mProgressHelper;
 
 
     /**
@@ -56,6 +58,8 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mImm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        mProgressHelper = new ProgressDialogHelper(getActivity());
     }
 
     @Override
@@ -75,7 +79,12 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
                 }
             }
         });*/
-        toast(context, mContext.getString(R.string.SMS_send));
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                toast(context, mContext.getString(R.string.SMS_send));
+            }
+        }, 1000);
         BmobSMS.requestSMSCode(phone,"短信模板", new QueryListener<Integer>() {
 
             @Override
@@ -97,6 +106,9 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         addSubscription(myUser.signOrLogin(psd, new SaveListener<MyUser>() {
             @Override
             public void done(MyUser s, BmobException e) {
+                if(mProgressHelper != null){
+                    mProgressHelper.dismissProgressDialog();
+                }
                 if(e==null){
                     toast(context, mContext.getString(R.string.reg_success));
                     new Handler().postDelayed(new Runnable() {

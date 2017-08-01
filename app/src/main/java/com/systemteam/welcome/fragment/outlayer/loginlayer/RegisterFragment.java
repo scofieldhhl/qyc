@@ -65,6 +65,7 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
                     toast(mContext, mContext.getString(R.string.reg_write_identify_code));
                     return;
                 }
+                mProgressHelper.showProgressDialog(getString(R.string.account_tip_login_ing));
                 registerUser(mContext, mPhone, mPwd);
                 break;
         }

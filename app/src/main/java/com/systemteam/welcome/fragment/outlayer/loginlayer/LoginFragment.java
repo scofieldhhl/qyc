@@ -68,9 +68,11 @@ public class LoginFragment extends BaseFragment {
                     toast(mContext, mContext.getString(R.string.welcomanim_title_psw_hint));
                     return;
                 }
+                mProgressHelper.showProgressDialog(getActivity().getString(R.string.account_tip_login_ing));
                 if(isLoginByPsd){
                     testLogin();
                 }else{
+                    //TODO 登录成功后，密码还是首次注册时的密码 是否需要将密码重置为最新注册码
                     registerUser(mContext, mPhone, mPwd);
                 }
                 break;
@@ -123,17 +125,21 @@ public class LoginFragment extends BaseFragment {
         user.loginObservable(BmobUser.class).subscribe(new Subscriber<BmobUser>() {
             @Override
             public void onCompleted() {
+                mProgressHelper.dismissProgressDialog();
                 log("----onCompleted----");
             }
 
             @Override
             public void onError(Throwable e) {
+                mProgressHelper.dismissProgressDialog();
+                toast(getActivity(), getString(R.string.account_tip_login_failed));
                 loge(new BmobException(e));
             }
 
             @Override
             public void onNext(BmobUser bmobUser) {
-                toast(mContext, bmobUser.getUsername() + "登陆成功");
+                mProgressHelper.dismissProgressDialog();
+                toast(mContext, bmobUser.getUsername() + getString(R.string.reg_success));
                 testGetCurrentUser();
                 ((BikeApplication)getActivity().getApplication()).getmUser();
                 startActivity(new Intent(getActivity(), MainActivity.class));
