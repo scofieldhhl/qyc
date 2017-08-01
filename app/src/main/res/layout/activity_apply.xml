@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/color_f4f3f3">
+    style="@style/activity_base_bg_gray">
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/toolbar"
@@ -16,8 +14,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        android:fadeScrollbars="false">
+        android:scrollbars="none"
+        android:layout_below="@id/toolbar">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,36 +23,9 @@
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:orientation="vertical">
 
-            <include
-                layout="@layout/layout_experter_info_avatar"></include>
-            <com.systemteam.view.IconEditTextView
-                android:layout_marginTop="10dp"
-                android:id="@+id/iet_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:edtHint="@string/account_hint_name"
-                app:maxLength="100"
-                app:edtIcon="@drawable/ic_mail_black"/>
+            <include layout="@layout/layout_experter_info_avatar"/>
 
-            <com.systemteam.view.IconEditTextView
-                android:layout_marginTop="10dp"
-                android:id="@+id/iet_phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:edtHint="@string/account_hint_phone"
-                app:maxLength="100"
-                app:edtIcon="@drawable/ic_mail_black"/>
-
-            <com.systemteam.view.IconEditTextView
-                android:layout_marginTop="10dp"
-                android:id="@+id/iet_sex"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:edtHint="@string/account_hint_sex"
-                app:maxLength="100"
-                app:enable="false"
-                android:clickable="true"
-                app:edtIcon="@drawable/ic_mail_black"/>
+            <include layout="@layout/layout_info_edit"/>
 
             <com.systemteam.view.IconEditTextView
                 android:layout_marginTop="10dp"
@@ -63,8 +34,14 @@
                 android:layout_height="wrap_content"
                 app:edtHint="@string/account_hint_email"
                 app:maxLength="100"
-                app:edtIcon="@drawable/ic_mail_black"/>
-
+                app:edtIcon="@drawable/ic_mail_blue_24dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/text_black_30"
+                android:textSize="12sp"
+                android:text="@string/apply_tip_email"/>
             <com.systemteam.view.IconEditTextView
                 android:layout_marginTop="10dp"
                 android:id="@+id/iet_address"
@@ -72,77 +49,20 @@
                 android:layout_height="wrap_content"
                 app:edtHint="@string/address"
                 app:maxLength="100"
-                app:edtIcon="@drawable/ic_mail_black"/>
-
-            <Button
+                app:edtIcon="@drawable/ic_country_blue_24dp"/>
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_alignParentBottom="true"
-                android:layout_margin="20dp"
-                android:background="@drawable/bt_book_selector"
+                android:gravity="right"
+                android:textColor="@color/text_black_30"
+                android:textSize="12sp"
+                android:text="@string/apply_tip_address"/>
+
+            <Button
+                style="@style/button_style"
                 android:text="@string/account_submit"
-                android:textColor="@color/white_dd"
-                android:onClick="doSignOut"
-                android:textSize="18sp" />
+                android:onClick="doApply" />
         </LinearLayout>
     </ScrollView>
 
-    <RelativeLayout
-        android:id="@+id/rl_upload_result"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:visibility="gone">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@color/toolbar_bg">
-
-            <ImageView
-                android:id="@+id/iv_close"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="20dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/btn_close"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/iv_close"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_centerVertical="true"
-                android:textSize="@dimen/text_size_16"
-                android:textColor="@color/white"
-                android:text=""/>
-        </RelativeLayout>
-        <TextView
-            android:id="@+id/tv_result_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text=""
-            android:paddingLeft="@dimen/activity_vertical_margin"
-            android:paddingRight="@dimen/activity_vertical_margin"
-            android:lineSpacingExtra="2dp"
-            android:lineSpacingMultiplier="1"
-            android:layout_centerInParent="true"
-            android:textColor="@color/colorPrimary"
-            android:layout_marginBottom="10dp"
-            android:textSize="@dimen/text_size_20"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_below="@id/tv_result_title"
-            android:text=""
-            android:paddingLeft="@dimen/activity_vertical_margin"
-            android:paddingRight="@dimen/activity_vertical_margin"
-            android:lineSpacingExtra="2dp"
-            android:lineSpacingMultiplier="1"
-            android:layout_centerInParent="true"
-            android:textSize="@dimen/text_size_16"/>
-    </RelativeLayout>
 </RelativeLayout>

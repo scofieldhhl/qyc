@@ -287,4 +287,11 @@ public class Utils {
         b = m.matches();
         return b;
     }
+
+    public static boolean isEmail(String email){
+        String check = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+        Pattern regex = Pattern.compile(check);
+        Matcher matcher = regex.matcher(email);
+        return matcher.matches();
+    }
 }

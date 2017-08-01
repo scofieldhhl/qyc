@@ -310,4 +310,13 @@
         <item name="android:textColor">@color/white_dd</item>
         <item name="android:textSize">18sp</item>
     </style>
+
+    <style name="CustomRadioTheme" parent="@android:style/Widget.CompoundButton.RadioButton">
+        <item name="android:button">@drawable/radiobutton_style</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:focusable">true</item>
+    </style>
 </resources>

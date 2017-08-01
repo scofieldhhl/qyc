@@ -49,52 +49,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
-        <com.systemteam.view.IconEditTextView
-            android:layout_marginTop="10dp"
-            android:id="@+id/iet_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:edtHint="@string/account_hint_name"
-            app:maxLength="100"
-            app:edtIcon="@drawable/ic_name_blue_24dp"/>
-        <com.systemteam.view.IconEditTextView
-            android:layout_marginTop="10dp"
-            android:id="@+id/iet_phone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:edtHint="@string/account_hint_phone"
-            app:maxLength="100"
-            app:enable="false"
-            android:clickable="false"
-            app:edtIcon="@drawable/ic_phone_blue_24dp"/>
-        <com.systemteam.view.IconEditTextView
-            android:layout_marginTop="10dp"
-            android:id="@+id/iet_cardname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:edtHint="@string/bank_name_hint"
-            app:maxLength="100"
-            app:edtIcon="@drawable/ic_mail_black"/>
-
-        <com.systemteam.view.IconEditTextView
-            android:layout_marginTop="10dp"
-            android:id="@+id/iet_cardnum"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:edtHint="@string/bank_num_hint"
-            app:maxLength="100"
-            app:isNumeric="true"
-            app:edtIcon="@drawable/ic_mail_black"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:padding="10dp"
-            android:text="@string/bankcard_no_notice"
-            android:gravity="center"
-            android:textColor="@color/red"
-            android:textSize="14sp" />
+        <include layout="@layout/layout_info_edit"/>
 
         <Button
             android:id="@+id/btn_unlock"

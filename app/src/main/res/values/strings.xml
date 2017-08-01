@@ -95,6 +95,8 @@
     <string name="success">成功</string>
     <string name="fail">失败</string>
     <string name="fail_submit">提交失败</string>
+    <string name="edit_info">资料编辑</string>
+    <string name="edit_info_success">您的资料修改已成功提交！</string>
 
     <string name="demo_title_location">demo_title_location</string>
     <string name="demo_desc_location">demo_desc_location</string>
@@ -190,9 +192,14 @@
     <string name="merchant_title">申请商户</string>
     <string name="user_no">尚未登录请先登录，立即前往登录界面？</string>
     <string name="apply_check_input_null">%s内容不能为空！</string>
+    <string name="apply_name_hint">真实姓名</string>
+    <string name="apply_tip_name">商户提现需要真实姓名</string>
+    <string name="apply_tip_email">邮箱非必填,可用于找回密码</string>
+    <string name="apply_tip_address">请确认设备运送目的地</string>
     <string name="address">地址</string>
     <string name="agree">同意</string>
     <string name="disagree">不同意</string>
+    <string name="apply_success_hint">您已成功申请合作商户，我们会尽快和您联系！</string>
     <string name="notice_apply">申请商户须知</string>
     <string name="notice_apply_content">
         1.\n

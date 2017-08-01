@@ -1,24 +1,31 @@
 package com.systemteam.user;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.systemteam.BaseActivity;
 import com.systemteam.BikeApplication;
 import com.systemteam.R;
 import com.systemteam.bean.MyUser;
+import com.systemteam.view.IconEditTextView;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -30,12 +37,17 @@ import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
 import static com.systemteam.util.Constant.MSG_LOGOOUT;
+import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 import static com.systemteam.util.Constant.REQUEST_IMAGE;
+import static com.systemteam.util.Constant.USER_TYPE_APPLYING;
+import static com.systemteam.util.Constant.USER_TYPE_CUSTOMER;
+import static com.systemteam.util.Constant.USER_TYPE_EXPERTER;
 
 public class UserInfoActivity extends BaseActivity {
     private String mAvatarPath;
     private ImageView mIvUserPhoto, mIvAddPhoto;
     private TextView mTvName, mTvPhone, mTvSex, mTvEmail, mTvAddress, mTvApply;
+    private TableLayout mRlInfoMore;
     private static class MyHandler extends Handler {
         private WeakReference<UserInfoActivity> mActivity;
 
@@ -54,6 +66,9 @@ public class UserInfoActivity extends BaseActivity {
                 case MSG_LOGOOUT:
                     theActivity.initData();
                     theActivity.finish();
+                    break;
+                case MSG_UPDATE_UI:
+                    theActivity.initData();
                     break;
             }
         }
@@ -79,6 +94,8 @@ public class UserInfoActivity extends BaseActivity {
         mTvSex = (TextView) findViewById(R.id.tv_sex);
         mTvEmail = (TextView) findViewById(R.id.tv_email);
         mTvApply = (TextView) findViewById(R.id.tv_apply);
+        mTvAddress  = (TextView) findViewById(R.id.tv_address);
+        mRlInfoMore = (TableLayout) findViewById(R.id.tl_info_more);
     }
 
     @Override
@@ -104,16 +121,29 @@ public class UserInfoActivity extends BaseActivity {
                 mTvSex.setText(R.string.man);
             }
             mTvEmail.setText(user.getEmail());
+            mTvAddress.setText(user.getAddress());
         }else {
             mTvName.setText("");
             mTvPhone.setText("");
             mTvSex.setText("");
             mTvEmail.setText("");
+            mTvAddress.setText("");
         }
 
-        if(user != null && user.getType() != null && user.getType().intValue() == 1){
+        if(user != null && user.getType() != null &&
+                (user.getType().intValue() == USER_TYPE_CUSTOMER || user.getType().intValue() == USER_TYPE_APPLYING)){
             mTvApply.setVisibility(View.GONE);
+            mRlInfoMore.setVisibility(View.VISIBLE);
+            if(user.getType().intValue() == USER_TYPE_APPLYING){
+                mIvAddPhoto.setVisibility(View.GONE);
+            }
+        }else if(user != null && user.getType() != null && (user.getType().intValue() == USER_TYPE_EXPERTER)){
+            mIvAddPhoto.setVisibility(View.GONE);
+            mTvApply.setVisibility(View.GONE);
+            mRlInfoMore.setVisibility(View.GONE);
         }else {
+            mIvAddPhoto.setVisibility(View.GONE);
+            mRlInfoMore.setVisibility(View.GONE);
             String strApply =  getString(R.string.merchant_apply);
             SpannableString mMoreFeatrue = new SpannableString(strApply);
             mMoreFeatrue.setSpan(new UnderlineSpan(), 0, strApply.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -126,6 +156,15 @@ public class UserInfoActivity extends BaseActivity {
     @Override
     public void onClick(View v) {
 
+    }
+
+    public void doUpdate(View view){
+        if(mUser != null && mUser.getType() != null && (mUser.getType().intValue() == USER_TYPE_CUSTOMER
+                || mUser.getType().intValue() == USER_TYPE_APPLYING)) {
+            startActivity(new Intent(UserInfoActivity.this, ApplyActivity.class));
+        }else {
+            showInputDialog();
+        }
     }
 
     public void doSubmit(View view){
@@ -207,5 +246,80 @@ public class UserInfoActivity extends BaseActivity {
         } else {
             checkUser(this);
         }
+    }
+
+    public Dialog showInputDialog() {
+        final Dialog dialog = new Dialog(mContext, R.style.MyDialog);
+        //设置它的ContentView
+        dialog.setContentView(R.layout.layout_info_input);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        final IconEditTextView mIetName = (IconEditTextView) dialog.findViewById(R.id.iet_name);
+        final IconEditTextView mIetPhone = (IconEditTextView) dialog.findViewById(R.id.iet_phone);
+        final RadioButton mRbMan = (RadioButton) dialog.findViewById(R.id.rb_man);
+        final RadioButton mRbWonman = (RadioButton) dialog.findViewById(R.id.rb_woman);
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.btn_unlock:
+                        mUser.setUsername(mIetName.getInputText());
+                        mUser.setSex(mRbMan.isChecked());
+                        if(TextUtils.isEmpty(mUser.getUsername())){
+                            mUser.setUsername(mUser.getMobilePhoneNumber());
+                        }
+                        requestUpdate();
+                        mImm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
+                        dialog.dismiss();
+                        break;
+                    case R.id.menu_icon:
+                        mImm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
+                        dialog.dismiss();
+                        break;
+                }
+            }
+        };
+        dialog.findViewById(R.id.btn_unlock).setOnClickListener(listener);
+        dialog.findViewById(R.id.menu_icon).setOnClickListener(listener);
+        ((IconEditTextView)dialog.findViewById(R.id.iet_phone)).setText(mUser.getMobilePhoneNumber());
+        dialog.findViewById(R.id.tv_name_tip).setVisibility(View.GONE);
+        if(mUser != null){
+            mIetName.setText(mUser.getUsername());
+            mIetPhone.setText(mUser.getMobilePhoneNumber());
+            if(mUser.getSex() != null){
+                if(mUser.getSex()){
+                    mRbMan.setChecked(true);
+                }else {
+                    mRbWonman.setChecked(true);
+                }
+            }else {
+                mRbMan.setChecked(true);
+            }
+        }
+        dialog.show();
+        return dialog;
+    }
+
+    private void requestUpdate(){
+        mProgressHelper.showProgressDialog(getString(R.string.submiting));
+        MyUser newUser = new MyUser();
+        newUser.setUsername(mUser.getUsername());
+        newUser.setSex(mUser.getSex());
+        addSubscription(newUser.update(mUser.getObjectId(), new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                mProgressHelper.dismissProgressDialog();
+                if(e == null){
+                    toast(getString(R.string.submit_success));
+                    mHandler.sendEmptyMessage(MSG_UPDATE_UI);
+                }else {
+                    toast(getString(R.string.submit_faile));
+                }
+            }
+        }));
     }
 }

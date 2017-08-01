@@ -25,8 +25,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <include
-                layout="@layout/layout_info"></include>
+            <include layout="@layout/layout_info"/>
+            <include layout="@layout/layout_info_more"/>
         </LinearLayout>
     </ScrollView>
     <TextView
@@ -39,16 +39,7 @@
         android:onClick="doSubmit"
         android:text="@string/merchant_apply" />
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/bt_book_selector"
+        style="@style/button_style"
         android:text="@string/account_logout"
-        android:textColor="@color/white_dd"
-        android:onClick="doSignOut"
-        android:textSize="18sp" />
+        android:onClick="doSignOut" />
 </LinearLayout>

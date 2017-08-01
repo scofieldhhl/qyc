@@ -25,13 +25,16 @@
         <ImageView
             android:id="@+id/iv_add_photo"
             style="@style/iv_arrow"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:scaleType="fitXY"
             android:layout_centerVertical="false"
             android:layout_alignParentBottom="true"
             android:layout_alignBottom="@id/iv_user_photo"
             android:layout_alignRight="@id/iv_user_photo"
-            android:visibility="gone"
+            android:visibility="visible"
             android:onClick="doSelectPicture"
-            android:src="@drawable/avatar_camera_profile_40dp"/>
+            android:src="@drawable/ic_vip_logo"/>
     </RelativeLayout>
 
     <ImageView

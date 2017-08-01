@@ -1,66 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tl_break"
+    android:id="@+id/tl_info_more"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:visibility="gone"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_vertical_margin"
     android:paddingRight="@dimen/activity_vertical_margin"
     android:stretchColumns="1">
-    <include
-        layout="@layout/layout_experter_info_avatar"></include>
-
     <TableRow
-        android:id="@+id/tr_info0"
+        android:id="@+id/tr_more0"
         android:onClick="doUpdate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
             style="@style/info_text_style_title"
-            android:text="@string/account_hint_nickname" />
+            android:text="@string/account_hint_email" />
 
         <TextView
-            android:id="@+id/tv_name"
+            android:id="@+id/tv_email"
             style="@style/info_text_style"/>
 
         <ImageView style="@style/menu_right_arrow_style" />
     </TableRow>
     <View style="@style/menu_divider_style" />
-
     <TableRow
-        android:id="@+id/tr_info1"
+        android:id="@+id/tr_more1"
         android:onClick="doUpdate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
             style="@style/info_text_style_title"
-            android:text="@string/account_hint_phone" />
+            android:text="@string/address" />
 
         <TextView
-            android:id="@+id/tv_phone"
+            android:id="@+id/tv_address"
             style="@style/info_text_style"/>
 
         <ImageView style="@style/menu_right_arrow_style" />
     </TableRow>
     <View style="@style/menu_divider_style" />
 
-    <TableRow
-        android:id="@+id/tr_info2"
-        android:onClick="doUpdate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            style="@style/info_text_style_title"
-            android:text="@string/account_hint_sex" />
-
-        <TextView
-            android:id="@+id/tv_sex"
-            style="@style/info_text_style"/>
-
-        <ImageView style="@style/menu_right_arrow_style" />
-    </TableRow>
-    <View style="@style/menu_divider_style" />
 </TableLayout>

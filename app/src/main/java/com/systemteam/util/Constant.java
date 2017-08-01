@@ -20,8 +20,10 @@ public class Constant {
     public static final int WITHDRAW_SUCCESS = 10;
     public static final int WITHDRAW_FAIL = -1;
 
-    public static final int USER_TYPE_CUSTOMER = 1;
     public static final int USER_TYPE_NORMAL = 0;
+    public static final int USER_TYPE_CUSTOMER = 1;
+    public static final int USER_TYPE_APPLYING = -1;
+    public static final int USER_TYPE_EXPERTER = 2;
 
     public static final float SCALING_MAP = 18.0f;
 

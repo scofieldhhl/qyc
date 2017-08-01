@@ -339,6 +339,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
             mBaiduMap.setMyLocationData(locData);
             currentLatitude = bdLocation.getLatitude();
             currentLongitude = bdLocation.getLongitude();
+            BikeApplication.mCurrentAddress = bdLocation.getAddrStr();
             current_addr.setText(bdLocation.getAddrStr());
             currentLL = new LatLng(bdLocation.getLatitude(),
                     bdLocation.getLongitude());

@@ -75,8 +75,9 @@
                 android:id="@+id/iv_edit"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:scaleType="center"
                 android:onClick="doBankEdit"
-                android:src="@drawable/ic_mail_black"/>
+                android:src="@drawable/ic_edit_black"/>
         </LinearLayout>
         <TableRow
             android:layout_width="match_parent"

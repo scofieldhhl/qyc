@@ -1,6 +1,8 @@
 package com.systemteam.user;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,13 +12,14 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.RadioButton;
 
 import com.systemteam.BaseActivity;
 import com.systemteam.BikeApplication;
 import com.systemteam.R;
 import com.systemteam.bean.MyUser;
 import com.systemteam.util.Constant;
+import com.systemteam.util.Utils;
 import com.systemteam.view.IconEditTextView;
 import com.systemteam.view.ProgressDialogHelper;
 
@@ -30,6 +33,7 @@ import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
 import static com.systemteam.util.Constant.REQUEST_IMAGE;
+import static com.systemteam.util.Constant.USER_TYPE_APPLYING;
 import static com.systemteam.util.Utils.imm;
 
 /**
@@ -40,7 +44,8 @@ import static com.systemteam.util.Utils.imm;
 public class ApplyActivity extends BaseActivity implements View.OnClickListener,
         CompoundButton.OnCheckedChangeListener {
     private ImageView mIvUserPhoto, mIvAddPhoto;
-    private IconEditTextView mIetName, mIetPhone, mIetEmail, mIetAddress, mIetSex;
+    private IconEditTextView mIetName, mIetPhone, mIetEmail, mIetAddress;
+    private RadioButton mRbMan, mRbWoman;
     private String mAvatarPath;
     private static class MyHandler extends Handler {
         private WeakReference<ApplyActivity> mActivity;
@@ -67,7 +72,12 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apply);
-        initToolBar(this, R.string.merchant_title);
+        mUser = BmobUser.getCurrentUser(MyUser.class);
+        if(mUser.getType() == null) {
+            initToolBar(this, R.string.merchant_title);
+        }else {
+            initToolBar(this, R.string.edit_info);
+        }
         mContext = this;
         mImm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         initView();
@@ -82,32 +92,37 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener,
         mIetPhone = (IconEditTextView) findViewById(R.id.iet_phone);
         mIetEmail = (IconEditTextView) findViewById(R.id.iet_email);
         mIetAddress = (IconEditTextView) findViewById(R.id.iet_address);
-        mIetSex = (IconEditTextView) findViewById(R.id.iet_sex);
+        mIetAddress.setText(BikeApplication.mCurrentAddress);
+        mRbMan = (RadioButton) findViewById(R.id.rb_man);
+        mRbWoman = (RadioButton) findViewById(R.id.rb_woman);
         mProgressHelper = new ProgressDialogHelper(this);
     }
 
     @Override
     protected void initData() {
         mSharedPre = mContext.getSharedPreferences(Constant.SHAERD_FILE_NAME, Context.MODE_PRIVATE);
-        initInfo(((BikeApplication)this.getApplication()).getmUser());
+        initInfo(mUser);
     }
 
     private void initInfo(MyUser user){
         if(user != null){
-            mIetName.setText(user.getUsername());
             loadAvatar(mContext, user.getPhotoPath(), mIvUserPhoto);
+            mIetName.setText(user.getUsername());
             mIetPhone.setText(user.getMobilePhoneNumber());
             if(user.getSex() != null){
-                mIetSex.setText(getString(user.getSex() ? R.string.man : R.string.woman));
+                mRbWoman.setChecked(user.getSex());
             }else {
-                mIetSex.setText(getString(R.string.man));
+                mRbMan.setChecked(true);
             }
-            mIetName.setText(user.getEmail());
+            mIetEmail.setText(user.getEmail());
+            if(!TextUtils.isEmpty(user.getAddress()))
+                mIetAddress.setText(user.getAddress());
         }else {
             mIetName.setText("");
             mIetPhone.setText("");
-            mIetSex.setText("");
+            mRbMan.setChecked(true);
             mIetEmail.setText("");
+            mIetAddress.setText("");
         }
 
     }
@@ -143,13 +158,6 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener,
     public void onClick(View v) {
         v.requestFocus();
         mImm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
-        switch (v.getId()) {
-            case R.id.iv_close:
-                finish();
-                break;
-            case R.id.iet_sex:
-                break;
-        }
     }
 
     @Override
@@ -161,33 +169,23 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener,
      * 提交前判空提醒
      */
     private boolean checkInput() {
-        String fist_name = mIetName.getInputText();
-        String email = mIetEmail.getInputText();
-        String Addr = mIetAddress.getInputText();
-        String phoneNum = mIetPhone.getInputText();
-        if (fist_name == null || TextUtils.isEmpty(fist_name)) {
-            Toast.makeText(mContext, getString(R.string.apply_check_input_null,
-                    getString(R.string.account_hint_nickname)), Toast.LENGTH_SHORT).show();
+        mUser.setUsername(mIetName.getInputText());
+        mUser.setEmail(mIetEmail.getInputText());
+        mUser.setAddress(mIetAddress.getInputText());
+        if (mUser.getUsername() == null || TextUtils.isEmpty(mUser.getUsername())) {
+            toast(getString(R.string.apply_check_input_null,
+                    getString(R.string.account_hint_nickname)));
             return false;
-        } else if (email == null || TextUtils.isEmpty(email)) {
-            Toast.makeText(mContext, getString(R.string.apply_check_input_null,
-                    getString(R.string.account_hint_email)), Toast.LENGTH_SHORT).show();
-            return false;
-        } else if (Addr == null || TextUtils.isEmpty(Addr)) {
-            Toast.makeText(mContext, getString(R.string.apply_check_input_null,
-                    getString(R.string.address)), Toast.LENGTH_SHORT).show();
-            return false;
-        } else if (phoneNum == null || TextUtils.isEmpty(phoneNum)) {
-            Toast.makeText(mContext, getString(R.string.apply_check_input_null,
-                    getString(R.string.account_hint_phone)), Toast.LENGTH_SHORT).show();
+        } else if (!TextUtils.isEmpty(mUser.getEmail())) {
+            if(Utils.isEmail(mUser.getEmail())){
+                toast(getString(R.string.account_tip_email_format));
+                return false;
+            }
+        } else if (mUser.getAddress() == null || TextUtils.isEmpty(mUser.getAddress())) {
+            toast(getString(R.string.apply_check_input_null,
+                    getString(R.string.address)));
             return false;
         }
-
-
-        /*else if(skill == null || TextUtils.isEmpty(skill)){
-            DFNToast.Show(mContext, getString(R.string.apply_skill_info) + getString(R.string.apply_check_input_null), Toast.LENGTH_SHORT);
-            return false;
-        }*/
         return true;
     }
 
@@ -199,25 +197,43 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener,
                 .start(ApplyActivity.this, REQUEST_IMAGE);
     }
 
-    public void doSignOut(View view){
-//        checkInput();
-        updateUser();
+    public void doApply(View view){
+        if(checkInput())
+            updateUser();
     }
-
+    String msg;
     private void updateUser() {
-        MyUser bmobUser = BmobUser.getCurrentUser(MyUser.class);
-        if (bmobUser != null) {
-            final MyUser newUser = new MyUser();
-            newUser.setAge(25);
-            newUser.setSex(false);
-            newUser.setType(1);
-            addSubscription(newUser.update(bmobUser.getObjectId(),new UpdateListener() {
+        if (mUser != null) {
+            mProgressHelper.showProgressDialog(getString(R.string.submiting));
+            MyUser newUser = new MyUser();
+            newUser.setUsername(mUser.getUsername());
+            newUser.setSex(mRbMan.isChecked());
+            newUser.setEmail(mUser.getEmail());
+            newUser.setAddress(mUser.getAddress());
+            msg = getString(R.string.edit_info_success);
+            if(mUser.getType() == null){
+                newUser.setType(USER_TYPE_APPLYING);
+                msg = getString(R.string.apply_success_hint);
+            }
+            addSubscription(newUser.update(mUser.getObjectId(),new UpdateListener() {
 
                 @Override
                 public void done(BmobException e) {
+                    mProgressHelper.dismissProgressDialog();
                     if(e==null){
-                        Toast.makeText(mContext, R.string.reg_success, Toast.LENGTH_SHORT).show();
+                        AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
+                        alertDialog.setTitle(getString(R.string.submit_success));
+                        alertDialog.setMessage(msg);
+                        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, mContext.getString(R.string.confirm),
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        ApplyActivity.this.finish();
+                                    }
+                                });
+                        alertDialog.show();
                     }else{
+                        toast(getString(R.string.submit_faile));
                         loge(e);
                     }
                 }
