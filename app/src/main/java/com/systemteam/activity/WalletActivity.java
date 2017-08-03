@@ -23,6 +23,11 @@ import com.systemteam.adapter.ChargeAmountDividerDecoration;
 import com.systemteam.bean.MyUser;
 import com.systemteam.util.Constant;
 import com.systemteam.util.Utils;
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.opensdk.modelmsg.WXTextObject;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import cn.bmob.v3.BmobUser;
 
@@ -201,8 +206,8 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     }
 
     private void wxRequest(){
-        /*//TODO Wechat pay
-        IWXAPI api = WXAPIFactory.createWXAPI(this, Constants.APP_ID);
+        //TODO Wechat pay
+        IWXAPI api = WXAPIFactory.createWXAPI(this, Constant.WX_APP_ID);
         WXTextObject textObj = new WXTextObject();
         textObj.text = "text";
 
@@ -216,7 +221,6 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         req.scene = SendMessageToWX.Req.WXSceneSession;
 
         api.sendReq(req);
-        finish();*/
     }
 
     private String buildTransaction(final String type) {

@@ -52,4 +52,6 @@ public class Constant {
 
     public static final String FORMAT_TIME = "0%s : %s";
 
+    //pay
+    public static final String WX_APP_ID = "wx88888888";
 }

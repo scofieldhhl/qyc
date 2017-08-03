@@ -12,8 +12,8 @@ android {
         release {
             keyAlias 'SystemStudio'
             keyPassword 'HUANGhl8811^'
-//            storeFile file('D:/appkey/systemstudio.jks')
-            storeFile file('/Users/ws/scofield/appkey/systemstudio.jks')
+            storeFile file('D:/appkey/systemstudio.jks')
+//            storeFile file('/Users/ws/scofield/appkey/systemstudio.jks')
             storePassword 'HUANGhl8811^'
         }
     }
@@ -101,5 +101,6 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.getbase:floatingactionbutton:1.10.1'
     compile 'org.greenrobot:greendao:3.2.0'
+    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.0.2'
     testCompile 'junit:junit:4.12'
 }

@@ -6,6 +6,9 @@ import android.os.Environment;
 import com.baidu.mapapi.SDKInitializer;
 import com.systemteam.bean.MyUser;
 import com.systemteam.database.db.DbCore;
+import com.systemteam.util.Constant;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
@@ -82,8 +85,7 @@ public class BikeApplication extends Application {
     }
 
     private void regToWx(){
-        /*String APP_ID = "wx88888888";
-        IWXAPI api = WXAPIFactory.createWXAPI(this, APP_ID, true);
-        api.registerApp(APP_ID);*/
+        IWXAPI api = WXAPIFactory.createWXAPI(this, Constant.WX_APP_ID, true);
+        api.registerApp(Constant.WX_APP_ID);
     }
 }
