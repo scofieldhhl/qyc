@@ -22,7 +22,7 @@
             android:id="@+id/tv_email"
             style="@style/info_text_style"/>
 
-        <ImageView style="@style/menu_right_arrow_style" />
+        <ImageView style="@style/right_arrow_style" />
     </TableRow>
     <View style="@style/menu_divider_style" />
     <TableRow
@@ -39,7 +39,7 @@
             android:id="@+id/tv_address"
             style="@style/info_text_style"/>
 
-        <ImageView style="@style/menu_right_arrow_style" />
+        <ImageView style="@style/right_arrow_style" />
     </TableRow>
     <View style="@style/menu_divider_style" />
 

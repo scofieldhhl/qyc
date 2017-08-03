@@ -14,14 +14,14 @@
 
         <ImageView
             style="@style/setting_icon_style"
-            android:src="@mipmap/setting" />
+            android:src="@drawable/ic_password_black" />
 
         <TextView
             style="@style/menu_text_style"
             android:textColor="@color/text_black_54"
             android:text="@string/break_lock_title" />
 
-        <ImageView style="@style/menu_right_arrow_style" />
+        <ImageView style="@style/right_arrow_style" />
     </TableRow>
     <View style="@style/menu_divider_style" />
 
@@ -32,14 +32,14 @@
 
         <ImageView
             style="@style/setting_icon_style"
-            android:src="@mipmap/setting" />
+            android:src="@drawable/ic_skill_black" />
 
         <TextView
             style="@style/menu_text_style"
             android:textColor="@color/text_black_54"
             android:text="@string/break_title" />
 
-        <ImageView style="@style/menu_right_arrow_style" />
+        <ImageView style="@style/right_arrow_style" />
     </TableRow>
     <View style="@style/menu_divider_style" />
 
@@ -50,14 +50,14 @@
 
         <ImageView
             style="@style/setting_icon_style"
-            android:src="@mipmap/setting" />
+            android:src="@drawable/ic_store_black" />
 
         <TextView
             style="@style/menu_text_style"
             android:textColor="@color/text_black_54"
             android:text="@string/setting_pay" />
 
-        <ImageView style="@style/menu_right_arrow_style" />
+        <ImageView style="@style/right_arrow_style" />
     </TableRow>
     <View style="@style/menu_divider_style" />
 
@@ -68,14 +68,14 @@
 
         <ImageView
             style="@style/setting_icon_style"
-            android:src="@mipmap/setting" />
+            android:src="@drawable/ic_person_black" />
 
         <TextView
             style="@style/menu_text_style"
             android:textColor="@color/text_black_54"
             android:text="@string/setting_protocol" />
 
-        <ImageView style="@style/menu_right_arrow_style" />
+        <ImageView style="@style/right_arrow_style" />
     </TableRow>
     <View style="@style/menu_divider_style" />
 </TableLayout>

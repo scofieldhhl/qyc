@@ -24,7 +24,7 @@
             android:id="@+id/tv_name"
             style="@style/info_text_style"/>
 
-        <ImageView style="@style/menu_right_arrow_style" />
+        <ImageView style="@style/right_arrow_style" />
     </TableRow>
     <View style="@style/menu_divider_style" />
 
@@ -42,7 +42,7 @@
             android:id="@+id/tv_phone"
             style="@style/info_text_style"/>
 
-        <ImageView style="@style/menu_right_arrow_style" />
+        <ImageView style="@style/right_arrow_style" />
     </TableRow>
     <View style="@style/menu_divider_style" />
 
@@ -60,7 +60,7 @@
             android:id="@+id/tv_sex"
             style="@style/info_text_style"/>
 
-        <ImageView style="@style/menu_right_arrow_style" />
+        <ImageView style="@style/right_arrow_style" />
     </TableRow>
     <View style="@style/menu_divider_style" />
 </TableLayout>

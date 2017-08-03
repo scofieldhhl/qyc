@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             app:edtHint="@string/bank_name_hint"
             app:maxLength="100"
-            app:edtIcon="@drawable/ic_mail_black"/>
+            app:edtIcon="@drawable/ic_mail_blue_24dp"/>
 
         <com.systemteam.view.IconEditTextView
             android:layout_marginTop="10dp"
@@ -84,7 +84,7 @@
             app:edtHint="@string/bank_num_hint"
             app:maxLength="100"
             app:isNumeric="true"
-            app:edtIcon="@drawable/ic_mail_black"/>
+            app:edtIcon="@drawable/ic_price_blue_24dp"/>
 
         <TextView
             android:layout_width="wrap_content"

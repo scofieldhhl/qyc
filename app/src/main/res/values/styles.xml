@@ -120,6 +120,15 @@
         <item name="android:src">@mipmap/arrow_right_white</item>
     </style>
 
+    <style name="right_arrow_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:src">@drawable/right</item>
+    </style>
+
     <style name="code_edit_style">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>

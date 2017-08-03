@@ -31,7 +31,6 @@ import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_EARN;
 import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_WITHDRAW;
 import static com.systemteam.util.Constant.BUNDLE_KEY_AMOUNT;
 import static com.systemteam.util.Constant.REQUEST_CODE;
-import static com.systemteam.util.Constant.WITHDRAW_AMOUNT_DEFAULT;
 
 /**
  * Created by gaolei on 16/12/29.
@@ -159,17 +158,17 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     public void doApply(View view){
         if(mUser != null && mUser.getType() != null &&
                 mUser.getType().intValue() == Constant.USER_TYPE_CUSTOMER){
-            if(mAmout > WITHDRAW_AMOUNT_DEFAULT){
+//            if(mAmout > WITHDRAW_AMOUNT_DEFAULT){
                 Intent intent = new Intent(WalletActivity.this, WithdrawActivity.class);
                 intent.putExtra(BUNDLE_KEY_AMOUNT, mAmout);
                 intent.putExtra(BUNDLE_KEY_ALL_EARN, mAllEarn);
                 intent.putExtra(BUNDLE_KEY_ALL_WITHDRAW, mAllWithDraw);
                 intent.putExtra(BUNDLE_KEY_ALL_COST, mAllCost);
                 startActivityForResult(intent, Constant.REQUEST_CODE);
-            }else {
-                Utils.showDialog(mContext, getString(R.string.tip), getString(R.string.withdraw_refund,
-                        WITHDRAW_AMOUNT_DEFAULT));
-            }
+//            }else {
+//                Utils.showDialog(mContext, getString(R.string.tip), getString(R.string.withdraw_refund,
+//                        WITHDRAW_AMOUNT_DEFAULT));
+//            }
         }
     }
 
