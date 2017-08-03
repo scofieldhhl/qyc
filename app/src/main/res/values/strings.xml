@@ -332,6 +332,8 @@
 
     <!--detail-->
     <string name="bala_detail_title">账户明细</string>
+    <string name="detail_recharge">充值明细</string>
+    <string name="detail_cost">消费明细</string>
     <!--detail-->
 
     <!--withdraw-->

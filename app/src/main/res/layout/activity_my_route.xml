@@ -18,6 +18,7 @@
     <com.jcodecraeer.xrecyclerview.XRecyclerView
         android:id="@+id/recyclerview_route"
         style="@style/xrecyclerview_style"
+        android:visibility="gone"
         android:layout_below="@id/toolbar"/>
 
     <TextView
@@ -29,5 +30,12 @@
         android:text="@string/no_route"
         android:textColor="@color/color_989898"
         android:textSize="16sp" />
+
+    <FrameLayout
+        android:id="@+id/ll_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:orientation="vertical"/>
 
 </RelativeLayout>

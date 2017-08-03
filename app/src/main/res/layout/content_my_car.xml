@@ -22,13 +22,12 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        android:src="@drawable/ic_add_white_36dp"
+        app:backgroundTint="@color/colorPrimary"
+        app:rippleColor="@color/colorPrimaryDark" />
+
     <com.jcodecraeer.xrecyclerview.XRecyclerView
         android:id="@+id/recyclerview_route"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"
-        android:layout_margin="15dp"
-        android:overScrollMode="never"
-        android:scrollbars="none" />
+        style="@style/xrecyclerview_style"
+        android:layout_below="@id/toolbar"/>
 </RelativeLayout>
