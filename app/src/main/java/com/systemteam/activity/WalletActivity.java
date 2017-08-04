@@ -20,6 +20,7 @@ import com.systemteam.BaseActivity;
 import com.systemteam.R;
 import com.systemteam.adapter.ChargeAmountAdapter;
 import com.systemteam.adapter.ChargeAmountDividerDecoration;
+import com.systemteam.bean.CashRecord;
 import com.systemteam.bean.MyUser;
 import com.systemteam.util.Constant;
 import com.systemteam.util.Utils;
@@ -30,11 +31,14 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
 
 import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_COST;
 import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_EARN;
 import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_WITHDRAW;
 import static com.systemteam.util.Constant.BUNDLE_KEY_AMOUNT;
+import static com.systemteam.util.Constant.PAY_AMOUNT_DEFAULT;
 import static com.systemteam.util.Constant.REQUEST_CODE;
 
 /**
@@ -50,7 +54,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     RelativeLayout wechat_layout, alipay_layout;
     Button mBtnBook;
     boolean isPayByWechat = true;
-    private float mAmout = 0f, mAllEarn, mAllWithDraw, mAllCost;
+    private float mAmout = 0f, mAllEarn, mAllWithDraw, mAllCost, mAmountPay = 0f;
     //TODO 计算商户提现额度
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -180,6 +184,11 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     @Override
     public void onItemClick(View v, int position) {
         adapter.setSelectPosition(position);
+        try {
+            mAmountPay = Float.valueOf(adapter.getValueSelect(position));
+        } catch (NumberFormatException e) {
+            mAmountPay = PAY_AMOUNT_DEFAULT;
+        }
     }
 
     @Override
@@ -201,6 +210,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                 }else {
                     payV2(view);
                 }
+                saveNewObject();
                 break;
         }
     }
@@ -349,4 +359,23 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     *//** 工具地址：https://doc.open.alipay.com/docs/doc.htm?treeId=291&articleId=106097&docType=1 *//*
     public static final String RSA2_PRIVATE = "";
     public static final String RSA_PRIVATE = "";*/
+
+    private void saveNewObject() {
+        MyUser user = BmobUser.getCurrentUser(MyUser.class);
+        CashRecord cashRecord = new CashRecord(user,
+                isPayByWechat ? Constant.PAY_TYPE_WX : Constant.PAY_TYPE_ALI, mAmountPay);
+        addSubscription(cashRecord.save(new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
+                mProgressHelper.dismissProgressDialog();
+                if(e==null){
+                    toast(getString(R.string.add_success));
+//                    mHandler.sendEmptyMessage(MSG_UPDATE_UI);
+                }else{
+                    loge(e);
+                    toast(getString(R.string.submit_faile));
+                }
+            }
+        }));
+    }
 }

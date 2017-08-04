@@ -19,7 +19,6 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
@@ -171,7 +170,7 @@ public class Utils {
         int size = myList.size();
         for (int i = 0; i < size; i++) {
             String mName = myList.get(i).service.getClassName().toString();
-            Log.d("gaolei","mName="+mName);
+            LogTool.d("mName="+mName);
             if (mName.equals(serviceName)) {
                 isWork = true;
                 break;
@@ -279,13 +278,9 @@ public class Utils {
      * @return 验证通过返回true
      */
     public static boolean isMobile(String str) {
-        Pattern p = null;
-        Matcher m = null;
-        boolean b = false;
-        p = Pattern.compile("^[1][3,4,5,8][0-9]{9}$"); // 验证手机号
-        m = p.matcher(str);
-        b = m.matches();
-        return b;
+        Pattern p = Pattern.compile("^[1][3,4,5,8][0-9]{9}$"); // 验证手机号
+        Matcher m = p.matcher(str);
+        return m.matches();
     }
 
     public static boolean isEmail(String email){

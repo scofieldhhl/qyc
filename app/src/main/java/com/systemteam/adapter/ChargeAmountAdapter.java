@@ -3,7 +3,6 @@ package com.systemteam.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +27,10 @@ public class ChargeAmountAdapter extends RecyclerView.Adapter<ChargeAmountAdapte
         notifyDataSetChanged();
     }
 
+    public String getValueSelect(int selectPosition){
+        return accountArr[selectPosition];
+    }
+
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.charge_amount_item, null);
         MyViewHolder holder = new MyViewHolder(view);
@@ -45,8 +48,7 @@ public class ChargeAmountAdapter extends RecyclerView.Adapter<ChargeAmountAdapte
     }
 
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.textView.setText(accountArr[position]);
-        Log.d("gaolei","onBindViewHolder---Charage----"+position);
+        holder.textView.setText(context.getString(R.string.amout_num, accountArr[position]));
 
         holder.itemView.setTag(position);
         if (position == selectPosition) {

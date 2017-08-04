@@ -10,6 +10,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -34,6 +36,7 @@ import com.systemteam.activity.WalletActivity;
 import com.systemteam.bean.MyUser;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
+import com.systemteam.util.Utils;
 import com.systemteam.view.ProgressDialogHelper;
 import com.systemteam.welcome.WelcomeActivity;
 
@@ -81,6 +84,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         titleHeight=dp2px(this,50);
         mImm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
         mProgressHelper = new ProgressDialogHelper(this);
+        checkNetworkAvailable(this);
     }
 
     protected void setStatusBarLayout() {
@@ -145,30 +149,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
-    Toast mToast;
-
-    public void showToast(String text) {
-        if (!TextUtils.isEmpty(text)) {
-            if (mToast == null) {
-                mToast = Toast.makeText(getApplicationContext(), text,
-                        Toast.LENGTH_SHORT);
-            } else {
-                mToast.setText(text);
-            }
-            mToast.show();
-        }
-    }
-
-    public void showToast(int resId) {
-        if (mToast == null) {
-            mToast = Toast.makeText(getApplicationContext(), resId,
-                    Toast.LENGTH_SHORT);
-        } else {
-            mToast.setText(resId);
-        }
-        mToast.show();
-    }
-
     public static void log(String msg) {
         LogTool.d("===============================================================================");
         LogTool.d(msg);
@@ -220,32 +200,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected abstract void initView();
 
     protected abstract void initData();
-
-    /*protected void initTitle(Activity act, int titleId, int menuRes, int searchRes) {
-        setStatusBar();
-        mIvMenu = (ImageView) act.findViewById(R.id.menu_icon);
-        mIvSearch = (ImageView) act.findViewById(R.id.search_icon);
-        mTvTitle = (TextView) act.findViewById(R.id.title);
-        mIvMenu.setOnClickListener(this);
-        mIvSearch.setOnClickListener(this);
-        if (titleId == 0) {
-            mTvTitle.setText("");
-        } else {
-            mTvTitle.setText(titleId);
-        }
-        if (menuRes == 0) {
-            mIvMenu.setVisibility(View.GONE);
-        } else {
-            mIvMenu.setVisibility(View.VISIBLE);
-            mIvMenu.setImageResource(menuRes);
-        }
-        if (searchRes == 0) {
-            mIvSearch.setVisibility(View.GONE);
-        } else {
-            mIvSearch.setVisibility(View.VISIBLE);
-            mIvSearch.setImageResource(searchRes);
-        }
-    }*/
 
     /**
      * 设置沉浸式状态栏
@@ -362,6 +316,30 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             return false;
         }else {
             return true;
+        }
+    }
+
+    /**
+     * 判断网络是否可用
+     *
+     * @param context
+     * @return 0:不可用，1移动网络，2WIFI
+     */
+    protected int checkNetworkAvailable(Context context) {
+        ConnectivityManager mgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = mgr.getActiveNetworkInfo();
+        if (info != null && info.isAvailable()) {
+            String name = info.getTypeName();
+            LogTool.d("Network is available :" + name);
+            if (name.equals("WIFI")) {
+                return Constant.NETWORK_STATUS_WIFI;
+            } else {
+                return Constant.NETWORK_STATUS_GRPS;
+            }
+        } else {
+            LogTool.e("Network is not available !");
+            Utils.showDialog(context, context.getString(R.string.tip), context.getString(R.string.net_none));
+            return Constant.NETWORK_STATUS_NO;
         }
     }
 }

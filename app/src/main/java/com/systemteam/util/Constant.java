@@ -54,4 +54,16 @@ public class Constant {
 
     //pay
     public static final String WX_APP_ID = "wx88888888";
+    public static final int PAY_TYPE_WX = 0;
+    public static final int PAY_TYPE_ALI = 1;
+
+    public static final int PHONE_TYPE_IPHONE = 0;
+    public static final int PHONE_TYPE_ANDROID = 1;
+    public static final int PAY_COUPON_DEFAULT = 0;
+    public static final float PAY_AMOUNT_DEFAULT = 5f;
+    //pay
+
+    public static final int NETWORK_STATUS_NO = 0;
+    public static final int NETWORK_STATUS_GRPS = 1;
+    public static final int NETWORK_STATUS_WIFI = 2;
 }
