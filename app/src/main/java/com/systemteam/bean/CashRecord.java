@@ -4,7 +4,6 @@ import cn.bmob.v3.BmobObject;
 
 import static com.systemteam.util.Constant.PAY_COUPON_DEFAULT;
 import static com.systemteam.util.Constant.PAY_TYPE_WX;
-import static com.systemteam.util.Constant.PHONE_TYPE_ANDROID;
 
 /**
  * 类描述：
@@ -18,7 +17,7 @@ public class CashRecord extends BmobObject {
     private Integer type = PAY_TYPE_WX;       //0：微信 1：支付宝
     private Float amount;       //金额
     private Float coin;         //充值金额对应账户增加额，默认1:1
-    private Integer phoneType = PHONE_TYPE_ANDROID;  //0：iPhone 1：Android
+    private String phoneType;   //
     private Integer status;     //状态
     private String mark;        //备注
     private Integer coupon = PAY_COUPON_DEFAULT;     //赠送优惠券数，默认0
@@ -61,11 +60,11 @@ public class CashRecord extends BmobObject {
         this.coin = coin;
     }
 
-    public Integer getPhoneType() {
+    public String getPhoneType() {
         return phoneType;
     }
 
-    public void setPhoneType(Integer phoneType) {
+    public void setPhoneType(String phoneType) {
         this.phoneType = phoneType;
     }
 

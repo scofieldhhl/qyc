@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.systemteam.R;
-import com.systemteam.bean.RouteRecord;
+import com.systemteam.bean.UseRecord;
 
 import java.util.List;
 
@@ -39,13 +39,20 @@ public class MyRouteAdapter extends BaseAdapter {
 
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.itemView.setTag(position);
-        RouteRecord routeRecord=(RouteRecord)list.get(position);
+        /*RouteRecord routeRecord=(RouteRecord)list.get(position);
 //        holder.bike_time.setText(context.getString(R.string.cost_time, routeRecord.getCycle_time()));
         holder.bike_time.setText(routeRecord.getCycle_time());
 //        holder.bike_distance.setText(context.getString(R.string.cost_distance, routeRecord.getCycle_distance()));
         holder.bike_distance.setText(routeRecord.getCarNo());
         holder.bike_price.setText(context.getString(R.string.cost_num, routeRecord.getCycle_price()));
-        holder.bike_date.setText(routeRecord.getCycle_date());
+        holder.bike_date.setText(routeRecord.getCycle_date());*/
+        UseRecord routeRecord=(UseRecord)list.get(position);
+//        holder.bike_time.setText(context.getString(R.string.cost_time, routeRecord.getCycle_time()));
+        holder.bike_time.setText(routeRecord.getTimeUse());
+//        holder.bike_distance.setText(context.getString(R.string.cost_distance, routeRecord.getCycle_distance()));
+        holder.bike_distance.setText(routeRecord.getCarNo());
+        holder.bike_price.setText(context.getString(R.string.cost_num, routeRecord.getCost()));
+        holder.bike_date.setText(routeRecord.getCreatedAt());
     }
 
     @Override

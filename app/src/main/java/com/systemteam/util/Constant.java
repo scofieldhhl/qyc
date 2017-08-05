@@ -36,6 +36,7 @@ public class Constant {
     public static final String  BUNDLE_KEY_ALL_EARN = "key_all_earn";
     public static final String  BUNDLE_KEY_ALL_WITHDRAW = "key_all_withdraw";
     public static final String  BUNDLE_KEY_ALL_COST = "key_all_cost";
+    public static final String  BUNDLE_KEY_BLANACE = "key_balance";
     public static final String  BUNDLE_KEY_AMOUNT = "key_amount";
     public static final int  REQUEST_IMAGE = 100;
     public static final int  REQUEST_CODE = 101;

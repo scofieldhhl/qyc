@@ -7,10 +7,8 @@ import static com.systemteam.util.Constant.COST_BASE_DEFAULT;
 public class UseRecord extends BmobObject{
     private static final long serialVersionUID = 1L;
     private Long id;
-    private String userId;  //用户ID
-    private MyUser user;    //用户
+    private MyUser author;    //用户
     private String carNo;   //车编号
-    private String time;    //使用日期
     private String timeUse; //使用时长
     private float cost = COST_BASE_DEFAULT;//费用
     private int status = 0; //状态：0正常，-1退款
@@ -25,20 +23,12 @@ public class UseRecord extends BmobObject{
         this.id = id;
     }
 
-    public MyUser getUser() {
-        return user;
+    public MyUser getAuthor() {
+        return author;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public void setUser(MyUser user) {
-        this.user = user;
+    public void setAuthor(MyUser author) {
+        this.author = author;
     }
 
     public String getCarNo() {
@@ -47,14 +37,6 @@ public class UseRecord extends BmobObject{
 
     public void setCarNo(String carNo) {
         this.carNo = carNo;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
     }
 
     public String getTimeUse() {

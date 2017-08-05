@@ -10,17 +10,26 @@ import android.view.ViewGroup;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.systemteam.R;
-import com.systemteam.adapter.MyCarAdapter;
+import com.systemteam.adapter.MyCashRecordAdapter;
 import com.systemteam.adapter.MyRouteDividerDecoration;
-import com.systemteam.bean.Car;
+import com.systemteam.bean.CashRecord;
+import com.systemteam.bean.MyUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+
+import static com.systemteam.BaseActivity.loge;
+import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
+
 public class RechargeFragment extends BaseFragment{
 
     XRecyclerView routeRecyclerView;
-    MyCarAdapter routeAdapter;
+    MyCashRecordAdapter routeAdapter;
     List<Object> routeList;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -107,7 +116,7 @@ public class RechargeFragment extends BaseFragment{
 //        no_route = (TextView) findViewById(R.id.no_route);
         routeRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         routeList = new ArrayList<>();
-        routeAdapter = new MyCarAdapter(mContext, routeList);
+        routeAdapter = new MyCashRecordAdapter(mContext, routeList);
 //        routeAdapter.setOnClickListener(mContext);
 //        routeAdapter.setOnLongClickListener(mContext);
         routeRecyclerView.setAdapter(routeAdapter);
@@ -138,14 +147,14 @@ public class RechargeFragment extends BaseFragment{
     }
 
     private void initDataList() {
-        /*mProgressHelper.showProgressDialog(getString(R.string.initing));
+        mProgressHelper.showProgressDialog(getString(R.string.initing));
         MyUser user = BmobUser.getCurrentUser(MyUser.class);
-        BmobQuery<Car> query = new BmobQuery<>();
+        BmobQuery<CashRecord> query = new BmobQuery<>();
         query.addWhereEqualTo(REQUEST_KEY_BY_USER, user.getObjectId());
-        addSubscription(query.findObjects(new FindListener<Car>() {
+        addSubscription(query.findObjects(new FindListener<CashRecord>() {
 
             @Override
-            public void done(List<Car> object, BmobException e) {
+            public void done(List<CashRecord> object, BmobException e) {
                 mProgressHelper.dismissProgressDialog();
                 if(e==null){
                     routeList.clear();
@@ -159,12 +168,6 @@ public class RechargeFragment extends BaseFragment{
                     loge(e);
                 }
             }
-        }));*/
-        for(int i = 0; i < 20; i++){
-            Car car = new Car();
-            car.setCarNo("NO." + i);
-            routeList.add(car);
-        }
-        routeAdapter.notifyDataSetChanged();
+        }));
     }
 }

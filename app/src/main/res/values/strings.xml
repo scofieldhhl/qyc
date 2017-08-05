@@ -350,7 +350,7 @@
     <string name="userName_no">姓名不能为空！</string>
     <string name="bankName_no">银行名称不能为空！</string>
     <string name="cardnum_no">账号不能为空！</string>
-    <string name="withdraw_title_info" formatted="false">%.2f(总收益) - %.2f(已提现) - %.2f(已消费)</string>
+    <string name="withdraw_title_info" formatted="false">%.2f(总收益) - %.2f(已提现) + %.2f(余额)</string>
     <string name="amout_format" formatted="false">&#160;%.2f&#160;元</string>
     <string name="withdraw_success_content">提现申请已成功提交！我们会在1 - %d 个工作日处理，请耐心等待，谢谢！</string>
     <string name="withdraw_fail_content">提现申请提交失败！请检查网络连接是否正常或其他信息是否正常！</string>

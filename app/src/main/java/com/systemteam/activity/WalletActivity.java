@@ -3,6 +3,8 @@ package com.systemteam.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,9 +22,13 @@ import com.systemteam.BaseActivity;
 import com.systemteam.R;
 import com.systemteam.adapter.ChargeAmountAdapter;
 import com.systemteam.adapter.ChargeAmountDividerDecoration;
+import com.systemteam.bean.Car;
 import com.systemteam.bean.CashRecord;
 import com.systemteam.bean.MyUser;
+import com.systemteam.bean.UseRecord;
+import com.systemteam.bean.Withdraw;
 import com.systemteam.util.Constant;
+import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
@@ -30,16 +36,26 @@ import com.tencent.mm.opensdk.modelmsg.WXTextObject;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.ref.WeakReference;
+
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 
-import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_COST;
 import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_EARN;
 import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_WITHDRAW;
 import static com.systemteam.util.Constant.BUNDLE_KEY_AMOUNT;
+import static com.systemteam.util.Constant.BUNDLE_KEY_BLANACE;
+import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 import static com.systemteam.util.Constant.PAY_AMOUNT_DEFAULT;
 import static com.systemteam.util.Constant.REQUEST_CODE;
+import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
 
 /**
  * Created by gaolei on 16/12/29.
@@ -54,8 +70,29 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     RelativeLayout wechat_layout, alipay_layout;
     Button mBtnBook;
     boolean isPayByWechat = true;
-    private float mAmout = 0f, mAllEarn, mAllWithDraw, mAllCost, mAmountPay = 0f;
-    //TODO 计算商户提现额度
+    private float mAmout = 0f, mAllEarn, mAllWithDraw, mBalance,mAllCost,  mAmountPay = 0f;
+
+    private static class MyHandler extends Handler {
+        private WeakReference<WalletActivity> mActivity;
+
+        public MyHandler(WalletActivity activity) {
+            mActivity = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            final WalletActivity theActivity = mActivity.get();
+            super.handleMessage(msg);
+            switch (msg.what){
+                case MSG_UPDATE_UI:
+                    theActivity.updateBalance();
+                    break;
+            }
+        }
+    }
+
+    private MyHandler mHandler = new MyHandler(this);
+    
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet);
@@ -110,41 +147,127 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
 
     private void initBalance(){
         mUser = BmobUser.getCurrentUser(MyUser.class);
+        mBalance = mUser.getBalance() == null ? 0f : mUser.getBalance().floatValue();
         if(mUser != null && mUser.getType() != null && mUser.getType().intValue() == 1){
             requestAllEarn();
-            mAmout = mAllEarn - mAllWithDraw - mAllCost;
-            if(mAmout < 0){
+        }
+        String acount_ballance = getString(R.string.account_ballance, mBalance, "");
+        Utils.setSpannableStr(ballance, acount_ballance, acount_ballance.length() - 3,
+                acount_ballance.length() - 2, 1.2f, Color.parseColor("#393939"));
+    }
+
+    private void updateBalance(){
+        if(mUser != null && mUser.getType() != null && mUser.getType().intValue() == 1) {
+            mAmout = mAllEarn + mBalance - mAllWithDraw;
+            if (mAmout < 0) {
                 mAmout = 0f;
             }
             String str1 = getString(R.string.account_withdraw);
-            String str2 =  getString(R.string.account_ballance, mAmout, str1);
+            String str2 = getString(R.string.account_ballance, mAmout, str1);
             int index = str2.indexOf(str1);
             Utils.setSpannableStr(ballance, str2, index, str2.length(), 0.6f,
                     ContextCompat.getColor(mContext, R.color.common_blue_main));
         }else {
-
-            String acount_ballance = getString(R.string.account_ballance,
-                    mUser.getBalance() == null ? 0f : mUser.getBalance().floatValue(), "");
+            String acount_ballance = getString(R.string.account_ballance, mBalance, "");
             Utils.setSpannableStr(ballance, acount_ballance, acount_ballance.length() - 3,
                     acount_ballance.length() - 2, 1.2f, Color.parseColor("#393939"));
         }
     }
 
     private void requestAllEarn(){
-        //TODO 计算总收益
-        mAllEarn = mUser.getBalance();
-        requestAllWithdraw();
+        mProgressHelper.showProgressDialog(getString(R.string.initing));
+        BmobQuery<Car> query = new BmobQuery<>();
+        query.addWhereEqualTo(REQUEST_KEY_BY_USER, mUser.getObjectId());
+        query.sum(new String[] { "earn" });
+        addSubscription(query.findStatistics(Car.class,new QueryListener<JSONArray>() {
+
+            @Override
+            public void done(JSONArray ary, BmobException e) {
+                if(e==null){
+                    if(ary!=null){//
+                        try {
+                            JSONObject obj = ary.getJSONObject(0);
+                            mAllEarn = Float.valueOf(obj.getInt("_sumEarn"));//_(关键字)+首字母大写的列名
+                            LogTool.d("reuslt : " + mAllEarn);
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+                    }else{
+                        mAllEarn = 0;
+//                        toast("查询成功，无数据");
+                    }
+                    requestAllWithdraw();
+                }else{
+                    mProgressHelper.dismissProgressDialog();
+                    toast(getString(R.string.initing_fail));
+                    LogTool.d("失败："+e.getMessage()+","+e.getErrorCode());
+                }
+            }
+        }));
+
     }
 
     private void requestAllWithdraw(){
-        //TODO 计算以提现
-        mAllWithDraw = new java.util.Random().nextFloat();
-        requesAllCost();
+        BmobQuery<Withdraw> query = new BmobQuery<>();
+        query.addWhereEqualTo(REQUEST_KEY_BY_USER, mUser.getObjectId());
+        query.sum(new String[] { "amout" });
+        addSubscription(query.findStatistics(Withdraw.class,new QueryListener<JSONArray>() {
+
+            @Override
+            public void done(JSONArray ary, BmobException e) {
+                if(e==null){
+                    if(ary!=null){//
+                        try {
+                            JSONObject obj = ary.getJSONObject(0);
+                            mAllWithDraw = Float.valueOf(obj.getInt("_sumAmout"));//_(关键字)+首字母大写的列名
+                            LogTool.d("reuslt : " + mAllWithDraw);
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+                    }else{
+                        mAllWithDraw = 0;
+//                        toast("查询成功，无数据");
+                    }
+                    mHandler.sendEmptyMessage(MSG_UPDATE_UI);
+//                    requesAllCost();
+                }else{
+                    mProgressHelper.dismissProgressDialog();
+                    toast(getString(R.string.initing_fail));
+                    LogTool.d("失败："+e.getMessage()+","+e.getErrorCode());
+                }
+            }
+        }));
+
     }
 
     private void requesAllCost(){
-        //TODO 计算消费
-        mAllCost = new java.util.Random().nextFloat();
+//        mAllCost = new java.util.Random().nextFloat();
+        BmobQuery<UseRecord> query = new BmobQuery<>();
+        query.addWhereEqualTo(REQUEST_KEY_BY_USER, mUser.getObjectId());
+        query.sum(new String[] { "cost" });
+        addSubscription(query.findStatistics(UseRecord.class,new QueryListener<JSONArray>() {
+
+            @Override
+            public void done(JSONArray ary, BmobException e) {
+                mProgressHelper.dismissProgressDialog();
+                if(e==null){
+                    if(ary!=null){//
+                        try {
+                            JSONObject obj = ary.getJSONObject(0);
+                            mAllCost = Float.valueOf(obj.getInt("_sumCost"));//_(关键字)+首字母大写的列名
+                            LogTool.d("reuslt : " + mAllCost);
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+                    }else{
+                        mAllCost = 0;
+//                        toast("查询成功，无数据");
+                    }
+                }else{
+                    LogTool.d("失败："+e.getMessage()+","+e.getErrorCode());
+                }
+            }
+        }));
     }
 
     @Override
@@ -172,7 +295,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                 intent.putExtra(BUNDLE_KEY_AMOUNT, mAmout);
                 intent.putExtra(BUNDLE_KEY_ALL_EARN, mAllEarn);
                 intent.putExtra(BUNDLE_KEY_ALL_WITHDRAW, mAllWithDraw);
-                intent.putExtra(BUNDLE_KEY_ALL_COST, mAllCost);
+                intent.putExtra(BUNDLE_KEY_BLANACE, mBalance);
                 startActivityForResult(intent, Constant.REQUEST_CODE);
 //            }else {
 //                Utils.showDialog(mContext, getString(R.string.tip), getString(R.string.withdraw_refund,

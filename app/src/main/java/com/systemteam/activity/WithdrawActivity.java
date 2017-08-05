@@ -40,6 +40,7 @@ import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_COST;
 import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_EARN;
 import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_WITHDRAW;
 import static com.systemteam.util.Constant.BUNDLE_KEY_AMOUNT;
+import static com.systemteam.util.Constant.BUNDLE_KEY_BLANACE;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 import static com.systemteam.util.Constant.MSG_WITHDRAW_SUCCESS;
 import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
@@ -51,7 +52,7 @@ public class WithdrawActivity extends BaseActivity implements MyCarAdapter.OnIte
     private BankCard mBankCard;
     private TextView mTvUserName, mTvPhone, mTvCard, mTvInfo;
     private boolean isSave = false;
-    private float mAmout = 0f, mAllEarn, mAllWithDraw, mAllCost;
+    private float mAmout = 0f, mAllEarn, mAllWithDraw, mBalance, mAllCost;
     private Withdraw mWithdraw;
     private boolean isWithDrawSuccess = false;
     XRecyclerView routeRecyclerView;
@@ -133,6 +134,7 @@ public class WithdrawActivity extends BaseActivity implements MyCarAdapter.OnIte
         mAmout = getIntent().getFloatExtra(BUNDLE_KEY_AMOUNT, 0f);
         mAllEarn = getIntent().getFloatExtra(BUNDLE_KEY_ALL_EARN, 0f);
         mAllWithDraw = getIntent().getFloatExtra(BUNDLE_KEY_ALL_WITHDRAW, 0f);
+        mBalance = getIntent().getFloatExtra(BUNDLE_KEY_BLANACE, 0f);
         mAllCost = getIntent().getFloatExtra(BUNDLE_KEY_ALL_COST, 0f);
         refreshAmout();
         mUser = BmobUser.getCurrentUser(MyUser.class);
@@ -142,7 +144,7 @@ public class WithdrawActivity extends BaseActivity implements MyCarAdapter.OnIte
 
     private void refreshAmout(){
         ((TextView) findViewById(R.id.tv_amount)).setText(getString(R.string.amout_format, mAmout));
-        mTvInfo.setText(getString(R.string.withdraw_title_info, mAllEarn, mAllWithDraw, mAllCost));
+        mTvInfo.setText(getString(R.string.withdraw_title_info, mAllEarn, mAllWithDraw, mBalance));
     }
 
     @Override

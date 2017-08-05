@@ -11,6 +11,7 @@ import android.view.View;
 import com.systemteam.BaseActivity;
 import com.systemteam.R;
 import com.systemteam.fragment.RechargeFragment;
+import com.systemteam.fragment.RouteFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,7 @@ public class BalanceDetailActivity extends BaseActivity implements TabLayout.OnT
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
         adapter.addFragment(new RechargeFragment(), getString(R.string.detail_recharge));
-        adapter.addFragment(new RechargeFragment(), getString(R.string.detail_cost));
+        adapter.addFragment(new RouteFragment(), getString(R.string.detail_cost));
         viewPager.setOffscreenPageLimit(1);
         viewPager.setAdapter(adapter);
 

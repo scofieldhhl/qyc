@@ -522,7 +522,7 @@ public class RouteService extends Service {
     private void newUseRecord(String timeUse){
         //2.增加使用记录
         UseRecord record = new UseRecord();
-        record.setUserId(mUser.getObjectId());
+        record.setAuthor(mUser);
         record.setCarNo(mCarNo);
         record.setCost(COST_BASE_DEFAULT);
         record.setEarn(mEarn);
