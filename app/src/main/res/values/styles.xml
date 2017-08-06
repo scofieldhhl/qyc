@@ -299,7 +299,8 @@
     <style name="toolbar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
-        <item name="android:background">@color/color_toolbar_bg</item>
+        <!--<item name="android:background">@color/color_toolbar_bg</item>-->
+        <item name="android:background">@color/colorPrimary</item>
     </style>
 
     <style name="toolbar_title">

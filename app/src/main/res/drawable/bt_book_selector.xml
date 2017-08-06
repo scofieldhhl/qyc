@@ -1,7 +1,5 @@
-<selector
-
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_focused="true">
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--<item android:state_focused="true">
         <shape>
             <corners android:radius="5dp" />
             <solid android:color="@color/color_dd343333" />
@@ -23,6 +21,31 @@
         <shape>
             <corners android:radius="5dp" />
             <solid android:color="@color/color_343333" />
+        </shape>
+    </item>-->
+
+    <item android:state_focused="true">
+        <shape>
+            <corners android:radius="5dp" />
+            <solid android:color="@color/colorPrimary" />
+        </shape>
+    </item>
+    <item android:state_pressed="true">
+        <shape>
+            <corners android:radius="5dp" />
+            <solid android:color="@color/colorPrimary" />
+        </shape>
+    </item>
+    <item android:state_selected="true">
+        <shape>
+            <corners android:radius="5dp" />
+            <solid android:color="@color/colorPrimary" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <corners android:radius="5dp" />
+            <solid android:color="@color/colorPrimaryDark" />
         </shape>
     </item>
 </selector>

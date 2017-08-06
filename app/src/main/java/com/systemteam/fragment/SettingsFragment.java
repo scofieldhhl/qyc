@@ -95,7 +95,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     public Dialog showFeedbackDialog() {
         mFeedbackDialog = new Dialog(mContext, R.style.MyDialog);
         //设置它的ContentView
-        mFeedbackDialog.setContentView(R.layout.activity_feedback);
+        mFeedbackDialog.setContentView(R.layout.layout_feedback);
         mFeedbackDialog.setCancelable(true);
         mFeedbackDialog.setCanceledOnTouchOutside(true);
         mFeedbackDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));

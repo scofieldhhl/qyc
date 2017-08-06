@@ -51,6 +51,7 @@ public class RouteDetailActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_detail);
+        mContext = this;
         initView();
         initData();
     }
@@ -130,8 +131,7 @@ public class RouteDetailActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        mContext = this;
-
+        initToolBar(RouteDetailActivity.this, R.string.route_detail);
         route_detail_mapview = (MapView) findViewById(R.id.route_detail_mapview);
         total_time = (TextView) findViewById(R.id.total_time);
         total_distance = (TextView) findViewById(R.id.total_distance);
@@ -159,8 +159,6 @@ public class RouteDetailActivity extends BaseActivity {
         for (int i = 0; i < routePoints.size(); i++) {
             RoutePoint point = routePoints.get(i);
             LatLng latLng = new LatLng(point.getRouteLat(), point.getRouteLng());
-            Log.d("gaolei", "point.getRouteLat()----show-----" + point.getRouteLat());
-            Log.d("gaolei", "point.getRouteLng()----show-----" + point.getRouteLng());
             points.add(latLng);
         }
         if (points.size() > 2) {

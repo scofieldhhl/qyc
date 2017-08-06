@@ -8,16 +8,12 @@
 
     <LinearLayout
         android:id="@+id/title_layout"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/color_343333"
-        android:visibility="visible"
-        android:gravity="bottom"
+        style="@style/toolbar"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/menu_icon"
@@ -25,17 +21,14 @@
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:clickable="true"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
                 android:src="@mipmap/return_icon" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/toolbar_title"
                 android:layout_centerInParent="true"
-                android:text="@string/feedback"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:text="@string/feedback" />
         </RelativeLayout>
     </LinearLayout>
 
