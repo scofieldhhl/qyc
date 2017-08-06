@@ -22,6 +22,7 @@ public class BikeApplication extends Application {
     public static String mSDCardPath;
     public static String APP_FOLDER_NAME;
     public static String mCurrentAddress;//当前定位地址
+    public static boolean isHaveUpdate;
     private MyUser mUser;
 
     public MyUser getmUser() {

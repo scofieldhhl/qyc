@@ -491,7 +491,7 @@ public class RouteService extends Service {
         }
         mEarn = totalPrice * EARN_RATE_DEFAULT;
         Car newCar = new Car();
-        newCar.setIncome(newCar.getIncome() + COST_BASE_DEFAULT);
+        newCar.setIncome(newCar.getIncome() + totalPrice);
         newCar.setEarn(newCar.getEarn() + mEarn);
         addSubscription(newCar.update(mCar.getObjectId(), new UpdateListener() {
             @Override
@@ -524,7 +524,7 @@ public class RouteService extends Service {
         UseRecord record = new UseRecord();
         record.setAuthor(mUser);
         record.setCarNo(mCarNo);
-        record.setCost(COST_BASE_DEFAULT);
+        record.setCost(totalPrice);
         record.setEarn(mEarn);
         record.setEarnRate(EARN_RATE_DEFAULT);
         record.setTimeUse(timeUse);

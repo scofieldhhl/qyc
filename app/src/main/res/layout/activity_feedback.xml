@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    style="@style/activity_base_bg_gray">
+    <LinearLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/color_343333"
+        android:visibility="visible"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <ImageView
+                android:id="@+id/menu_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:clickable="true"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:src="@mipmap/return_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/feedback"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <TextView
+            style="@style/text_style_title"
+            android:layout_height="38dp"
+            android:paddingLeft="30dp"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/text_size_18"
+            android:text="@string/feedback_title1"/>
+        <EditText
+            android:id="@+id/et_email"
+            android:inputType="textEmailAddress"
+            style="@style/text_style"
+            android:layout_height="50dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:gravity="center_vertical"
+            android:background="@color/white"
+            android:hint="@string/feedback_hint_email"/>
+        <TextView
+            style="@style/text_style_title"
+            android:layout_height="38dp"
+            android:paddingLeft="30dp"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/text_size_18"
+            android:text="@string/feedback_title2"/>
+
+        <EditText
+            android:id="@+id/et_content"
+            style="@style/text_style"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:inputType="textMultiLine"
+            android:maxLines="100"
+            android:paddingTop="12dp"
+            android:gravity="top|left"
+            android:background="@color/white"
+            android:hint="@string/feedback_hint_detail"/>
+
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/submit"
+        style="@style/button_style"
+        android:layout_margin="20dp"/>
+
+</LinearLayout>

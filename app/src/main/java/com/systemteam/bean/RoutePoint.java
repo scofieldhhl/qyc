@@ -61,7 +61,6 @@ public class RoutePoint implements Parcelable {
 
         @Override
         public RoutePoint[] newArray(int size) {
-// TODO Auto-generated method stub
             return new RoutePoint[size];
         }
     };

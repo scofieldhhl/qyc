@@ -5,28 +5,6 @@
     <!--<PreferenceCategory
         android:key="@string/pref_downloadsettings_key"
         android:title="@string/pref_downloadsettings_title">
-        <com.keepvid.studio.view.IconListPreference
-            android:key="@string/pref_download_path_key"
-            android:negativeButtonText="@string/cancel"
-            android:title="@string/pref_download_path_title" />
-
-        <EditTextPreference
-            android:defaultValue="@string/pref_max_download_task_default"
-            android:dialogLayout="@layout/dialog_setting_maxtask"
-            android:dialogTitle="@string/pref_max_download_task_dlg"
-            android:hint="@string/pref_max_download_task_hint"
-            android:inputType="number"
-            android:key="@string/pref_max_download_task_key"
-            android:negativeButtonText="@string/cancel"
-            android:positiveButtonText="@string/confirm"
-            android:title="@string/pref_max_download_task_title" />
-
-        <CheckBoxPreference
-            android:defaultValue="@string/pref_wifi_download_only_default"
-            android:dialogTitle="@string/pref_wifi_download_only_dlg"
-            android:key="@string/pref_wifi_download_only_key"
-            android:title="@string/pref_wifi_download_only_title"
-            android:widgetLayout="@layout/layout_checkbox_switcher" />
 
     </PreferenceCategory>-->
 
@@ -34,19 +12,11 @@
         android:key="@string/pref_generalsettings_key"
         android:title="@string/pref_generalsettings_title">
 
-
-
-       <!-- <com.keepvid.studio.view.IconListPreference
-            android:defaultValue="@string/pref_player_video_defualt"
-            android:key="@string/pref_player_video_key"
-            android:negativeButtonText="@string/cancel"
-            android:title="@string/pref_player_video_title" />
-
-        <com.keepvid.studio.view.IconListPreference
-            android:defaultValue="@string/pref_player_audio_defualt"
-            android:key="@string/pref_player_audio_key"
-            android:negativeButtonText="@string/cancel"
-            android:title="@string/pref_player_audio_title" />-->
+        <com.systemteam.view.PreferenceWithTip
+            android:key="@string/pref_check_update_key"
+            android:persistent="false"
+            android:title="@string/pref_check_update_title"
+            android:widgetLayout="@layout/preference_widget_image" />
 
     </PreferenceCategory>
 

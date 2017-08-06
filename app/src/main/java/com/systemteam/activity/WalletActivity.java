@@ -215,6 +215,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
 
             @Override
             public void done(JSONArray ary, BmobException e) {
+                mProgressHelper.dismissProgressDialog();
                 if(e==null){
                     if(ary!=null){//
                         try {

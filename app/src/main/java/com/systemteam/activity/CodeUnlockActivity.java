@@ -115,7 +115,6 @@ public class CodeUnlockActivity extends BaseActivity {
                     }
                     currentEditIndex = index;
                 } else {
-                    // TODO 判断
                     // handler.sendEmptyMessage(1);
                 }
             } else {

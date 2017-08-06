@@ -26,7 +26,6 @@
     <string name="coupon">优惠券</string>
     <string name="route">使用记录</string>
     <string name="invite_friend">邀请好友</string>
-    <string name="feedback">问题反馈</string>
     <string name="guide">使用指南</string>
     <string name="setting">设置</string>
     <string name="account_ballance" formatted="false">账户余额&#160;%.2f&#160;元  %s</string>
@@ -358,6 +357,33 @@
     <string name="withdraw_refund_content">提现申请拒绝，您有一笔等待或异常提现申请需要处理，请联系客服或等待该提现完成后在尝试！</string>
     <string name="withdraw_record">提现记录</string>
     <!--withdraw-->
+
+    <!--feedback-->
+    <string name="feedback">反馈</string>
+    <string name="feedback_title1">联系</string>
+    <string name="feedback_hint_email">"@example.com"</string>
+    <string name="feedback_title2">详情</string>
+    <string name="feedback_hint_detail">
+        Tips: \n
+        1.设备、开锁、扣费等异常，请把编号发给我们 \n
+        2.有更好的建议，请反馈给我们</string>
+
+    <string name="email_not_valid">邮件地址无效，请检查后重试！</string>
+    <string name="feedback_null">反馈内容不能为空，请检查后重试！</string>
+    <string name="feedback_error">反馈失败, 请检查后重试！</string>
+    <string name="feedback_sending">正在发送</string>
+    <string name="feedback_success">发送成功！</string>
+    <string name="no_update">已是最新版本！</string>
+    <string name="about_us_1">
+        摇星球八客科技荣誉出品，八客科技有限公司！\n
+        \n
+        \n
+        \n
+        \n
+        \n
+    </string>
+    <!--feedback-->
+
     <string name="errcode_success">发送成功</string>
     <string name="errcode_cancel">发送取消</string>
     <string name="errcode_deny">发送被拒绝</string>

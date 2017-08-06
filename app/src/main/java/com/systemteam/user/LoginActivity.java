@@ -229,7 +229,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 try {
                     str = new String(response.data, getParamsEncoding());
                 } catch (UnsupportedEncodingException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 return Response.success(str, HttpHeaderParser.parseCacheHeaders(response));

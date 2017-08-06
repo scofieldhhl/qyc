@@ -21,12 +21,10 @@ public class SelectDialog extends Dialog implements View.OnClickListener {
     public SelectDialog(Context context, int theme) {
         super(context, theme);
         this.context = context;
-        // TODO Auto-generated constructor stub
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_confirm);
 
@@ -36,7 +34,6 @@ public class SelectDialog extends Dialog implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        // TODO Auto-generated method stub
 //        dialogOnclickInterface = (IDialogOnclickInterface) context;
         switch (v.getId()) {
             case R.id.confirm:

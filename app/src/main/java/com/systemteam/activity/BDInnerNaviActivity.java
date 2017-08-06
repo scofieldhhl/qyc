@@ -187,7 +187,6 @@ public class BDInnerNaviActivity extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		// TODO Auto-generated method stub
 		if(useCommonInterface) {
 			if(mBaiduNaviCommonModule != null) {
 				mBaiduNaviCommonModule.onStart();
