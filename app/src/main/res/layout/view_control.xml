@@ -2,109 +2,65 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:gravity="center_horizontal"
     android:layout_alignParentBottom="true"
-    android:layout_marginBottom="10dp">
-
+    android:layout_marginBottom="30dp">
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:gravity="center"
         android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/start_spot"
-            style="@style/AutoWrapTv"
-            android:text="开始识别" />
-
-        <TextView
-            android:id="@+id/stop_spot"
-            style="@style/AutoWrapTv"
-            android:text="暂停识别" />
-
-        <TextView
-            android:id="@+id/show_rect"
-            style="@style/AutoWrapTv"
-            android:text="显示扫描框" />
-
-        <TextView
-            android:id="@+id/hidden_rect"
-            style="@style/AutoWrapTv"
-            android:text="隐藏扫描框" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/start_spot_showrect"
-            style="@style/AutoWrapTv"
-            android:text="开始识别显示扫描框" />
-
-        <TextView
-            android:id="@+id/stop_spot_hiddenrect"
-            style="@style/AutoWrapTv"
-            android:text="暂停识别隐藏扫描框" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/start_preview"
-            style="@style/AutoWrapTv"
-            android:text="开始预览" />
-
-        <TextView
-            android:id="@+id/stop_preview"
-            style="@style/AutoWrapTv"
-            android:text="停止预览" />
-
-        <TextView
-            android:id="@+id/scan_barcode"
-            style="@style/AutoWrapTv"
-            android:text="扫条码" />
-
-        <TextView
-            android:id="@+id/scan_qrcode"
-            style="@style/AutoWrapTv"
-            android:text="扫二维码" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/iv_code"
+            android:onClick="onClick"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="center"
+            android:src="@drawable/ic_edit_white"/>
 
         <TextView
             android:id="@+id/tv_inputcode"
-            style="@style/AutoWrapTv"
-            android:padding="10dp"
+            style="@style/AutoWrapTv_code"
+            android:layout_width="wrap_content"
+            android:background="@null"
+            android:padding="3dp"
             android:text="@string/code_unlock"/>
-
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/iv_light"
+            android:onClick="onClick"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@mipmap/flashlight_icon"/>
         <TextView
             android:id="@+id/open_flashlight"
-            style="@style/AutoWrapTv"
-            android:padding="10dp"
+            style="@style/AutoWrapTv_code"
+            android:layout_width="wrap_content"
+            android:background="@null"
+            android:padding="3dp"
             android:text="@string/light_open" />
-
-        <TextView
-            android:id="@+id/close_flashlight"
-            style="@style/AutoWrapTv"
-            android:visibility="gone"
-            android:text="@string/light_close" />
-
-        <TextView
-            android:id="@+id/choose_qrcde_from_gallery"
-            style="@style/AutoWrapTv"
-            android:visibility="gone"
-            android:text="从相册选取扫描" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
     </LinearLayout>
 </LinearLayout>

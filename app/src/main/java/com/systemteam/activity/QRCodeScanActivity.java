@@ -122,11 +122,12 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
             case R.id.menu_icon:
                 finish();
                 break;
+            case R.id.iv_code:
             case R.id.tv_inputcode:
 //                startActivity(new Intent(QRCodeScanActivity.this, CodeUnlockActivity.class));
                 showInputDialog();
                 break;
-            case R.id.start_spot:
+            /*case R.id.start_spot:
                 mQRCodeView.startSpot();
                 break;
             case R.id.stop_spot:
@@ -149,11 +150,12 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
                 break;
             case R.id.stop_preview:
                 mQRCodeView.stopCamera();
-                break;
+                break;*/
+            case R.id.iv_light:
             case R.id.open_flashlight:
                 switchFlashlight();
                 break;
-            case R.id.close_flashlight:
+            /*case R.id.close_flashlight:
 
                 break;
             case R.id.scan_barcode:
@@ -163,15 +165,15 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
                 mQRCodeView.changeToScanQRCodeStyle();
                 break;
             case R.id.choose_qrcde_from_gallery:
-                /*
+                *//*
                 从相册选取二维码图片，这里为了方便演示，使用的是
                 https://github.com/bingoogolapple/BGAPhotoPicker-Android
                 这个库来从图库中选择二维码图片，这个库不是必须的，你也可以通过自己的方式从图库中选择图片
-                 */
+                 *//*
 
                 // 识别图片中的二维码还有问题，占时不要用
 //                startActivityForResult(BGAPhotoPickerActivity.newIntent(this, null, 1, null, false), REQUEST_CODE_CHOOSE_QRCODE_FROM_GALLERY);
-                break;
+                break;*/
         }
     }
 
