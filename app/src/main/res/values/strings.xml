@@ -354,7 +354,9 @@
     <string name="withdraw_success_content">提现申请已成功提交！我们会在1 - %d 个工作日处理，请耐心等待，谢谢！</string>
     <string name="withdraw_fail_content">提现申请提交失败！请检查网络连接是否正常或其他信息是否正常！</string>
     <string name="withdraw_refund" formatted="false">提现申请拒绝，提现金额未达到%.2f元起提现要求！</string>
-    <string name="withdraw_refund_content">提现申请拒绝，您有一笔等待或异常提现申请需要处理，请联系客服或等待该提现完成后在尝试！</string>
+    <string name="withdraw_refund_record" formatted="false">提现申请拒绝，获取提现记录失败！</string>
+    <string name="withdraw_refund_applying">提现申请拒绝，您有一笔提现申请等待处理，请联系客服或等待该提现完成后在尝试！</string>
+    <string name="withdraw_refund_days"  formatted="false">提现申请拒绝，您最近%d天内已有一笔提现申请，请勿频繁申请提现！</string>
     <string name="withdraw_record">提现记录</string>
     <!--withdraw-->
 

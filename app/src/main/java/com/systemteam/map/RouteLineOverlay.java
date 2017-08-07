@@ -21,7 +21,6 @@ class RouteLineOverlay extends Overlay
 {
     @Override
     public void draw(Canvas canvas, MapView mapView, boolean shadow) {
-        // TODO Auto-generated method stub
         super.draw(canvas, mapView, shadow);
         Projection projection=mapView.getP
         Point p1=new Point();

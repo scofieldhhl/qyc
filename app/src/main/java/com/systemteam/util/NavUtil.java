@@ -119,7 +119,6 @@ public class NavUtil {
                 }
 
                 public void onRoutePlanFailed() {
-                    // TODO Auto-generated method stub
                     Toast.makeText(activity, "算路失败", Toast.LENGTH_SHORT).show();
                 }
             });

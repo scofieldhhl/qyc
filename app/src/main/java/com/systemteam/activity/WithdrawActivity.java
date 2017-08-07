@@ -22,11 +22,13 @@ import com.systemteam.adapter.WithdrawAdapter;
 import com.systemteam.bean.BankCard;
 import com.systemteam.bean.MyUser;
 import com.systemteam.bean.Withdraw;
+import com.systemteam.util.Constant;
 import com.systemteam.util.Utils;
 import com.systemteam.view.IconEditTextView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
@@ -305,18 +307,23 @@ public class WithdrawActivity extends BaseActivity implements MyCarAdapter.OnIte
         MyUser user = BmobUser.getCurrentUser(MyUser.class);
         BmobQuery<Withdraw> query = new BmobQuery<>();
         query.addWhereEqualTo(REQUEST_KEY_BY_USER, user.getObjectId());
+        query.order("-createdAt");
         addSubscription(query.findObjects(new FindListener<Withdraw>() {
 
             @Override
             public void done(List<Withdraw> object, BmobException e) {
                 if(e==null){
+                    if(routeList == null)
+                        routeList = new ArrayList<>();
                     routeList.clear();
                     if(object != null && object.size() > 0){
-                        routeList.add("");
                         routeList.addAll(object);
                     }
                     routeAdapter.notifyDataSetChanged();
                 }else{
+                    routeList.clear();
+                    routeList = null;
+                    toast(getString(R.string.initing_fail));
                     loge(e);
                 }
             }
@@ -334,13 +341,25 @@ public class WithdrawActivity extends BaseActivity implements MyCarAdapter.OnIte
             Utils.showDialog(mContext, getString(R.string.tip), getString(R.string.withdraw_refund,
                     WITHDRAW_AMOUNT_DEFAULT));
             return false;
-        }else if(routeList.size() <= 1){
-            return true;
-        }else {
-            //TODO 判断1.最近30天内是否有提现 2.是否有为完成的提现记录
-            Utils.showDialog(mContext, getString(R.string.tip), getString(R.string.withdraw_refund_content));
+        }else if(routeList == null){
+            Utils.showDialog(mContext, getString(R.string.tip), getString(R.string.withdraw_refund_record));
             return false;
+        }else if(routeList.size() > 0){
+            Withdraw withdraw = (Withdraw) routeList.get(0);
+            if(withdraw.getStatus() != Constant.WITHDRAW_SUCCESS){
+                Utils.showDialog(mContext, getString(R.string.tip), getString(R.string.withdraw_refund_applying));
+                return false;
+            }else if (Utils.differentDays(Utils.strToDate(withdraw.getCreatedAt()), new Date()) < WITHDRAW_DAYS_DEFAULT){
+                Utils.showDialog(mContext, getString(R.string.tip), getString(R.string.withdraw_refund_days,
+                        WITHDRAW_AMOUNT_DEFAULT));
+                return false;
+            }else {
+                return true;
+            }
+        }else if(routeList.size() == 0){
+            return true;
         }
+        return true;
     }
 
     private void requestWithdraw(){
