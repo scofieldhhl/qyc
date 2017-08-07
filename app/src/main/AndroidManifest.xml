@@ -161,7 +161,9 @@
             android:theme="@style/Custom.AppTheme.NoActionBar" />
         <activity android:name=".car.NewCarActivity" />
         <activity android:name=".activity.BalanceDetailActivity" />
-        <activity android:name=".activity.WithdrawActivity"></activity>
+        <activity android:name=".activity.WithdrawActivity" />
+        <activity android:name=".activity.MyWelcomeActivity"
+            android:theme="@style/WelcomeScreenTheme"/>
     </application>
 
 </manifest>

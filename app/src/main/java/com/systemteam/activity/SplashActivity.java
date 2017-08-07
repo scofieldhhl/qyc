@@ -21,6 +21,7 @@ public class SplashActivity extends BaseActivity {
 //        checkSDK();
         mUser = ((BikeApplication) this.getApplication()).getmUser();
         if(mUser == null){
+//            startActivity(new Intent(SplashActivity.this, MyWelcomeActivity.class));
             startActivity(new Intent(SplashActivity.this, WelcomeActivity.class));
             finish();
         }else {

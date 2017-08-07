@@ -285,3 +285,9 @@ public static java.lang.String TABLENAME; }
 # If you do not use Rx:
 -dontwarn rx.**
 # greendao 3 end
+
+#welcome
+-keepclassmembers class * extends com.stephentuso.welcome.WelcomeActivity {
+    public static java.lang.String welcomeKey();
+}
+#welcome

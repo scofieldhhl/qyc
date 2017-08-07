@@ -102,5 +102,6 @@ dependencies {
     compile 'com.getbase:floatingactionbutton:1.10.1'
     compile 'org.greenrobot:greendao:3.2.0'
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.0.2'
+    compile 'com.stephentuso:welcome:1.4.1'
     testCompile 'junit:junit:4.12'
 }
