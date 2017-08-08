@@ -33,7 +33,7 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 
 import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
-
+//TODO 车辆信息管理，车收益统计（天／月），每辆车收益统计
 public class MyCarActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, MyCarAdapter.OnItemClickListener,
         MyCarAdapter.OnItemLongClickListener{

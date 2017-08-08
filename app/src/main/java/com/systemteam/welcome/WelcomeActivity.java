@@ -19,7 +19,7 @@ import com.systemteam.welcome.fragment.outlayer.WelcomAnimFragment;
 import com.systemteam.welcome.utils.DisplayUtil;
 import com.systemteam.welcome.view.ParentViewPager;
 
-//TODO 修改样式
+//TODO 1.修改样式 2.login register增加网络判断
 public class WelcomeActivity extends FragmentActivity {
 
     private final int FRAGMENT_WELCOMEANIM = 0;
