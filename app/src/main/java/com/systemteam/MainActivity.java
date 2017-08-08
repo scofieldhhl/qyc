@@ -230,7 +230,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         }
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
-            mToolbar.setNavigationIcon(R.mipmap.menu_icon);
+            mToolbar.setNavigationIcon(R.drawable.ic_menu_white);
         }
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

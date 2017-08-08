@@ -22,16 +22,34 @@ public class MyRouteAdapter extends BaseAdapter {
     }
 
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.my_route_item, null);
+        View view = null;
+        switch (viewType){
+            case TYPE_TITLE:
+                view = LayoutInflater.from(context).inflate(R.layout.item_my_car, null);
+                break;
+            case TYPE_CONTENT:
+                view = LayoutInflater.from(context).inflate(R.layout.item_my_car, null);
+                break;
+        }
         MyViewHolder holder = new MyViewHolder(view);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 int position = (int) view.getTag();
-                if (listener != null) {
+                if (listener != null && getItemViewType(position) != TYPE_TITLE) {
                     listener.onItemClick(view, position);
                 }
+            }
+        });
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                int position = (int) view.getTag();
+                if (longClickListener != null && getItemViewType(position) != TYPE_TITLE) {
+                    longClickListener.onItemLongClick(view, position);
+                }
+                return false;
             }
         });
         return holder;
@@ -39,20 +57,24 @@ public class MyRouteAdapter extends BaseAdapter {
 
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.itemView.setTag(position);
-        /*RouteRecord routeRecord=(RouteRecord)list.get(position);
+        switch(getItemViewType(position)){
+            case TYPE_TITLE:
+                holder.bike_time.setText(context.getString(R.string.carNo));
+                holder.bike_distance.setText(context.getString(R.string.earn));
+                holder.bike_price.setText(context.getString(R.string.status));
+                holder.bike_date.setVisibility(View.GONE);
+                break;
+            case TYPE_CONTENT:
+                UseRecord routeRecord=(UseRecord)list.get(position);
 //        holder.bike_time.setText(context.getString(R.string.cost_time, routeRecord.getCycle_time()));
-        holder.bike_time.setText(routeRecord.getCycle_time());
+                holder.bike_time.setText(routeRecord.getTimeUse());
 //        holder.bike_distance.setText(context.getString(R.string.cost_distance, routeRecord.getCycle_distance()));
-        holder.bike_distance.setText(routeRecord.getCarNo());
-        holder.bike_price.setText(context.getString(R.string.cost_num, routeRecord.getCycle_price()));
-        holder.bike_date.setText(routeRecord.getCycle_date());*/
-        UseRecord routeRecord=(UseRecord)list.get(position);
-//        holder.bike_time.setText(context.getString(R.string.cost_time, routeRecord.getCycle_time()));
-        holder.bike_time.setText(routeRecord.getTimeUse());
-//        holder.bike_distance.setText(context.getString(R.string.cost_distance, routeRecord.getCycle_distance()));
-        holder.bike_distance.setText(routeRecord.getCarNo());
-        holder.bike_price.setText(context.getString(R.string.cost_num, routeRecord.getCost()));
-        holder.bike_date.setText(routeRecord.getCreatedAt());
+                holder.bike_distance.setText(routeRecord.getCarNo());
+                holder.bike_price.setText(context.getString(R.string.cost_num, String.valueOf(routeRecord.getCost())));
+                holder.bike_date.setText(routeRecord.getCreatedAt());
+                break;
+        }
+
     }
 
     @Override
