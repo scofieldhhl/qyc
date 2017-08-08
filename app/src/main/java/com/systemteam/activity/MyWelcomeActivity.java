@@ -1,19 +1,16 @@
 package com.systemteam.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 
 import com.stephentuso.welcome.BasicPage;
-import com.stephentuso.welcome.FragmentWelcomePage;
 import com.stephentuso.welcome.ParallaxPage;
 import com.stephentuso.welcome.WelcomeActivity;
 import com.stephentuso.welcome.WelcomeConfiguration;
 import com.systemteam.R;
 import com.systemteam.util.LogTool;
-import com.systemteam.welcome.fragment.outlayer.LoginAnimFragment;
 
 public class MyWelcomeActivity extends WelcomeActivity {
-    LoginAnimFragment mFragment = new LoginAnimFragment();
     @Override
     protected WelcomeConfiguration configuration() {
         return new WelcomeConfiguration.Builder(this)
@@ -39,17 +36,11 @@ public class MyWelcomeActivity extends WelcomeActivity {
                         .background(R.color.purple_background)
                 )
 
-                /*.page(new BasicPage(R.drawable.ic_edit_white,
+                .page(new BasicPage(R.drawable.ic_edit_white,
                         "Customizable",
                         "All elements of the welcome screen can be customized easily.")
                         .background(R.color.blue_background)
-                )*/
-                .page(new FragmentWelcomePage() {
-                    @Override
-                    protected Fragment fragment() {
-                        return mFragment;
-                    }
-                }.background(R.color.red_background))
+                )
 
                 .swipeToDismiss(false)
                 .backButtonNavigatesPages(false)
@@ -72,11 +63,8 @@ public class MyWelcomeActivity extends WelcomeActivity {
     @Override
     protected void completeWelcomeScreen() {
         LogTool.d("completeWelcomeScreen");
-        if(mFragment == null){
-            mFragment = new LoginAnimFragment();
-        }
-        return;
-//        super.completeWelcomeScreen();
+        startActivity(new Intent(MyWelcomeActivity.this, com.systemteam.welcome.WelcomeActivity.class));
+        super.completeWelcomeScreen();
     }
 
     @Override

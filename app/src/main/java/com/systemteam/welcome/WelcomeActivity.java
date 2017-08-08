@@ -89,6 +89,7 @@ public class WelcomeActivity extends FragmentActivity {
     private void init() {
         ParentFragmentStatePagerAdapter adapter = new ParentFragmentStatePagerAdapter(getSupportFragmentManager());
         vp_parent.setAdapter(adapter);
+        vp_parent.setCurrentItem(1);
     }
 
     private void playLogoInAnim(){

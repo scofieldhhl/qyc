@@ -11,7 +11,6 @@ import com.systemteam.BikeApplication;
 import com.systemteam.MainActivity;
 import com.systemteam.R;
 import com.systemteam.util.LogTool;
-import com.systemteam.welcome.WelcomeActivity;
 
 public class SplashActivity extends BaseActivity {
     @Override
@@ -21,8 +20,8 @@ public class SplashActivity extends BaseActivity {
 //        checkSDK();
         mUser = ((BikeApplication) this.getApplication()).getmUser();
         if(mUser == null){
-//            startActivity(new Intent(SplashActivity.this, MyWelcomeActivity.class));
-            startActivity(new Intent(SplashActivity.this, WelcomeActivity.class));
+            startActivity(new Intent(SplashActivity.this, MyWelcomeActivity.class));
+//            startActivity(new Intent(SplashActivity.this, WelcomeActivity.class));
             finish();
         }else {
             new Handler().postDelayed(new Runnable() {

@@ -11,10 +11,10 @@
 
     <ImageView
         android:id="@+id/iv_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
         android:layout_gravity="center"
-        android:src="@drawable/welcome_logo"/>
+        android:src="@mipmap/app_icon"/>
 
     <com.systemteam.welcome.view.ParentViewPager
         android:id="@+id/vp_parent"
