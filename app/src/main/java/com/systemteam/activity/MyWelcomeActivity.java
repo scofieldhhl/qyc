@@ -36,13 +36,13 @@ public class MyWelcomeActivity extends WelcomeActivity {
                         .background(R.color.purple_background)
                 )
 
-                .page(new BasicPage(R.drawable.ic_edit_white,
+                /*.page(new BasicPage(R.drawable.ic_edit_white,
                         "Customizable",
                         "All elements of the welcome screen can be customized easily.")
                         .background(R.color.blue_background)
-                )
+                )*/
 
-                .swipeToDismiss(false)
+                .swipeToDismiss(true)
                 .backButtonNavigatesPages(false)
                 .exitAnimation(android.R.anim.fade_out)
                 .build();
