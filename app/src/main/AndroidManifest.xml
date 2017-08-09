@@ -163,7 +163,7 @@
         <activity android:name=".activity.BalanceDetailActivity" />
         <activity android:name=".activity.WithdrawActivity" />
         <activity android:name=".activity.MyWelcomeActivity"
-            android:theme="@style/WelcomeScreenTheme"/>
+            android:theme="@style/CustomWelcomeScreenTheme"/>
     </application>
 
 </manifest>

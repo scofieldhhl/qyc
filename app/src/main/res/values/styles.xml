@@ -352,4 +352,11 @@
         <item name="android:layout_centerVertical">true</item>
         <item name="android:focusable">true</item>
     </style>
+
+    <style name="CustomWelcomeScreenTheme" parent="WelcomeScreenTheme">
+        <!-- Done/skip button text -->
+        <item name="welcomeButtonSkipText">@string/skip</item>
+        <item name="welcomeButtonDoneText">@string/at_once</item>
+    </style>
+
 </resources>

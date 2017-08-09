@@ -241,6 +241,7 @@
     <string name="SMS_failed">验证码发送失败，请稍后重试！</string>
     <string name="reg_failed">验证登录失败，请检查手机号或验证码是否正确输入！</string>
     <string name="skip">跳过</string>
+    <string name="at_once">立即体验</string>
     <!--welcom-->
 
     <!--menu-->
