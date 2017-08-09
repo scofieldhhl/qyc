@@ -2,8 +2,6 @@ package com.systemteam.bean;
 
 import cn.bmob.v3.BmobUser;
 
-import static com.systemteam.util.Constant.COUPON_DEFAULT;
-
 public class MyUser extends BmobUser {
 
 	private static final long serialVersionUID = 1L;
@@ -15,7 +13,7 @@ public class MyUser extends BmobUser {
 	private MyUser superUser;//上级用户
 	private Integer status;	//0申请中 1商户
 	private Float earn;		//收益
-	private Integer coupon = COUPON_DEFAULT; //优惠券数
+	private Integer coupon; //优惠券数
 	private String photoPath;//头像路径
 	private String address;	 //地址
 

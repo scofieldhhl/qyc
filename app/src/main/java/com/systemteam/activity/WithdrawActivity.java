@@ -351,7 +351,7 @@ public class WithdrawActivity extends BaseActivity implements MyCarAdapter.OnIte
                 return false;
             }else if (Utils.differentDays(Utils.strToDate(withdraw.getCreatedAt()), new Date()) < WITHDRAW_DAYS_DEFAULT){
                 Utils.showDialog(mContext, getString(R.string.tip), getString(R.string.withdraw_refund_days,
-                        WITHDRAW_AMOUNT_DEFAULT));
+                        WITHDRAW_DAYS_DEFAULT));
                 return false;
             }else {
                 return true;
