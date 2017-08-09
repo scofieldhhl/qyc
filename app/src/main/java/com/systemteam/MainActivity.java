@@ -112,7 +112,7 @@ import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
 import static com.systemteam.util.Constant.DISMISS_SPLASH;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
-
+//TODO 1、计算距离 2、结束使用后，界面没有退回到定位全部车辆的界面
 public class MainActivity extends BaseActivity implements OnGetRoutePlanResultListener,
         AllInterface.OnMenuSlideListener {
 

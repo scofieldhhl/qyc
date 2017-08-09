@@ -88,7 +88,7 @@ import static com.systemteam.util.Constant.TIME_ONCE_ACTIVE;
 //        LBS
 //        先贴一个保存经纬度点的Service的核心代码：
 
-
+//TODO 计费没有更新到摇摇车的收益中
 public class RouteService extends Service {
 
     private double currentLatitude, currentLongitude;
