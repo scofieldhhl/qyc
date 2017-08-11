@@ -18,20 +18,20 @@ public class MyWelcomeActivity extends WelcomeActivity {
                 .defaultHeaderTypefacePath("Montserrat-Bold.ttf")
 
                 .page(new BasicPage(R.drawable.ic_front_desk_white,
-                        "Welcome",
-                        "An Android library for onboarding, instructional screens, and more")
+                        getString(R.string.welcome_title1),
+                        getString(R.string.welcome_decr1))
                         .background(R.color.orange_background)
                 )
 
                 .page(new BasicPage(R.drawable.ic_thumb_up_white,
-                        "Simple to use",
-                        "Add a welcome screen to your app with only a few lines of code.")
+                        getString(R.string.welcome_title2),
+                        getString(R.string.welcome_decr2))
                         .background(R.color.red_background)
                 )
 
                 .page(new ParallaxPage(R.layout.parallax_example,
-                        "Easy parallax",
-                        "Supply a layout and parallax effects will automatically be applied")
+                        getString(R.string.welcome_title3),
+                        getString(R.string.welcome_decr3))
                         .lastParallaxFactor(2f)
                         .background(R.color.purple_background)
                 )

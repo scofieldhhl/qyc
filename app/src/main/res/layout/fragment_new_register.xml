@@ -9,7 +9,7 @@
         android:id="@+id/rl_country"
         android:layout_width="match_parent"
         android:layout_height="46dp"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:background="@color/white"
         android:layout_marginTop="4dp" >
 

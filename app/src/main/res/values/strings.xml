@@ -242,6 +242,12 @@
     <string name="reg_failed">验证登录失败，请检查手机号或验证码是否正确输入！</string>
     <string name="skip">跳过</string>
     <string name="at_once">立即体验</string>
+    <string name="welcome_title1">寓教于乐</string>
+    <string name="welcome_decr1">An Android library for onboarding, instructional screens, and more</string>
+    <string name="welcome_title2">扫码即用</string>
+    <string name="welcome_decr2">Add a welcome screen to your app with only a few lines of code.</string>
+    <string name="welcome_title3">合作共赢</string>
+    <string name="welcome_decr3">Supply a layout and parallax effects will automatically be applied</string>
     <!--welcom-->
 
     <!--menu-->

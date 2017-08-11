@@ -30,7 +30,7 @@ import cn.bmob.v3.listener.UpdateListener;
 
 import static com.systemteam.util.Constant.REQUEST_KEY_BY_CARNO;
 
-//myTODO 车辆信息管理，车收益统计（天／月），每辆车收益统计
+//TODO 车辆信息管理，车收益统计（天／月），每辆车收益统计
 public class CarDetailActivity extends BaseActivity
         implements MyCarAdapter.OnItemClickListener, MyCarAdapter.OnItemLongClickListener{
     XRecyclerView routeRecyclerView;
