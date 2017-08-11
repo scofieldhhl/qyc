@@ -18,7 +18,7 @@ import com.systemteam.fragment.RouteFragment;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//TODO 增加分页加载
 public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnItemClickListener {
 
     XRecyclerView routeRecyclerView;

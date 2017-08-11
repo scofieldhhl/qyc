@@ -584,6 +584,9 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
                 openMenu();
                 break;
             case R.id.bike_sound:
+                if(checkNetworkAvailable(mContext) == Constant.NETWORK_STATUS_NO){
+                    return;
+                }
                 if (checkBalance(mUser, MainActivity.this)) {
                     //TODO 检查车的状态是否是可用状态
                     beginService();

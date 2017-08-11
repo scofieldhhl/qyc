@@ -1,12 +1,14 @@
 package com.systemteam.car;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
@@ -28,19 +30,24 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 
+import static com.systemteam.util.Constant.QUERY_LIMIT_DEFAULT;
 import static com.systemteam.util.Constant.REQUEST_KEY_BY_CARNO;
 
 //TODO 车辆信息管理，车收益统计（天／月），每辆车收益统计
-public class CarDetailActivity extends BaseActivity
-        implements MyCarAdapter.OnItemClickListener, MyCarAdapter.OnItemLongClickListener{
+public class CarDetailActivity extends BaseActivity implements MyCarAdapter.OnItemClickListener,
+        MyCarAdapter.OnItemLongClickListener{
     XRecyclerView routeRecyclerView;
     MyRouteAdapter routeAdapter;
     List<Object> routeList;
+    private boolean isChartShow = false;
     private Car mCar;
+    FrameLayout mLayoutChart;
+    private ChartFragment mChartFragment;
+    private Menu mMenu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_my_car);
+        setContentView(R.layout.activity_car_detail);
         mContext = this;
         initView();
         initData();
@@ -49,12 +56,45 @@ public class CarDetailActivity extends BaseActivity
     @Override
     protected void initView() {
         initToolBar(CarDetailActivity.this, R.string.detail_car_title);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setVisibility(View.GONE);
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.f_chart, new ChartFragment())
-                .commit();
+        mToolbar.inflateMenu(R.menu.menu_car_detail);
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_settings:
+                        isChartShow = !isChartShow;
+                        if(isChartShow){
+                            mLayoutChart.setVisibility(View.VISIBLE);
+                            if(mChartFragment == null){
+                                mChartFragment = new ChartFragment();
+                            }
+                            getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.ll_content, mChartFragment)
+                                    .commit();
+                            item.setTitle(R.string.action_detail);
+                            mMenu.getItem(1).setVisible(true);
+                            mMenu.getItem(2).setVisible(true);
+                        }else {
+                            mLayoutChart.setVisibility(View.GONE);
+                            item.setTitle(R.string.action_chart);
+                            mMenu.getItem(1).setVisible(false);
+                            mMenu.getItem(2).setVisible(false);
+                        }
+                        //判断当前屏幕方向
+                        if(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+                            //切换竖屏
+                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                        }else{
+                            //切换横屏
+                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                        }
+                        break;
+                }
+                return true;
+            }
+        });
+        mLayoutChart = (FrameLayout) findViewById(R.id.ll_content);
+        mLayoutChart.setVisibility(View.GONE);
     }
 
     @Override
@@ -120,24 +160,9 @@ public class CarDetailActivity extends BaseActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.my_car, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        mMenu = menu;
+        getMenuInflater().inflate(R.menu.menu_car_detail, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -160,6 +185,7 @@ public class CarDetailActivity extends BaseActivity
         BmobQuery<UseRecord> query = new BmobQuery<>();
         query.addWhereEqualTo(REQUEST_KEY_BY_CARNO, mCar.getCarNo());
         query.order("-createdAt");
+        query.setLimit(QUERY_LIMIT_DEFAULT);
         addSubscription(query.findObjects(new FindListener<UseRecord>() {
 
             @Override

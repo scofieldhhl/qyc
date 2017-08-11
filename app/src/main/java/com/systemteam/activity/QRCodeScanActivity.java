@@ -325,6 +325,12 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
                         if(!TextUtils.isEmpty(code) && code.length() > 5){
                             //TODO 校验输入车牌的有效性
                         }
+                        if(checkNetworkAvailable(mContext) == Constant.NETWORK_STATUS_NO){
+                            return;
+                        }
+                        if (!checkBalance(mUser, QRCodeScanActivity.this)) {
+                            return;
+                        }
                         dialog.dismiss();
                         new Handler().postDelayed(new Runnable() {
                             @Override
