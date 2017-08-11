@@ -28,7 +28,10 @@ public class Constant {
     public static final float SCALING_MAP = 18.0f;
 
     public static final String REQUEST_KEY_BY_USER = "author";
+    public static final String REQUEST_KEY_BY_CAR = "car";
+    public static final String REQUEST_KEY_BY_CARNO = "carNo";
     public static final String TIME_ONCE_ACTIVE_STR = "03 : 00";
+    public static final String  BUNDLE_CAR = "key_car";
     public static final String  BUNDLE_USER = "key_user";
     public static final String  BUNDLE_TYPE_MENU = "key_type";
     public static final String  BUNDLE_KEY_CODE = "key_code";

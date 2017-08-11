@@ -42,7 +42,7 @@ public class MyWelcomeActivity extends WelcomeActivity {
                         .background(R.color.blue_background)
                 )*/
 
-                .swipeToDismiss(true)
+                .swipeToDismiss(false)
                 .backButtonNavigatesPages(false)
                 .exitAnimation(android.R.anim.fade_out)
                 .build();

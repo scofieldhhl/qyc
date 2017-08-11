@@ -1,14 +1,8 @@
 package com.systemteam.car;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,9 +13,10 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.systemteam.BaseActivity;
 import com.systemteam.R;
 import com.systemteam.adapter.MyCarAdapter;
+import com.systemteam.adapter.MyRouteAdapter;
 import com.systemteam.adapter.MyRouteDividerDecoration;
 import com.systemteam.bean.Car;
-import com.systemteam.bean.MyUser;
+import com.systemteam.bean.UseRecord;
 import com.systemteam.fragment.ChartFragment;
 import com.systemteam.util.Constant;
 
@@ -29,23 +24,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 
-import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
+import static com.systemteam.util.Constant.REQUEST_KEY_BY_CARNO;
+
 //myTODO 车辆信息管理，车收益统计（天／月），每辆车收益统计
-public class MyCarActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MyCarAdapter.OnItemClickListener,
-        MyCarAdapter.OnItemLongClickListener{
+public class CarDetailActivity extends BaseActivity
+        implements MyCarAdapter.OnItemClickListener, MyCarAdapter.OnItemLongClickListener{
     XRecyclerView routeRecyclerView;
-    MyCarAdapter routeAdapter;
+    MyRouteAdapter routeAdapter;
     List<Object> routeList;
+    private Car mCar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_car);
+        setContentView(R.layout.content_my_car);
         mContext = this;
         initView();
         initData();
@@ -53,23 +48,9 @@ public class MyCarActivity extends BaseActivity
 
     @Override
     protected void initView() {
-        initToolBar(MyCarActivity.this, R.string.my_car);
+        initToolBar(CarDetailActivity.this, R.string.detail_car_title);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MyCarActivity.this, NewCarActivity.class));
-            }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        fab.setVisibility(View.GONE);
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.f_chart, new ChartFragment())
@@ -78,15 +59,21 @@ public class MyCarActivity extends BaseActivity
 
     @Override
     protected void initData() {
+        Intent intent = getIntent();
+        if(intent != null){
+            Bundle bundle = intent.getExtras();
+            mCar = (Car) bundle.getSerializable(Constant.BUNDLE_CAR);
+        }
+
         routeRecyclerView = (XRecyclerView) findViewById(R.id.recyclerview_route);
 //        no_route = (TextView) findViewById(R.id.no_route);
         routeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 //        routeList = getAllPoints();
         routeList = new ArrayList<>();
-        routeAdapter = new MyCarAdapter(mContext, routeList);
-        routeAdapter.setOnClickListener(MyCarActivity.this);
-        routeAdapter.setOnLongClickListener(MyCarActivity.this);
+        routeAdapter = new MyRouteAdapter(mContext, routeList);
+        routeAdapter.setOnClickListener(CarDetailActivity.this);
+        routeAdapter.setOnLongClickListener(CarDetailActivity.this);
         routeRecyclerView.setAdapter(routeAdapter);
         routeRecyclerView.addItemDecoration(new MyRouteDividerDecoration(1));
 
@@ -121,23 +108,20 @@ public class MyCarActivity extends BaseActivity
         if(routeList != null){
             routeList.clear();
         }
-        initCarList();
+        if(mCar != null){
+            initList();
+        }
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.my_car, menu);
+//        getMenuInflater().inflate(R.menu.my_car, menu);
         return true;
     }
 
@@ -156,31 +140,6 @@ public class MyCarActivity extends BaseActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
     @Override
     public void onClick(View view) {
 
@@ -193,22 +152,18 @@ public class MyCarActivity extends BaseActivity
 
     @Override
     public void onItemClick(View v, int position) {
-        Intent intent = new Intent(MyCarActivity.this, CarDetailActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(Constant.BUNDLE_CAR, (Car)routeList.get(position));
-        intent.putExtras(bundle);
-        startActivity(intent);
+
     }
 
-    private void initCarList() {
+    private void initList() {
         mProgressHelper.showProgressDialog(getString(R.string.initing));
-        MyUser user = BmobUser.getCurrentUser(MyUser.class);
-        BmobQuery<Car> query = new BmobQuery<>();
-        query.addWhereEqualTo(REQUEST_KEY_BY_USER, user.getObjectId());
-        addSubscription(query.findObjects(new FindListener<Car>() {
+        BmobQuery<UseRecord> query = new BmobQuery<>();
+        query.addWhereEqualTo(REQUEST_KEY_BY_CARNO, mCar.getCarNo());
+        query.order("-createdAt");
+        addSubscription(query.findObjects(new FindListener<UseRecord>() {
 
             @Override
-            public void done(List<Car> object, BmobException e) {
+            public void done(List<UseRecord> object, BmobException e) {
                 mProgressHelper.dismissProgressDialog();
                 if(e==null){
                     routeList.clear();
@@ -227,7 +182,7 @@ public class MyCarActivity extends BaseActivity
 
     @Override
     public void onItemLongClick(View v, final int position) {
-        AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
+        /*AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
         alertDialog.setTitle(R.string.notice);
         alertDialog.setMessage(getString(R.string.del_tip_car));
         alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, mContext.getString(R.string.del_comfirm),
@@ -249,7 +204,7 @@ public class MyCarActivity extends BaseActivity
                     public void onClick(DialogInterface dialog, int which) {
                     }
                 });
-        alertDialog.show();
+        alertDialog.show();*/
     }
 
     private void doUpdate(Car car){
@@ -268,7 +223,7 @@ public class MyCarActivity extends BaseActivity
                 mProgressHelper.dismissProgressDialog();
                 if(e == null){
                     toast(getString(R.string.del_success));
-                    initCarList();
+                    initList();
                 }else {
                     toast(getString(R.string.submit_faile));
                 }

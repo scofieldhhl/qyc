@@ -30,4 +30,10 @@
         android:id="@+id/recyclerview_route"
         style="@style/xrecyclerview_style"
         android:layout_below="@id/toolbar"/>
+
+    <FrameLayout
+        android:id="@+id/f_chart"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"/>
 </RelativeLayout>

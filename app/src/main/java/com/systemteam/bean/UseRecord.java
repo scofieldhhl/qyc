@@ -8,6 +8,7 @@ public class UseRecord extends BmobObject{
     private static final long serialVersionUID = 1L;
     private Long id;
     private MyUser author;    //用户
+    private Car car;        //
     private String carNo;   //车编号
     private String timeUse; //使用时长
     private float cost = COST_BASE_DEFAULT;//费用
@@ -77,5 +78,13 @@ public class UseRecord extends BmobObject{
 
     public void setEarn(float earn) {
         this.earn = earn;
+    }
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
     }
 }

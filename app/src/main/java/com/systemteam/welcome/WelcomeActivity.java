@@ -3,24 +3,24 @@ package com.systemteam.welcome;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
+import com.systemteam.BaseActivity;
 import com.systemteam.R;
 import com.systemteam.welcome.fragment.outlayer.LoginAnimFragment;
 import com.systemteam.welcome.fragment.outlayer.WelcomAnimFragment;
 import com.systemteam.welcome.utils.DisplayUtil;
 import com.systemteam.welcome.view.ParentViewPager;
 
-//TODO 1.修改样式 2.login register增加网络判断
-public class WelcomeActivity extends FragmentActivity {
+public class WelcomeActivity extends BaseActivity {
 
     private final int FRAGMENT_WELCOMEANIM = 0;
     private final int FRAGMENT_LOGINANIM = 1;
@@ -41,6 +41,16 @@ public class WelcomeActivity extends FragmentActivity {
         findView();
         setClick();
         init();
+    }
+
+    @Override
+    protected void initView() {
+
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     private void findView() {
@@ -106,6 +116,11 @@ public class WelcomeActivity extends FragmentActivity {
         mAnimatorSet.play(anim2).with(anim3);
         mAnimatorSet.setDuration(1000);
         mAnimatorSet.start();
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 
     public class ParentFragmentStatePagerAdapter extends FragmentStatePagerAdapter {

@@ -103,5 +103,6 @@ dependencies {
     compile 'org.greenrobot:greendao:3.2.0'
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.0.2'
     compile 'com.stephentuso:welcome:1.4.1'
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
     testCompile 'junit:junit:4.12'
 }

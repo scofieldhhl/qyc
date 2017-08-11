@@ -159,6 +159,10 @@
             android:name=".car.MyCarActivity"
             android:label="@string/title_activity_my_car"
             android:theme="@style/Custom.AppTheme.NoActionBar" />
+        <activity
+            android:name=".car.CarDetailActivity"
+            android:label="@string/detail"
+            android:theme="@style/Custom.AppTheme.NoActionBar" />
         <activity android:name=".car.NewCarActivity" />
         <activity android:name=".activity.BalanceDetailActivity" />
         <activity android:name=".activity.WithdrawActivity" />
