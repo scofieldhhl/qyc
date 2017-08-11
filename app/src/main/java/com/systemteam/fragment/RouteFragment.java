@@ -114,36 +114,38 @@ public class RouteFragment extends BaseFragment{
     private void initRecyclerview(View view){
         routeRecyclerView = (XRecyclerView) view.findViewById(R.id.recyclerview_route);
 //        no_route = (TextView) findViewById(R.id.no_route);
-        routeRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        routeList = new ArrayList<>();
-        routeAdapter = new MyRouteAdapter(mContext, routeList);
+        if(routeRecyclerView != null){
+            routeRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+            routeList = new ArrayList<>();
+            routeAdapter = new MyRouteAdapter(mContext, routeList);
 //        routeAdapter.setOnClickListener(mContext);
 //        routeAdapter.setOnLongClickListener(mContext);
-        routeRecyclerView.setAdapter(routeAdapter);
-        routeRecyclerView.addItemDecoration(new MyRouteDividerDecoration(1));
+            routeRecyclerView.setAdapter(routeAdapter);
+            routeRecyclerView.addItemDecoration(new MyRouteDividerDecoration(1));
 
-        routeRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
-        routeRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallScale);
-        routeRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
-        routeRecyclerView.setPullRefreshEnabled(false);
+            routeRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
+            routeRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallScale);
+            routeRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
+            routeRecyclerView.setPullRefreshEnabled(false);
 //        View header = LayoutInflater.from(this).inflate(R.layout.recyclerview_header,
 //                (ViewGroup)findViewById(android.R.id.content),false);
 //        routeRecyclerView.addHeaderView(header);
 
-        routeRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
-            @Override
-            public void onRefresh() {
+            routeRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
+                @Override
+                public void onRefresh() {
 //                Toast.makeText(MyRouteActivity.this, "onRefresh", Toast.LENGTH_SHORT).show();
-                routeRecyclerView.refreshComplete();
-            }
+                    routeRecyclerView.refreshComplete();
+                }
 
-            @Override
-            public void onLoadMore() {
+                @Override
+                public void onLoadMore() {
 //                Toast.makeText(MyRouteActivity.this, "onLoadMore", Toast.LENGTH_SHORT).show();
-                routeRecyclerView.loadMoreComplete();
-                routeAdapter.notifyDataSetChanged();
-            }
-        });
+                    routeRecyclerView.loadMoreComplete();
+                    routeAdapter.notifyDataSetChanged();
+                }
+            });
+        }
     }
 
     private void initDataList() {

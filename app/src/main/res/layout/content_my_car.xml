@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    style="@style/activity_base_bg_gray"
     tools:context="com.systemteam.car.MyCarActivity">
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -26,14 +25,24 @@
         app:backgroundTint="@color/colorPrimary"
         app:rippleColor="@color/colorPrimaryDark" />
 
-    <com.jcodecraeer.xrecyclerview.XRecyclerView
-        android:id="@+id/recyclerview_route"
-        style="@style/xrecyclerview_style"
-        android:layout_below="@id/toolbar"/>
-
-    <FrameLayout
-        android:id="@+id/f_chart"
-        android:layout_alignParentBottom="true"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@id/toolbar">
+
+        <FrameLayout
+            android:id="@+id/f_chart"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginBottom="5dp"/>
+        <com.jcodecraeer.xrecyclerview.XRecyclerView
+            android:id="@+id/recyclerview_route"
+            style="@style/xrecyclerview_style"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+    </LinearLayout>
 </RelativeLayout>

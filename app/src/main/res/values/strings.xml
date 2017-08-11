@@ -97,6 +97,7 @@
     <string name="edit_info">资料编辑</string>
     <string name="edit_info_success">您的资料修改已成功提交！</string>
     <string name="amout_num" formatted="false">%s元</string>
+    <string name="earn_total" formatted="false">总收益：%.2f元</string>
 
     <string name="demo_title_location">demo_title_location</string>
     <string name="demo_desc_location">demo_desc_location</string>
@@ -342,6 +343,8 @@
     <string name="detail_recharge">充值明细</string>
     <string name="detail_cost">消费明细</string>
     <string name="detail_car_title">详情</string>
+
+    <string name="detail_month_eran" formatted="false">%d月日收益一览</string>
     <!--detail-->
 
     <!--withdraw-->

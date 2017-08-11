@@ -20,24 +20,18 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.systemteam.R;
-import com.systemteam.bean.MyUser;
-import com.systemteam.bean.UseRecord;
+import com.systemteam.bean.ChartBean;
 import com.systemteam.util.LogTool;
 import com.systemteam.view.DayAxisValueFormatter;
 import com.systemteam.view.MyAxisValueFormatter;
 import com.systemteam.view.XYMarkerView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
-
-import static com.systemteam.BaseActivity.loge;
-import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
-
+import static com.systemteam.R.string.detail_month_eran;
+//TODO 车收益统计（天／月），每辆车收益统计
 public class ChartFragment extends DemoBase implements OnChartValueSelectedListener {
 
     List<Object> routeList;
@@ -46,6 +40,7 @@ public class ChartFragment extends DemoBase implements OnChartValueSelectedListe
     private String mParam1;
     private String mParam2;
     protected BarChart mChart;
+    private float mMonth = 8f;
 
     public ChartFragment() {
     }
@@ -80,7 +75,7 @@ public class ChartFragment extends DemoBase implements OnChartValueSelectedListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContext = getActivity();
-        View view = inflater.inflate(R.layout.fragment_recyclerview, container, false);
+        View view = inflater.inflate(R.layout.fragment_chart, container, false);
         initView(view);
         return view;
     }
@@ -88,7 +83,6 @@ public class ChartFragment extends DemoBase implements OnChartValueSelectedListe
     @Override
     public void onResume() {
         super.onResume();
-        initData();
     }
 
 
@@ -173,7 +167,16 @@ public class ChartFragment extends DemoBase implements OnChartValueSelectedListe
         mv.setChartView(mChart); // For bounds control
         mChart.setMarker(mv); // Set the marker to the chart
 
-        setData(12, 50);
+//        setData(12, 50);
+        List<ChartBean> list = new ArrayList<>();
+        int dayMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        int dayOfYear = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+        LogTool.d("dayOfYear :" + dayOfYear + "  DayofMonth : " + dayMonth);
+        for(int i = 0; i < dayMonth; i++){
+
+            list.add(new ChartBean((dayOfYear - i), i));
+        }
+        setData(list);
 
         /*// setting data
         mSeekBarY.setProgress(50);
@@ -187,7 +190,6 @@ public class ChartFragment extends DemoBase implements OnChartValueSelectedListe
 
     @Override
     protected void initData() {
-        initDataList();
     }
 
     @Override
@@ -196,35 +198,6 @@ public class ChartFragment extends DemoBase implements OnChartValueSelectedListe
     }
 
 
-    private void initDataList() {
-        mProgressHelper.showProgressDialog(getString(R.string.initing));
-        MyUser user = BmobUser.getCurrentUser(MyUser.class);
-        BmobQuery<UseRecord> query = new BmobQuery<>();
-        query.addWhereEqualTo(REQUEST_KEY_BY_USER, user.getObjectId());
-        // 根据score字段升序显示数据
-        query.order("-createdAt");
-        // 根据score字段降序显示数据
-        //query.order("-score");
-        // 多个排序字段可以用（，）号分隔
-//        query.order("-score,createdAt");
-        addSubscription(query.findObjects(new FindListener<UseRecord>() {
-
-            @Override
-            public void done(List<UseRecord> object, BmobException e) {
-                mProgressHelper.dismissProgressDialog();
-                if(e==null){
-                    routeList.clear();
-                    LogTool.d("-----------------------" + object.size());
-                    if(object != null && object.size() > 0){
-                        routeList.addAll(object);
-                    }
-                }else{
-                    toast(mContext, mContext.getString(R.string.initing_fail));
-                    loge(e);
-                }
-            }
-        }));
-    }
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
@@ -263,6 +236,41 @@ public class ChartFragment extends DemoBase implements OnChartValueSelectedListe
             mChart.notifyDataSetChanged();
         } else {
             set1 = new BarDataSet(yVals1, "The year 2017");
+
+            set1.setDrawIcons(false);
+
+            set1.setColors(ColorTemplate.MATERIAL_COLORS);
+
+            ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+            dataSets.add(set1);
+
+            BarData data = new BarData(dataSets);
+            data.setValueTextSize(10f);
+            data.setValueTypeface(mTfLight);
+            data.setBarWidth(0.9f);
+
+            mChart.setData(data);
+        }
+    }
+
+    private void setData(List<ChartBean> list) {
+
+        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
+
+        for (ChartBean bean : list) {
+           yVals1.add(new BarEntry(bean.index, bean.value));
+        }
+
+        BarDataSet set1;
+
+        if (mChart.getData() != null &&
+                mChart.getData().getDataSetCount() > 0) {
+            set1 = (BarDataSet) mChart.getData().getDataSetByIndex(0);
+            set1.setValues(yVals1);
+            mChart.getData().notifyDataChanged();
+            mChart.notifyDataSetChanged();
+        } else {
+            set1 = new BarDataSet(yVals1, getString(detail_month_eran, (int)mMonth));
 
             set1.setDrawIcons(false);
 

@@ -8,7 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,7 +21,7 @@ import com.systemteam.adapter.MyCarAdapter;
 import com.systemteam.adapter.MyRouteDividerDecoration;
 import com.systemteam.bean.Car;
 import com.systemteam.bean.MyUser;
-import com.systemteam.fragment.ChartFragment;
+import com.systemteam.fragment.PieChartFragment;
 import com.systemteam.util.Constant;
 
 import java.util.ArrayList;
@@ -35,13 +34,14 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 
 import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
-//myTODO 车辆信息管理，车收益统计（天／月），每辆车收益统计
+
 public class MyCarActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, MyCarAdapter.OnItemClickListener,
         MyCarAdapter.OnItemLongClickListener{
     XRecyclerView routeRecyclerView;
     MyCarAdapter routeAdapter;
     List<Object> routeList;
+    PieChartFragment mChartFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,17 +62,17 @@ public class MyCarActivity extends BaseActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
+        navigationView.setNavigationItemSelectedListener(this);*/
+        mChartFragment = new PieChartFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.f_chart, new ChartFragment())
+                .replace(R.id.f_chart, mChartFragment)
                 .commit();
     }
 
@@ -113,15 +113,15 @@ public class MyCarActivity extends BaseActivity
                 routeAdapter.notifyDataSetChanged();
             }
         });
+        if(routeList != null){
+            routeList.clear();
+        }
+        initCarList();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(routeList != null){
-            routeList.clear();
-        }
-        initCarList();
     }
 
     @Override
@@ -215,6 +215,7 @@ public class MyCarActivity extends BaseActivity
                     if(object != null && object.size() > 0){
                         routeList.add("");
                         routeList.addAll(object);
+                        mChartFragment.setRouteList(routeList);
                     }
                     routeAdapter.notifyDataSetChanged();
                 }else{

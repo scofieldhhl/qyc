@@ -87,7 +87,7 @@
                     android:layout_toRightOf="@+id/tv_pswtitle"
                     android:background="@null"
                     android:hint="@string/reg_write_identify_code"
-                    android:inputType="textPassword"
+                    android:inputType="numberPassword"
                     android:singleLine="true"
                     android:maxLength="20"
                     android:textColor="@color/base_gray"

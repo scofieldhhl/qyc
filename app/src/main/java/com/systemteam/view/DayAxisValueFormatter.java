@@ -10,8 +10,12 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 public class DayAxisValueFormatter implements IAxisValueFormatter
 {
 
-    protected String[] mMonths = new String[]{
+    /*protected String[] mMonths = new String[]{
             "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    };*/
+
+    protected String[] mMonths = new String[]{
+            "/1", "/2", "/3", "/4", "/5", "/6", "/7", "/8", "/9", "/10", "/11", "/12"
     };
 
     private BarLineChartBase<?> chart;
@@ -38,7 +42,7 @@ public class DayAxisValueFormatter implements IAxisValueFormatter
 
             int dayOfMonth = determineDayOfMonth(days, month + 12 * (year - 2016));
 
-            String appendix = "th";
+            /*String appendix = "th";
 
             switch (dayOfMonth) {
                 case 1:
@@ -62,8 +66,8 @@ public class DayAxisValueFormatter implements IAxisValueFormatter
                 case 31:
                     appendix = "st";
                     break;
-            }
-
+            }*/
+            String appendix = "";
             return dayOfMonth == 0 ? "" : dayOfMonth + appendix + " " + monthName;
         }
     }
