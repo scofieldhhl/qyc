@@ -298,9 +298,11 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     }
 
     protected boolean checkBalance(MyUser user,final Activity activity){
-        if((user.getCoupon() == null || user.getCoupon().intValue() == 0) &&
-                (user.getBalance() == null || user.getBalance().floatValue() == 0
-                        || user.getBalance().floatValue() < COST_BASE_DEFAULT)) {
+        if(user.getCoupon() != null && user.getCoupon().intValue() > 0){
+            return true;
+        }else if(user.getBalance() != null && user.getBalance().floatValue() > COST_BASE_DEFAULT){
+            return true;
+        }else {
             AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
             alertDialog.setTitle(activity.getString(R.string.tip));
             alertDialog.setMessage(activity.getString(R.string.ballance_no));
@@ -314,8 +316,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                     });
             alertDialog.show();
             return false;
-        }else {
-            return true;
         }
     }
 

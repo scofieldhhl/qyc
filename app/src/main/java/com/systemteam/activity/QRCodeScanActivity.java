@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.systemteam.BaseActivity;
 import com.systemteam.R;
+import com.systemteam.bean.MyUser;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 
@@ -31,6 +32,9 @@ import java.util.List;
 
 import cn.bingoogolapple.qrcode.core.QRCodeView;
 import cn.bingoogolapple.qrcode.zbar.ZBarView;
+import cn.bmob.v3.BmobUser;
+
+import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
 
 public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Delegate {
     private boolean isLightOpened = false;
@@ -77,7 +81,7 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
     }
 
     private void exist(String code){
-        setResult(RESULT_OK, new Intent().putExtra(Constant.BUNDLE_KEY_CODE, code)); //intent为A传来的带有Bundle的intent，当然也可以自己定义新的Bundle
+        setResult(RESULT_OK, new Intent().putExtra(BUNDLE_KEY_CODE, code)); //intent为A传来的带有Bundle的intent，当然也可以自己定义新的Bundle
         finish();//此处一定要调用finish()方法
     }
 
@@ -92,6 +96,7 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
     @Override
     protected void initData() {
         checkSDK();
+        mUser = BmobUser.getCurrentUser(MyUser.class);
         isUnLock = getIntent().getBooleanExtra(Constant.BUNDLE_KEY_UNLOCK, false);//是否是解锁还是获取编号
         if(!isUnLock){
             ((TextView)findViewById(R.id.tv_inputcode)).setText(R.string.code_manual);
@@ -105,6 +110,7 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
 
     @Override
     public void onScanQRCodeSuccess(String result) {
+        //TODO 扫码成功，数据处理下一步操作
         LogTool.d("result:" + result);
         Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
         vibrate();
@@ -335,8 +341,11 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if(isUnLock)
-                                    startActivity(new Intent(mContext, ActiveActivity.class));
+                                if(isUnLock) {
+                                    Intent intent = new Intent(mContext, ActiveActivity.class);
+                                    intent.putExtra(BUNDLE_KEY_CODE, code);
+                                    startActivity(intent);
+                                }
                                 exist(code);
                             }
                         }, 100);

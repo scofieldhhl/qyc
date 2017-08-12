@@ -19,6 +19,7 @@ import com.systemteam.util.Utils;
 import java.lang.ref.WeakReference;
 
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
+import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 import static com.systemteam.util.Constant.TIME_ONCE_ACTIVE_STR;
 
@@ -70,7 +71,9 @@ public class ActiveActivity extends BaseActivity {
     protected void initData() {
         mReceiver = new LocationReceiver();
         registerBroadcast(ACTION_BROADCAST_ACTIVE, mReceiver);
-        startService(new Intent(this, RouteService.class));
+        Intent serviceIntent = new Intent(this, RouteService.class);
+        serviceIntent.putExtra(BUNDLE_KEY_CODE, getIntent().getStringExtra(BUNDLE_KEY_CODE));
+        startService(serviceIntent);
     }
 
     @Override
