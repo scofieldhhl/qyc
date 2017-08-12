@@ -10,13 +10,21 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.systemteam.BaseActivity;
 import com.systemteam.R;
+import com.systemteam.bean.Car;
 import com.systemteam.service.RouteService;
+import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
+
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
 import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
@@ -28,6 +36,7 @@ public class ActiveActivity extends BaseActivity {
     private LocationReceiver mReceiver;
     private TextView mTvTick;
     private boolean isFinished = false;
+    private Car mCar;
     private static class MyHandler extends Handler {
         private WeakReference<ActiveActivity> mActivity;
 
@@ -71,9 +80,7 @@ public class ActiveActivity extends BaseActivity {
     protected void initData() {
         mReceiver = new LocationReceiver();
         registerBroadcast(ACTION_BROADCAST_ACTIVE, mReceiver);
-        Intent serviceIntent = new Intent(this, RouteService.class);
-        serviceIntent.putExtra(BUNDLE_KEY_CODE, getIntent().getStringExtra(BUNDLE_KEY_CODE));
-        startService(serviceIntent);
+        checkCarExist(getIntent().getStringExtra(BUNDLE_KEY_CODE));
     }
 
     @Override
@@ -118,7 +125,7 @@ public class ActiveActivity extends BaseActivity {
         if(!isFinished){
             toastDialog();
         }else {
-            startService(new Intent(this, RouteService.class));
+            startRouteService(this, mCar);
             isFinished = false;
         }
     }
@@ -143,4 +150,33 @@ public class ActiveActivity extends BaseActivity {
         });
         builder.create().show();
     }
+
+    private void checkCarExist(String carNo) {
+        mProgressHelper.showProgressDialog(getString(R.string.initing));
+        BmobQuery<Car> query = new BmobQuery<>();
+        query.addWhereEqualTo("carNo", carNo);
+        addSubscription(query.findObjects(new FindListener<Car>() {
+
+            @Override
+            public void done(List<Car> object, BmobException e) {
+                mProgressHelper.dismissProgressDialog();
+                if(e==null){
+                    if(object != null && object.size() > 0){
+                        mCar = object.get(0);
+                        startRouteService(ActiveActivity.this, mCar);
+                    }else {
+                        Toast.makeText(ActiveActivity.this, R.string.error_car_no, Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    Toast.makeText(ActiveActivity.this, R.string.initing_fail, Toast.LENGTH_SHORT).show();
+                    if(e instanceof BmobException){
+                        LogTool.e("错误码："+((BmobException)e).getErrorCode()+",错误描述："+((BmobException)e).getMessage());
+                    }else{
+                        LogTool.e("错误描述："+e.getMessage());
+                    }
+                }
+            }
+        }));
+    }
+
 }

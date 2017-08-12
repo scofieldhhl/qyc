@@ -1,5 +1,7 @@
 package com.systemteam.bean;
 
+import com.systemteam.R;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
@@ -16,6 +18,8 @@ import java.util.List;
 public class BikeInfo implements Serializable {
     @Transient
     private static final long serialVersionUID = -758459502806858414L;
+    @Transient
+    Car car;
     @Id
     private Long id;
     private double latitude;//精度
@@ -48,6 +52,17 @@ public class BikeInfo implements Serializable {
         this.name = name;
         this.distance = distance;
         this.time = time;
+    }
+
+    //TODO 计算和当前位置的距离
+    public BikeInfo(Car car){
+        this.car = car;
+        this.latitude = car.getPosition().getLatitude();
+        this.longitude = car.getPosition().getLongitude();
+        this.imgId = R.mipmap.bike_mobai;
+        this.name = car.getCarNo();
+        this.distance = "100米";
+        this.time = "100";
     }
 
 
@@ -262,4 +277,11 @@ public class BikeInfo implements Serializable {
         this.earn = earn;
     }
 
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
+    }
 }

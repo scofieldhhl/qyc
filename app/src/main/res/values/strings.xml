@@ -102,6 +102,7 @@
     <string name="action_detail">使用详情</string>
     <string name="action_preview">上个月</string>
     <string name="action_next">下个月</string>
+    <string name="error_car_no">错误的车牌编号，请重试！</string>
 
     <string name="demo_title_location">demo_title_location</string>
     <string name="demo_desc_location">demo_desc_location</string>

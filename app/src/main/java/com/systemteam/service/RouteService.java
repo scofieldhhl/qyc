@@ -17,7 +17,6 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
-import android.text.TextUtils;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -62,7 +61,7 @@ import rx.subscriptions.CompositeSubscription;
 
 import static com.systemteam.BaseActivity.loge;
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
-import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
+import static com.systemteam.util.Constant.BUNDLE_CAR;
 import static com.systemteam.util.Constant.COST_BASE_DEFAULT;
 import static com.systemteam.util.Constant.EARN_RATE_DEFAULT;
 import static com.systemteam.util.Constant.FORMAT_TIME;
@@ -133,10 +132,18 @@ public class RouteService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         LogTool.d("RouteService--------onStartCommand---------------");
         if(intent != null){
-            String key = intent.getStringExtra(BUNDLE_KEY_CODE);
-            if(key != null && !TextUtils.isEmpty(key)){
-                mCarNo = key;
-                checkCarExist(key);
+            Bundle bundle = intent.getExtras();
+            if(bundle != null){
+                mCar = (Car) bundle.get(BUNDLE_CAR);
+                if(mCar != null){
+                    mCarNo = mCar.getCarNo();
+                }else {
+                    Toast.makeText(this, R.string.error_car_no, Toast.LENGTH_SHORT).show();
+                    return super.onStartCommand(intent, flags, startId);
+                }
+            }else {
+                Toast.makeText(this, R.string.error_car_no, Toast.LENGTH_SHORT).show();
+                return super.onStartCommand(intent, flags, startId);
             }
         }
         mUser = BmobUser.getCurrentUser(MyUser.class);
@@ -163,8 +170,7 @@ public class RouteService extends Service {
     }
 
     private void initLocation() {
-        mIconLocation = BitmapDescriptorFactory
-                .fromResource(R.mipmap.location_marker);
+        mIconLocation = BitmapDescriptorFactory.fromResource(R.mipmap.location_marker);
         locationMode = MyLocationConfiguration.LocationMode.NORMAL;
 
         //定位服务的客户端。宿主程序在客户端声明此类，并调用，目前只支持在主线程中启动
@@ -466,6 +472,7 @@ public class RouteService extends Service {
     private void balance(){
         //1.扣费
         if(mUser == null){
+            LogTool.e("mUser == null");
             return;
         }
         MyUser newUser = new MyUser();
@@ -487,16 +494,25 @@ public class RouteService extends Service {
         }));
         //2.修改car收益
         if(mCar == null){
+            LogTool.e("mCar == null");
             return;
         }
         mEarn = totalPrice * EARN_RATE_DEFAULT;
         Car newCar = new Car();
-        newCar.setIncome(newCar.getIncome() + totalPrice);
-        newCar.setEarn(newCar.getEarn() + mEarn);
+        newCar.setIncome((mCar.getIncome() == null ? 0f : mCar.getIncome()) + totalPrice);
+        newCar.setEarn((mCar.getEarn() == null ? 0f : mCar.getEarn()) + mEarn);
         addSubscription(newCar.update(mCar.getObjectId(), new UpdateListener() {
             @Override
             public void done(BmobException e) {
-
+                LogTool.d("done : ");
+                if(e==null){
+                }else{
+                    if(e instanceof BmobException){
+                        LogTool.e("错误码："+((BmobException)e).getErrorCode()+",错误描述："+((BmobException)e).getMessage());
+                    }else{
+                        LogTool.e("错误描述："+e.getMessage());
+                    }
+                }
             }
         }));
     }
@@ -513,7 +529,11 @@ public class RouteService extends Service {
                         mCar = object.get(0);
                     }
                 }else{
-                    loge(e);
+                    if(e instanceof BmobException){
+                        LogTool.e("错误码："+((BmobException)e).getErrorCode()+",错误描述："+((BmobException)e).getMessage());
+                    }else{
+                        LogTool.e("错误描述："+e.getMessage());
+                    }
                 }
             }
         }));

@@ -42,6 +42,7 @@ public class Constant {
     public static final String  BUNDLE_KEY_ALL_COST = "key_all_cost";
     public static final String  BUNDLE_KEY_BLANACE = "key_balance";
     public static final String  BUNDLE_KEY_AMOUNT = "key_amount";
+    public static final String  BUNDLE_KEY_ISGAMEOVER = "key_isgameover";
     public static final int  REQUEST_IMAGE = 100;
     public static final int  REQUEST_CODE = 101;
 

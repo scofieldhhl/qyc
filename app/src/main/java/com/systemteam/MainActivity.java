@@ -108,7 +108,6 @@ import overlayutil.WalkingRouteOverlay;
 
 import static com.systemteam.bean.BikeInfo.infos;
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
-import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
 import static com.systemteam.util.Constant.DISMISS_SPLASH;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
@@ -175,8 +174,9 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
                     if(list != null && list.size() > 0){
                         List<BikeInfo> listBike = new ArrayList<>();
                         for(Car car : list){//TODO 两层for循环效率低
-                            listBike.add(new BikeInfo(car.getPosition().getLatitude(), car.getPosition().getLongitude(),
-                                    R.mipmap.bike_mobai, car.getCarNo(), "100米", "100"));
+                            if(car != null){
+                                listBike.add(new BikeInfo(car));
+                            }
                         }
                         theActivity.addInfosOverlay(listBike);
                     }
@@ -706,8 +706,8 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
     public void onMenuSlide(float offset) {
         shadowView.setVisibility(offset == 0 ? View.INVISIBLE : View.VISIBLE);
         int alpha = (int) Math.round(offset * 255 * 0.4);
-        String hex = Integer.toHexString(alpha).toUpperCase();
-        LogTool.i("color------------" + "#" + hex + "000000");
+//        String hex = Integer.toHexString(alpha).toUpperCase();
+//        LogTool.i("color------------" + "#" + hex + "000000");
         shadowView.setBackgroundColor(Color.argb(alpha, 0, 0, 0));
     }
 
@@ -749,8 +749,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
             // 位置
             latLng = new LatLng(info.getLatitude(), info.getLongitude());
             // 图标
-            overlayOptions = new MarkerOptions().position(latLng)
-                    .icon(bikeIcon).zIndex(5);
+            overlayOptions = new MarkerOptions().position(latLng).icon(bikeIcon).zIndex(5);
             marker = (Marker) (mBaiduMap.addOverlay(overlayOptions));
             Bundle bundle = new Bundle();
             bundle.putSerializable("info", info);
@@ -778,6 +777,8 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         // 在地图上添加Marker，并显示
         mBaiduMap.addOverlay(options);
         infos.clear();
+        //loading car
+        loadCarlistNear(_latitude, _longitude);
         infos.add(new BikeInfo(_latitude - new Random().nextInt(5) * 0.0005,
                 _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_mobai, "001", "100米", "1分钟"));
         infos.add(new BikeInfo(_latitude - new Random().nextInt(5) * 0.0005,
@@ -791,19 +792,18 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         infos.add(bikeInfo);
         addInfosOverlay(infos);
         initNearestBike(bikeInfo, new LatLng(_latitude - 0.0005, _longitude - 0.0005));
-        //loading car
-        loadCarlistNear(_latitude, _longitude);
     }
 
     private void loadCarlistNear(double _latitude, double _longitude){
+        mProgressHelper.showProgressDialog(getString(R.string.initing));
         BmobQuery<Car> query = new BmobQuery<>();
         query.addWhereNear("position", new BmobGeoPoint(_longitude, _latitude));
         addSubscription(query.findObjects(new FindListener<Car>() {
 
             @Override
             public void done(List<Car> object, BmobException e) {
+                mProgressHelper.dismissProgressDialog();
                 if(e==null){
-                    toast("查询成功:" + object.size());
                     Message msg = mHandler.obtainMessage(Constant.MSG_RESPONSE_SUCCESS);
                     msg.obj = object;
                     msg.sendToTarget();
@@ -863,8 +863,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
 
             LogTool.i("changeLatitude-----startNode--------" + startNodeStr.getLocation().latitude);
             LogTool.i("changeLongitude-----startNode--------" + startNodeStr.getLocation().longitude);
-            mSearch.walkingSearch((new WalkingRoutePlanOption())
-                    .from(startNodeStr).to(endNodeStr));
+            mSearch.walkingSearch((new WalkingRoutePlanOption()).from(startNodeStr).to(endNodeStr));
 
         }
     }
@@ -1051,6 +1050,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         if (CodeUnlockActivity.unlockSuccess || isServiceLive) {
             beginService();
         }
+        //TODO APP首次打开完成任务后，首页不能退出运行模式
         if (RouteDetailActivity.completeRoute)
             backFromRouteDetail();
     }
@@ -1094,11 +1094,17 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
             return;
         }
 
-        Intent intent = new Intent(this, RouteService.class);
         if(bInfo != null){
-            intent.putExtra(BUNDLE_KEY_CODE, bInfo.getName());
+            Car car = bInfo.getCar();
+            if(car == null){//TODO for TEST
+               car = new Car();
+                car.setCarNo(bInfo.getCarNo());
+            }
+            startRouteService(this, car);
+        }else {
+            Toast.makeText(this, R.string.break_car_no, Toast.LENGTH_SHORT).show();
+            return;
         }
-        startService(intent);
         MyLocationConfiguration configuration
                 = new MyLocationConfiguration(locationMode, true, mIconLocation);
         //设置定位图层配置信息，只有先允许定位图层后设置定位图层配置信息才会生

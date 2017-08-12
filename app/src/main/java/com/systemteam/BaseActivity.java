@@ -33,7 +33,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.systemteam.activity.BreakActivity;
 import com.systemteam.activity.WalletActivity;
+import com.systemteam.bean.Car;
 import com.systemteam.bean.MyUser;
+import com.systemteam.service.RouteService;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
@@ -47,6 +49,7 @@ import cn.bmob.v3.exception.BmobException;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
+import static com.systemteam.util.Constant.BUNDLE_CAR;
 import static com.systemteam.util.Constant.COST_BASE_DEFAULT;
 import static com.systemteam.util.Utils.dp2px;
 
@@ -341,5 +344,13 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             Utils.showDialog(context, context.getString(R.string.tip), context.getString(R.string.net_none));
             return Constant.NETWORK_STATUS_NO;
         }
+    }
+
+    protected void startRouteService(Activity activity, Car car){
+        Intent intent = new Intent(activity, RouteService.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(BUNDLE_CAR, car);
+        intent.putExtras(bundle);
+        startService(intent);
     }
 }
