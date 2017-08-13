@@ -2,6 +2,8 @@ package com.systemteam.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,46 +22,65 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.systemteam.R;
+import com.systemteam.bean.Car;
 import com.systemteam.bean.ChartBean;
+import com.systemteam.bean.UseRecord;
+import com.systemteam.util.DateUtil;
 import com.systemteam.util.LogTool;
+import com.systemteam.util.Utils;
 import com.systemteam.view.DayAxisValueFormatter;
 import com.systemteam.view.MyAxisValueFormatter;
 import com.systemteam.view.XYMarkerView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-import static com.systemteam.R.string.detail_month_eran;
-//TODO 车收益统计（天／月），每辆车收益统计
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobDate;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListener;
+
+import static com.systemteam.util.Constant.CYCLE_DAY_CHART;
+import static com.systemteam.util.Constant.MSG_UPDATE_UI;
+import static com.systemteam.util.Constant.REQUEST_KEY_BY_CARNO;
+
+//TODO 解决查询完成后不能及时更新图标 2、部分天数的收益统计查询失败处理
 public class ChartFragment extends DemoBase implements OnChartValueSelectedListener {
-
-    List<Object> routeList;
+    public final String DATE_START = "%s 00:00:00";
+    public final String DATE_END = "%s 23:59:59";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
     private String mParam2;
     protected BarChart mChart;
     private float mMonth = 8f;
+    private Car mCar;
+    private List<ChartBean> mBeanlist;
+    private int mDayOfYear;
 
-    public ChartFragment() {
-    }
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case MSG_UPDATE_UI:
+                    setData(mBeanlist);
+                    break;
+            }
+        }
+    };
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RechargeFragment.
-     */
-    public static ChartFragment newInstance(String param1, String param2) {
-        ChartFragment fragment = new ChartFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public ChartFragment(Car car) {
+        this.mCar = car;
     }
 
     @Override
@@ -85,6 +106,11 @@ public class ChartFragment extends DemoBase implements OnChartValueSelectedListe
         super.onResume();
     }
 
+    @Override
+    public void onActivityCreated(final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        initData();
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -168,15 +194,7 @@ public class ChartFragment extends DemoBase implements OnChartValueSelectedListe
         mChart.setMarker(mv); // Set the marker to the chart
 
 //        setData(12, 50);
-        List<ChartBean> list = new ArrayList<>();
-        int dayMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        int dayOfYear = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
-        LogTool.d("dayOfYear :" + dayOfYear + "  DayofMonth : " + dayMonth);
-        for(int i = 0; i < dayMonth; i++){
 
-            list.add(new ChartBean((dayOfYear - i), i));
-        }
-        setData(list);
 
         /*// setting data
         mSeekBarY.setProgress(50);
@@ -190,6 +208,14 @@ public class ChartFragment extends DemoBase implements OnChartValueSelectedListe
 
     @Override
     protected void initData() {
+        mBeanlist = new ArrayList<>();
+        int dayMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        mDayOfYear = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+        LogTool.d("dayOfYear :" + mDayOfYear + "  DayofMonth : " + dayMonth);
+        mProgressHelper.showProgressDialog(getString(R.string.initing));
+        for(int i = 0; i < CYCLE_DAY_CHART; i++){
+            requestEarnByDay((0 - i - 1));
+        }
     }
 
     @Override
@@ -209,50 +235,6 @@ public class ChartFragment extends DemoBase implements OnChartValueSelectedListe
 
     }
 
-    private void setData(int count, float range) {
-
-        float start = 1f;
-
-        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
-
-        for (int i = (int) start; i < start + count + 1; i++) {
-            float mult = (range + 1);
-            float val = (float) (Math.random() * mult);
-
-            if (Math.random() * 100 < 25) {
-                yVals1.add(new BarEntry(i, val, getResources().getDrawable(R.drawable.ic_country_blue_24dp)));
-            } else {
-                yVals1.add(new BarEntry(i, val));
-            }
-        }
-
-        BarDataSet set1;
-
-        if (mChart.getData() != null &&
-                mChart.getData().getDataSetCount() > 0) {
-            set1 = (BarDataSet) mChart.getData().getDataSetByIndex(0);
-            set1.setValues(yVals1);
-            mChart.getData().notifyDataChanged();
-            mChart.notifyDataSetChanged();
-        } else {
-            set1 = new BarDataSet(yVals1, "The year 2017");
-
-            set1.setDrawIcons(false);
-
-            set1.setColors(ColorTemplate.MATERIAL_COLORS);
-
-            ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
-            dataSets.add(set1);
-
-            BarData data = new BarData(dataSets);
-            data.setValueTextSize(10f);
-            data.setValueTypeface(mTfLight);
-            data.setBarWidth(0.9f);
-
-            mChart.setData(data);
-        }
-    }
-
     private void setData(List<ChartBean> list) {
 
         ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
@@ -270,7 +252,7 @@ public class ChartFragment extends DemoBase implements OnChartValueSelectedListe
             mChart.getData().notifyDataChanged();
             mChart.notifyDataSetChanged();
         } else {
-            set1 = new BarDataSet(yVals1, getString(detail_month_eran, (int)mMonth));
+            set1 = new BarDataSet(yVals1, getString(R.string.detail_month_eran, (int)CYCLE_DAY_CHART));
 
             set1.setDrawIcons(false);
 
@@ -286,5 +268,86 @@ public class ChartFragment extends DemoBase implements OnChartValueSelectedListe
 
             mChart.setData(data);
         }
+    }
+
+    private void requestEarnByDay(final int day){
+        BmobQuery<UseRecord> query = new BmobQuery<>();
+        List<BmobQuery<UseRecord>> and = new ArrayList<>();
+        //大于00：00：00
+        BmobQuery<UseRecord> q1 = new BmobQuery<>();
+//        String start = "2017-08-12 00:00:00";
+        String strDate = DateUtil.getSomeDay(new Date(), day);
+        LogTool.d("strDate : " + strDate);
+        String start = String.format(Locale.US, DATE_START, strDate);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date  = null;
+        try {
+            date = sdf.parse(start);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        q1.addWhereGreaterThanOrEqualTo("createdAt",new BmobDate(date));
+        and.add(q1);
+        //小于23：59：59
+        BmobQuery<UseRecord> q2 = new BmobQuery<>();
+//        String end = "2017-08-12 23:59:59";
+        String end = String.format(Locale.US, DATE_END, strDate);
+        Date date1  = null;
+        try {
+            date1 = sdf.parse(end);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        q2.addWhereEqualTo(REQUEST_KEY_BY_CARNO, mCar.getCarNo());
+        q2.addWhereLessThanOrEqualTo("createdAt",new BmobDate(date1));
+        and.add(q2);
+        //添加复合与查询
+        query.and(and);
+        query.addWhereEqualTo(REQUEST_KEY_BY_CARNO, mCar.getCarNo());
+        /*addSubscription(query.findObjects(new FindListener<UseRecord>() {
+            @Override
+            public void done(List<UseRecord> object, BmobException e) {
+                if(e==null){
+                    LogTool.d("object：" + object.size());
+                }else{
+                    LogTool.e("失败："+e.getMessage()+","+e.getErrorCode());
+                }
+            }
+        }));*/
+        query.sum(new String[] { "earn" });
+        addSubscription(query.findStatistics(UseRecord.class,new QueryListener<JSONArray>() {
+
+            @Override
+            public void done(JSONArray ary, BmobException e) {
+                float earnDay = 0f;
+                ChartBean bean = new ChartBean((mDayOfYear + day + 1), earnDay);
+                if(e==null){
+                    if(ary!=null){//
+                        try {
+                            JSONObject obj = ary.getJSONObject(0);
+                            LogTool.d(obj.toString());
+                            double value = Double.valueOf(obj.getString("_sumEarn"));//_(关键字)+首字母大写的列名
+                            LogTool.d("value : " + value);
+                            earnDay = Utils.formatDouble2(value);
+                            LogTool.d("reuslt : " + earnDay);
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+                    }else{
+                        earnDay = 0;
+                    }
+                    LogTool.e("done："+ earnDay);
+                }else{
+                    LogTool.e("失败："+e.getMessage()+","+e.getErrorCode());
+                }
+                bean.value = earnDay;
+                mBeanlist.add(bean);
+                if((day + CYCLE_DAY_CHART) == 0){
+                    mProgressHelper.dismissProgressDialog();
+                    setData(mBeanlist);
+                    mHandler.sendEmptyMessage(MSG_UPDATE_UI);
+                }
+            }
+        }));
     }
 }

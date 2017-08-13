@@ -12,10 +12,6 @@ import com.systemteam.util.Constant;
 
 import java.util.List;
 
-/**
- * Created by gaolei on 17/1/18.
- */
-
 public class MyCarAdapter extends BaseAdapter {
     public MyCarAdapter(Context context, List<Object> list) {
         this.context = context;
@@ -68,8 +64,8 @@ public class MyCarAdapter extends BaseAdapter {
             case TYPE_CONTENT:
                 Car Car= (Car) list.get(position);
                 holder.bike_time.setText(Car.getCarNo());
-                holder.bike_distance.setText(String.valueOf(Car.getEarn() == null ? 0.0 : Car.getEarn()));
-                holder.bike_price.setText(String.valueOf(Car.getStatus() == null ? 0 : Car.getStatus()));
+                holder.bike_distance.setText(context.getString(R.string.earn_format,
+                        Car.getEarn() == null ? 0.0 : Car.getEarn()));
                 if(Car.getStatus() == null){
                     holder.bike_price.setText(context.getString(R.string.status_normal));
                 }else {

@@ -10,6 +10,7 @@ public class Constant {
     public static final float COST_BASE_DEFAULT = 1.0f;
     public static final long TIME_ONCE_ACTIVE = 3 * 60 * 1000;
     public static int COUPON_DEFAULT = 3;
+    public static int CYCLE_DAY_CHART = 15;
 
     public static final int STATUS_NORMAL = 0;
     public static final int BREAK_STATUS_LOCK = -1;

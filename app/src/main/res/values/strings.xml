@@ -103,6 +103,7 @@
     <string name="action_preview">上个月</string>
     <string name="action_next">下个月</string>
     <string name="error_car_no">错误的车牌编号，请重试！</string>
+    <string name="earn_format" formatted="false">%.2f</string>
 
     <string name="demo_title_location">demo_title_location</string>
     <string name="demo_desc_location">demo_desc_location</string>
@@ -349,7 +350,7 @@
     <string name="detail_cost">消费明细</string>
     <string name="detail_car_title">详情</string>
 
-    <string name="detail_month_eran" formatted="false">%d月日收益一览</string>
+    <string name="detail_month_eran" formatted="false">近%d日日收益一览</string>
     <!--detail-->
 
     <!--withdraw-->

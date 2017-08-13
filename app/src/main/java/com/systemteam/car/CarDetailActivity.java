@@ -21,6 +21,7 @@ import com.systemteam.bean.Car;
 import com.systemteam.bean.UseRecord;
 import com.systemteam.fragment.ChartFragment;
 import com.systemteam.util.Constant;
+import com.systemteam.util.LogTool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,19 +67,19 @@ public class CarDetailActivity extends BaseActivity implements MyCarAdapter.OnIt
                         if(isChartShow){
                             mLayoutChart.setVisibility(View.VISIBLE);
                             if(mChartFragment == null){
-                                mChartFragment = new ChartFragment();
+                                mChartFragment = new ChartFragment(mCar);
                             }
                             getSupportFragmentManager().beginTransaction()
                                     .replace(R.id.ll_content, mChartFragment)
                                     .commit();
                             item.setTitle(R.string.action_detail);
-                            mMenu.getItem(1).setVisible(true);
-                            mMenu.getItem(2).setVisible(true);
+                            /*mMenu.getItem(1).setVisible(true);
+                            mMenu.getItem(2).setVisible(true);*/
                         }else {
                             mLayoutChart.setVisibility(View.GONE);
                             item.setTitle(R.string.action_chart);
-                            mMenu.getItem(1).setVisible(false);
-                            mMenu.getItem(2).setVisible(false);
+                            /*mMenu.getItem(1).setVisible(false);
+                            mMenu.getItem(2).setVisible(false);*/
                         }
                         //判断当前屏幕方向
                         if(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
@@ -103,6 +104,12 @@ public class CarDetailActivity extends BaseActivity implements MyCarAdapter.OnIt
         if(intent != null){
             Bundle bundle = intent.getExtras();
             mCar = (Car) bundle.getSerializable(Constant.BUNDLE_CAR);
+            if(mCar != null){
+                initList();
+                LogTool.d("mcar : " + mCar.getCarNo());
+            }else {
+                LogTool.e("mcar == null");
+            }
         }
 
         routeRecyclerView = (XRecyclerView) findViewById(R.id.recyclerview_route);
@@ -147,9 +154,6 @@ public class CarDetailActivity extends BaseActivity implements MyCarAdapter.OnIt
         super.onResume();
         if(routeList != null){
             routeList.clear();
-        }
-        if(mCar != null){
-            initList();
         }
     }
 

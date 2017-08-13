@@ -28,6 +28,8 @@ import android.widget.TextView;
 import com.systemteam.R;
 import com.systemteam.custom.SelectDialog;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -342,5 +344,11 @@ public class Utils {
             LogTool.d("判断day2 - day1 : " + (day2 - day1));
             return day2 - day1;
         }
+    }
+
+    public static float formatDouble2(double d) {
+        // 新方法，如果不需要四舍五入，可以使用RoundingMode.DOWN
+        BigDecimal bg = new BigDecimal(d).setScale(2, RoundingMode.UP);
+        return bg.floatValue();
     }
 }
