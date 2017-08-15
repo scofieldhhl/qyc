@@ -187,7 +187,7 @@ public class Utils {
      * @param context
      * @return true 表示开启
      */
-    public static final boolean isGpsOPen(final Context context) {
+    public static boolean isGpsOPen(final Context context) {
         LocationManager locationManager
                 = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         // 通过GPS卫星定位，定位级别可以精确到街（通过24颗卫星定位，在室外和空旷的地方定位准确、速度快）
@@ -204,7 +204,7 @@ public class Utils {
      * 强制帮用户打开GPS
      * @param context
      */
-    public static final void openGPS(Context context) {
+    public static void openGPS(Context context) {
         Intent GPSIntent = new Intent();
         GPSIntent.setClassName("com.android.settings",
                 "com.android.settings.widget.SettingsAppWidgetProvider");

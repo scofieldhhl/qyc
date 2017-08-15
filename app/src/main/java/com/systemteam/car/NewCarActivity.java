@@ -121,7 +121,7 @@ public class NewCarActivity extends BaseActivity {
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true); // 打开gps
         option.setCoorType("bd09ll"); // 设置坐标类型
-        option.setScanSpan(1000);//设置onReceiveLocation()获取位置的频率
+        option.setScanSpan(Constant.MAP_SCAN_SPAN);//设置onReceiveLocation()获取位置的频率
         option.setIsNeedAddress(true);//如想获得具体位置就需要设置为true
         mlocationClient.setLocOption(option);
         mlocationClient.start();

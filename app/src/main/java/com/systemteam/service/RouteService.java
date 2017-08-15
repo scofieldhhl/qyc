@@ -41,6 +41,7 @@ import com.systemteam.bean.UseRecord;
 import com.systemteam.callback.AllInterface;
 import com.systemteam.database.db.DBManager;
 import com.systemteam.map.MyOrientationListener;
+import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
 import com.systemteam.welcome.WelcomeActivity;
@@ -187,14 +188,12 @@ public class RouteService extends Service {
         //设置是否打开gps进行定位
         mOption.setOpenGps(true);
         //设置扫描间隔，单位是毫秒 当<1000(1s)时，定时定位无效
-        int span = 10000;
-        mOption.setScanSpan(span);
+        mOption.setScanSpan(Constant.MAP_SCAN_SPAN);
         //设置 LocationClientOption
         mlocationClient.setLocOption(mOption);
 
         //初始化图标,BitmapDescriptorFactory是bitmap 描述信息工厂类.
-        mIconLocation = BitmapDescriptorFactory
-                .fromResource(R.mipmap.location_marker);
+        mIconLocation = BitmapDescriptorFactory.fromResource(R.mipmap.location_marker);
 
         myOrientationListener = new MyOrientationListener(this);
         //通过接口回调来实现实时方向的改变

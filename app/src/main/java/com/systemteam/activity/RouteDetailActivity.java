@@ -31,6 +31,8 @@ import com.systemteam.bean.RoutePoint;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.systemteam.util.Constant.MAP_SCAN_SPAN;
+
 
 /**
  * Created by gaolei on 16/12/29.
@@ -69,8 +71,7 @@ public class RouteDetailActivity extends BaseActivity {
         //设置是否打开gps进行定位
         mOption.setOpenGps(true);
         //设置扫描间隔，单位是毫秒 当<1000(1s)时，定时定位无效
-        int span = 10000;
-        mOption.setScanSpan(span);
+        mOption.setScanSpan(MAP_SCAN_SPAN);
         //设置 LocationClientOption
         mlocationClient.setLocOption(mOption);
         if (!mlocationClient.isStarted()) {

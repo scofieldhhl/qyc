@@ -14,6 +14,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
@@ -182,8 +183,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         if (titleId == 0) {
             mToolbarTitle.setText("");
         } else {
-            int titleColor = act.getResources().getColor(R.color.white);
-            mToolbarTitle.setTextColor(titleColor);
+            mToolbarTitle.setTextColor(ContextCompat.getColor(act, R.color.white));
             mToolbarTitle.setText(titleId);
         }
 

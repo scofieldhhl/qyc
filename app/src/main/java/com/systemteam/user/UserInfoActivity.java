@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -147,7 +148,7 @@ public class UserInfoActivity extends BaseActivity {
             String strApply =  getString(R.string.merchant_apply);
             SpannableString mMoreFeatrue = new SpannableString(strApply);
             mMoreFeatrue.setSpan(new UnderlineSpan(), 0, strApply.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            mMoreFeatrue.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.common_blue_main)),
+            mMoreFeatrue.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.common_blue_main)),
                     0, strApply.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             mTvApply.setText(mMoreFeatrue);
         }
@@ -206,7 +207,7 @@ public class UserInfoActivity extends BaseActivity {
     }
 
     public void doSelectPicture(View view){
-        MultiImageSelector.create(mContext)
+        MultiImageSelector.create()
                 .showCamera(true)
                 .count(1)
                 .single()

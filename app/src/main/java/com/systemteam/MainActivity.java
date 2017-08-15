@@ -109,6 +109,7 @@ import overlayutil.WalkingRouteOverlay;
 import static com.systemteam.bean.BikeInfo.infos;
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
 import static com.systemteam.util.Constant.DISMISS_SPLASH;
+import static com.systemteam.util.Constant.MAP_SCAN_SPAN;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 //TODO 1、计算距离 2、结束使用后，界面没有退回到定位全部车辆的界面
@@ -259,7 +260,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         /*LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true); // 打开gps
         option.setCoorType("bd09ll"); // 设置坐标类型
-        option.setScanSpan(5000);//设置onReceiveLocation()获取位置的频率
+        option.setScanSpan(MAP_SCAN_SPAN);//设置onReceiveLocation()获取位置的频率
         option.setIsNeedAddress(true);//如想获得具体位置就需要设置为true
         mlocationClient.setLocOption(option);*/
         initLocation();
@@ -289,8 +290,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         option.setCoorType("bd09ll");
         //可选，默认gcj02，设置返回的定位结果坐标系
 
-        int span = 1000;
-        option.setScanSpan(span);
+        option.setScanSpan(MAP_SCAN_SPAN);
         //可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
 
         option.setIsNeedAddress(true);
@@ -346,7 +346,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
             LocationManager.getInstance().setCurrentLL(currentLL);
             LocationManager.getInstance().setAddress(bdLocation.getAddrStr());
             startNodeStr = PlanNode.withLocation(currentLL);
-            //option.setScanSpan(5000)，每隔5000ms这个方法就会调用一次，而有些我们只想调用一次，所以要判断一下isFirstLoc
+            //option.setScanSpan(MAP_SCAN_SPAN)，每隔10000ms这个方法就会调用一次，而有些我们只想调用一次，所以要判断一下isFirstLoc
             if (isFirstLoc) {
                 isFirstLoc = false;
                 LatLng ll = new LatLng(bdLocation.getLatitude(),
@@ -958,7 +958,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
 
     // 响应DLg中的List item 点击
     interface OnItemInDlgClickListener {
-        public void onItemClick(int position);
+        void onItemClick(int position);
     }
 
     private class MyWalkingRouteOverlay extends WalkingRouteOverlay {

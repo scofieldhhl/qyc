@@ -33,7 +33,6 @@ public class SettingActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        initToolBar(this, R.string.setting);
         mSettingFragment = new SettingsFragment();
         mType = getIntent().getIntExtra(BUNDLE_TYPE_MENU, -1);
         switch (mType){
@@ -41,11 +40,13 @@ public class SettingActivity extends BaseActivity implements
                 getFragmentManager().beginTransaction()
                         .replace(R.id.ll_content, mSettingFragment)
                         .commit();
+                initToolBar(this, R.string.setting);
                 break;
             case 1:
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.ll_content, new GuideFragment())
                         .commit();
+                initToolBar(this, R.string.guide);
                 break;
             default:
                 break;

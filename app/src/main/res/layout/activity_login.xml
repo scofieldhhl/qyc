@@ -27,7 +27,6 @@
             android:id="@+id/splash_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:layout_marginLeft="24dp"
             android:src="@drawable/btn_blue_48dp" />
 

@@ -349,7 +349,7 @@ public class XRecyclerView extends RecyclerView {
         public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
             mWrapAdapter.notifyItemMoved(fromPosition, toPosition);
         }
-    };
+    }
 
     private class WrapAdapter extends Adapter<ViewHolder> {
 
