@@ -16,7 +16,7 @@ public class Constant {
     public static final int BREAK_STATUS_LOCK = -1;
     public static final int BREAK_STATUS = -2;
 
-    public static final int QUERY_LIMIT_DEFAULT = 15;
+    public static final int QUERY_LIMIT_DEFAULT = 10;
     public static int WITHDRAW_DAYS_DEFAULT = 15;
     public static float WITHDRAW_AMOUNT_DEFAULT = 300f;
     public static final int WITHDRAW_SUCCESS = 10;

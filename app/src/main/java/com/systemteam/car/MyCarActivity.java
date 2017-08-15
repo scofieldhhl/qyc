@@ -93,7 +93,8 @@ public class MyCarActivity extends BaseActivity
         routeRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
         routeRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallScale);
         routeRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
-        routeRecyclerView.setPullRefreshEnabled(false);
+        routeRecyclerView.setPullRefreshEnabled(true);
+        routeRecyclerView.setLoadingMoreEnabled(true);
 //        View header = LayoutInflater.from(this).inflate(R.layout.recyclerview_header,
 //                (ViewGroup)findViewById(android.R.id.content),false);
 //        routeRecyclerView.addHeaderView(header);

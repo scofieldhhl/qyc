@@ -39,7 +39,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     protected InputMethodManager mImm;
     private CompositeSubscription mCompositeSubscription;
     protected ProgressDialogHelper mProgressHelper;
-
+    protected int mPage = 0;    //分页页码
 
     /**
      * 解决Subscription内存泄露问题
