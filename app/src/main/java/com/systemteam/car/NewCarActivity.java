@@ -269,7 +269,7 @@ public class NewCarActivity extends BaseActivity {
                     bdLocation.getLongitude());
             MapStatus.Builder builder = new MapStatus.Builder();
             //地图缩放比设置为18
-            builder.target(ll).zoom(Constant.SCALING_MAP);
+            builder.target(ll).zoom(Constant.MAP_SCALING);
             mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
         }
     }

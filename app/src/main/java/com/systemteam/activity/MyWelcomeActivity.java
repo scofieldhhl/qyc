@@ -17,7 +17,8 @@ public class MyWelcomeActivity extends WelcomeActivity {
                 .defaultTitleTypefacePath("Montserrat-Bold.ttf")
                 .defaultHeaderTypefacePath("Montserrat-Bold.ttf")
 
-                .page(new BasicPage(R.drawable.ic_front_desk_white,
+//                .page(new BasicPage(R.drawable.ic_front_desk_white,
+                .page(new BasicPage(R.drawable.welcome1,
                         getString(R.string.welcome_title1),
                         getString(R.string.welcome_decr1))
                         .background(R.color.orange_background)

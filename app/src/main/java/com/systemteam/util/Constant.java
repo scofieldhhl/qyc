@@ -11,7 +11,6 @@ public class Constant {
     public static final long TIME_ONCE_ACTIVE = 3 * 60 * 1000;
     public static int COUPON_DEFAULT = 3;
     public static int CYCLE_DAY_CHART = 15;
-    public static final int MAP_SCAN_SPAN = 10 * 1000;//设置地图扫描间隔，单位是毫秒
 
     public static final int STATUS_NORMAL = 0;
     public static final int BREAK_STATUS_LOCK = -1;
@@ -25,26 +24,27 @@ public class Constant {
 
     public static final int USER_TYPE_NORMAL = 0;
     public static final int USER_TYPE_CUSTOMER = 1;
-    public static final int USER_TYPE_APPLYING = -1;
+    public static final int USER_TYPE_APPLYING = -1;    //申请成为商户
     public static final int USER_TYPE_EXPERTER = 2;
-
-    public static final float SCALING_MAP = 18.0f;
-
+    //map
+    public static final int MAP_SCAN_SPAN = 10 * 1000;  //设置地图扫描间隔，单位是毫秒
+    public static final float MAP_SCALING = 18.0f;      ////地图缩放比设置为18
+    //map
     public static final String REQUEST_KEY_BY_USER = "author";
     public static final String REQUEST_KEY_BY_CAR = "car";
     public static final String REQUEST_KEY_BY_CARNO = "carNo";
     public static final String TIME_ONCE_ACTIVE_STR = "03 : 00";
-    public static final String  BUNDLE_CAR = "key_car";
-    public static final String  BUNDLE_USER = "key_user";
-    public static final String  BUNDLE_TYPE_MENU = "key_type";
-    public static final String  BUNDLE_KEY_CODE = "key_code";
-    public static final String  BUNDLE_KEY_UNLOCK = "key_unlock";
-    public static final String  BUNDLE_KEY_ALL_EARN = "key_all_earn";
-    public static final String  BUNDLE_KEY_ALL_WITHDRAW = "key_all_withdraw";
-    public static final String  BUNDLE_KEY_ALL_COST = "key_all_cost";
-    public static final String  BUNDLE_KEY_BLANACE = "key_balance";
-    public static final String  BUNDLE_KEY_AMOUNT = "key_amount";
-    public static final String  BUNDLE_KEY_ISGAMEOVER = "key_isgameover";
+    public static final String BUNDLE_CAR = "key_car";
+    public static final String BUNDLE_USER = "key_user";
+    public static final String BUNDLE_TYPE_MENU = "key_type";
+    public static final String BUNDLE_KEY_CODE = "key_code";
+    public static final String BUNDLE_KEY_UNLOCK = "key_unlock";
+    public static final String BUNDLE_KEY_ALL_EARN = "key_all_earn";
+    public static final String BUNDLE_KEY_ALL_WITHDRAW = "key_all_withdraw";
+    public static final String BUNDLE_KEY_ALL_COST = "key_all_cost";
+    public static final String BUNDLE_KEY_BLANACE = "key_balance";
+    public static final String BUNDLE_KEY_AMOUNT = "key_amount";
+    public static final String BUNDLE_KEY_ISGAMEOVER = "key_isgameover";
     public static final int  REQUEST_IMAGE = 100;
     public static final int  REQUEST_CODE = 101;
 

@@ -19,7 +19,8 @@
     <style name="AppTheme.splash">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowBackground">@mipmap/splash_img</item>
+        <!--<item name="android:windowBackground">@mipmap/splash_img</item>-->
+        <item name="android:windowBackground">@drawable/splash_img</item>
     </style>
 
     <style name="text_style">

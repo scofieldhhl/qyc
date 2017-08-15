@@ -17,7 +17,11 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
@@ -114,7 +118,7 @@ import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 //TODO 1、计算距离 2、结束使用后，界面没有退回到定位全部车辆的界面
 public class MainActivity extends BaseActivity implements OnGetRoutePlanResultListener,
-        AllInterface.OnMenuSlideListener {
+        AllInterface.OnMenuSlideListener, NavigationView.OnNavigationItemSelectedListener{
 
     private double currentLatitude, currentLongitude, changeLatitude, changeLongitude;
     private ImageView splash_img, btn_locale, btn_refresh, mIvScan;
@@ -152,6 +156,31 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
     private BaiduMap mBaiduMap;
     private float mCurrentX;
     private boolean isFirstLoc = true; // 是否首次定位
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+            gotoWallet(null);
+        } else if (id == R.id.nav_gallery) {
+            gotoMycar(null);
+        } else if (id == R.id.nav_slideshow) {
+            gotoMyRoute(null);
+        } else if (id == R.id.nav_manage) {
+            gotoGuide(null);
+        } else if (id == R.id.nav_share) {
+            gotoSetting(null);
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.id_drawerlayout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 
     private static class MyHandler extends Handler {
         private WeakReference<MainActivity> mActivity;
@@ -208,15 +237,6 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         isServiceLive = Utils.isServiceWork(this, getPackageName() + ".service.RouteService");
         if (isServiceLive)
             beginService();
-
-        FragmentManager fm = getSupportFragmentManager();
-        mMenuFragment = (LeftMenuFragment) fm.findFragmentById(R.id.id_container_menu);
-        mLeftDrawerLayout.setOnMenuSlideListener(this);
-
-        if (mMenuFragment == null) {
-            fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment =
-                    LeftMenuFragment.newInstance(mUser)).commit();
-        }
     }
 
     protected void initToolBar(Activity act, int titleId) {
@@ -266,8 +286,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         initLocation();
         mlocationClient.start();
         mCurrentMode = MyLocationConfiguration.LocationMode.FOLLOWING;
-        mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
-                mCurrentMode, true, null));
+        mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(mCurrentMode, true, null));
         myOrientationListener = new MyOrientationListener(this);
         //通过接口回调来实现实时方向的改变
         myOrientationListener.setOnOrientationListener(new MyOrientationListener.OnOrientationListener() {
@@ -349,11 +368,10 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
             //option.setScanSpan(MAP_SCAN_SPAN)，每隔10000ms这个方法就会调用一次，而有些我们只想调用一次，所以要判断一下isFirstLoc
             if (isFirstLoc) {
                 isFirstLoc = false;
-                LatLng ll = new LatLng(bdLocation.getLatitude(),
-                        bdLocation.getLongitude());
+                LatLng ll = new LatLng(bdLocation.getLatitude(), bdLocation.getLongitude());
                 MapStatus.Builder builder = new MapStatus.Builder();
                 //地图缩放比设置为18
-                builder.target(ll).zoom(Constant.SCALING_MAP);
+                builder.target(ll).zoom(Constant.MAP_SCALING);
                 mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
                 changeLatitude = bdLocation.getLatitude();
                 changeLongitude = bdLocation.getLongitude();
@@ -502,7 +520,26 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         book_countdown = (TextView) findViewById(R.id.book_countdown);
         prompt = (TextView) findViewById(R.id.prompt);
         cancel_book = (TextView) findViewById(R.id.cancel_book);
+        //侧滑栏
         mLeftDrawerLayout = (LeftDrawerLayout) findViewById(R.id.id_drawerlayout);
+        FragmentManager fm = getSupportFragmentManager();
+        mMenuFragment = (LeftMenuFragment) fm.findFragmentById(R.id.id_container_menu);
+        mLeftDrawerLayout.setOnMenuSlideListener(this);
+
+        if (mMenuFragment == null) {
+            fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment =
+                    LeftMenuFragment.newInstance(mUser)).commit();
+        }
+
+        /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.id_drawerlayout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);*/
+
         shadowView = (View) findViewById(R.id.shadow);
         bike_sound.setOnClickListener(this);
         shadowView.setOnClickListener(this);
@@ -612,7 +649,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
             routeOverlay.removeFromMap();
         MapStatus.Builder builder = new MapStatus.Builder();
         //地图缩放比设置为18
-        builder.target(currentLL).zoom(Constant.SCALING_MAP);
+        builder.target(currentLL).zoom(Constant.MAP_SCALING);
         mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
     }
 
