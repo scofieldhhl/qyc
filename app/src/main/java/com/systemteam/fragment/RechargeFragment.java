@@ -2,16 +2,12 @@ package com.systemteam.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.jcodecraeer.xrecyclerview.ProgressStyle;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.systemteam.R;
 import com.systemteam.adapter.MyCashRecordAdapter;
-import com.systemteam.adapter.MyRouteDividerDecoration;
 import com.systemteam.bean.CashRecord;
 import com.systemteam.bean.MyUser;
 
@@ -23,21 +19,16 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
-import static com.systemteam.BaseActivity.loge;
 import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
 
-public class RechargeFragment extends BaseFragment{
+public class RechargeFragment extends BaseListFragment{
 
-    XRecyclerView routeRecyclerView;
-    MyCashRecordAdapter routeAdapter;
-    List<Object> routeList;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
     private String mParam2;
 
-    public RechargeFragment() {
-    }
+    public RechargeFragment() {}
 
     /**
      * Use this factory method to create a new instance of
@@ -99,11 +90,17 @@ public class RechargeFragment extends BaseFragment{
     @Override
     protected void initView(View view) {
         initRecyclerview(view);
+        routeList = new ArrayList<>();
+        routeAdapter = new MyCashRecordAdapter(mContext, routeList);
+        routeAdapter.setOnClickListener(this);
+        routeAdapter.setOnLongClickListener(this);
+        routeRecyclerView.setAdapter(routeAdapter);
     }
 
     @Override
     protected void initData() {
-        initDataList();
+        mPage = 0;
+        initDataList(mPage);
     }
 
     @Override
@@ -111,63 +108,30 @@ public class RechargeFragment extends BaseFragment{
 
     }
 
-    private void initRecyclerview(View view){
-        routeRecyclerView = (XRecyclerView) view.findViewById(R.id.recyclerview_route);
-//        no_route = (TextView) findViewById(R.id.no_route);
-        routeRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        routeList = new ArrayList<>();
-        routeAdapter = new MyCashRecordAdapter(mContext, routeList);
-//        routeAdapter.setOnClickListener(mContext);
-//        routeAdapter.setOnLongClickListener(mContext);
-        routeRecyclerView.setAdapter(routeAdapter);
-        routeRecyclerView.addItemDecoration(new MyRouteDividerDecoration(1));
-
-        routeRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
-        routeRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallScale);
-        routeRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
-        routeRecyclerView.setPullRefreshEnabled(false);
-//        View header = LayoutInflater.from(this).inflate(R.layout.recyclerview_header,
-//                (ViewGroup)findViewById(android.R.id.content),false);
-//        routeRecyclerView.addHeaderView(header);
-
-        routeRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
-            @Override
-            public void onRefresh() {
-//                Toast.makeText(MyRouteActivity.this, "onRefresh", Toast.LENGTH_SHORT).show();
-                routeRecyclerView.refreshComplete();
-            }
-
-            @Override
-            public void onLoadMore() {
-//                Toast.makeText(MyRouteActivity.this, "onLoadMore", Toast.LENGTH_SHORT).show();
-                routeRecyclerView.loadMoreComplete();
-                routeAdapter.notifyDataSetChanged();
-            }
-        });
-    }
-
-    private void initDataList() {
-        mProgressHelper.showProgressDialog(getString(R.string.initing));
+    @Override
+    protected void initDataList(final int page) {
+        if(page == 0)
+            mProgressHelper.showProgressDialog(getString(R.string.initing));
         MyUser user = BmobUser.getCurrentUser(MyUser.class);
         BmobQuery<CashRecord> query = new BmobQuery<>();
         query.addWhereEqualTo(REQUEST_KEY_BY_USER, user.getObjectId());
+        initQueryByPage(query, page);
         addSubscription(query.findObjects(new FindListener<CashRecord>() {
 
             @Override
             public void done(List<CashRecord> object, BmobException e) {
-                mProgressHelper.dismissProgressDialog();
-                if(e==null){
-                    routeList.clear();
-                    if(object != null && object.size() > 0){
-                        routeList.add("");
-                        routeList.addAll(object);
-                    }
-                    routeAdapter.notifyDataSetChanged();
-                }else{
-                    toast(mContext, mContext.getString(R.string.initing_fail));
-                    loge(e);
-                }
+                onResponse(object, e, page);
             }
         }));
+    }
+
+    @Override
+    public void onItemClick(View v, int position) {
+
+    }
+
+    @Override
+    public void onItemLongClick(View v, int position) {
+
     }
 }
