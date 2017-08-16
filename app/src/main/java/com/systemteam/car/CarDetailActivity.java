@@ -3,20 +3,15 @@ package com.systemteam.car;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.jcodecraeer.xrecyclerview.ProgressStyle;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
-import com.systemteam.BaseActivity;
 import com.systemteam.R;
-import com.systemteam.adapter.MyCarAdapter;
+import com.systemteam.activity.BaseListActivity;
 import com.systemteam.adapter.MyRouteAdapter;
-import com.systemteam.adapter.MyRouteDividerDecoration;
 import com.systemteam.bean.Car;
 import com.systemteam.bean.UseRecord;
 import com.systemteam.fragment.ChartFragment;
@@ -31,15 +26,11 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 
-import static com.systemteam.util.Constant.QUERY_LIMIT_DEFAULT;
 import static com.systemteam.util.Constant.REQUEST_KEY_BY_CARNO;
 
-//TODO 车辆信息管理，车收益统计（天／月），每辆车收益统计
-public class CarDetailActivity extends BaseActivity implements MyCarAdapter.OnItemClickListener,
-        MyCarAdapter.OnItemLongClickListener{
-    XRecyclerView routeRecyclerView;
-    MyRouteAdapter routeAdapter;
-    List<Object> routeList;
+//TODO 首次进入无法显示详情列表
+public class CarDetailActivity extends BaseListActivity {
+
     private boolean isChartShow = false;
     private Car mCar;
     FrameLayout mLayoutChart;
@@ -96,6 +87,13 @@ public class CarDetailActivity extends BaseActivity implements MyCarAdapter.OnIt
         });
         mLayoutChart = (FrameLayout) findViewById(R.id.ll_content);
         mLayoutChart.setVisibility(View.GONE);
+
+        initRecyclerview();
+        routeList = new ArrayList<>();
+        routeAdapter = new MyRouteAdapter(mContext, routeList);
+        routeAdapter.setOnClickListener(this);
+        routeAdapter.setOnLongClickListener(this);
+        routeRecyclerView.setAdapter(routeAdapter);
     }
 
     @Override
@@ -105,56 +103,19 @@ public class CarDetailActivity extends BaseActivity implements MyCarAdapter.OnIt
             Bundle bundle = intent.getExtras();
             mCar = (Car) bundle.getSerializable(Constant.BUNDLE_CAR);
             if(mCar != null){
-                initList();
+                mPage = 0;
+                initDataList(mPage);
                 LogTool.d("mcar : " + mCar.getCarNo());
             }else {
                 LogTool.e("mcar == null");
             }
         }
 
-        routeRecyclerView = (XRecyclerView) findViewById(R.id.recyclerview_route);
-//        no_route = (TextView) findViewById(R.id.no_route);
-        routeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-//        routeList = getAllPoints();
-        routeList = new ArrayList<>();
-        routeAdapter = new MyRouteAdapter(mContext, routeList);
-        routeAdapter.setOnClickListener(CarDetailActivity.this);
-        routeAdapter.setOnLongClickListener(CarDetailActivity.this);
-        routeRecyclerView.setAdapter(routeAdapter);
-        routeRecyclerView.addItemDecoration(new MyRouteDividerDecoration(1));
-
-        routeRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
-        routeRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallScale);
-        routeRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
-        routeRecyclerView.setPullRefreshEnabled(false);
-//        View header = LayoutInflater.from(this).inflate(R.layout.recyclerview_header,
-//                (ViewGroup)findViewById(android.R.id.content),false);
-//        routeRecyclerView.addHeaderView(header);
-
-        routeRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
-            @Override
-            public void onRefresh() {
-//                Toast.makeText(MyRouteActivity.this, "onRefresh", Toast.LENGTH_SHORT).show();
-                routeRecyclerView.refreshComplete();
-            }
-
-            @Override
-            public void onLoadMore() {
-//                Toast.makeText(MyRouteActivity.this, "onLoadMore", Toast.LENGTH_SHORT).show();
-                loadPage();
-                routeRecyclerView.loadMoreComplete();
-                routeAdapter.notifyDataSetChanged();
-            }
-        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(routeList != null){
-            routeList.clear();
-        }
     }
 
     @Override
@@ -174,40 +135,9 @@ public class CarDetailActivity extends BaseActivity implements MyCarAdapter.OnIt
 
     }
 
-    public List<Car> loadPage() {
-        return  null;
-
-    }
-
     @Override
     public void onItemClick(View v, int position) {
 
-    }
-
-    private void initList() {
-        mProgressHelper.showProgressDialog(getString(R.string.initing));
-        BmobQuery<UseRecord> query = new BmobQuery<>();
-        query.addWhereEqualTo(REQUEST_KEY_BY_CARNO, mCar.getCarNo());
-        query.order("-createdAt");
-        query.setLimit(QUERY_LIMIT_DEFAULT);
-        addSubscription(query.findObjects(new FindListener<UseRecord>() {
-
-            @Override
-            public void done(List<UseRecord> object, BmobException e) {
-                mProgressHelper.dismissProgressDialog();
-                if(e==null){
-                    routeList.clear();
-                    if(object != null && object.size() > 0){
-                        routeList.add("");
-                        routeList.addAll(object);
-                    }
-                    routeAdapter.notifyDataSetChanged();
-                }else{
-                    toast(getString(R.string.initing_fail));
-                    loge(e);
-                }
-            }
-        }));
     }
 
     @Override
@@ -253,10 +183,28 @@ public class CarDetailActivity extends BaseActivity implements MyCarAdapter.OnIt
                 mProgressHelper.dismissProgressDialog();
                 if(e == null){
                     toast(getString(R.string.del_success));
-                    initList();
+                    mPage = 0;
+                    initDataList(mPage);
                 }else {
                     toast(getString(R.string.submit_faile));
                 }
+            }
+        }));
+    }
+
+    @Override
+    protected void initDataList(final int page) {
+        if (page == 0)
+            mProgressHelper.showProgressDialog(getString(R.string.initing));
+        BmobQuery<UseRecord> query = new BmobQuery<>();
+        query.addWhereEqualTo(REQUEST_KEY_BY_CARNO, mCar.getCarNo());
+        query.order("-createdAt");
+        initQueryByPage(query, page);
+        addSubscription(query.findObjects(new FindListener<UseRecord>() {
+
+            @Override
+            public void done(List<UseRecord> object, BmobException e) {
+                onResponse(object, e, page);
             }
         }));
     }

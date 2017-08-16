@@ -6,7 +6,6 @@ import android.view.View;
 import com.systemteam.BaseActivity;
 import com.systemteam.R;
 import com.systemteam.fragment.RouteFragment;
-//TODO 增加分页加载
 public class MyRouteActivity extends BaseActivity{
 
     public void onCreate(Bundle savedInstanceState) {

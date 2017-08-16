@@ -8,17 +8,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.jcodecraeer.xrecyclerview.ProgressStyle;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
-import com.systemteam.BaseActivity;
 import com.systemteam.R;
+import com.systemteam.activity.BaseListActivity;
 import com.systemteam.adapter.MyCarAdapter;
-import com.systemteam.adapter.MyRouteDividerDecoration;
 import com.systemteam.bean.Car;
 import com.systemteam.bean.MyUser;
 import com.systemteam.fragment.PieChartFragment;
@@ -35,12 +31,8 @@ import cn.bmob.v3.listener.UpdateListener;
 
 import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
 
-public class MyCarActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MyCarAdapter.OnItemClickListener,
-        MyCarAdapter.OnItemLongClickListener{
-    XRecyclerView routeRecyclerView;
-    MyCarAdapter routeAdapter;
-    List<Object> routeList;
+public class MyCarActivity extends BaseListActivity
+        implements NavigationView.OnNavigationItemSelectedListener, MyCarAdapter.OnItemClickListener{
     PieChartFragment mChartFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,50 +66,19 @@ public class MyCarActivity extends BaseActivity
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.f_chart, mChartFragment)
                 .commit();
+
+        initRecyclerview();
+        routeList = new ArrayList<>();
+        routeAdapter = new MyCarAdapter(mContext, routeList);
+        routeAdapter.setOnClickListener(this);
+        routeAdapter.setOnLongClickListener(this);
+        routeRecyclerView.setAdapter(routeAdapter);
     }
 
     @Override
     protected void initData() {
-        routeRecyclerView = (XRecyclerView) findViewById(R.id.recyclerview_route);
-//        no_route = (TextView) findViewById(R.id.no_route);
-        routeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-//        routeList = getAllPoints();
-        routeList = new ArrayList<>();
-        routeAdapter = new MyCarAdapter(mContext, routeList);
-        routeAdapter.setOnClickListener(MyCarActivity.this);
-        routeAdapter.setOnLongClickListener(MyCarActivity.this);
-        routeRecyclerView.setAdapter(routeAdapter);
-        routeRecyclerView.addItemDecoration(new MyRouteDividerDecoration(1));
-
-        routeRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
-        routeRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallScale);
-        routeRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
-        routeRecyclerView.setPullRefreshEnabled(true);
-        routeRecyclerView.setLoadingMoreEnabled(true);
-//        View header = LayoutInflater.from(this).inflate(R.layout.recyclerview_header,
-//                (ViewGroup)findViewById(android.R.id.content),false);
-//        routeRecyclerView.addHeaderView(header);
-
-        routeRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
-            @Override
-            public void onRefresh() {
-//                Toast.makeText(MyRouteActivity.this, "onRefresh", Toast.LENGTH_SHORT).show();
-                routeRecyclerView.refreshComplete();
-            }
-
-            @Override
-            public void onLoadMore() {
-//                Toast.makeText(MyRouteActivity.this, "onLoadMore", Toast.LENGTH_SHORT).show();
-                loadPage();
-                routeRecyclerView.loadMoreComplete();
-                routeAdapter.notifyDataSetChanged();
-            }
-        });
-        if(routeList != null){
-            routeList.clear();
-        }
-        initCarList();
+        mPage = 0;
+        initDataList(mPage);
     }
 
     @Override
@@ -187,11 +148,6 @@ public class MyCarActivity extends BaseActivity
 
     }
 
-    public List<Car> loadPage() {
-        return  null;
-
-    }
-
     @Override
     public void onItemClick(View v, int position) {
         Intent intent = new Intent(MyCarActivity.this, CarDetailActivity.class);
@@ -199,32 +155,6 @@ public class MyCarActivity extends BaseActivity
         bundle.putSerializable(Constant.BUNDLE_CAR, (Car)routeList.get(position));
         intent.putExtras(bundle);
         startActivity(intent);
-    }
-
-    private void initCarList() {
-        mProgressHelper.showProgressDialog(getString(R.string.initing));
-        MyUser user = BmobUser.getCurrentUser(MyUser.class);
-        BmobQuery<Car> query = new BmobQuery<>();
-        query.addWhereEqualTo(REQUEST_KEY_BY_USER, user.getObjectId());
-        addSubscription(query.findObjects(new FindListener<Car>() {
-
-            @Override
-            public void done(List<Car> object, BmobException e) {
-                mProgressHelper.dismissProgressDialog();
-                if(e==null){
-                    routeList.clear();
-                    if(object != null && object.size() > 0){
-                        routeList.add("");
-                        routeList.addAll(object);
-                        mChartFragment.setRouteList(routeList);
-                    }
-                    routeAdapter.notifyDataSetChanged();
-                }else{
-                    toast(getString(R.string.initing_fail));
-                    loge(e);
-                }
-            }
-        }));
     }
 
     @Override
@@ -270,10 +200,28 @@ public class MyCarActivity extends BaseActivity
                 mProgressHelper.dismissProgressDialog();
                 if(e == null){
                     toast(getString(R.string.del_success));
-                    initCarList();
+                    mPage = 0;
+                    initDataList(mPage);
                 }else {
                     toast(getString(R.string.submit_faile));
                 }
+            }
+        }));
+    }
+
+    @Override
+    protected void initDataList(final int page) {
+        if(page == 0)
+            mProgressHelper.showProgressDialog(getString(R.string.initing));
+        MyUser user = BmobUser.getCurrentUser(MyUser.class);
+        BmobQuery<Car> query = new BmobQuery<>();
+        query.addWhereEqualTo(REQUEST_KEY_BY_USER, user.getObjectId());
+        initQueryByPage(query, page);
+        addSubscription(query.findObjects(new FindListener<Car>() {
+
+            @Override
+            public void done(List<Car> object, BmobException e) {
+                onResponse(object, e, page);
             }
         }));
     }

@@ -6,18 +6,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.jcodecraeer.xrecyclerview.ProgressStyle;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
-import com.systemteam.BaseActivity;
 import com.systemteam.R;
-import com.systemteam.adapter.MyCarAdapter;
-import com.systemteam.adapter.MyRouteDividerDecoration;
 import com.systemteam.adapter.WithdrawAdapter;
 import com.systemteam.bean.BankCard;
 import com.systemteam.bean.MyUser;
@@ -49,17 +43,13 @@ import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
 import static com.systemteam.util.Constant.WITHDRAW_AMOUNT_DEFAULT;
 import static com.systemteam.util.Constant.WITHDRAW_DAYS_DEFAULT;
 
-public class WithdrawActivity extends BaseActivity implements MyCarAdapter.OnItemClickListener,
-        MyCarAdapter.OnItemLongClickListener{
+public class WithdrawActivity extends BaseListActivity {
     private BankCard mBankCard;
     private TextView mTvUserName, mTvPhone, mTvCard, mTvInfo;
     private boolean isSave = false;
     private float mAmout = 0f, mAllEarn, mAllWithDraw, mBalance, mAllCost;
     private Withdraw mWithdraw;
     private boolean isWithDrawSuccess = false;
-    XRecyclerView routeRecyclerView;
-    WithdrawAdapter routeAdapter;
-    List<Object> routeList;
 
     private static class MyHandler extends Handler {
         private WeakReference<WithdrawActivity> mActivity;
@@ -78,7 +68,8 @@ public class WithdrawActivity extends BaseActivity implements MyCarAdapter.OnIte
                     break;
                 case MSG_WITHDRAW_SUCCESS:
                     theActivity.refreshAmout();
-                    theActivity.initAdapterList();
+                    theActivity.mPage = 0;
+                    theActivity.initDataList(theActivity.mPage);
                     break;
             }
         }
@@ -102,33 +93,12 @@ public class WithdrawActivity extends BaseActivity implements MyCarAdapter.OnIte
         mTvCard = (TextView) findViewById(R.id.tv_cardnum);
         mTvInfo = (TextView) findViewById(R.id.tv_title_info);
 
-        routeRecyclerView = (XRecyclerView) findViewById(R.id.recyclerview_route);
-        routeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
+        initRecyclerview();
         routeList = new ArrayList<>();
         routeAdapter = new WithdrawAdapter(mContext, routeList);
         routeAdapter.setOnClickListener(this);
         routeAdapter.setOnLongClickListener(this);
         routeRecyclerView.setAdapter(routeAdapter);
-        routeRecyclerView.addItemDecoration(new MyRouteDividerDecoration(10));
-
-        routeRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
-        routeRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallScale);
-        routeRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
-        routeRecyclerView.setPullRefreshEnabled(false);
-
-        routeRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
-            @Override
-            public void onRefresh() {
-                routeRecyclerView.refreshComplete();
-            }
-
-            @Override
-            public void onLoadMore() {
-                routeRecyclerView.loadMoreComplete();
-                routeAdapter.notifyDataSetChanged();
-            }
-        });
     }
 
     @Override
@@ -141,7 +111,8 @@ public class WithdrawActivity extends BaseActivity implements MyCarAdapter.OnIte
         refreshAmout();
         mUser = BmobUser.getCurrentUser(MyUser.class);
         requestInfo();
-        initAdapterList();
+        mPage = 0;
+        initDataList(mPage);
     }
 
     private void refreshAmout(){
@@ -303,33 +274,6 @@ public class WithdrawActivity extends BaseActivity implements MyCarAdapter.OnIte
         }));
     }
 
-    private void initAdapterList() {
-        MyUser user = BmobUser.getCurrentUser(MyUser.class);
-        BmobQuery<Withdraw> query = new BmobQuery<>();
-        query.addWhereEqualTo(REQUEST_KEY_BY_USER, user.getObjectId());
-        query.order("-createdAt");
-        addSubscription(query.findObjects(new FindListener<Withdraw>() {
-
-            @Override
-            public void done(List<Withdraw> object, BmobException e) {
-                if(e==null){
-                    if(routeList == null)
-                        routeList = new ArrayList<>();
-                    routeList.clear();
-                    if(object != null && object.size() > 0){
-                        routeList.addAll(object);
-                    }
-                    routeAdapter.notifyDataSetChanged();
-                }else{
-                    routeList.clear();
-                    routeList = null;
-                    toast(getString(R.string.initing_fail));
-                    loge(e);
-                }
-            }
-        }));
-    }
-
     public void doSubmit(View view){
         if(checkWithdrawEnable()){
             requestWithdraw();
@@ -381,6 +325,22 @@ public class WithdrawActivity extends BaseActivity implements MyCarAdapter.OnIte
                             getString(R.string.withdraw_fail_content));
                     loge(e);
                 }
+            }
+        }));
+    }
+
+    @Override
+    protected void initDataList(final int page) {
+        MyUser user = BmobUser.getCurrentUser(MyUser.class);
+        BmobQuery<Withdraw> query = new BmobQuery<>();
+        query.addWhereEqualTo(REQUEST_KEY_BY_USER, user.getObjectId());
+        query.order("-createdAt");
+        initQueryByPage(query, page);
+        addSubscription(query.findObjects(new FindListener<Withdraw>() {
+
+            @Override
+            public void done(List<Withdraw> object, BmobException e) {
+                onResponse(object, e, page);
             }
         }));
     }

@@ -30,7 +30,7 @@ import com.systemteam.bean.ChartBean;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//TODO 15812121214 账号不显示统计图
 public class PieChartFragment extends DemoBase implements OnChartValueSelectedListener {
 
     List<Object> routeList;
