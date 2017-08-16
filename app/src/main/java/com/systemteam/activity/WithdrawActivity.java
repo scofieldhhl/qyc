@@ -17,6 +17,7 @@ import com.systemteam.bean.BankCard;
 import com.systemteam.bean.MyUser;
 import com.systemteam.bean.Withdraw;
 import com.systemteam.util.Constant;
+import com.systemteam.util.DateUtil;
 import com.systemteam.util.Utils;
 import com.systemteam.view.IconEditTextView;
 
@@ -293,7 +294,7 @@ public class WithdrawActivity extends BaseListActivity {
             if(withdraw.getStatus() != Constant.WITHDRAW_SUCCESS){
                 Utils.showDialog(mContext, getString(R.string.tip), getString(R.string.withdraw_refund_applying));
                 return false;
-            }else if (Utils.differentDays(Utils.strToDate(withdraw.getCreatedAt()), new Date()) < WITHDRAW_DAYS_DEFAULT){
+            }else if (DateUtil.differentDays(DateUtil.strToDate(withdraw.getCreatedAt()), new Date()) < WITHDRAW_DAYS_DEFAULT){
                 Utils.showDialog(mContext, getString(R.string.tip), getString(R.string.withdraw_refund_days,
                         WITHDRAW_DAYS_DEFAULT));
                 return false;
