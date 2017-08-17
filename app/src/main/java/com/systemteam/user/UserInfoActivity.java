@@ -88,6 +88,7 @@ public class UserInfoActivity extends BaseActivity {
     @Override
     protected void initView() {
         initToolBar(this, R.string.account_profile);
+        initBackgroudColor();
         mIvUserPhoto = (ImageView) findViewById(R.id.iv_user_photo);
         mIvAddPhoto = (ImageView) findViewById(R.id.iv_add_photo);
         mTvName = (TextView) findViewById(R.id.tv_name);

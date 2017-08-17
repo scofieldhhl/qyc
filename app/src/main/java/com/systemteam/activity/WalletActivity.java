@@ -1,11 +1,14 @@
 package com.systemteam.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -41,6 +45,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
@@ -104,6 +109,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     @Override
     protected void initView() {
         initToolBar(this, R.string.wallet);
+        initBackgroudColor();
         mToolbar.inflateMenu(R.menu.menu_toolbar_wallet);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -501,5 +507,51 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                 }
             }
         }));
+    }
+
+    protected void initBackgroudColor(){
+        // 用来提取颜色的Bitmap
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.theme_bg);
+        // Palette的部分
+        Palette.Builder builder = Palette.from(bitmap);
+        builder.generate(new Palette.PaletteAsyncListener() {@Override public void onGenerated(Palette palette) {
+            //获取到充满活力的这种色调
+//            Palette.Swatch vibrant = palette.getVibrantSwatch();
+            Palette.Swatch s1 = palette.getVibrantSwatch();       //获取到充满活力的这种色调
+            Palette.Swatch s2 = palette.getDarkVibrantSwatch();    //获取充满活力的黑
+            Palette.Swatch s3 = palette.getLightVibrantSwatch();   //获取充满活力的亮
+            Palette.Swatch s4 = palette.getMutedSwatch();           //获取柔和的色调
+            Palette.Swatch s5 = palette.getDarkMutedSwatch();      //获取柔和的黑
+            Palette.Swatch s6 = palette.getLightMutedSwatch();    //获取柔和的亮
+            List<Palette.Swatch> swatches = palette.getSwatches();
+            for(Palette.Swatch s : swatches){
+                LogTool.d("swatch :" + s.getRgb() + " " + s.get);
+            }
+            //根据调色板Palette获取到图片中的颜色设置到toolbar和tab中背景，标题等，使整个UI界面颜色统一
+            /*toolbar_tab.setBackgroundColor(vibrant.getRgb());
+            toolbar_tab.setSelectedTabIndicatorColor(colorBurn(vibrant.getRgb()));*/
+            mToolbar.setBackgroundColor(s1.getRgb());
+            if(s2 != null)
+                ballance.setBackgroundColor(s2.getRgb());
+            if(s3 != null)
+                mBtnBook.setBackgroundColor(s3.getRgb());
+            if(s6 != null)
+                wechat_layout.setBackgroundColor(s6.getRgb());
+            if (android.os.Build.VERSION.SDK_INT >= 21) {
+                Window window = getWindow();
+                if(s4 != null)
+                    window.setStatusBarColor(s4.getRgb());
+                if(s5 != null)
+                    window.setNavigationBarColor(s5.getRgb());
+            }
+
+            /*if (android.os.Build.VERSION.SDK_INT >= 21) {
+                Window window = getWindow();
+                window.setStatusBarColor(colorBurn(vibrant.getRgb()));
+                window.setNavigationBarColor(colorBurn(vibrant.getRgb()));
+            }*/
+        }
+        });
+
     }
 }

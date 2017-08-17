@@ -10,6 +10,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -18,10 +20,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -352,5 +356,55 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         bundle.putSerializable(BUNDLE_CAR, car);
         intent.putExtras(bundle);
         startService(intent);
+    }
+
+    protected void initBackgroudColor(){
+        // 用来提取颜色的Bitmap
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.theme_bg);
+        // Palette的部分
+        Palette.Builder builder = Palette.from(bitmap);
+        builder.generate(new Palette.PaletteAsyncListener() {@Override public void onGenerated(Palette palette) {
+            //获取到充满活力的这种色调
+            Palette.Swatch vibrant = palette.getVibrantSwatch();
+//            Palette.Swatch s = p.getVibrantSwatch();       //获取到充满活力的这种色调
+//            Palette.Swatch s = p.getDarkVibrantSwatch();    //获取充满活力的黑
+//            Palette.Swatch s = p.getLightVibrantSwatch();   //获取充满活力的亮
+//            Palette.Swatch s = p.getMutedSwatch();           //获取柔和的色调
+//            Palette.Swatch s = p.getDarkMutedSwatch();      //获取柔和的黑
+//            Palette.Swatch s = p.getLightMutedSwatch();    //获取柔和的亮
+            //根据调色板Palette获取到图片中的颜色设置到toolbar和tab中背景，标题等，使整个UI界面颜色统一
+            /*toolbar_tab.setBackgroundColor(vibrant.getRgb());
+            toolbar_tab.setSelectedTabIndicatorColor(colorBurn(vibrant.getRgb()));*/
+            mToolbar.setBackgroundColor(vibrant.getRgb());
+
+            if (android.os.Build.VERSION.SDK_INT >= 21) {
+                Window window = getWindow();
+                window.setStatusBarColor(colorBurn(vibrant.getRgb()));
+                window.setNavigationBarColor(colorBurn(vibrant.getRgb()));
+            }
+        }
+        });
+
+    }
+
+    /**
+     * 颜色加深处理
+     *
+     * @param RGBValues RGB的值，由alpha（透明度）、red（红）、green（绿）、blue（蓝）构成，
+     *                  Android中我们一般使用它的16进制，
+     *                  例如："#FFAABBCC",最左边到最右每两个字母就是代表alpha（透明度）、
+     *                  red（红）、green（绿）、blue（蓝）。每种颜色值占一个字节(8位)，值域0~255
+     *                  所以下面使用移位的方法可以得到每种颜色的值，然后每种颜色值减小一下，在合成RGB颜色，颜色就会看起来深一些了
+     * @return
+     */
+    private int colorBurn(int RGBValues) {
+        int alpha = RGBValues >> 24;
+        int red = RGBValues >> 16 & 0xFF;
+        int green = RGBValues >> 8 & 0xFF;
+        int blue = RGBValues & 0xFF;
+        red = (int) Math.floor(red * (1 - 0.1));
+        green = (int) Math.floor(green * (1 - 0.1));
+        blue = (int) Math.floor(blue * (1 - 0.1));
+        return Color.rgb(red, green, blue);
     }
 }
