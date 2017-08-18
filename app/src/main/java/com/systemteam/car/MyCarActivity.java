@@ -222,6 +222,7 @@ public class MyCarActivity extends BaseListActivity
             @Override
             public void done(List<Car> object, BmobException e) {
                 onResponse(object, e, page);
+                mChartFragment.setRouteList(routeList);
             }
         }));
     }

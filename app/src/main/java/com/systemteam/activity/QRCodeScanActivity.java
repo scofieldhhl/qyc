@@ -334,14 +334,14 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
                         if(checkNetworkAvailable(mContext) == Constant.NETWORK_STATUS_NO){
                             return;
                         }
-                        if (!checkBalance(mUser, QRCodeScanActivity.this)) {
-                            return;
-                        }
                         dialog.dismiss();
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 if(isUnLock) {
+                                    if (!checkBalance(mUser, QRCodeScanActivity.this)) {
+                                        return;
+                                    }
                                     Intent intent = new Intent(mContext, ActiveActivity.class);
                                     intent.putExtra(BUNDLE_KEY_CODE, code);
                                     startActivity(intent);

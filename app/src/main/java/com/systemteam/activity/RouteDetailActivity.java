@@ -36,11 +36,11 @@ import java.util.List;
 
 import static com.systemteam.util.Constant.MAP_SCAN_SPAN;
 
-
 /**
- * Created by gaolei on 16/12/29.
+ * @Description 使用完成后点击toolbar返回值Main界面，Main界面没有退出使用中模式
+ * @author scofield.hhl@gmail.com
+ * @time 2017/8/18
  */
-//TODO 使用完成后点击toolbar返回值Main界面，Main界面没有退出使用中模式
 public class RouteDetailActivity extends BaseActivity {
 
     private MapView route_detail_mapview;
