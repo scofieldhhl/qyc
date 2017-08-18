@@ -376,6 +376,7 @@
     <string name="withdraw_refund_record" formatted="false">提现申请拒绝，获取提现记录失败！</string>
     <string name="withdraw_refund_applying">提现申请拒绝，您有一笔提现申请等待处理，请联系客服或等待该提现完成后在尝试！</string>
     <string name="withdraw_refund_days" formatted="false">提现申请拒绝，您最近%d天内已有一笔提现申请，请勿频繁申请提现！</string>
+    <string name="withdraw_refund_success" formatted="false">提现申请拒绝，您成功申请提现，请勿重复申请！</string>
     <string name="withdraw_record">提现记录</string>
     <!--withdraw-->
 

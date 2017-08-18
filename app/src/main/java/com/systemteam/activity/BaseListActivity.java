@@ -8,7 +8,6 @@ import com.systemteam.BaseActivity;
 import com.systemteam.R;
 import com.systemteam.adapter.BaseAdapter;
 import com.systemteam.adapter.MyRouteDividerDecoration;
-import com.systemteam.bean.UseRecord;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 
@@ -56,12 +55,12 @@ public abstract class BaseListActivity extends BaseActivity implements BaseAdapt
         query.setLimit(Constant.QUERY_LIMIT_DEFAULT);
         query.setSkip(Constant.QUERY_LIMIT_DEFAULT * page);
         //判断是否有缓存，该方法必须放在查询条件（如果有的话）都设置完之后再来调用才有效，就像这里一样。
-        boolean isCache = query.hasCachedResult(UseRecord.class);
+        /*boolean isCache = query.hasCachedResult(UseRecord.class);
         if(isCache){//此为举个例子，并不一定按这种方式来设置缓存策略
             query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);    // 如果有缓存的话，则设置策略为CACHE_ELSE_NETWORK
         }else{
             query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);    // 如果没有缓存的话，则设置策略为NETWORK_ELSE_CACHE
-        }
+        }*/
     }
 
     protected abstract void initDataList(final int page);

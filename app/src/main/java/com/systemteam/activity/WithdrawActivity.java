@@ -18,6 +18,7 @@ import com.systemteam.bean.MyUser;
 import com.systemteam.bean.Withdraw;
 import com.systemteam.util.Constant;
 import com.systemteam.util.DateUtil;
+import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
 import com.systemteam.view.IconEditTextView;
 
@@ -44,6 +45,11 @@ import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
 import static com.systemteam.util.Constant.WITHDRAW_AMOUNT_DEFAULT;
 import static com.systemteam.util.Constant.WITHDRAW_DAYS_DEFAULT;
 
+/**
+ * @Description 1.出现重复点击重复申请 2.提现后修改账户余额为0
+ * @author scofield.hhl@gmail.com
+ * @time 2017/8/18
+ */
 public class WithdrawActivity extends BaseListActivity {
     private BankCard mBankCard;
     private TextView mTvUserName, mTvPhone, mTvCard, mTvInfo;
@@ -51,6 +57,7 @@ public class WithdrawActivity extends BaseListActivity {
     private float mAmout = 0f, mAllEarn, mAllWithDraw, mBalance, mAllCost;
     private Withdraw mWithdraw;
     private boolean isWithDrawSuccess = false;
+    private boolean isWithdrawBalance = true;   //账户余额是否提现
 
     private static class MyHandler extends Handler {
         private WeakReference<WithdrawActivity> mActivity;
@@ -276,6 +283,11 @@ public class WithdrawActivity extends BaseListActivity {
     }
 
     public void doSubmit(View view){
+        if(isWithDrawSuccess){
+            Utils.showDialog(mContext, getString(R.string.fail_submit),
+                    getString(R.string.withdraw_refund_success));
+            return;
+        }
         if(checkWithdrawEnable()){
             requestWithdraw();
         }
@@ -313,21 +325,49 @@ public class WithdrawActivity extends BaseListActivity {
         addSubscription(mWithdraw.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
-                mProgressHelper.dismissProgressDialog();
                 if(e==null){
-                    isWithDrawSuccess = true;
-                    mAllWithDraw += mAmout;
-                    mAmout = 0f;
-                    Utils.showDialog(mContext, getString(R.string.submit_success),
-                        getString(R.string.withdraw_success_content, WITHDRAW_DAYS_DEFAULT));
-                    mHandler.sendEmptyMessage(MSG_WITHDRAW_SUCCESS);
+                    if(isWithdrawBalance){
+                        requestClearBalance();
+                    }else {
+                        mProgressHelper.dismissProgressDialog();
+                        onResponseSuccess();
+                    }
                 }else{
+                    mProgressHelper.dismissProgressDialog();
                     Utils.showDialog(mContext, getString(R.string.fail_submit),
                             getString(R.string.withdraw_fail_content));
-                    loge(e);
+                    LogTool.e("error : " + e.getErrorCode() + " msg: " + e.getMessage());
                 }
             }
         }));
+    }
+
+    /**
+     * 清空账号余额
+     */
+    private void requestClearBalance(){
+        MyUser user = new MyUser();
+        user.setBalance(0f);
+        addSubscription(user.update(mUser.getObjectId(), new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                mProgressHelper.dismissProgressDialog();
+                if(e==null){
+                    onResponseSuccess();
+                }else{
+                    LogTool.e("error : " + e.getErrorCode() + " msg: " + e.getMessage());
+                }
+            }
+        }));
+    }
+
+    private void onResponseSuccess(){
+        isWithDrawSuccess = true;
+        mAllWithDraw += mAmout;
+        mAmout = 0f;
+        Utils.showDialog(mContext, getString(R.string.submit_success),
+                getString(R.string.withdraw_success_content, WITHDRAW_DAYS_DEFAULT));
+        mHandler.sendEmptyMessage(MSG_WITHDRAW_SUCCESS);
     }
 
     @Override

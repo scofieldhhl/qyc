@@ -1,7 +1,10 @@
 package com.systemteam.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -142,6 +145,32 @@ public class RouteDetailActivity extends BaseActivity {
         startBmp = BitmapDescriptorFactory.fromResource(R.mipmap.route_start);
         endBmp = BitmapDescriptorFactory.fromResource(R.mipmap.route_end);
         initMap();
+    }
+
+    protected void initToolBar(Activity act, int titleId) {
+        mToolbar = (Toolbar) act.findViewById(R.id.toolbar);
+        mToolbarTitle = (TextView) act.findViewById(R.id.toolbar_title);
+        mToolbar.getVisibility();
+        mToolbar.setTitle("");
+        if (titleId == 0) {
+            mToolbarTitle.setText("");
+        } else {
+            mToolbarTitle.setTextColor(ContextCompat.getColor(act, R.color.white));
+            mToolbarTitle.setText(titleId);
+        }
+
+
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+            mToolbar.setNavigationIcon(R.mipmap.return_icon);
+        }
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                completeRoute = true;
+                finish();
+            }
+        });
     }
 
     @Override

@@ -525,7 +525,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
             Palette.Swatch s6 = palette.getLightMutedSwatch();    //获取柔和的亮
             List<Palette.Swatch> swatches = palette.getSwatches();
             for(Palette.Swatch s : swatches){
-                LogTool.d("swatch :" + s.getRgb() + " " + s.get);
+                LogTool.d("swatch :" + s.getRgb());
             }
             //根据调色板Palette获取到图片中的颜色设置到toolbar和tab中背景，标题等，使整个UI界面颜色统一
             /*toolbar_tab.setBackgroundColor(vibrant.getRgb());
