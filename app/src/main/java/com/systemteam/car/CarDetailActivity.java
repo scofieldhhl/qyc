@@ -28,7 +28,6 @@ import cn.bmob.v3.listener.UpdateListener;
 
 import static com.systemteam.util.Constant.REQUEST_KEY_BY_CARNO;
 
-//TODO 首次进入无法显示详情列表
 public class CarDetailActivity extends BaseListActivity {
 
     private boolean isChartShow = false;
@@ -56,6 +55,7 @@ public class CarDetailActivity extends BaseListActivity {
                     case R.id.action_settings:
                         isChartShow = !isChartShow;
                         if(isChartShow){
+                            routeRecyclerView.setVisibility(View.GONE);
                             mLayoutChart.setVisibility(View.VISIBLE);
                             if(mChartFragment == null){
                                 mChartFragment = new ChartFragment(mCar);
@@ -67,6 +67,7 @@ public class CarDetailActivity extends BaseListActivity {
                             /*mMenu.getItem(1).setVisible(true);
                             mMenu.getItem(2).setVisible(true);*/
                         }else {
+                            routeRecyclerView.setVisibility(View.VISIBLE);
                             mLayoutChart.setVisibility(View.GONE);
                             item.setTitle(R.string.action_chart);
                             /*mMenu.getItem(1).setVisible(false);

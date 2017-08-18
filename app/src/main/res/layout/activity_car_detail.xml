@@ -18,7 +18,6 @@
     <com.jcodecraeer.xrecyclerview.XRecyclerView
         android:id="@+id/recyclerview_route"
         style="@style/xrecyclerview_style"
-        android:visibility="gone"
         android:layout_below="@id/toolbar"/>
 
     <TextView
