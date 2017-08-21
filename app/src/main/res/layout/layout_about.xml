@@ -28,7 +28,7 @@
             <TextView
                 style="@style/toolbar_title"
                 android:layout_centerInParent="true"
-                android:text="@string/feedback" />
+                android:text="@string/about" />
         </RelativeLayout>
     </LinearLayout>
 

@@ -78,6 +78,7 @@
     <Button
         android:id="@+id/submit"
         style="@style/button_style"
+        android:text="@string/submit"
         android:layout_margin="20dp"/>
 
 </LinearLayout>

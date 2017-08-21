@@ -104,6 +104,7 @@
     <string name="action_next">下个月</string>
     <string name="error_car_no">错误的车牌编号，请重试！</string>
     <string name="earn_format" formatted="false">%.2f</string>
+    <string name="submit">提交</string>
 
     <string name="demo_title_location">demo_title_location</string>
     <string name="demo_desc_location">demo_desc_location</string>
