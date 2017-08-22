@@ -109,7 +109,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     @Override
     protected void initView() {
         initToolBar(this, R.string.wallet);
-        initBackgroudColor();
+//        initBackgroudColor();
         mToolbar.inflateMenu(R.menu.menu_toolbar_wallet);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override

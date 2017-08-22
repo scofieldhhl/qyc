@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_f4f3f3"
     android:orientation="vertical"
     tools:context="com.systemteam.user.UserInfoActivity">
     <android.support.v7.widget.Toolbar
@@ -20,11 +19,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:paddingBottom="15dp"
         android:scrollbars="none">
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
+            style="@style/info_layout_style"
             android:orientation="vertical">
             <include layout="@layout/layout_info"/>
             <include layout="@layout/layout_info_more"/>
@@ -35,7 +33,7 @@
         style="@style/menu_text_style"
         android:layout_width="match_parent"
         android:textSize="@dimen/text_14"
-        android:textColor="@color/text_black_54"
+        android:textColor="@color/colorAccent"
         android:gravity="center"
         android:onClick="doSubmit"
         android:text="@string/merchant_apply" />

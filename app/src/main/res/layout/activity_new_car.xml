@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_f4f3f3"
     android:orientation="vertical"
     tools:context="com.systemteam.car.NewCarActivity">
     <android.support.v7.widget.Toolbar

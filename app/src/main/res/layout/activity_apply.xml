@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/activity_base_bg_gray">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/toolbar"
@@ -18,11 +19,14 @@
         android:layout_below="@id/toolbar">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <LinearLayout
+                style="@style/info_layout_style"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:orientation="vertical">
             <include layout="@layout/layout_experter_info_avatar"/>
 
             <include layout="@layout/layout_info_edit"/>
@@ -57,7 +61,7 @@
                 android:textColor="@color/text_black_30"
                 android:textSize="12sp"
                 android:text="@string/apply_tip_address"/>
-
+            </LinearLayout>
             <Button
                 style="@style/button_style"
                 android:text="@string/account_submit"

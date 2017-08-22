@@ -13,6 +13,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
 
     </style>
 
@@ -331,7 +332,8 @@
     <style name="activity_base_bg_gray">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:background">@color/color_f4f3f3</item>
+        <!--<item name="android:background">@color/color_f4f3f3</item>-->
+        <item name="android:background">@color/colorPrimary</item>
         <item name="android:paddingBottom">15dp</item>
     </style>
 
