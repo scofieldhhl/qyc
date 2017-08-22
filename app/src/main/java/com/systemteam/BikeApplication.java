@@ -16,12 +16,14 @@ import java.io.File;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobConfig;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobGeoPoint;
 
 public class BikeApplication extends Application {
 
     public static String mSDCardPath;
     public static String APP_FOLDER_NAME;
     public static String mCurrentAddress;//当前定位地址
+    public static BmobGeoPoint mCurrentPosition; //当前定位经纬度信息
     public static boolean isHaveUpdate;
     private MyUser mUser;
 
@@ -30,6 +32,14 @@ public class BikeApplication extends Application {
             mUser = BmobUser.getCurrentUser(MyUser.class);
         }
         return mUser;
+    }
+    public static void setPosition(double longitude, double latitude){
+        if(mCurrentPosition == null){
+            mCurrentPosition = new BmobGeoPoint(longitude, latitude);
+        }else {
+            mCurrentPosition.setLongitude(longitude);
+            mCurrentPosition.setLatitude(latitude);
+        }
     }
 
     public void setmUser(MyUser mUser) {

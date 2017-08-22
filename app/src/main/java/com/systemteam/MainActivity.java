@@ -359,9 +359,9 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
             currentLatitude = bdLocation.getLatitude();
             currentLongitude = bdLocation.getLongitude();
             BikeApplication.mCurrentAddress = bdLocation.getAddrStr();
+            BikeApplication.setPosition(currentLongitude, currentLatitude);
             current_addr.setText(bdLocation.getAddrStr());
-            currentLL = new LatLng(bdLocation.getLatitude(),
-                    bdLocation.getLongitude());
+            currentLL = new LatLng(bdLocation.getLatitude(), bdLocation.getLongitude());
             LocationManager.getInstance().setCurrentLL(currentLL);
             LocationManager.getInstance().setAddress(bdLocation.getAddrStr());
             startNodeStr = PlanNode.withLocation(currentLL);

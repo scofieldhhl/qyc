@@ -1,6 +1,8 @@
 package com.systemteam.bean;
 
+import com.systemteam.BikeApplication;
 import com.systemteam.R;
+import com.systemteam.util.Utils;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
@@ -43,8 +45,7 @@ public class BikeInfo implements Serializable {
     public static List<BikeInfo> infos = new ArrayList<>();
 
 
-    public BikeInfo(double latitude, double longitude, int imgId, String name,
-                    String distance, String time) {
+    public BikeInfo(double latitude, double longitude, int imgId, String name, String distance, String time) {
         super();
         this.latitude = latitude;
         this.longitude = longitude;
@@ -61,7 +62,12 @@ public class BikeInfo implements Serializable {
         this.longitude = car.getPosition().getLongitude();
         this.imgId = R.mipmap.bike_mobai;
         this.name = car.getCarNo();
-        this.distance = "100米";
+        if(BikeApplication.mCurrentPosition != null){
+            this.distance = Utils.GetDistance(car.getPosition().getLongitude(), car.getPosition().getLatitude(),
+                    BikeApplication.mCurrentPosition.getLongitude(), BikeApplication.mCurrentPosition.getLatitude()) + "米";
+        }else {
+            this.distance = "100米";
+        }
         this.time = "100";
     }
 
