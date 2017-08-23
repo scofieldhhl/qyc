@@ -55,20 +55,23 @@ public class BikeInfo implements Serializable {
         this.time = time;
     }
 
-    //TODO 计算和当前位置的距离
     public BikeInfo(Car car){
         this.car = car;
         this.latitude = car.getPosition().getLatitude();
         this.longitude = car.getPosition().getLongitude();
         this.imgId = R.mipmap.bike_icon;
         this.name = car.getCarNo();
+        int num = 100;
         if(BikeApplication.mCurrentPosition != null){
-            this.distance = Utils.GetDistance(car.getPosition().getLongitude(), car.getPosition().getLatitude(),
-                    BikeApplication.mCurrentPosition.getLongitude(), BikeApplication.mCurrentPosition.getLatitude()) + "米";
-        }else {
-            this.distance = "100米";
+            num = (int) Utils.GetDistance(car.getPosition().getLongitude(), car.getPosition().getLatitude(),
+                    BikeApplication.mCurrentPosition.getLongitude(), BikeApplication.mCurrentPosition.getLatitude());
         }
-        this.time = "10分钟";
+        this.distance = num + "米";
+        if(num > 100){
+            this.time = (num / 100) + "分钟" ;
+        }else {
+            this.time = "1分钟";
+        }
     }
 
 

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.systemteam.BaseActivity;
 import com.systemteam.R;
 import com.systemteam.bean.Car;
+import com.systemteam.bean.MyUser;
 import com.systemteam.service.RouteService;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
@@ -23,6 +24,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
@@ -125,6 +127,10 @@ public class ActiveActivity extends BaseActivity {
         if(!isFinished){
             toastDialog();
         }else {
+            mUser = BmobUser.getCurrentUser(MyUser.class);
+            if (!checkBalance(mUser, ActiveActivity.this)) {
+                return;
+            }
             startRouteService(this, mCar);
             isFinished = false;
         }

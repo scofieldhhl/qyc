@@ -52,6 +52,7 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_EARN;
 import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_WITHDRAW;
@@ -62,10 +63,6 @@ import static com.systemteam.util.Constant.PAY_AMOUNT_DEFAULT;
 import static com.systemteam.util.Constant.REQUEST_CODE;
 import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
 
-/**
- * Created by gaolei on 16/12/29.
- */
-
 public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.OnItemClickListener{
 
     RecyclerView recyclerview_acount;
@@ -75,7 +72,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     RelativeLayout wechat_layout, alipay_layout;
     Button mBtnBook;
     boolean isPayByWechat = true;
-    private float mAmout = 0f, mAllEarn, mAllWithDraw, mBalance,mAllCost,  mAmountPay = 0f;
+    private float mAmout = 0f, mAllEarn, mAllWithDraw, mBalance,mAllCost,  mAmountPay = 5f;
 
     private static class MyHandler extends Handler {
         private WeakReference<WalletActivity> mActivity;
@@ -335,12 +332,15 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                 alipay.setImageResource(R.mipmap.type_select);
                 break;
             case R.id.btn_book:
+                if(mAmountPay < 5f){
+                    toast(getString(R.string.pay_error_amout));
+                }
                 if(isPayByWechat){
                     wxRequest();
                 }else {
                     payV2(view);
                 }
-//                saveNewObject();
+                saveNewObject();
                 break;
         }
     }
@@ -491,17 +491,35 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     public static final String RSA_PRIVATE = "";*/
 
     private void saveNewObject() {
-        MyUser user = BmobUser.getCurrentUser(MyUser.class);
-        CashRecord cashRecord = new CashRecord(user,
-                isPayByWechat ? Constant.PAY_TYPE_WX : Constant.PAY_TYPE_ALI, mAmountPay);
-        addSubscription(cashRecord.save(new SaveListener<String>() {
+        final MyUser user = BmobUser.getCurrentUser(MyUser.class);
+        MyUser newUser = new MyUser();
+        if(user.getBalance() == null){
+            newUser.setBalance(mAmountPay);
+        }else {
+            newUser.setBalance(user.getBalance() + mAmountPay);
+        }
+        addSubscription(newUser.update(user.getObjectId(), new UpdateListener() {
             @Override
-            public void done(String s, BmobException e) {
-                mProgressHelper.dismissProgressDialog();
+            public void done(BmobException e) {
                 if(e==null){
-                    toast(getString(R.string.add_success));
+                    toast(getString(R.string.pay_success));
+                    CashRecord cashRecord = new CashRecord(user,
+                            isPayByWechat ? Constant.PAY_TYPE_WX : Constant.PAY_TYPE_ALI, mAmountPay);
+                    addSubscription(cashRecord.save(new SaveListener<String>() {
+                        @Override
+                        public void done(String s, BmobException e) {
+                            mProgressHelper.dismissProgressDialog();
+                            if(e==null){
+                                toast(getString(R.string.pay_success));
 //                    mHandler.sendEmptyMessage(MSG_UPDATE_UI);
+                            }else{
+                                loge(e);
+                                toast(getString(R.string.submit_faile));
+                            }
+                        }
+                    }));
                 }else{
+                    mProgressHelper.dismissProgressDialog();
                     loge(e);
                     toast(getString(R.string.submit_faile));
                 }

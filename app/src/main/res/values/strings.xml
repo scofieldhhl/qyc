@@ -353,7 +353,8 @@
     <string name="detail_recharge">充值明细</string>
     <string name="detail_cost">消费明细</string>
     <string name="detail_car_title">详情</string>
-
+    <string name="pay_error_amout">充值金额有误，请重新选择！</string>
+    <string name="pay_success">充值成功！</string>
     <string name="detail_month_eran" formatted="false">近%d日日收益一览</string>
     <!--detail-->
 

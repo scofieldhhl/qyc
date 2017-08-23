@@ -47,6 +47,7 @@ public class Constant {
     public static final String BUNDLE_KEY_ISGAMEOVER = "key_isgameover";
     public static final int  REQUEST_IMAGE = 100;
     public static final int  REQUEST_CODE = 101;
+    public static final int  REQUEST_CODE_WALLET = 102;
 
     public static final int DISMISS_SPLASH = 0x122;
     public static final int MSG_RESPONSE_SUCCESS = 0x123;

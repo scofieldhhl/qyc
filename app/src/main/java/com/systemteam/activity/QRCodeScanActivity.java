@@ -314,7 +314,7 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
         final Dialog dialog = new Dialog(mContext, R.style.MyDialog);
         //设置它的ContentView
         dialog.setContentView(R.layout.activity_code_unlock);
-        dialog.setCancelable(true);
+        dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(true);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
@@ -326,29 +326,29 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
                 switch (v.getId()) {
                     case R.id.btn_unlock:
                         mImm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
-                        mImm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
                         final String code = String.valueOf(((EditText) dialog.findViewById(R.id.et_code)).getText());
                         if(!TextUtils.isEmpty(code) && code.length() > 5){
                             //TODO 校验输入车牌的有效性
                         }
                         if(checkNetworkAvailable(mContext) == Constant.NETWORK_STATUS_NO){
-                            return;
+                            break;
                         }
-                        dialog.dismiss();
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if(isUnLock) {
-                                    if (!checkBalance(mUser, QRCodeScanActivity.this)) {
-                                        return;
-                                    }
-                                    Intent intent = new Intent(mContext, ActiveActivity.class);
-                                    intent.putExtra(BUNDLE_KEY_CODE, code);
-                                    startActivity(intent);
-                                }
-                                exist(code);
+                        if(isUnLock) {
+                            mUser = BmobUser.getCurrentUser(MyUser.class);
+                            if (!checkBalance(mUser, QRCodeScanActivity.this)) {
+                                return;
                             }
-                        }, 100);
+                            dialog.dismiss();
+                            new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent intent = new Intent(mContext, ActiveActivity.class);
+                                        intent.putExtra(BUNDLE_KEY_CODE, code);
+                                        startActivity(intent);
+                                    }
+                                }, 100);
+                        }
+                        exist(code);
                         break;
                     case R.id.iv_light:
                         switchFlashlight();

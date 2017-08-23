@@ -56,6 +56,7 @@ import rx.subscriptions.CompositeSubscription;
 
 import static com.systemteam.util.Constant.BUNDLE_CAR;
 import static com.systemteam.util.Constant.COST_BASE_DEFAULT;
+import static com.systemteam.util.Constant.REQUEST_CODE;
 import static com.systemteam.util.Utils.dp2px;
 
 
@@ -318,7 +319,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            startActivity(new Intent(activity, WalletActivity.class));
+                            startActivityForResult(new Intent(activity, WalletActivity.class), REQUEST_CODE);
                         }
                     });
             alertDialog.show();
