@@ -37,7 +37,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -49,6 +48,7 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.InfoWindow;
+import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
@@ -274,6 +274,17 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         mBaiduMap = mMapView.getMap();
         // 开启定位图层
         mBaiduMap.setMyLocationEnabled(true);
+        mBaiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                bike_layout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public boolean onMapPoiClick(MapPoi mapPoi) {
+                return false;
+            }
+        });
         // 定位初始化
         mlocationClient = new LocationClient(this);
         mlocationClient.registerLocationListener(myListener);
@@ -617,7 +628,6 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
                 toastDialog();
                 break;
             case R.id.menu_icon:
-                LogTool.i("menu_icon-----click--------openMenu()");
                 openMenu();
                 break;
             case R.id.bike_sound:
@@ -631,7 +641,6 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
                 break;
             case R.id.shadow:
                 closeMenu();
-                LogTool.i("shadow-----click--------closeMenu()");
                 break;
         }
     }
@@ -656,7 +665,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
     @Override
     public void onGetWalkingRouteResult(final WalkingRouteResult result) {
         if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-            Toast.makeText(MainActivity.this, R.string.no_found, Toast.LENGTH_SHORT).show();
+            toast(getString(R.string.no_found));
         }
         if (result.error == SearchResult.ERRORNO.AMBIGUOUS_ROURE_ADDR) {
             // 起终点或途经点地址有岐义，通过以下接口获取建议查询信息
@@ -686,7 +695,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
                             overlay.zoomToSpan();
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Toast.makeText(MainActivity.this, R.string.error_line, Toast.LENGTH_SHORT).show();
+                            toast(getString(R.string.error_line));
                         }
                     }
 
@@ -720,23 +729,18 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
     }
 
     public void onGetTransitRouteResult(TransitRouteResult transitRouteResult) {
-        System.out.print("");
     }
 
     public void onGetMassTransitRouteResult(MassTransitRouteResult massTransitRouteResult) {
-        System.out.print("");
     }
 
     public void onGetDrivingRouteResult(DrivingRouteResult drivingRouteResult) {
-        System.out.print("");
     }
 
     public void onGetIndoorRouteResult(IndoorRouteResult indoorRouteResult) {
-        System.out.print("");
     }
 
     public void onGetBikingRouteResult(BikingRouteResult bikingRouteResult) {
-        System.out.print("");
     }
 
     @Override
@@ -817,14 +821,14 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         //loading car
         loadCarlistNear(_latitude, _longitude);
         infos.add(new BikeInfo(_latitude - new Random().nextInt(5) * 0.0005,
-                _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_mobai, "001", "100米", "1分钟"));
+                _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_icon, "001", "100米", "1分钟"));
         infos.add(new BikeInfo(_latitude - new Random().nextInt(5) * 0.0005,
-                _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_youbai, "002", "200米", "2分钟"));
+                _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_icon, "002", "200米", "2分钟"));
         infos.add(new BikeInfo(_latitude - new Random().nextInt(5) * 0.0005,
-                _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_ofo, "003", "300米", "3分钟"));
+                _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_icon, "003", "300米", "3分钟"));
         infos.add(new BikeInfo(_latitude - new Random().nextInt(5) * 0.0005,
-                _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_xiaolan, "004", "400米", "4分钟"));
-        BikeInfo bikeInfo = new BikeInfo(_latitude - 0.0005, _longitude - 0.0005, R.mipmap.bike_xiaolan, "005",
+                _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_icon, "004", "400米", "4分钟"));
+        BikeInfo bikeInfo = new BikeInfo(_latitude - 0.0005, _longitude - 0.0005, R.mipmap.bike_icon, "005",
                 "50米", "0.5分钟");
         infos.add(bikeInfo);
         addInfosOverlay(infos);
@@ -915,7 +919,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         @Override
         public void onFinish() {
             book_countdown.setText(R.string.end_book);
-            Toast.makeText(MainActivity.this, getString(R.string.cancel_book_toast), Toast.LENGTH_SHORT).show();
+            toast(getString(R.string.cancel_book_toast));
         }
     };
 
@@ -1139,7 +1143,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
             }
             startRouteService(this, car);
         }else {
-            Toast.makeText(this, R.string.break_car_no, Toast.LENGTH_SHORT).show();
+            toast(getString(R.string.break_car_no));
             return;
         }
         MyLocationConfiguration configuration
@@ -1238,7 +1242,7 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
             }
 
             if ((System.currentTimeMillis() - exitTime) > 2000) {
-                Toast.makeText(getApplicationContext(), R.string.exist_app, Toast.LENGTH_SHORT).show();
+                toast(getString(R.string.exist_app));
                 exitTime = System.currentTimeMillis();
             } else {
 //                finish();

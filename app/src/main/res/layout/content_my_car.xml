@@ -35,13 +35,13 @@
             android:id="@+id/f_chart"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:layout_marginBottom="5dp"/>
         <com.jcodecraeer.xrecyclerview.XRecyclerView
             android:id="@+id/recyclerview_route"
             style="@style/xrecyclerview_style"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="4"/>
     </LinearLayout>
 </RelativeLayout>

@@ -340,7 +340,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                 }else {
                     payV2(view);
                 }
-                saveNewObject();
+//                saveNewObject();
                 break;
         }
     }

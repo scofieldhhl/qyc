@@ -60,7 +60,7 @@ public class BikeInfo implements Serializable {
         this.car = car;
         this.latitude = car.getPosition().getLatitude();
         this.longitude = car.getPosition().getLongitude();
-        this.imgId = R.mipmap.bike_mobai;
+        this.imgId = R.mipmap.bike_icon;
         this.name = car.getCarNo();
         if(BikeApplication.mCurrentPosition != null){
             this.distance = Utils.GetDistance(car.getPosition().getLongitude(), car.getPosition().getLatitude(),
@@ -68,7 +68,7 @@ public class BikeInfo implements Serializable {
         }else {
             this.distance = "100米";
         }
-        this.time = "100";
+        this.time = "10分钟";
     }
 
 
