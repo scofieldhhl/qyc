@@ -116,7 +116,6 @@ import static com.systemteam.util.Constant.DISMISS_SPLASH;
 import static com.systemteam.util.Constant.MAP_SCAN_SPAN;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
-//TODO 1、计算距离 2、结束使用后，界面没有退回到定位全部车辆的界面
 public class MainActivity extends BaseActivity implements OnGetRoutePlanResultListener,
         AllInterface.OnMenuSlideListener, NavigationView.OnNavigationItemSelectedListener{
 
@@ -1091,7 +1090,6 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
         if (CodeUnlockActivity.unlockSuccess || isServiceLive) {
             beginService();
         }
-        //TODO APP首次打开完成任务后，首页不能退出运行模式
         if (RouteDetailActivity.completeRoute)
             backFromRouteDetail();
     }
