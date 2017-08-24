@@ -12,6 +12,11 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.UnderlineSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -137,6 +142,14 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         mBtnBook = (Button) findViewById(R.id.btn_book);
         mBtnBook.setOnClickListener(this);
 
+        String str1 =  getString(R.string.wallet_tip_2);
+        String content = getString(R.string.wallet_tip_1, str1);
+        SpannableString mMoreFeatrue = new SpannableString(content);
+        int index = content.indexOf(str1);
+        mMoreFeatrue.setSpan(new UnderlineSpan(), index, content.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mMoreFeatrue.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.colorAccent)),
+                index, content.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ((TextView) findViewById(R.id.tv_pay_protocol)).setText(mMoreFeatrue);
     }
 
     @Override
@@ -330,6 +343,9 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                 isPayByWechat = false;
                 wechat.setImageResource(R.mipmap.type_unselect);
                 alipay.setImageResource(R.mipmap.type_select);
+                break;
+            case R.id.tv_pay_protocol:
+                Utils.showProtocol(mContext, Constant.GUIDE_TYPE_PAY);
                 break;
             case R.id.btn_book:
                 if(mAmountPay < 5f){

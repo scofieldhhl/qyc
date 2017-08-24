@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/title_layout"
+        style="@style/toolbar"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/menu_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:clickable="true"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:src="@mipmap/return_icon" />
+
+            <TextView
+                android:id="@+id/tv_title"
+                style="@style/toolbar_title"
+                android:layout_centerInParent="true"
+                android:text="@string/setting_pay" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!--<ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_f4f3f3"
+            android:orientation="vertical"
+            android:gravity="top">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                t/>
+
+        </LinearLayout>
+    </ScrollView>-->
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_layout"
+        android:scrollbars="vertical"
+        android:background="@color/white"
+        android:textSize="@dimen/text_size_16"
+        android:singleLine="false"
+        android:textColor="@color/black"/>
+</RelativeLayout>

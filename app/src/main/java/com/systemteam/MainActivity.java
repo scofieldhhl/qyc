@@ -112,6 +112,7 @@ import overlayutil.WalkingRouteOverlay;
 
 import static com.systemteam.bean.BikeInfo.infos;
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
+import static com.systemteam.util.Constant.BUNDLE_CAR;
 import static com.systemteam.util.Constant.DISMISS_SPLASH;
 import static com.systemteam.util.Constant.MAP_SCAN_SPAN;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
@@ -936,13 +937,23 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
                     break;
                 case R.id.id_lock:
                     Intent intent = new Intent(MainActivity.this, BreakActivity.class);
-                    intent.putExtra(Constant.BUNDLE_TYPE_MENU, 0);
-                    startActivity(intent);
+                    intent.putExtra(Constant.BUNDLE_TYPE_MENU, Constant.BREAK_TYPE_LOCK);
+                    if(bInfo != null){
+                        Bundle extras = new Bundle();
+                        extras.putSerializable(BUNDLE_CAR, bInfo.getCar());
+                        intent.putExtras(extras);
+                    }
+                    startActivityForResult(intent, Constant.REQUEST_CODE_BREAK);
                     break;
                 case R.id.id_break:
                     Intent intentBreak = new Intent(MainActivity.this, BreakActivity.class);
-                    intentBreak.putExtra(Constant.BUNDLE_TYPE_MENU, 1);
-                    startActivity(intentBreak);
+                    intentBreak.putExtra(Constant.BUNDLE_TYPE_MENU, Constant.BREAK_TYPE_BREAK);
+                    if(bInfo != null) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(BUNDLE_CAR, bInfo.getCar());
+                        intentBreak.putExtras(bundle);
+                    }
+                    startActivityForResult(intentBreak, Constant.REQUEST_CODE_BREAK);
                     break;
             }
         }

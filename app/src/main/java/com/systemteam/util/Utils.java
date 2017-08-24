@@ -3,6 +3,7 @@ package com.systemteam.util;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
@@ -10,16 +11,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -36,10 +40,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-/**
- * Created by gaolei on 16/12/30.
- */
 
 public class Utils {
     private static PowerManager.WakeLock mWakeLock;
@@ -316,5 +316,44 @@ public class Utils {
         s = s * EARTH_RADIUS;
         s = Math.round(s * 10000) / 10000;
         return s;
+    }
+
+    public static void showProtocol(Context context, int typeDialog){
+        final Dialog dialog = new Dialog(context, R.style.MyDialog);
+        dialog.setContentView(R.layout.layout_protocol_pay);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.menu_icon:
+                        dialog.dismiss();
+                        break;
+                }
+            }
+        };
+        dialog.findViewById(R.id.menu_icon).setOnClickListener(listener);
+        int title = R.string.setting_pay;
+        int content = R.string.protocol_pay;
+        switch (typeDialog){
+            case Constant.GUIDE_TYPE_PAY:
+                title = R.string.setting_pay;
+                content = R.string.protocol_pay;
+                break;
+            case Constant.GUIDE_TYPE_PROCOTOL:
+                title = R.string.setting_protocol;
+                content = R.string.protocol_user;
+                break;
+        }
+        ((TextView)dialog.findViewById(R.id.tv_title)).setText(context.getString(title));
+        TextView tvCotent = (TextView)dialog.findViewById(R.id.tv_content);
+        (tvCotent).setText(context.getString(content));
+        tvCotent.setMovementMethod(ScrollingMovementMethod.getInstance());
+        dialog.show();
     }
 }

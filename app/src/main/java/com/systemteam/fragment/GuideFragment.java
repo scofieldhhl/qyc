@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import com.systemteam.R;
 import com.systemteam.activity.BreakActivity;
 import com.systemteam.util.Constant;
+import com.systemteam.util.Utils;
 
 /**
  */
@@ -58,27 +59,27 @@ public class GuideFragment extends BaseFragment{
 
     @Override
     public void onClick(View v) {
-        int type = 0;
+        int type = -1;
         switch (v.getId()){
             case R.id.tr_break:
-                type = 1;
+                type = Constant.BREAK_TYPE_BREAK;
                 break;
             case R.id.tr_lock:
-                type = 0;
+                type = Constant.BREAK_TYPE_LOCK;
                 break;
             case R.id.tr_pay:
-                type = 2;
+                type = Constant.GUIDE_TYPE_PAY;
                 break;
             case R.id.tr_protocol:
-                type = 3;
+                type = Constant.GUIDE_TYPE_PROCOTOL;
                 break;
         }
-        if(type == 0 || type == 1){
+        if(type == Constant.BREAK_TYPE_LOCK || type == Constant.BREAK_TYPE_BREAK){
             Intent intent = new Intent(getActivity(), BreakActivity.class);
             intent.putExtra(Constant.BUNDLE_TYPE_MENU, type);
             startActivity(intent);
         }else {
-
+            Utils.showProtocol(getActivity(), type);
         }
     }
 

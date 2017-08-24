@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/activity_base_bg_gray">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -15,9 +17,10 @@
 
     <LinearLayout
         android:id="@+id/charge_layout"
-        android:layout_below="@id/toolbar"
         android:orientation="vertical"
-        style="@style/info_layout_style">
+        style="@style/info_layout_style"
+        android:layout_height="0dp"
+        android:layout_weight="3">
 
         <TextView
             android:id="@+id/ballance"
@@ -45,11 +48,15 @@
         android:layout_below="@id/charge_layout"
         android:padding="2dp"
         android:orientation="vertical"
-        style="@style/info_layout_style">
+        style="@style/info_layout_style"
+        android:layout_height="0dp"
+        android:layout_weight="2">
 
         <TextView
             android:id="@+id/trancaction_type"
             style="@style/text_style_title"
+            android:layout_margin="5dp"
+            android:textSize="@dimen/text_size_14"
             android:text="@string/transaction_type"/>
 
         <View style="@style/transaction_type_divider" />
@@ -57,7 +64,8 @@
         <RelativeLayout
             android:id="@+id/wechat_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:clickable="true"
             android:background="@drawable/type_item_selector">
 
@@ -83,7 +91,8 @@
         <RelativeLayout
             android:id="@+id/alipay_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:clickable="true"
             android:background="@drawable/type_item_selector">
 
@@ -104,7 +113,6 @@
 
         </RelativeLayout>
     </LinearLayout>
-
     <Button
         android:id="@+id/btn_book"
         android:layout_width="match_parent"
@@ -120,4 +128,16 @@
         android:text="@string/charge_im"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size" />
-</RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_pay_protocol"
+        style="@style/menu_text_style"
+        android:padding="0dp"
+        android:layout_marginBottom="15dp"
+        android:layout_width="match_parent"
+        android:textSize="@dimen/text_12"
+        android:textColor="@color/black"
+        android:layout_below="@id/btn_book"
+        android:gravity="center"
+        android:onClick="onClick" />
+</LinearLayout>

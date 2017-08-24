@@ -24,16 +24,16 @@
         android:id="@+id/action_a"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:onClick="gotoBreak"
-        app:fab_icon="@drawable/account_portrait"
+        android:onClick="onClick"
+        app:fab_icon="@drawable/ic_skill_blue_24dp"
         app:fab_colorPressed="@color/colorPrimary"/>
 
     <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/action_b"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:onClick="gotoBreakLock"
-        app:fab_icon="@drawable/mis_asv"
+        android:onClick="onClick"
+        app:fab_icon="@drawable/ic_password_blue_24dp"
         app:fab_colorPressed="@color/colorPrimary"/>
 
 </com.getbase.floatingactionbutton.FloatingActionsMenu>

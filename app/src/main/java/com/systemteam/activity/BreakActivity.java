@@ -25,7 +25,9 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 
+import static com.systemteam.util.Constant.BUNDLE_CAR;
 import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
+import static com.systemteam.util.Constant.BUNDLE_KEY_SUBMIT_SUCCESS;
 import static com.systemteam.util.Constant.BUNDLE_TYPE_MENU;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 import static com.systemteam.util.Constant.REQUEST_CODE;
@@ -39,6 +41,7 @@ public class BreakActivity extends BaseActivity {
     private CheckBox[] mCbArray;
     private Car mCar;
     private EditText mEtDescription;
+    private boolean isSubmitSuccess = false;
     private static class MyHandler extends Handler {
         private WeakReference<BreakActivity> mActivity;
 
@@ -64,7 +67,7 @@ public class BreakActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_break);
         mContext = this;
-        mType = getIntent().getIntExtra(BUNDLE_TYPE_MENU, 0);
+        mType = getIntent().getIntExtra(BUNDLE_TYPE_MENU, Constant.BREAK_TYPE_LOCK);
         initView();
         initData();
     }
@@ -74,7 +77,7 @@ public class BreakActivity extends BaseActivity {
         mTlBreak = (TableLayout) findViewById(R.id.tl_break);
         mLlLock = (LinearLayout) findViewById(R.id.ll_lock);
         mTvCode = (TextView) findViewById(R.id.tv_title_code);
-        if(mType == 0){
+        if(mType == Constant.BREAK_TYPE_LOCK){
             initToolBar(this, R.string.break_lock_title);
             mTlBreak.setVisibility(View.GONE);
             mLlLock.setVisibility(View.VISIBLE);
@@ -97,7 +100,17 @@ public class BreakActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
+        Intent intent = getIntent();
+        if(intent != null){
+            Bundle bundle = intent.getExtras();
+            if(bundle != null){
+                mCar = (Car) bundle.getSerializable(BUNDLE_CAR);
+                if(mCar != null){
+                    mCarNo = mCar.getCarNo();
+                    mTvCode.setText(getString(R.string.break_carNo) + mCarNo);
+                }
+            }
+        }
     }
 
     @Override
@@ -106,6 +119,14 @@ public class BreakActivity extends BaseActivity {
             case R.id.menu_icon:
                 finish();
                 break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(isSubmitSuccess){
+            setResult(RESULT_OK, new Intent().putExtra(BUNDLE_KEY_SUBMIT_SUCCESS, isSubmitSuccess));
         }
     }
 
@@ -126,7 +147,7 @@ public class BreakActivity extends BaseActivity {
                 return;
             }
             Car newCar = new Car();
-            if(mType == 0){
+            if(mType == Constant.BREAK_TYPE_LOCK){
                 newCar.setStatus(Constant.BREAK_STATUS_LOCK);
             }else {
                 int status = -1;
@@ -147,8 +168,10 @@ public class BreakActivity extends BaseActivity {
                 public void done(BmobException e) {
                     mProgressHelper.dismissProgressDialog();
                     if(e==null){
+                        isSubmitSuccess = true;
                         toast(getString(R.string.break_submit_success));
                     }else{
+                        isSubmitSuccess = false;
                         toast(getString(R.string.submit_faile));
                         loge(e);
                     }
@@ -166,29 +189,36 @@ public class BreakActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_CODE && data != null){
-            mCarNo = data.getStringExtra(BUNDLE_KEY_CODE);
-            mTvCode.setText(getString(R.string.break_carNo) + mCarNo);
+            String result = data.getStringExtra(BUNDLE_KEY_CODE);
+            if(!TextUtils.isEmpty(result)){
+                mCarNo = result;
+                mTvCode.setText(getString(R.string.break_carNo) + mCarNo);
+            }
         }
     }
 
     private void checkCarExist(String carNo) {
-        BmobQuery<Car> query = new BmobQuery<>();
-        query.addWhereEqualTo("carNo", carNo);
-        addSubscription(query.findObjects(new FindListener<Car>() {
+        if(mCar == null){
+            BmobQuery<Car> query = new BmobQuery<>();
+            query.addWhereEqualTo("carNo", carNo);
+            addSubscription(query.findObjects(new FindListener<Car>() {
 
-            @Override
-            public void done(List<Car> object, BmobException e) {
-                if(e==null){
-                    if(object != null && object.size() > 0){
-                        mCar = object.get(0);
-                        mHandler.sendEmptyMessage(MSG_RESPONSE_SUCCESS);
+                @Override
+                public void done(List<Car> object, BmobException e) {
+                    if(e==null){
+                        if(object != null && object.size() > 0){
+                            mCar = object.get(0);
+                            mHandler.sendEmptyMessage(MSG_RESPONSE_SUCCESS);
+                        }
+                    }else{
+                        mProgressHelper.dismissProgressDialog();
+                        toast(getString(R.string.response_faile));
+                        loge(e);
                     }
-                }else{
-                    mProgressHelper.dismissProgressDialog();
-                    toast(getString(R.string.response_faile));
-                    loge(e);
                 }
-            }
-        }));
+            }));
+        }else {
+            mHandler.sendEmptyMessage(MSG_RESPONSE_SUCCESS);
+        }
     }
 }

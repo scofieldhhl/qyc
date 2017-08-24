@@ -15,6 +15,12 @@ public class Constant {
     public static final int STATUS_NORMAL = 0;
     public static final int BREAK_STATUS_LOCK = -1;
     public static final int BREAK_STATUS = -2;
+    //guide
+    public static final int BREAK_TYPE_LOCK = -1;
+    public static final int BREAK_TYPE_BREAK = -2;
+    public static final int GUIDE_TYPE_PAY = -3;
+    public static final int GUIDE_TYPE_PROCOTOL = -4;
+    //guide
 
     public static final int QUERY_LIMIT_DEFAULT = 10;
     public static int WITHDRAW_DAYS_DEFAULT = 15;
@@ -25,7 +31,7 @@ public class Constant {
     public static final int USER_TYPE_NORMAL = 0;
     public static final int USER_TYPE_CUSTOMER = 1;
     public static final int USER_TYPE_APPLYING = -1;    //申请成为商户
-    public static final int USER_TYPE_EXPERTER = 2;
+    public static final int USER_TYPE_EXPERTER = 2;     //维护维修人员
     //map
     public static final int MAP_SCAN_SPAN = 10 * 1000;  //设置地图扫描间隔，单位是毫秒
     public static final float MAP_SCALING = 18.0f;      ////地图缩放比设置为18
@@ -45,9 +51,11 @@ public class Constant {
     public static final String BUNDLE_KEY_BLANACE = "key_balance";
     public static final String BUNDLE_KEY_AMOUNT = "key_amount";
     public static final String BUNDLE_KEY_ISGAMEOVER = "key_isgameover";
-    public static final int  REQUEST_IMAGE = 100;
-    public static final int  REQUEST_CODE = 101;
-    public static final int  REQUEST_CODE_WALLET = 102;
+    public static final String BUNDLE_KEY_SUBMIT_SUCCESS = "key_issubmitsuccess";
+    public static final int REQUEST_IMAGE = 100;
+    public static final int REQUEST_CODE = 101;
+    public static final int REQUEST_CODE_WALLET = 102;
+    public static final int REQUEST_CODE_BREAK = 103;
 
     public static final int DISMISS_SPLASH = 0x122;
     public static final int MSG_RESPONSE_SUCCESS = 0x123;

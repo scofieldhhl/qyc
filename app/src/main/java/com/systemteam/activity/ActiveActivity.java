@@ -17,6 +17,7 @@ import com.systemteam.R;
 import com.systemteam.bean.Car;
 import com.systemteam.bean.MyUser;
 import com.systemteam.service.RouteService;
+import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
 
@@ -29,8 +30,11 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
+import static com.systemteam.util.Constant.BUNDLE_CAR;
 import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
+import static com.systemteam.util.Constant.BUNDLE_KEY_SUBMIT_SUCCESS;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
+import static com.systemteam.util.Constant.REQUEST_CODE_BREAK;
 import static com.systemteam.util.Constant.TIME_ONCE_ACTIVE_STR;
 
 public class ActiveActivity extends BaseActivity {
@@ -87,7 +91,19 @@ public class ActiveActivity extends BaseActivity {
 
     @Override
     public void onClick(View v) {
-
+        Intent intentBreak = new Intent(mContext, BreakActivity.class);
+        switch (v.getId()){
+            case R.id.action_a:
+                intentBreak.putExtra(Constant.BUNDLE_TYPE_MENU, Constant.BREAK_TYPE_BREAK);
+                break;
+            case R.id.action_b:
+                intentBreak.putExtra(Constant.BUNDLE_TYPE_MENU, Constant.BREAK_TYPE_LOCK);
+                break;
+        }
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(BUNDLE_CAR, mCar);
+        intentBreak.putExtras(bundle);
+        startActivityForResult(intentBreak, Constant.REQUEST_CODE_BREAK);
     }
 
     @Override
@@ -185,4 +201,13 @@ public class ActiveActivity extends BaseActivity {
         }));
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE_BREAK && data != null && resultCode == RESULT_OK){
+            if(data.getBooleanExtra(BUNDLE_KEY_SUBMIT_SUCCESS, false)){
+                //TODO 使用过程中申报设备故障处理
+            }
+        }
+    }
 }

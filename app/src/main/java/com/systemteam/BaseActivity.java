@@ -260,14 +260,14 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     public void gotoBreak(View view){
         Intent intentBreak = new Intent(mContext, BreakActivity.class);
-        intentBreak.putExtra(Constant.BUNDLE_TYPE_MENU, 1);
-        startActivity(intentBreak);
+        intentBreak.putExtra(Constant.BUNDLE_TYPE_MENU, Constant.BREAK_TYPE_BREAK);
+        startActivityForResult(intentBreak, Constant.REQUEST_CODE_BREAK);
     }
 
     public void gotoBreakLock(View view){
         Intent intent = new Intent(mContext, BreakActivity.class);
-        intent.putExtra(Constant.BUNDLE_TYPE_MENU, 0);
-        startActivity(intent);
+        intent.putExtra(Constant.BUNDLE_TYPE_MENU, Constant.BREAK_TYPE_LOCK);
+        startActivityForResult(intent, Constant.REQUEST_CODE_BREAK);
     }
 
     public void loadAvatar(final Context context, String path, final ImageView imageView){

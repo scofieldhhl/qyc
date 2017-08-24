@@ -106,6 +106,9 @@
     <string name="earn_format" formatted="false">%.2f</string>
     <string name="submit">提交</string>
 
+    <string name="wallet_tip_1" formatted="false">点击马上充值，即表示已阅读和同意%s</string>
+    <string name="wallet_tip_2">《充值协议》</string>
+
     <string name="demo_title_location">demo_title_location</string>
     <string name="demo_desc_location">demo_desc_location</string>
     <string name="demo_title_geocode">demo_title_geocode</string>
@@ -407,6 +410,7 @@
         \n
         \n
     </string>
+
     <!--feedback-->
 
     <string name="errcode_success">发送成功</string>
@@ -416,7 +420,7 @@
     <string name="errcode_unknown">发送返回</string>
 
     <!-- Settings strings. -->
-    <string name="setting_pay">充值说明</string>
+    <string name="setting_pay">充值协议</string>
     <string name="setting_protocol">用户协议</string>
     <string name="pref_download_path_key">download_path_preference</string>
     <string name="pref_download_path_title">下载路径</string>
@@ -485,4 +489,81 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <!--Setting-->
+
+    <string name="protocol_pay">
+        \n
+        1.账户构成：\n
+        \n
+        2.账户余额使用规则：\n
+        \n
+        3.账户余额有效期：\n
+        \n
+        4.退款规则：\n
+        \n
+        5.正当性保证：\n
+        \n
+        \n
+        1.账户构成：\n
+        \n
+        2.账户余额使用规则：\n
+        \n
+        3.账户余额有效期：\n
+        \n
+        4.退款规则：\n
+        \n
+        5.正当性保证：\n
+        \n
+        \n
+        1.账户构成：\n
+        \n
+        2.账户余额使用规则：\n
+        \n
+        3.账户余额有效期：\n
+        \n
+        4.退款规则：\n
+        \n
+        5.正当性保证：\n
+        \n
+    </string>
+
+    <string name="protocol_user">
+        \n
+        1.提示条款：\n
+        \n
+        2.协议范围：\n
+        \n
+        3.用户注册与认证：\n
+        \n
+        4.账户安全规范：\n
+        \n
+        5.共享平台服务及规范：\n
+        \n
+        6.用户信息保护及授权：\n
+        \n
+        7.著作权：\n
+        \n
+        8.责任的限制：\n
+        \n
+        9.用户行为的评价与处理：\n
+        \n
+        \n
+        1.提示条款：\n
+        \n
+        2.协议范围：\n
+        \n
+        3.用户注册与认证：\n
+        \n
+        4.账户安全规范：\n
+        \n
+        5.共享平台服务及规范：\n
+        \n
+        6.用户信息保护及授权：\n
+        \n
+        7.著作权：\n
+        \n
+        8.责任的限制：\n
+        \n
+        9.用户行为的评价与处理：\n
+        \n
+    </string>
 </resources>
