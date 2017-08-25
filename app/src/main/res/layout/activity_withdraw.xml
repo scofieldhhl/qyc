@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/activity_base_bg_gray"
+    style="@style/activity_base_bg"
     android:orientation="vertical"
     tools:context="com.systemteam.activity.WithdrawActivity">
 

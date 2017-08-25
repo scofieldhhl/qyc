@@ -30,7 +30,7 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 
 import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
-
+//TODO 小车状态修改：故障改为正常，维修申报
 public class MyCarActivity extends BaseListActivity
         implements NavigationView.OnNavigationItemSelectedListener, MyCarAdapter.OnItemClickListener{
     PieChartFragment mChartFragment;
