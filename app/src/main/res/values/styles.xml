@@ -332,7 +332,7 @@
     <style name="activity_base_bg">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <!--<item name="android:background">@color/color_f4f3f3</item>-->
+        <item name="android:background">@color/color_f4f3f3</item>
         <!--<item name="android:background">@color/colorPrimary</item>-->
         <!--<item name="android:paddingBottom">15dp</item>-->
     </style>

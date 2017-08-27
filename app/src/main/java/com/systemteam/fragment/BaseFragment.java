@@ -78,6 +78,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
                 }
             }
         });*/
+        //TODO 发送失败dialog与 toast成功冲突
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

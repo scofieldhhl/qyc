@@ -118,6 +118,7 @@ import static com.systemteam.util.Constant.DISMISS_SPLASH;
 import static com.systemteam.util.Constant.MAP_SCAN_SPAN;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
+//TODO 屏蔽预约功能后，获取services获取小车编号失败
 public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanResultListener,
         AllInterface.OnMenuSlideListener, NavigationView.OnNavigationItemSelectedListener{
 
@@ -833,7 +834,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
                 "50米", "0.5分钟");
         infos.add(bikeInfo);
         addInfosOverlay(infos);
-        initNearestBike(bikeInfo, new LatLng(_latitude - 0.0005, _longitude - 0.0005));
+//        initNearestBike(bikeInfo, new LatLng(_latitude - 0.0005, _longitude - 0.0005));
     }
 
     private void loadCarlistNear(double _latitude, double _longitude){
@@ -889,9 +890,9 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
     private void updateBikeInfo(BikeInfo bikeInfo) {
 
         if (!hasPlanRoute) {
-            bike_layout.setVisibility(View.VISIBLE);
+            /*bike_layout.setVisibility(View.VISIBLE);
             bike_time.setText(bikeInfo.getTime());
-            bike_distance.setText(bikeInfo.getDistance());
+            bike_distance.setText(bikeInfo.getDistance());*/
             bInfo = bikeInfo;
             endNodeStr = PlanNode.withLocation(new LatLng(bikeInfo.getLatitude(), bikeInfo.getLongitude()));
             drawPlanRoute(endNodeStr);

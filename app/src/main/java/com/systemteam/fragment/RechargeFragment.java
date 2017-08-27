@@ -115,6 +115,7 @@ public class RechargeFragment extends BaseListFragment{
         MyUser user = BmobUser.getCurrentUser(MyUser.class);
         BmobQuery<CashRecord> query = new BmobQuery<>();
         query.addWhereEqualTo(REQUEST_KEY_BY_USER, user.getObjectId());
+        query.order("-createdAt");
         initQueryByPage(query, page);
         addSubscription(query.findObjects(new FindListener<CashRecord>() {
 

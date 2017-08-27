@@ -299,7 +299,7 @@ public class CarDetailActivity extends BaseListActivity {
     }
 
     public void doRequestCarExpert(View view){
-        //TODO 维修表增加维修记录
+        //TODO 维修表增加维修记录，更新界面，避免重复申报，小车状态设计
         toast(getString(R.string.break_submit_success));
     }
 }
