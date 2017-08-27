@@ -10,9 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.systemteam.BaseActivity;
 import com.systemteam.R;
 import com.systemteam.bean.Car;
 import com.systemteam.bean.MyUser;
@@ -37,7 +35,7 @@ import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 import static com.systemteam.util.Constant.REQUEST_CODE_BREAK;
 import static com.systemteam.util.Constant.TIME_ONCE_ACTIVE_STR;
 
-public class ActiveActivity extends BaseActivity {
+public class ActiveActivity extends BaseActiveActivity {
     private String mTime = TIME_ONCE_ACTIVE_STR;
     private LocationReceiver mReceiver;
     private TextView mTvTick;
@@ -185,12 +183,12 @@ public class ActiveActivity extends BaseActivity {
                 if(e==null){
                     if(object != null && object.size() > 0){
                         mCar = object.get(0);
-                        startRouteService(ActiveActivity.this, mCar);
+                        checkCarAvaliable(ActiveActivity.this, mCar);
                     }else {
-                        Toast.makeText(ActiveActivity.this, R.string.error_car_no, Toast.LENGTH_SHORT).show();
+                        toast(getString(R.string.error_car_no));
                     }
                 }else{
-                    Toast.makeText(ActiveActivity.this, R.string.initing_fail, Toast.LENGTH_SHORT).show();
+                    toast(getString(R.string.initing_fail));
                     if(e instanceof BmobException){
                         LogTool.e("错误码："+((BmobException)e).getErrorCode()+",错误描述："+((BmobException)e).getMessage());
                     }else{

@@ -71,6 +71,7 @@ import com.baidu.mapapi.search.route.RoutePlanSearch;
 import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
+import com.systemteam.activity.BaseActiveActivity;
 import com.systemteam.activity.BreakActivity;
 import com.systemteam.activity.CodeUnlockActivity;
 import com.systemteam.activity.MyRouteActivity;
@@ -117,7 +118,7 @@ import static com.systemteam.util.Constant.DISMISS_SPLASH;
 import static com.systemteam.util.Constant.MAP_SCAN_SPAN;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
-public class MainActivity extends BaseActivity implements OnGetRoutePlanResultListener,
+public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanResultListener,
         AllInterface.OnMenuSlideListener, NavigationView.OnNavigationItemSelectedListener{
 
     private double currentLatitude, currentLongitude, changeLatitude, changeLongitude;
@@ -1150,7 +1151,8 @@ public class MainActivity extends BaseActivity implements OnGetRoutePlanResultLi
                car = new Car();
                 car.setCarNo(bInfo.getCarNo());
             }
-            startRouteService(this, car);
+//            startRouteService(this, car);
+            checkCarAvaliable(MainActivity.this, car);
         }else {
             toast(getString(R.string.break_car_no));
             return;

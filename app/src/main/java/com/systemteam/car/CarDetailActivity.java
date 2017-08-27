@@ -3,11 +3,15 @@ package com.systemteam.car;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.systemteam.R;
 import com.systemteam.activity.BaseListActivity;
@@ -33,8 +37,11 @@ public class CarDetailActivity extends BaseListActivity {
     private boolean isChartShow = false;
     private Car mCar;
     FrameLayout mLayoutChart;
+    LinearLayout mLlDetail;
     private ChartFragment mChartFragment;
     private Menu mMenu;
+    private TextView mTvCarNo, mTvEarn, mTvAddress, mTvStatus, mTvMark;
+    Button mBtnUpdate, mBtnExpert;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +62,7 @@ public class CarDetailActivity extends BaseListActivity {
                     case R.id.action_settings:
                         isChartShow = !isChartShow;
                         if(isChartShow){
-                            routeRecyclerView.setVisibility(View.GONE);
+                            mLlDetail.setVisibility(View.GONE);
                             mLayoutChart.setVisibility(View.VISIBLE);
                             if(mChartFragment == null){
                                 mChartFragment = new ChartFragment(mCar);
@@ -67,7 +74,7 @@ public class CarDetailActivity extends BaseListActivity {
                             /*mMenu.getItem(1).setVisible(true);
                             mMenu.getItem(2).setVisible(true);*/
                         }else {
-                            routeRecyclerView.setVisibility(View.VISIBLE);
+                            mLlDetail.setVisibility(View.VISIBLE);
                             mLayoutChart.setVisibility(View.GONE);
                             item.setTitle(R.string.action_chart);
                             /*mMenu.getItem(1).setVisible(false);
@@ -95,6 +102,16 @@ public class CarDetailActivity extends BaseListActivity {
         routeAdapter.setOnClickListener(this);
         routeAdapter.setOnLongClickListener(this);
         routeRecyclerView.setAdapter(routeAdapter);
+
+        mTvCarNo = (TextView) findViewById(R.id.tv_carno);
+        mTvEarn = (TextView) findViewById(R.id.tv_earn);
+        mTvAddress = (TextView) findViewById(R.id.tv_address);
+        mTvStatus = (TextView) findViewById(R.id.tv_status);
+        mTvMark = (TextView) findViewById(R.id.tv_mark);
+
+        mBtnUpdate = (Button) findViewById(R.id.btn_update);
+        mBtnExpert = (Button) findViewById(R.id.btn_expert);
+        mLlDetail = (LinearLayout) findViewById(R.id.ll_detail);
     }
 
     @Override
@@ -103,6 +120,7 @@ public class CarDetailActivity extends BaseListActivity {
         if(intent != null){
             Bundle bundle = intent.getExtras();
             mCar = (Car) bundle.getSerializable(Constant.BUNDLE_CAR);
+            initInfo(mCar);
             if(mCar != null){
                 mPage = 0;
                 initDataList(mPage);
@@ -112,6 +130,51 @@ public class CarDetailActivity extends BaseListActivity {
             }
         }
 
+    }
+
+    private void initInfo(Car car){
+        if(car != null){
+            mTvCarNo.setText(car.getCarNo());
+            mTvEarn.setText(car.getEarn() != null ? String.valueOf(car.getEarn()) : "0.00");
+            mTvAddress.setText(car.getAddress());
+            if(car.getStatus() == null){
+                mTvStatus.setText(getString(R.string.status_normal));
+                mBtnUpdate.setVisibility(View.GONE);
+                mBtnExpert.setVisibility(View.GONE);
+            }else {
+                switch (car.getStatus()){
+                    case Constant.STATUS_NORMAL:
+                        mTvStatus.setText(getString(R.string.status_normal));
+                        mTvStatus.setTextColor(ContextCompat.getColor(mContext, R.color.black));
+                        mBtnUpdate.setVisibility(View.GONE);
+                        mBtnExpert.setVisibility(View.GONE);
+                        break;
+                    case Constant.BREAK_STATUS_LOCK:
+                        mTvStatus.setText(getString(R.string.status_lock));
+                        mTvStatus.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+                        mBtnUpdate.setVisibility(View.VISIBLE);
+                        mBtnExpert.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        mTvStatus.setText(getString(R.string.status_break));
+                        mTvStatus.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
+                        mBtnUpdate.setVisibility(View.VISIBLE);
+                        mBtnExpert.setVisibility(View.VISIBLE);
+                        break;
+                }
+            }
+            mTvMark.setText(car.getMark());
+
+        }else {
+            mTvCarNo.setText("");
+            mTvEarn.setText("");
+            mTvAddress.setText("");
+            mTvStatus.setText("");
+            mTvMark.setText("");
+
+            mBtnUpdate.setVisibility(View.GONE);
+            mBtnExpert.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -208,5 +271,35 @@ public class CarDetailActivity extends BaseListActivity {
                 onResponse(object, e, page);
             }
         }));
+    }
+
+    public void doRequestCarNormal(View view){
+        if(mCar == null){
+            mProgressHelper.dismissProgressDialog();
+            toast(getString(R.string.break_car_no));
+            return;
+        }
+        mProgressHelper.showProgressDialog(getString(R.string.submiting));
+        Car newCar = new Car();
+        newCar.setStatus(Constant.STATUS_NORMAL);
+        addSubscription(newCar.update(mCar.getObjectId(), new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                mProgressHelper.dismissProgressDialog();
+                if(e==null){
+                    toast(getString(R.string.submiting));
+                    mCar.setStatus(Constant.STATUS_NORMAL);
+                    initInfo(mCar);
+                }else{
+                    toast(getString(R.string.submit_faile));
+                    loge(e);
+                }
+            }
+        }));
+    }
+
+    public void doRequestCarExpert(View view){
+        //TODO 维修表增加维修记录
+        toast(getString(R.string.break_submit_success));
     }
 }

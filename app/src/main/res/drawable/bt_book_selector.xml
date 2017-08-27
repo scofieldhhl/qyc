@@ -27,36 +27,36 @@
         <shape>
             <corners android:radius="60dp" />
             <solid android:color="@color/colorPrimaryDark" />
-            <stroke
+            <!--<stroke
                 android:width="3dip"
-                android:color="@color/colorAccent" />
+                android:color="@color/colorAccent" />-->
         </shape>
     </item>
     <item android:state_pressed="true">
         <shape>
             <corners android:radius="60dp" />
             <solid android:color="@color/colorPrimaryDark" />
-            <stroke
+            <!--<stroke
                 android:width="3dip"
-                android:color="@color/colorAccent" />
+                android:color="@color/colorAccent" />-->
         </shape>
     </item>
     <item android:state_selected="true">
         <shape>
             <corners android:radius="60dp" />
             <solid android:color="@color/colorPrimaryDark" />
-            <stroke
+            <!--<stroke
                 android:width="3dip"
-                android:color="@color/colorAccent" />
+                android:color="@color/colorAccent" />-->
         </shape>
     </item>
     <item>
         <shape>
             <corners android:radius="60dp" />
             <solid android:color="@color/colorPrimary" />
-            <stroke
+            <!--<stroke
                 android:width="3dip"
-                android:color="@color/colorAccent" />
+                android:color="@color/colorAccent" />-->
         </shape>
     </item>
     <!--<item android:state_focused="true">

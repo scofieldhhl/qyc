@@ -73,11 +73,11 @@ public class MyCarAdapter extends BaseAdapter {
                     switch (status){
                         case Constant.STATUS_NORMAL:
                             holder.bike_price.setText(context.getString(R.string.status_normal));
-                            holder.bike_price.setTextColor(ContextCompat.getColor(context, R.color.color_393939));
+                            holder.bike_price.setTextColor(ContextCompat.getColor(context, R.color.black));
                             break;
                         case Constant.BREAK_STATUS_LOCK:
                             holder.bike_price.setText(context.getString(R.string.status_lock));
-                            holder.bike_price.setTextColor(ContextCompat.getColor(context, R.color.red));
+                            holder.bike_price.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
                             break;
                         default:
                             holder.bike_price.setText(context.getString(R.string.status_break));

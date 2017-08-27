@@ -14,72 +14,151 @@
             style="@style/toolbar_title" />
     </android.support.v7.widget.Toolbar>
 
-    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/tl_info"
-        style="@style/info_layout_style"
-        android:layout_below="@id/toolbar"
-        android:padding="10dp"
-        android:stretchColumns="1,3">
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/ll_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@id/toolbar">
+        <TableLayout
+            style="@style/info_layout_style"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:stretchColumns="1,3">
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <TextView
-                style="@style/info_text_style_title"
-                android:text="@string/carNo" />
+                <TextView
+                    style="@style/info_text_style_title"
+                    android:padding="5dp"
+                    android:text="@string/carNo" />
 
-            <TextView
-                style="@style/info_text_style"/>
-            <TextView
-                style="@style/info_text_style_title"
-                android:text="@string/earn" />
+                <TextView
+                    android:id="@+id/tv_carno"
+                    android:padding="5dp"
+                    style="@style/info_text_style"/>
+            </TableRow>
+            <View style="@style/menu_divider_style" />
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    style="@style/info_text_style_title"
+                    android:padding="5dp"
+                    android:text="@string/earn" />
 
-            <TextView
-                style="@style/info_text_style"/>
-        </TableRow>
-        <View style="@style/menu_divider_style" />
-        <TextView
-            style="@style/info_text_style"
-            android:text="@string/address"/>
-        <View style="@style/menu_divider_style" />
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_earn"
+                    android:padding="5dp"
+                    style="@style/info_text_style"/>
+            </TableRow>
+            <View style="@style/menu_divider_style" />
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    style="@style/info_text_style_title"
+                    android:padding="5dp"
+                    android:text="@string/address" />
+                <TextView
+                    android:id="@+id/tv_address"
+                    style="@style/info_text_style"
+                    android:padding="5dp"
+                    android:gravity="left"
+                    android:ellipsize="end"
+                    android:layout_width="match_parent"
+                    android:maxLines="1"/>
+            </TableRow>
+            <View style="@style/menu_divider_style" />
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <TextView
-                style="@style/info_text_style_title"
-                android:text="@string/status" />
+                <TextView
+                    style="@style/info_text_style_title"
+                    android:padding="5dp"
+                    android:text="@string/status" />
 
-            <TextView
-                style="@style/info_text_style"/>
+                <TextView
+                    android:id="@+id/tv_status"
+                    android:padding="5dp"
+                    style="@style/info_text_style"/>
 
-            <TextView
-                style="@style/info_text_style"/>
+            </TableRow>
+            <View style="@style/menu_divider_style" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:layout_marginTop="10dp"
+                android:gravity="center|center_vertical"
+                android:orientation="horizontal">
                 <Button
+                    android:id="@+id/btn_update"
                     style="@style/button_style"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="30dp"
+                    android:textSize="@dimen/text_size_14"
+                    android:onClick="doRequestCarNormal"
                     android:padding="0dp"
-                    android:layout_margin="0dp"/>
+                    android:layout_margin="5dp"
+                    android:text="@string/apply_normal"/>
                 <Button
+                    android:id="@+id/btn_expert"
                     style="@style/button_style"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="30dp"
+                    android:textSize="@dimen/text_size_14"
+                    android:onClick="doRequestCarExpert"
                     android:padding="0dp"
-                    android:layout_margin="0dp"/>
+                    android:layout_margin="5dp"
+                    android:text="@string/apply_expert"/>
             </LinearLayout>
-        </TableRow>
-        <View style="@style/menu_divider_style" />
-        <TextView
-            style="@style/info_text_style"
-            android:text="@string/mark"/>
-        <View style="@style/menu_divider_style" />
-    </TableLayout>
-    <com.jcodecraeer.xrecyclerview.XRecyclerView
-        android:id="@+id/recyclerview_route"
-        style="@style/xrecyclerview_style"
-        android:layout_below="@id/tl_info"/>
+            <View style="@style/menu_divider_style" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    style="@style/info_text_style_title"
+                    android:padding="5dp"
+                    android:text="@string/mark" />
+                <TextView
+                    android:id="@+id/tv_mark"
+                    style="@style/info_text_style"
+                    android:padding="5dp"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:maxLines="1"/>
+            </LinearLayout>
+        </TableLayout>
+        <LinearLayout
+            style="@style/info_layout_style"
+            android:background="@null"
+            android:orientation="horizontal">
+            <View style="@style/menu_divider_style"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:background="@color/text_black_30"/>
+            <TextView
+                style="@style/info_text_style"
+                android:padding="3dp"
+                android:textSize="12sp"
+                android:textColor="@color/text_black_30"
+                android:layout_height="wrap_content"
+                android:text="@string/earn_detail"/>
+            <View style="@style/menu_divider_style"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:background="@color/text_black_30"/>
+        </LinearLayout>
+        <com.jcodecraeer.xrecyclerview.XRecyclerView
+            android:id="@+id/recyclerview_route"
+            style="@style/xrecyclerview_style"/>
+
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/ll_content"

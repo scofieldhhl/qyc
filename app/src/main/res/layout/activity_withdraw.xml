@@ -134,18 +134,18 @@
         <View style="@style/menu_divider_style"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:background="@color/text_black_54"/>
+            android:background="@color/text_black_30"/>
         <TextView
             style="@style/info_text_style"
             android:padding="3dp"
             android:textSize="12sp"
-            android:textColor="@color/text_black_54"
+            android:textColor="@color/text_black_30"
             android:layout_height="wrap_content"
             android:text="@string/withdraw_record"/>
         <View style="@style/menu_divider_style"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:background="@color/text_black_54"/>
+            android:background="@color/text_black_30"/>
     </LinearLayout>
     <com.jcodecraeer.xrecyclerview.XRecyclerView
         android:id="@+id/recyclerview_route"

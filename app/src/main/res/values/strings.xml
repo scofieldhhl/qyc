@@ -53,6 +53,8 @@
     <string name="open_gps">请先打开GPS，提高定位准确度</string>
     <string name="confirm">确定</string>
     <string name="cancel">取消</string>
+    <string name="confirm_continu">坚持使用</string>
+    <string name="cancel_change">更换设备</string>
     <string name="navigation">导航</string>
     <string name="begin_navigation">开始导航</string>
     <string name="my_position">我的位置</string>
@@ -107,6 +109,11 @@
     <string name="submit">提交</string>
     <string name="type">类型</string>
     <string name="mark">备注</string>
+    <string name="earn_detail">收益明细</string>
+    <string name="apply_normal">设备正常</string>
+    <string name="apply_expert">维修申报</string>
+    <string name="tip_lock">该设备已申报无法开锁，建议更换设备使用</string>
+    <string name="tip_break">该设备已申报故障，建议更换设备使用</string>
 
     <string name="wallet_tip_1" formatted="false">点击马上充值，即表示已阅读和同意%s</string>
     <string name="wallet_tip_2">《充值协议》</string>
