@@ -34,20 +34,22 @@ import com.systemteam.MainActivity;
 import com.systemteam.R;
 import com.systemteam.activity.RouteDetailActivity;
 import com.systemteam.bean.Car;
+import com.systemteam.bean.EventMessage;
 import com.systemteam.bean.MyUser;
 import com.systemteam.bean.RoutePoint;
-import com.systemteam.bean.RouteRecord;
 import com.systemteam.bean.UseRecord;
 import com.systemteam.callback.AllInterface;
-import com.systemteam.database.db.DBManager;
 import com.systemteam.map.MyOrientationListener;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
 import com.systemteam.welcome.WelcomeActivity;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -60,7 +62,6 @@ import cn.bmob.v3.listener.UpdateListener;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
-import static com.systemteam.BaseActivity.loge;
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
 import static com.systemteam.util.Constant.BUNDLE_CAR;
 import static com.systemteam.util.Constant.COST_BASE_DEFAULT;
@@ -111,6 +112,7 @@ public class RouteService extends Service {
     private Car mCar;
     private String mTime;
     private MyUser mUser;
+    private boolean isUseFree = false;
 
     public void setiUpdateLocation(AllInterface.IUpdateLocation iUpdateLocation) {
         this.iUpdateLocation = iUpdateLocation;
@@ -154,9 +156,13 @@ public class RouteService extends Service {
         }
 //        initLocation();//初始化LocationgClient
         initNotification();
+        //TODO 发送开锁指令，开锁成功后开始计时
         initCountDownTimer();
         Utils.acquireWakeLock(this);
         // 开启轨迹记录线程
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -237,33 +243,43 @@ public class RouteService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        releaseCountDownTimer();
+//        releaseCountDownTimer();
 //        mlocationClient.stop();
 //        myOrientationListener.stop();
         LogTool.d("RouteService----0nDestroy---------------");
+        Utils.releaseWakeLock();
+        mTime = "";
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    //TODO 发送设备停止指令
+    private void doGameOver(boolean isFree){
+        LogTool.d("doGameOver");
         Gson gson = new Gson();
         String routeListStr = gson.toJson(routPointList);
         LogTool.d("RouteService----routeListStr-------------" + routeListStr);
-        if(mTime.equalsIgnoreCase("02 : 58") || mTime.equalsIgnoreCase("02 : 59")){
-            mTime = getString(R.string.time_start);
-        }
-        Bundle bundle = new Bundle();
-//        bundle.putString("totalTime", totalTime + "");
-        bundle.putString("totalTime", mTime);
-        bundle.putString("totalDistance", mCarNo + "");
-        bundle.putString("totalPrice", totalPrice + "");
-        bundle.putString("routePoints", routeListStr);
-        Intent intent = new Intent(this, RouteDetailActivity.class);
-        intent.putExtras(bundle);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        /*if (routPointList.size() > 2)
-            insertData(routeListStr);*/
-        insertData(routeListStr);
-        Utils.releaseWakeLock();
         stopForeground(true);
         isBikeUsing = false;
-        mTime = "";
+        if(!isFree){
+            requestBalance();
+            if(mTime.equalsIgnoreCase("02 : 58") || mTime.equalsIgnoreCase("02 : 59")){
+                mTime = getString(R.string.time_start);
+            }
+            Bundle bundle = new Bundle();
+            bundle.putString("totalTime", mTime);
+            bundle.putString("totalDistance", mCarNo + "");
+            bundle.putString("totalPrice", totalPrice + "");
+            bundle.putString("routePoints", routeListStr);
+            Intent intent = new Intent(this, RouteDetailActivity.class);
+            intent.putExtras(bundle);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            insertData(routeListStr);
+        }else {
+            stopSelf();
+        }
     }
 
 
@@ -358,24 +374,7 @@ public class RouteService extends Service {
 
     public void insertData(String routeListStr) {
         newUseRecord(mTime);
-        /*ContentValues values = new ContentValues();
-        // 向该对象中插入键值对，其中键是列名，值是希望插入到这一列的值，值必须和数据当中的数据类型一致
-        values.put("cycle_date", Utils.getDateFromMillisecond(beginTime));
-        values.put("cycle_time", totalTime);
-        values.put("cycle_distance", totalDistance);
-        values.put("cycle_price", totalPrice);
-        values.put("cycle_points", routeListStr);
-        // 创建DatabaseHelper对象
-        RouteDBHelper dbHelper = new RouteDBHelper(this);
-        // 得到一个可写的SQLiteDatabase对象
-        SQLiteDatabase sqliteDatabase = dbHelper.getWritableDatabase();
-        // 调用insert方法，就可以将数据插入到数据库当中
-        // 第一个参数:表名称
-        // 第二个参数：SQl不允许一个空列，如果ContentValues是空的，那么这一列被明确的指明为NULL值
-        // 第三个参数：ContentValues对象
-        sqliteDatabase.insert("cycle_route", null, values);
-        sqliteDatabase.close();*/
-        RouteRecord record = new RouteRecord();
+        /*RouteRecord record = new RouteRecord();
         record.setCycle_date(Utils.getDateFromMillisecond(beginTime));
         record.setCycle_time(String.valueOf(mTime));
         record.setCycle_distance(String.valueOf(totalDistance));
@@ -388,7 +387,7 @@ public class RouteService extends Service {
         record.setTimeUse(String.valueOf(mTime));
         record.setEarnRate(EARN_RATE_DEFAULT);
         record.setEarn(totalPrice * EARN_RATE_DEFAULT);
-        new DBManager().save(record);
+        new DBManager().save(record);*/
     }
 
     private void initCountDownTimer(){
@@ -397,31 +396,30 @@ public class RouteService extends Service {
             public void run() {
                 if(!isBikeUsing){
                     countDownTimer.start();
-                    balance();
+//                    requestBalance();
                 }
             }
         }, 0);
     }
 
     private CountDownTimer countDownTimer = new CountDownTimer(TIME_ONCE_ACTIVE, 1000) {
+        String timeLeft;
         private Handler handler = new Handler();
+        Runnable taskBroad = new Runnable() {
+            @Override
+            public void run() {
+                sendBroadcast(timeLeft);
+            }
+        };
         @Override
         public void onTick(long millisUntilFinished) {
             long min = millisUntilFinished / 60000;
             long secode = (millisUntilFinished / 1000) % 60;
-//            totalTime = (int) (System.currentTimeMillis() - beginTime) / 1000 / 60;
-//            totalPrice = (float) (Math.floor(totalTime / 30) * COST_BASE_DEFAULT + COST_BASE_DEFAULT);
-            final String timeLeft = String.format(Locale.US, FORMAT_TIME, min,
+            timeLeft = String.format(Locale.US, FORMAT_TIME, min,
                     secode < 10 ? "0" + secode : String.valueOf(secode));
-//            mCarNo = getString(R.string.cost_distance, String.valueOf(totalDistance));
             startNotifi(timeLeft, mCarNo,
                     getString(R.string.cost_num, String.valueOf(totalPrice)));
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    sendBroadcast(timeLeft);
-                }
-            }, 1000);
+            handler.postDelayed(taskBroad, 1000);
 
             long millUse = TIME_ONCE_ACTIVE - millisUntilFinished;
             secode = (millUse / 1000) % 60;
@@ -431,8 +429,10 @@ public class RouteService extends Service {
 
         @Override
         public void onFinish() {
+            LogTool.d("onFinish");
+            handler.removeCallbacks(taskBroad);
             sendBroadcast(getString(R.string.time_end));
-            stopSelf();
+            doGameOver(isUseFree);
         }
     };
 
@@ -467,10 +467,11 @@ public class RouteService extends Service {
         this.mCompositeSubscription.add(s);
     }
 
-    private void balance(){
+    private void requestBalance(){
         //1.扣费
         if(mUser == null){
             LogTool.e("mUser == null");
+            stopSelf();
             return;
         }
         MyUser newUser = new MyUser();
@@ -486,31 +487,33 @@ public class RouteService extends Service {
             public void done(BmobException e) {
                 if(e==null){
                 }else{
-                    loge(e);
+                    //TODO 错误码：206， 502
+                    LogTool.e("错误码："+(e).getErrorCode()+",错误描述："+(e).getMessage());
                 }
-            }
-        }));
-        //2.修改car收益
-        if(mCar == null){
-            LogTool.e("mCar == null");
-            return;
-        }
-        mEarn = totalPrice * EARN_RATE_DEFAULT;
-        Car newCar = new Car();
-        newCar.setIncome((mCar.getIncome() == null ? 0f : mCar.getIncome()) + totalPrice);
-        newCar.setEarn((mCar.getEarn() == null ? 0f : mCar.getEarn()) + mEarn);
-        addSubscription(newCar.update(mCar.getObjectId(), new UpdateListener() {
-            @Override
-            public void done(BmobException e) {
-                LogTool.d("done : ");
-                if(e==null){
-                }else{
-                    if(e instanceof BmobException){
-                        LogTool.e("错误码："+((BmobException)e).getErrorCode()+",错误描述："+((BmobException)e).getMessage());
-                    }else{
-                        LogTool.e("错误描述："+e.getMessage());
+                //2.修改car收益
+                if(mCar == null){
+                    LogTool.e("mCar == null");
+                    stopSelf();
+                    return;
+                }
+                mEarn = totalPrice * EARN_RATE_DEFAULT;
+                Car newCar = new Car();
+                newCar.setIncome((mCar.getIncome() == null ? 0f : mCar.getIncome()) + totalPrice);
+                newCar.setEarn((mCar.getEarn() == null ? 0f : mCar.getEarn()) + mEarn);
+                addSubscription(newCar.update(mCar.getObjectId(), new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        stopSelf();
+                        if(e==null){
+                        }else{
+                            if(e instanceof BmobException){
+                                LogTool.e("错误码："+((BmobException)e).getErrorCode()+",错误描述："+((BmobException)e).getMessage());
+                            }else{
+                                LogTool.e("错误描述："+e.getMessage());
+                            }
+                        }
                     }
-                }
+                }));
             }
         }));
     }
@@ -553,5 +556,16 @@ public class RouteService extends Service {
 
             }
         }));
+    }
+
+    @Subscribe(threadMode = ThreadMode.ASYNC)
+    public void ActionMessage(EventMessage msg){
+        switch (msg.getAction()){
+            case EventMessage.ACTION_GAMEOVER:
+                LogTool.d("EventMessage.ACTION_GAMEOVER");
+                isUseFree = msg.getIsFree();
+                releaseCountDownTimer();
+                break;
+        }
     }
 }

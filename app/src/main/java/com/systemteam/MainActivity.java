@@ -2,11 +2,9 @@ package com.systemteam;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -88,7 +86,6 @@ import com.systemteam.custom.LeftDrawerLayout;
 import com.systemteam.fragment.LeftMenuFragment;
 import com.systemteam.map.MyOrientationListener;
 import com.systemteam.map.RouteLineAdapter;
-import com.systemteam.service.RouteService;
 import com.systemteam.user.UserInfoActivity;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LocationManager;
@@ -114,11 +111,13 @@ import overlayutil.WalkingRouteOverlay;
 import static com.systemteam.bean.BikeInfo.infos;
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
 import static com.systemteam.util.Constant.BUNDLE_CAR;
+import static com.systemteam.util.Constant.BUNDLE_KEY_IS_ACTIVING;
 import static com.systemteam.util.Constant.DISMISS_SPLASH;
 import static com.systemteam.util.Constant.MAP_SCAN_SPAN;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 //TODO 屏蔽预约功能后，获取services获取小车编号失败
+//TODO 关屏3min使用完成后，主界面没有推出使用中模式
 public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanResultListener,
         AllInterface.OnMenuSlideListener, NavigationView.OnNavigationItemSelectedListener{
 
@@ -627,7 +626,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
 //                drawPlanRoute(endNodeStr);
                 break;
             case R.id.end_route:
-                toastDialog();
+                toastDialog(MainActivity.this, false);
                 break;
             case R.id.menu_icon:
                 openMenu();
@@ -841,6 +840,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         mProgressHelper.showProgressDialog(getString(R.string.initing));
         BmobQuery<Car> query = new BmobQuery<>();
         query.addWhereNear("position", new BmobGeoPoint(_longitude, _latitude));
+        query.order("-position");
         addSubscription(query.findObjects(new FindListener<Car>() {
 
             @Override
@@ -940,9 +940,10 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
                 case R.id.id_lock:
                     Intent intent = new Intent(MainActivity.this, BreakActivity.class);
                     intent.putExtra(Constant.BUNDLE_TYPE_MENU, Constant.BREAK_TYPE_LOCK);
-                    if(bInfo != null){
+                    if(bInfo != null){//TODO binfo null
                         Bundle extras = new Bundle();
                         extras.putSerializable(BUNDLE_CAR, bInfo.getCar());
+                        extras.putBoolean(BUNDLE_KEY_IS_ACTIVING, isGaming);
                         intent.putExtras(extras);
                     }
                     startActivityForResult(intent, Constant.REQUEST_CODE_BREAK);
@@ -950,9 +951,10 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
                 case R.id.id_break:
                     Intent intentBreak = new Intent(MainActivity.this, BreakActivity.class);
                     intentBreak.putExtra(Constant.BUNDLE_TYPE_MENU, Constant.BREAK_TYPE_BREAK);
-                    if(bInfo != null) {
+                    if(bInfo != null) {//TODO binfo null
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(BUNDLE_CAR, bInfo.getCar());
+                        bundle.putBoolean(BUNDLE_KEY_IS_ACTIVING, isGaming);
                         intentBreak.putExtras(bundle);
                     }
                     startActivityForResult(intentBreak, Constant.REQUEST_CODE_BREAK);
@@ -1103,7 +1105,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         if (CodeUnlockActivity.unlockSuccess || isServiceLive) {
             beginService();
         }
-        if (RouteDetailActivity.completeRoute)
+        if (RouteDetailActivity.completeRoute || !isServiceLive)
             backFromRouteDetail();
     }
 
@@ -1274,8 +1276,12 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            String time = intent.getStringExtra("totalTime");
+            isGaming = true;
+            if(getString(R.string.time_end).equalsIgnoreCase(time)) {
+                isGaming = false;
+            }
             if (Utils.isTopActivity(context)) {
-                String time = intent.getStringExtra("totalTime");
                 String distance = intent.getStringExtra("totalDistance");
                 String price = intent.getStringExtra("totalPrice");
                 bike_time.setText(time);
@@ -1288,24 +1294,6 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         }
     }
 
-    protected void toastDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setMessage(R.string.exist);
-        builder.setTitle(R.string.tip);
-        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                Intent intent = new Intent(MainActivity.this, RouteService.class);
-                stopService(intent);
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
-    }
 
     private void checkSDK(){
         CheckPermission();
@@ -1383,6 +1371,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
             default:
                 break;
         }
+        checkBackFromBreak(requestCode, data);
     }
 
 }

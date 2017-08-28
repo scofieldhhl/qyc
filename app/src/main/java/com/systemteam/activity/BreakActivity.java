@@ -27,6 +27,7 @@ import cn.bmob.v3.listener.UpdateListener;
 
 import static com.systemteam.util.Constant.BUNDLE_CAR;
 import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
+import static com.systemteam.util.Constant.BUNDLE_KEY_IS_ACTIVING;
 import static com.systemteam.util.Constant.BUNDLE_KEY_SUBMIT_SUCCESS;
 import static com.systemteam.util.Constant.BUNDLE_TYPE_MENU;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
@@ -42,6 +43,7 @@ public class BreakActivity extends BaseActivity {
     private Car mCar;
     private EditText mEtDescription;
     private boolean isSubmitSuccess = false;
+    private boolean isActiving = false;
     private static class MyHandler extends Handler {
         private WeakReference<BreakActivity> mActivity;
 
@@ -109,6 +111,7 @@ public class BreakActivity extends BaseActivity {
                     mCarNo = mCar.getCarNo();
                     mTvCode.setText(getString(R.string.break_carNo) + mCarNo);
                 }
+                isActiving = bundle.getBoolean(BUNDLE_KEY_IS_ACTIVING);
             }
         }
     }
@@ -174,6 +177,17 @@ public class BreakActivity extends BaseActivity {
                         isSubmitSuccess = false;
                         toast(getString(R.string.submit_faile));
                         loge(e);
+                    }
+                    if(isActiving){
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(isSubmitSuccess){
+                                    setResult(RESULT_OK, new Intent().putExtra(BUNDLE_KEY_SUBMIT_SUCCESS, isSubmitSuccess));
+                                }
+                                finish();
+                            }
+                        }, 1000);
                     }
                 }
             }));

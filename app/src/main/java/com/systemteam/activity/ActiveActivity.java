@@ -1,9 +1,7 @@
 package com.systemteam.activity;
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,7 +12,6 @@ import android.widget.TextView;
 import com.systemteam.R;
 import com.systemteam.bean.Car;
 import com.systemteam.bean.MyUser;
-import com.systemteam.service.RouteService;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
@@ -30,16 +27,14 @@ import cn.bmob.v3.listener.FindListener;
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
 import static com.systemteam.util.Constant.BUNDLE_CAR;
 import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
-import static com.systemteam.util.Constant.BUNDLE_KEY_SUBMIT_SUCCESS;
+import static com.systemteam.util.Constant.BUNDLE_KEY_IS_ACTIVING;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
-import static com.systemteam.util.Constant.REQUEST_CODE_BREAK;
 import static com.systemteam.util.Constant.TIME_ONCE_ACTIVE_STR;
 
 public class ActiveActivity extends BaseActiveActivity {
     private String mTime = TIME_ONCE_ACTIVE_STR;
     private LocationReceiver mReceiver;
     private TextView mTvTick;
-    private boolean isFinished = false;
     private Car mCar;
     private static class MyHandler extends Handler {
         private WeakReference<ActiveActivity> mActivity;
@@ -54,7 +49,7 @@ public class ActiveActivity extends BaseActiveActivity {
             super.handleMessage(msg);
             switch (msg.what){
                 case MSG_UPDATE_UI:
-                    if(theActivity.isFinished){
+                    if(!theActivity.isGaming){
                         theActivity.mTvTick.setText(theActivity.getString(R.string.play_onemore));
                     }else {
                         theActivity.mTvTick.setText((String)msg.obj);
@@ -100,6 +95,7 @@ public class ActiveActivity extends BaseActiveActivity {
         }
         Bundle bundle = new Bundle();
         bundle.putSerializable(BUNDLE_CAR, mCar);
+        bundle.putBoolean(BUNDLE_KEY_IS_ACTIVING, isGaming);
         intentBreak.putExtras(bundle);
         startActivityForResult(intentBreak, Constant.REQUEST_CODE_BREAK);
     }
@@ -125,12 +121,13 @@ public class ActiveActivity extends BaseActiveActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (Utils.isTopActivity(context)) {
+                isGaming = true;
                 mTime = intent.getStringExtra("totalTime");
                 Message msg = mHandler.obtainMessage(MSG_UPDATE_UI);
                 msg.obj = mTime;
                 msg.sendToTarget();
                 if(getString(R.string.time_end).equalsIgnoreCase(mTime)){
-                    isFinished = true;
+                    isGaming = false;
                     mHandler.sendEmptyMessageDelayed(MSG_UPDATE_UI, 3*1000);
                 }
             }
@@ -138,37 +135,16 @@ public class ActiveActivity extends BaseActiveActivity {
     }
 
     public void doDone(View view){
-        if(!isFinished){
-            toastDialog();
+        if(isGaming){
+            toastDialog(ActiveActivity.this, false);
         }else {
             mUser = BmobUser.getCurrentUser(MyUser.class);
             if (!checkBalance(mUser, ActiveActivity.this)) {
                 return;
             }
             startRouteService(this, mCar);
-            isFinished = false;
+            isGaming = true;
         }
-    }
-
-    protected void toastDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setMessage(R.string.exist);
-        builder.setTitle(R.string.tip);
-        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                Intent intent = new Intent(ActiveActivity.this, RouteService.class);
-                stopService(intent);
-                isFinished = true;
-                mHandler.sendEmptyMessageDelayed(MSG_UPDATE_UI, 3*1000);
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
     }
 
     private void checkCarExist(String carNo) {
@@ -202,10 +178,7 @@ public class ActiveActivity extends BaseActiveActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CODE_BREAK && data != null && resultCode == RESULT_OK){
-            if(data.getBooleanExtra(BUNDLE_KEY_SUBMIT_SUCCESS, false)){
-                //TODO 使用过程中申报设备故障处理
-            }
-        }
+        LogTool.d("requestCode: " + requestCode + " resultCode: " + resultCode);
+        checkBackFromBreak(requestCode, data);
     }
 }

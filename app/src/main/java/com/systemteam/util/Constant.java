@@ -1,9 +1,5 @@
 package com.systemteam.util;
 
-/**
- * Created by gaolei on 17/2/24.
- */
-
 public class Constant {
     //默认值
     public static final float EARN_RATE_DEFAULT = 0.3f;
@@ -52,6 +48,7 @@ public class Constant {
     public static final String BUNDLE_KEY_AMOUNT = "key_amount";
     public static final String BUNDLE_KEY_ISGAMEOVER = "key_isgameover";
     public static final String BUNDLE_KEY_SUBMIT_SUCCESS = "key_issubmitsuccess";
+    public static final String BUNDLE_KEY_IS_ACTIVING = "key_isactivting";
     public static final int REQUEST_IMAGE = 100;
     public static final int REQUEST_CODE = 101;
     public static final int REQUEST_CODE_WALLET = 102;
