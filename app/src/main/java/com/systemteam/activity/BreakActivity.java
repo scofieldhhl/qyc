@@ -26,6 +26,7 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 
 import static com.systemteam.util.Constant.BUNDLE_CAR;
+import static com.systemteam.util.Constant.BUNDLE_CARNO;
 import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
 import static com.systemteam.util.Constant.BUNDLE_KEY_IS_ACTIVING;
 import static com.systemteam.util.Constant.BUNDLE_KEY_SUBMIT_SUCCESS;
@@ -109,8 +110,10 @@ public class BreakActivity extends BaseActivity {
                 mCar = (Car) bundle.getSerializable(BUNDLE_CAR);
                 if(mCar != null){
                     mCarNo = mCar.getCarNo();
-                    mTvCode.setText(getString(R.string.break_carNo) + mCarNo);
+                }else {
+                    mCarNo = bundle.getString(BUNDLE_CARNO);
                 }
+                mTvCode.setText(getString(R.string.break_carNo) + mCarNo);
                 isActiving = bundle.getBoolean(BUNDLE_KEY_IS_ACTIVING);
             }
         }

@@ -71,7 +71,6 @@ import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.systemteam.activity.BaseActiveActivity;
 import com.systemteam.activity.BreakActivity;
-import com.systemteam.activity.CodeUnlockActivity;
 import com.systemteam.activity.MyRouteActivity;
 import com.systemteam.activity.NavigationActivity;
 import com.systemteam.activity.QRCodeScanActivity;
@@ -111,13 +110,16 @@ import overlayutil.WalkingRouteOverlay;
 import static com.systemteam.bean.BikeInfo.infos;
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
 import static com.systemteam.util.Constant.BUNDLE_CAR;
+import static com.systemteam.util.Constant.BUNDLE_CARNO;
 import static com.systemteam.util.Constant.BUNDLE_KEY_IS_ACTIVING;
 import static com.systemteam.util.Constant.DISMISS_SPLASH;
 import static com.systemteam.util.Constant.MAP_SCAN_SPAN;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
-//TODO 屏蔽预约功能后，获取services获取小车编号失败
+// 屏蔽预约功能后，获取services获取小车编号失败
 //TODO 关屏3min使用完成后，主界面没有推出使用中模式
+// 首次安装使用，main界面没有小车编号
+//TODO 使用过程中申报故障后，main界面没有退出使用中模式
 public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanResultListener,
         AllInterface.OnMenuSlideListener, NavigationView.OnNavigationItemSelectedListener{
 
@@ -137,6 +139,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
     //定位图层显示方式
     private MyLocationConfiguration.LocationMode locationMode;
     private BikeInfo bInfo;
+    private String mCarNo;
 
     PlanNode startNodeStr, endNodeStr;
     int nodeIndex = -1, distance;
@@ -213,7 +216,11 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
                     }
                     break;
                 case MSG_UPDATE_UI:
-                    theActivity.bikeOnUsing();
+                    if(theActivity.isGaming){
+                        theActivity.bikeOnUsing();
+                    }else {
+                        theActivity.backFromRouteDetail();
+                    }
                     break;
             }
         }
@@ -940,23 +947,27 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
                 case R.id.id_lock:
                     Intent intent = new Intent(MainActivity.this, BreakActivity.class);
                     intent.putExtra(Constant.BUNDLE_TYPE_MENU, Constant.BREAK_TYPE_LOCK);
+                    Bundle extras = new Bundle();
                     if(bInfo != null){//TODO binfo null
-                        Bundle extras = new Bundle();
                         extras.putSerializable(BUNDLE_CAR, bInfo.getCar());
-                        extras.putBoolean(BUNDLE_KEY_IS_ACTIVING, isGaming);
-                        intent.putExtras(extras);
+                    }else {
+                        extras.putString(BUNDLE_CARNO, mCarNo);
                     }
+                    extras.putBoolean(BUNDLE_KEY_IS_ACTIVING, isGaming);
+                    intent.putExtras(extras);
                     startActivityForResult(intent, Constant.REQUEST_CODE_BREAK);
                     break;
                 case R.id.id_break:
                     Intent intentBreak = new Intent(MainActivity.this, BreakActivity.class);
                     intentBreak.putExtra(Constant.BUNDLE_TYPE_MENU, Constant.BREAK_TYPE_BREAK);
+                    Bundle bundle = new Bundle();
                     if(bInfo != null) {//TODO binfo null
-                        Bundle bundle = new Bundle();
                         bundle.putSerializable(BUNDLE_CAR, bInfo.getCar());
-                        bundle.putBoolean(BUNDLE_KEY_IS_ACTIVING, isGaming);
-                        intentBreak.putExtras(bundle);
+                    }else {
+                        bundle.putString(BUNDLE_CARNO, mCarNo);
                     }
+                    bundle.putBoolean(BUNDLE_KEY_IS_ACTIVING, isGaming);
+                    intentBreak.putExtras(bundle);
                     startActivityForResult(intentBreak, Constant.REQUEST_CODE_BREAK);
                     break;
             }
@@ -1102,9 +1113,9 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         mlocationClient.requestLocation();
         isServiceLive = Utils.isServiceWork(this, getPackageName() + ".service.RouteService");
         LogTool.i("MainActivity------------onRestart------------------");
-        if (CodeUnlockActivity.unlockSuccess || isServiceLive) {
+        /*if (CodeUnlockActivity.unlockSuccess || isServiceLive) {
             beginService();
-        }
+        }*/
         if (RouteDetailActivity.completeRoute || !isServiceLive)
             backFromRouteDetail();
     }
@@ -1277,12 +1288,14 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         @Override
         public void onReceive(Context context, Intent intent) {
             String time = intent.getStringExtra("totalTime");
+            String distance = intent.getStringExtra("totalDistance");
+            mCarNo = distance;
             isGaming = true;
             if(getString(R.string.time_end).equalsIgnoreCase(time)) {
                 isGaming = false;
+                mCarNo = null;
             }
             if (Utils.isTopActivity(context)) {
-                String distance = intent.getStringExtra("totalDistance");
                 String price = intent.getStringExtra("totalPrice");
                 bike_time.setText(time);
                 bike_distance.setText(distance);
