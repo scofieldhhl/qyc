@@ -356,7 +356,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                 }else {
                     payV2(view);
                 }
-                saveNewObject();
+//                saveNewObject();
                 break;
         }
     }
@@ -389,7 +389,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
      * @param v
      */
     public void payV2(View v) {
-        /*if (TextUtils.isEmpty(APPID) || (TextUtils.isEmpty(RSA2_PRIVATE) && TextUtils.isEmpty(RSA_PRIVATE))) {
+        /*if (TextUtils.isEmpty(Constant.ALI_APP_ID) || (TextUtils.isEmpty(RSA2_PRIVATE) && TextUtils.isEmpty(RSA_PRIVATE))) {
             new AlertDialog.Builder(this).setTitle("警告").setMessage("需要配置APPID | RSA_PRIVATE")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialoginterface, int i) {
@@ -398,9 +398,9 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                         }
                     }).show();
             return;
-        }
+        }*/
 
-        *//**
+        /**
          * 这里只是为了方便直接向商户展示支付宝的整个支付流程；所以Demo中加签过程直接放在客户端完成；
          * 真实App里，privateKey等数据严禁放在客户端，加签过程务必要放在服务端完成；
          * 防止商户私密数据泄露，造成不必要的资金损失，及面临各种安全风险；

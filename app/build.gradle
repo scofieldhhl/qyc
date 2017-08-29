@@ -106,4 +106,5 @@ dependencies {
     compile 'com.stephentuso:welcome:1.4.1'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
     testCompile 'junit:junit:4.12'
+    compile files('libs/alipaySdk-20170623-proguard.jar')
 }
