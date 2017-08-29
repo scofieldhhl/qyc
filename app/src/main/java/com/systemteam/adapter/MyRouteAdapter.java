@@ -7,12 +7,9 @@ import android.view.ViewGroup;
 
 import com.systemteam.R;
 import com.systemteam.bean.UseRecord;
+import com.systemteam.car.CarDetailActivity;
 
 import java.util.List;
-
-/**
- * Created by gaolei on 17/1/18.
- */
 
 public class MyRouteAdapter extends BaseAdapter {
 
@@ -70,7 +67,11 @@ public class MyRouteAdapter extends BaseAdapter {
                 holder.bike_time.setText(routeRecord.getTimeUse());
 //        holder.bike_distance.setText(context.getString(R.string.cost_distance, routeRecord.getCycle_distance()));
                 holder.bike_distance.setText(routeRecord.getCarNo());
-                holder.bike_price.setText(context.getString(R.string.cost_num, String.valueOf(routeRecord.getCost())));
+                if(context instanceof CarDetailActivity){
+                    holder.bike_price.setText(context.getString(R.string.cost_num, String.valueOf(routeRecord.getEarn())));
+                }else {
+                    holder.bike_price.setText(context.getString(R.string.cost_num, String.valueOf(routeRecord.getCost())));
+                }
                 holder.bike_date.setText(routeRecord.getCreatedAt());
                 break;
         }

@@ -113,7 +113,9 @@ public class BreakActivity extends BaseActivity {
                 }else {
                     mCarNo = bundle.getString(BUNDLE_CARNO);
                 }
-                mTvCode.setText(getString(R.string.break_carNo) + mCarNo);
+                if(!TextUtils.isEmpty(mCarNo)){
+                    mTvCode.setText(getString(R.string.break_carNo) + mCarNo);
+                }
                 isActiving = bundle.getBoolean(BUNDLE_KEY_IS_ACTIVING);
             }
         }
@@ -162,6 +164,9 @@ public class BreakActivity extends BaseActivity {
                         status *= 10;
                         status += (i + 1);
                     }
+                }
+                if(status == -1){//没有勾选故障原因
+                    status = -10;
                 }
                 newCar.setStatus(status);
             }

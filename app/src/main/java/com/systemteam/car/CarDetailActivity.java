@@ -31,7 +31,7 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 
 import static com.systemteam.util.Constant.REQUEST_KEY_BY_CARNO;
-
+//小车状态 3处使用：carDetail  BaseActiveActivity  CarAdatpter
 public class CarDetailActivity extends BaseListActivity {
 
     private boolean isChartShow = false;
@@ -163,8 +163,13 @@ public class CarDetailActivity extends BaseListActivity {
                         break;
                 }
             }
+            if(car.getStatusExpert() != null && car.getStatusExpert() == Constant.STATUS_EXPERT_WAITING){
+                mTvStatus.setText(R.string.status_experting);
+                mTvStatus.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
+                mBtnUpdate.setVisibility(View.GONE);
+                mBtnExpert.setVisibility(View.GONE);
+            }
             mTvMark.setText(car.getMark());
-
         }else {
             mTvCarNo.setText("");
             mTvEarn.setText("");
@@ -206,29 +211,6 @@ public class CarDetailActivity extends BaseListActivity {
 
     @Override
     public void onItemLongClick(View v, final int position) {
-        /*AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
-        alertDialog.setTitle(R.string.notice);
-        alertDialog.setMessage(getString(R.string.del_tip_car));
-        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, mContext.getString(R.string.del_comfirm),
-                new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        try {
-                            doUpdate((Car) routeList.get(position));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, mContext.getString(R.string.del_cancel),
-                new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-        alertDialog.show();*/
     }
 
     private void doUpdate(Car car){
@@ -251,6 +233,7 @@ public class CarDetailActivity extends BaseListActivity {
                     initDataList(mPage);
                 }else {
                     toast(getString(R.string.submit_faile));
+                    LogTool.e("错误码："+(e).getErrorCode()+",错误描述："+(e).getMessage());
                 }
             }
         }));
@@ -287,19 +270,38 @@ public class CarDetailActivity extends BaseListActivity {
             public void done(BmobException e) {
                 mProgressHelper.dismissProgressDialog();
                 if(e==null){
-                    toast(getString(R.string.submiting));
                     mCar.setStatus(Constant.STATUS_NORMAL);
                     initInfo(mCar);
                 }else{
                     toast(getString(R.string.submit_faile));
-                    loge(e);
+                    LogTool.e("错误码："+(e).getErrorCode()+",错误描述："+(e).getMessage());
                 }
             }
         }));
     }
 
     public void doRequestCarExpert(View view){
-        //TODO 维修表增加维修记录，更新界面，避免重复申报，小车状态设计
-        toast(getString(R.string.break_submit_success));
+        if(mCar == null){
+            mProgressHelper.dismissProgressDialog();
+            toast(getString(R.string.break_car_no));
+            return;
+        }
+        mProgressHelper.showProgressDialog(getString(R.string.submiting));
+        Car newCar = new Car();
+        newCar.setStatusExpert(Constant.STATUS_EXPERT_WAITING);
+        newCar.setCountExpert(mCar.getCountExpert() == null ? 1 : (mCar.getCountExpert() + 1));
+        addSubscription(newCar.update(mCar.getObjectId(), new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                mProgressHelper.dismissProgressDialog();
+                if(e==null){
+                    mCar.setStatusExpert(Constant.STATUS_EXPERT_WAITING);
+                    initInfo(mCar);
+                }else{
+                    toast(getString(R.string.submit_faile));
+                    LogTool.e("错误码："+(e).getErrorCode()+",错误描述："+(e).getMessage());
+                }
+            }
+        }));
     }
 }

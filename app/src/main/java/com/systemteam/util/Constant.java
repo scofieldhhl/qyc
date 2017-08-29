@@ -8,9 +8,11 @@ public class Constant {
     public static int COUPON_DEFAULT = 3;
     public static int CYCLE_DAY_CHART = 15;
 
-    public static final int STATUS_NORMAL = 0;
-    public static final int BREAK_STATUS_LOCK = -1;
-    public static final int BREAK_STATUS = -2;
+    public static final int STATUS_NORMAL = 0;          //正常
+    public static final int BREAK_STATUS_LOCK = -1;     //无法开锁
+
+    public static final int STATUS_EXPERT_NORMAL = 0;   //设备正常
+    public static final int STATUS_EXPERT_WAITING = -1; //设备维修中
     //guide
     public static final int BREAK_TYPE_LOCK = -1;
     public static final int BREAK_TYPE_BREAK = -2;

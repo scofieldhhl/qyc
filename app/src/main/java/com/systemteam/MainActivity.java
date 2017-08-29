@@ -117,9 +117,9 @@ import static com.systemteam.util.Constant.MAP_SCAN_SPAN;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 // 屏蔽预约功能后，获取services获取小车编号失败
-//TODO 关屏3min使用完成后，主界面没有推出使用中模式
+// 关屏3min使用完成后，主界面没有推出使用中模式
 // 首次安装使用，main界面没有小车编号
-//TODO 使用过程中申报故障后，main界面没有退出使用中模式
+// 使用过程中申报故障后，main界面没有退出使用中模式
 public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanResultListener,
         AllInterface.OnMenuSlideListener, NavigationView.OnNavigationItemSelectedListener{
 

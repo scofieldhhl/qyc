@@ -62,14 +62,14 @@ public class MyCarAdapter extends BaseAdapter {
                 holder.bike_date.setVisibility(View.GONE);
                 break;
             case TYPE_CONTENT:
-                Car Car= (Car) list.get(position);
-                holder.bike_time.setText(Car.getCarNo());
+                Car car = (Car) list.get(position);
+                holder.bike_time.setText(car.getCarNo());
                 holder.bike_distance.setText(context.getString(R.string.earn_format,
-                        Car.getEarn() == null ? 0.0 : Car.getEarn()));
-                if(Car.getStatus() == null){
+                        car.getEarn() == null ? 0.0 : car.getEarn()));
+                if(car.getStatus() == null){
                     holder.bike_price.setText(context.getString(R.string.status_normal));
                 }else {
-                    int status = Car.getStatus().intValue();
+                    int status = car.getStatus().intValue();
                     switch (status){
                         case Constant.STATUS_NORMAL:
                             holder.bike_price.setText(context.getString(R.string.status_normal));
@@ -85,7 +85,11 @@ public class MyCarAdapter extends BaseAdapter {
                             break;
                     }
                 }
-                holder.bike_date.setText(Car.getUpdatedAt());
+                if(car.getStatusExpert() != null && car.getStatusExpert() == Constant.STATUS_EXPERT_WAITING){
+                    holder.bike_price.setText(context.getString(R.string.status_experting));
+                    holder.bike_price.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
+                }
+                holder.bike_date.setText(car.getUpdatedAt());
                 break;
         }
     }

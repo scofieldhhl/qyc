@@ -40,7 +40,6 @@ public class MyCarActivity extends BaseListActivity
         setContentView(R.layout.activity_my_car);
         mContext = this;
         initView();
-        initData();
     }
 
     @Override
@@ -84,6 +83,7 @@ public class MyCarActivity extends BaseListActivity
     @Override
     protected void onResume() {
         super.onResume();
+        initData();
     }
 
     @Override

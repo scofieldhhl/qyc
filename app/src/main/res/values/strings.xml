@@ -85,6 +85,7 @@
     <string name="status_normal">正常</string>
     <string name="status_lock">无法开锁</string>
     <string name="status_break">故障</string>
+    <string name="status_experting">维修中</string>
 
     <string name="carNo">编号</string>
     <string name="earn">收益</string>

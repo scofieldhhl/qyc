@@ -16,10 +16,12 @@ public class Car extends BmobObject {
 	private String address;		//地址
 	private BmobGeoPoint position;//GPS定位（经纬度信息）
 	private Float income;		//使用总收入
-	private Integer status;		//状态 0正常，-1无法开锁，0<-1：故障
+	private Integer status;		//状态 0正常，-1无法开锁，<-10：故障
 	private String password;	//启动密码
 	private Float earn;			//商户总收益
 	private String mark;		//备注or故障描述
+	private Integer statusExpert;//维修状态 0设备正常，-1维修中
+	private Integer countExpert;//维修次数
 
 	public String getCarNo() {
 		return carNo;
@@ -123,5 +125,21 @@ public class Car extends BmobObject {
 
 	public void setMark(String mark) {
 		this.mark = mark;
+	}
+
+	public Integer getStatusExpert() {
+		return statusExpert;
+	}
+
+	public void setStatusExpert(Integer statusExpert) {
+		this.statusExpert = statusExpert;
+	}
+
+	public Integer getCountExpert() {
+		return countExpert;
+	}
+
+	public void setCountExpert(Integer countExpert) {
+		this.countExpert = countExpert;
 	}
 }
