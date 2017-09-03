@@ -80,8 +80,8 @@
                 android:layout_marginRight="8dp"
                 android:background="@null"
                 android:hint="@string/smssdk_write_mobile_phone"
-                android:inputType="number"
-                android:singleLine="true"
+                android:inputType="phone"
+                android:maxLines="1"
                 android:maxLength="11"
                 android:textColor="#ff363636"
                 android:drawablePadding="8dp"
@@ -121,33 +121,28 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="16dip"
         android:layout_marginRight="16dip"
         android:layout_marginTop="24dip"
         android:orientation="horizontal"
-        android:weightSum="5"
-        android:layout_height="48dp">
+        android:weightSum="5">
 
         <Button
             android:id="@+id/btn_next"
+            style="@style/button_style"
+            android:layout_margin="5dp"
             android:layout_width="0dp"
             android:layout_weight="2"
-            android:layout_height="match_parent"
-            android:background="@drawable/ic_phone_reg_bg"
-            android:text="@string/reg_send_ver"
-            android:textColor="#ffffff"
-            android:textSize="16sp" />
+            android:text="@string/reg_send_ver" />
 
         <Button
             android:id="@+id/btn_login"
+            style="@style/button_style"
+            android:layout_margin="0dp"
             android:layout_width="0dp"
             android:layout_weight="3"
-            android:layout_marginLeft="10dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/ic_phone_reg_bg"
-            android:text="@string/reg_next"
-            android:textColor="#ffffff"
-            android:textSize="16sp" />
+            android:text="@string/reg_next" />
 
     </LinearLayout>
 </LinearLayout>

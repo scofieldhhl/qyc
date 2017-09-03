@@ -1,6 +1,6 @@
 <resources>
     <string name="action_settings">Settings</string>
-    <string name="app_name">biubike</string>
+    <string name="app_name">摇星球</string>
     <string name="bybike">摇星球</string>
     <string name="findbike">找摇摇车</string>
     <string name="current_address">北京市海淀区海淀北二街8号中关村SOHO</string>
@@ -118,6 +118,10 @@
 
     <string name="wallet_tip_1" formatted="false">点击马上充值，即表示已阅读和同意%s</string>
     <string name="wallet_tip_2">《充值协议》</string>
+    <string name="about_us2">八客科技(深圳)有限公司</string>
+    <string name="about_us">
+        Copyright@2017
+    </string>
 
     <string name="demo_title_location">demo_title_location</string>
     <string name="demo_desc_location">demo_desc_location</string>
@@ -413,9 +417,8 @@
     <string name="feedback_success">发送成功！</string>
     <string name="no_update">已是最新版本！</string>
     <string name="about_us_1">
-        摇星球八客科技荣誉出品，八客科技有限公司！\n
-        \n
-        \n
+        摇星球八客科技荣誉出品。摇星球是一款给你的小孩带来欢乐的APP，APP基于地图精准地位，扫码开锁，快速便捷！
+        八客科技是目前国内开创共享经济模式的引领者，致力于应用互联网思维，为广大消费者带来极致体验！\n
         \n
         \n
         \n
