@@ -49,6 +49,7 @@
     <TableRow
         android:id="@+id/tr_info2"
         android:onClick="doUpdate"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -62,5 +63,6 @@
 
         <ImageView style="@style/right_arrow_style" />
     </TableRow>
-    <View style="@style/menu_divider_style" />
+    <View style="@style/menu_divider_style"
+        android:visibility="gone"/>
 </TableLayout>

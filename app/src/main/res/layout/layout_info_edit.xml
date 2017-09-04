@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/info_layout_style"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
     <com.systemteam.view.IconEditTextView
         android:layout_marginTop="10dp"
@@ -20,7 +21,6 @@
         android:textSize="12sp"
         android:text="@string/apply_tip_name"/>
     <com.systemteam.view.IconEditTextView
-        android:layout_marginTop="10dp"
         android:id="@+id/iet_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,12 +33,13 @@
         android:layout_height="wrap_content"
         android:gravity="right"
         android:textColor="@color/text_black_30"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:textSize="12sp"
         android:text="@string/apply_tip_name"/>
     <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:orientation="horizontal"
         android:layout_marginLeft="40dp">
         <RadioButton

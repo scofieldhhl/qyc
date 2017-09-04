@@ -48,7 +48,6 @@
                 style="@style/button_style"
                 android:layout_width="100dp"
                 android:layout_margin="0dp"
-                android:layout_height="wrap_content"
                 android:onClick="doSubmit"
                 android:text="@string/account_submit"/>
         </LinearLayout>

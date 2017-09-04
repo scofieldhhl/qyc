@@ -111,19 +111,9 @@
     </LinearLayout>
     <Button
         android:id="@+id/btn_book"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/button_style"
         android:layout_below="@id/trancaction_type_layout"
-        android:layout_margin="15dp"
-        android:background="@drawable/bt_book_selector"
-        android:clickable="true"
-        android:gravity="center"
-        android:padding="10dp"
-        android:paddingBottom="1dp"
-        android:paddingTop="1dp"
-        android:text="@string/charge_im"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size" />
+        android:text="@string/charge_im"/>
 
     <TextView
         android:id="@+id/tv_pay_protocol"
