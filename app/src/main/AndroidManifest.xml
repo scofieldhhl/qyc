@@ -161,6 +161,7 @@
         <activity
             android:name=".car.CarDetailActivity"
             android:label="@string/detail"
+            android:screenOrientation="sensor"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Custom.AppTheme.NoActionBar" />
         <activity android:name=".car.NewCarActivity" />

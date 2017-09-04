@@ -1,7 +1,6 @@
 package com.systemteam.car;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
@@ -80,14 +79,14 @@ public class CarDetailActivity extends BaseListActivity {
                             /*mMenu.getItem(1).setVisible(false);
                             mMenu.getItem(2).setVisible(false);*/
                         }
-                        //判断当前屏幕方向
+                        /*//判断当前屏幕方向
                         if(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
                             //切换竖屏
                             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                         }else{
                             //切换横屏
                             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                        }
+                        }*/
                         break;
                 }
                 return true;

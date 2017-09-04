@@ -78,10 +78,13 @@
                 style="@style/menu_text_style"
                 android:text="@string/wallet" />
 
-            <View
+            <TextView
+                android:id="@+id/tv_balance"
+                style="@style/menu_text_style"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:gravity="right"/>
 
             <ImageView style="@style/menu_right_arrow_style" />
         </LinearLayout>
@@ -97,24 +100,23 @@
                 style="@style/menu_text_style"
                 android:text="@string/coupon" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
             <TextView
                 android:id="@+id/tv_coupon"
-                android:padding="10dp"
-                style="@style/menu_text_style" />
+                style="@style/menu_text_style"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right" />
 
-            <!--<ImageView style="@style/menu_right_arrow_style" />-->
+            <ImageView style="@style/menu_right_arrow_style"
+                android:visibility="invisible"/>
         </LinearLayout>
         <View style="@style/menu_divider_style" />
         <LinearLayout
             android:id="@+id/ll_mycar"
             style="@style/menu_layout_style"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
             <LinearLayout
                 style="@style/menu_layout_style"
                 android:onClick="gotoMycar">
@@ -126,10 +128,13 @@
                     style="@style/menu_text_style"
                     android:text="@string/my_car" />
 
-                <View
+                <TextView
+                    android:id="@+id/tv_carcount"
+                    style="@style/menu_text_style"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:gravity="right"/>
 
                 <ImageView style="@style/menu_right_arrow_style" />
             </LinearLayout>

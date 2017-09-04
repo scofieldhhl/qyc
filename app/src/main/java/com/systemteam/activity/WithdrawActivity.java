@@ -42,7 +42,6 @@ import static com.systemteam.util.Constant.BUNDLE_KEY_BLANACE;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 import static com.systemteam.util.Constant.MSG_WITHDRAW_SUCCESS;
 import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
-import static com.systemteam.util.Constant.WITHDRAW_AMOUNT_DEFAULT;
 import static com.systemteam.util.Constant.WITHDRAW_DAYS_DEFAULT;
 
 /**
@@ -294,11 +293,11 @@ public class WithdrawActivity extends BaseListActivity {
     }
 
     private boolean checkWithdrawEnable(){
-        if(mAmout < WITHDRAW_AMOUNT_DEFAULT){
+        /*if(mAmout < WITHDRAW_AMOUNT_DEFAULT){
             Utils.showDialog(mContext, getString(R.string.tip), getString(R.string.withdraw_refund,
                     WITHDRAW_AMOUNT_DEFAULT));
             return false;
-        }else if(routeList == null){
+        }else*/ if(routeList == null){
             Utils.showDialog(mContext, getString(R.string.tip), getString(R.string.withdraw_refund_record));
             return false;
         }else if(routeList.size() > 0){

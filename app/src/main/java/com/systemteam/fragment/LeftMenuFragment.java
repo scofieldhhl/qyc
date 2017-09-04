@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.systemteam.BaseActivity;
 import com.systemteam.R;
 import com.systemteam.bean.MyUser;
+import com.systemteam.util.ProtocolPreferences;
 
 import cn.bmob.v3.BmobUser;
 
@@ -25,9 +26,8 @@ public class LeftMenuFragment extends BaseFragment {
 
     private LinearLayout mLLMycar;
     private ImageView mPhoto;
-    private TextView mTvName, mTvVersion, mTvCoupon;
-    public LeftMenuFragment(){
-    }
+    private TextView mTvName, mTvVersion, mTvCoupon, mTvBalance, mTvCarCount;
+    public LeftMenuFragment(){}
 
     public static LeftMenuFragment newInstance(MyUser user){
         LeftMenuFragment fragment = new LeftMenuFragment();
@@ -38,6 +38,7 @@ public class LeftMenuFragment extends BaseFragment {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mContext = getActivity();
         View view=inflater.inflate(R.layout.main_menu,null);
         initView(view);
         return view;
@@ -50,6 +51,8 @@ public class LeftMenuFragment extends BaseFragment {
         mPhoto = (ImageView) view.findViewById(R.id.user_photo);
         mTvVersion = (TextView) view.findViewById(R.id.tv_version);
         mTvCoupon = (TextView) view.findViewById(R.id.tv_coupon);
+        mTvBalance = (TextView) view.findViewById(R.id.tv_balance);
+        mTvCarCount = (TextView) view.findViewById(R.id.tv_carcount);
     }
 
     @Override
@@ -81,12 +84,16 @@ public class LeftMenuFragment extends BaseFragment {
             (mTvName).setText(user.getUsername());
             ((BaseActivity)getActivity()).loadAvatar(getActivity(), user.getPhotoPath(), mPhoto);
             mTvCoupon.setText(mUser.getCoupon() == null ? "0" : String.valueOf(mUser.getCoupon()));
+            mTvBalance.setText(mUser.getBalance() == null ? "0.0" :
+                    getString(R.string.balance_format, mUser.getBalance()));
+            mTvCarCount.setText(String.valueOf(ProtocolPreferences.getCarCount(mContext)));
         }else {
             (mTvName).setText("");
             ((BaseActivity)getActivity()).loadAvatar(getActivity(), "", mPhoto);
-            mTvCoupon.setText("");
+            mTvCoupon.setText("0");
+            mTvBalance.setText("0.0");
+            mTvCarCount.setText("0");
         }
-
     }
 
     @Override

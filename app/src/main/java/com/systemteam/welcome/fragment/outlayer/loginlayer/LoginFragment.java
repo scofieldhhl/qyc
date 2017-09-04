@@ -83,7 +83,7 @@ public class LoginFragment extends BaseFragment {
                 onLoginWeibo(v);
                 break;
             case R.id.iv_wechat:
-                onLoginWechat(v);
+//                onLoginWechat(v);
                 break;
             case R.id.tv_forgetpsw:
                 requestSMSCode(mContext, mPhone);

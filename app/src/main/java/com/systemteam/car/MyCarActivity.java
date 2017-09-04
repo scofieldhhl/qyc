@@ -19,6 +19,7 @@ import com.systemteam.bean.Car;
 import com.systemteam.bean.MyUser;
 import com.systemteam.fragment.PieChartFragment;
 import com.systemteam.util.Constant;
+import com.systemteam.util.ProtocolPreferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -223,6 +224,9 @@ public class MyCarActivity extends BaseListActivity
             public void done(List<Car> object, BmobException e) {
                 onResponse(object, e, page);
                 mChartFragment.setRouteList(routeList);
+                if(object != null){
+                    ProtocolPreferences.setCarCount(mContext, object.size());
+                }
             }
         }));
     }
