@@ -1,6 +1,7 @@
 package com.systemteam.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,7 @@ public class MyRouteAdapter extends BaseAdapter {
         this.list = list;
     }
 
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = null;
         switch (viewType){
             case TYPE_TITLE:
@@ -52,27 +53,28 @@ public class MyRouteAdapter extends BaseAdapter {
         return holder;
     }
 
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         holder.itemView.setTag(position);
+        MyViewHolder viewHolder = (MyViewHolder) holder;
         switch(getItemViewType(position)){
             case TYPE_TITLE:
-                holder.bike_time.setText(context.getString(R.string.carNo));
-                holder.bike_distance.setText(context.getString(R.string.earn));
-                holder.bike_price.setText(context.getString(R.string.status));
-                holder.bike_date.setVisibility(View.GONE);
+                viewHolder.bike_time.setText(context.getString(R.string.carNo));
+                viewHolder.bike_distance.setText(context.getString(R.string.earn));
+                viewHolder.bike_price.setText(context.getString(R.string.status));
+                viewHolder.bike_date.setVisibility(View.GONE);
                 break;
             case TYPE_CONTENT:
                 UseRecord routeRecord=(UseRecord)list.get(position);
-//        holder.bike_time.setText(context.getString(R.string.cost_time, routeRecord.getCycle_time()));
-                holder.bike_time.setText(routeRecord.getTimeUse());
-//        holder.bike_distance.setText(context.getString(R.string.cost_distance, routeRecord.getCycle_distance()));
-                holder.bike_distance.setText(routeRecord.getCarNo());
+//        viewHolder.bike_time.setText(context.getString(R.string.cost_time, routeRecord.getCycle_time()));
+                viewHolder.bike_time.setText(routeRecord.getTimeUse());
+//        viewHolder.bike_distance.setText(context.getString(R.string.cost_distance, routeRecord.getCycle_distance()));
+                viewHolder.bike_distance.setText(routeRecord.getCarNo());
                 if(context instanceof CarDetailActivity){
-                    holder.bike_price.setText(context.getString(R.string.cost_num, String.valueOf(routeRecord.getEarn())));
+                    viewHolder.bike_price.setText(context.getString(R.string.cost_num, String.valueOf(routeRecord.getEarn())));
                 }else {
-                    holder.bike_price.setText(context.getString(R.string.cost_num, String.valueOf(routeRecord.getCost())));
+                    viewHolder.bike_price.setText(context.getString(R.string.cost_num, String.valueOf(routeRecord.getCost())));
                 }
-                holder.bike_date.setText(routeRecord.getCreatedAt());
+                viewHolder.bike_date.setText(routeRecord.getCreatedAt());
                 break;
         }
 

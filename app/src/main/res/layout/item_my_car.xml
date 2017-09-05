@@ -12,46 +12,33 @@
         android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/bike_time"
+            style="@style/text_style"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:textColor="@color/color_393939"
+            android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/bike_time"
-                style="@style/text_style"
-                android:textColor="@color/color_393939"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/bike_distance"
+            style="@style/text_style"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:textColor="@color/color_393939"
+            android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/bike_distance"
-                style="@style/text_style"
-                android:textColor="@color/color_393939"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/bike_price"
+            style="@style/text_style"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:textColor="@color/color_393939"
+            android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/bike_price"
-                style="@style/text_style"
-                android:textColor="@color/color_393939"
-                android:textSize="18sp" />
-
-        </LinearLayout>
     </LinearLayout>
 
     <View

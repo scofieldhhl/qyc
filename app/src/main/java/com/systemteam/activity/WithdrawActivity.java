@@ -49,6 +49,7 @@ import static com.systemteam.util.Constant.WITHDRAW_DAYS_DEFAULT;
  * @author scofield.hhl@gmail.com
  * @time 2017/8/18
  */
+//TODO 提现后金额显示
 public class WithdrawActivity extends BaseListActivity {
     private BankCard mBankCard;
     private TextView mTvUserName, mTvPhone, mTvCard, mTvInfo;
@@ -297,7 +298,17 @@ public class WithdrawActivity extends BaseListActivity {
             Utils.showDialog(mContext, getString(R.string.tip), getString(R.string.withdraw_refund,
                     WITHDRAW_AMOUNT_DEFAULT));
             return false;
-        }else*/ if(routeList == null){
+        }else*/
+        if(mBankCard == null){
+            toast(getString(R.string.bankcard_no_hint));
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showInputDialog();
+                }
+            }, 1500);
+            return false;
+        }else if(routeList == null){
             Utils.showDialog(mContext, getString(R.string.tip), getString(R.string.withdraw_refund_record));
             return false;
         }else if(routeList.size() > 0){

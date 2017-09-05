@@ -1,6 +1,8 @@
 package com.systemteam.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,8 @@ import com.systemteam.R;
 import com.systemteam.bean.CashRecord;
 
 import java.util.List;
+
+import static com.systemteam.util.Constant.PAY_TYPE_ALI;
 
 /**
  * Created by gaolei on 17/1/18.
@@ -20,7 +24,7 @@ public class MyCashRecordAdapter extends BaseAdapter {
         this.list = list;
     }
 
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = null;
         switch (viewType){
             case TYPE_TITLE:
@@ -54,21 +58,28 @@ public class MyCashRecordAdapter extends BaseAdapter {
         return holder;
     }
 
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         holder.itemView.setTag(position);
+        MyViewHolder viewHolder = (MyViewHolder) holder;
         switch(getItemViewType(position)){
             case TYPE_TITLE:
-                holder.bike_time.setText(context.getString(R.string.carNo));
-                holder.bike_distance.setText(context.getString(R.string.earn));
-                holder.bike_price.setText(context.getString(R.string.status));
-                holder.bike_date.setVisibility(View.GONE);
+                viewHolder.bike_time.setText(context.getString(R.string.carNo));
+                viewHolder.bike_distance.setText(context.getString(R.string.earn));
+                viewHolder.bike_price.setText(context.getString(R.string.status));
+                viewHolder.bike_date.setVisibility(View.GONE);
                 break;
             case TYPE_CONTENT:
                 CashRecord cashRecord= (CashRecord) list.get(position);
-                holder.bike_time.setText(cashRecord.getCreatedAt());
-                holder.bike_distance.setText("");
-                holder.bike_price.setText(String.valueOf(cashRecord.getAmount()));
-                holder.bike_date.setText(cashRecord.getUpdatedAt());
+                String strPay = context.getString(R.string.pay_wechat);
+                if(cashRecord.getType() != null && cashRecord.getType() == PAY_TYPE_ALI){
+                    strPay = context.getString(R.string.pay_ali);
+                }
+                viewHolder.bike_time.setText(context.getString(R.string.charge_success, strPay));
+                viewHolder.bike_distance.setVisibility(View.GONE);
+                viewHolder.bike_price.setText(context.getString(R.string.amout_num,
+                        String.valueOf(cashRecord.getAmount())));
+                viewHolder.bike_price.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
+                viewHolder.bike_date.setText(cashRecord.getCreatedAt());
                 break;
         }
     }

@@ -116,6 +116,9 @@
     <string name="apply_expert">维修申报</string>
     <string name="tip_lock">该设备已申报无法开锁，建议更换设备使用</string>
     <string name="tip_break">该设备已申报故障，建议更换设备使用</string>
+    <string name="charge_success">从%s成功充值：</string>
+    <string name="pay_wechat">微信</string>
+    <string name="pay_ali">支付宝</string>
 
     <string name="wallet_tip_1" formatted="false">点击马上充值，即表示已阅读和同意%s</string>
     <string name="wallet_tip_2">《充值协议》</string>

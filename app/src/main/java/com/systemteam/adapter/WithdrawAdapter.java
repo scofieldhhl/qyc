@@ -2,6 +2,7 @@ package com.systemteam.adapter;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ public class WithdrawAdapter extends BaseAdapter {
         this.list = list;
     }
 
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = null;
         switch (viewType){
             case TYPE_TITLE:
@@ -57,39 +58,40 @@ public class WithdrawAdapter extends BaseAdapter {
         return holder;
     }
 
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         holder.itemView.setTag(position);
-        holder.bike_date.setVisibility(View.GONE);
+        MyViewHolder viewHolder = (MyViewHolder) holder;
+        viewHolder.bike_date.setVisibility(View.GONE);
         switch(getItemViewType(position)){
             case TYPE_TITLE:
-                holder.bike_time.setText(context.getString(R.string.date));
-                holder.bike_distance.setText(context.getString(R.string.amount));
-                holder.bike_price.setText(context.getString(R.string.status));
+                viewHolder.bike_time.setText(context.getString(R.string.date));
+                viewHolder.bike_distance.setText(context.getString(R.string.amount));
+                viewHolder.bike_price.setText(context.getString(R.string.status));
                 break;
             case TYPE_CONTENT:
                 Withdraw object= (Withdraw) list.get(position);
-                holder.bike_time.setText(object.getCreatedAt());
-                holder.bike_distance.setText(context.getString(R.string.amout_format, object.getAmout()));
+                viewHolder.bike_time.setText(object.getCreatedAt());
+                viewHolder.bike_distance.setText(context.getString(R.string.amout_format, object.getAmout()));
                 if(object.getStatus() == null){
-                    holder.bike_price.setText(context.getString(R.string.waiting));
+                    viewHolder.bike_price.setText(context.getString(R.string.waiting));
                 }else {
                     int status = object.getStatus().intValue();
                     switch (status){
                         case Constant.STATUS_NORMAL:
-                            holder.bike_price.setText(context.getString(R.string.waiting));
-                            holder.bike_price.setTextColor(ContextCompat.getColor(context, R.color.color_393939));
+                            viewHolder.bike_price.setText(context.getString(R.string.waiting));
+                            viewHolder.bike_price.setTextColor(ContextCompat.getColor(context, R.color.color_393939));
                             break;
                         case Constant.WITHDRAW_SUCCESS:
-                            holder.bike_price.setText(context.getString(R.string.success));
-                            holder.bike_price.setTextColor(ContextCompat.getColor(context, R.color.text_black_87));
+                            viewHolder.bike_price.setText(context.getString(R.string.success));
+                            viewHolder.bike_price.setTextColor(ContextCompat.getColor(context, R.color.text_black_87));
                             break;
                         case Constant.WITHDRAW_FAIL:
-                            holder.bike_price.setText(context.getString(R.string.fail));
-                            holder.bike_price.setTextColor(ContextCompat.getColor(context, R.color.red));
+                            viewHolder.bike_price.setText(context.getString(R.string.fail));
+                            viewHolder.bike_price.setTextColor(ContextCompat.getColor(context, R.color.red));
                             break;
                         default:
-                            holder.bike_price.setText(context.getString(R.string.waiting));
-                            holder.bike_price.setTextColor(ContextCompat.getColor(context, R.color.color_393939));
+                            viewHolder.bike_price.setText(context.getString(R.string.waiting));
+                            viewHolder.bike_price.setTextColor(ContextCompat.getColor(context, R.color.color_393939));
                             break;
                     }
                 }

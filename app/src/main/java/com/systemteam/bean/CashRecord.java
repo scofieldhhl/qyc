@@ -3,7 +3,6 @@ package com.systemteam.bean;
 import cn.bmob.v3.BmobObject;
 
 import static com.systemteam.util.Constant.PAY_COUPON_DEFAULT;
-import static com.systemteam.util.Constant.PAY_TYPE_WX;
 
 /**
  * 类描述：
@@ -14,7 +13,7 @@ import static com.systemteam.util.Constant.PAY_TYPE_WX;
 public class CashRecord extends BmobObject {
     private static final long serialVersionUID = 1L;
     private MyUser author;      //用户
-    private Integer type = PAY_TYPE_WX;       //0：微信 1：支付宝
+    private Integer type;       //0：微信 1：支付宝
     private Float amount;       //金额
     private Float coin;         //充值金额对应账户增加额，默认1:1
     private String phoneType;   //
