@@ -34,6 +34,15 @@
         <item name="android:textColor">@color/color_747474</item>
     </style>
 
+    <style name="item_tip_text_style">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">5dip</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/text_black_30</item>
+    </style>
+
     <style name="text_style_title">
 
         <item name="android:layout_width">match_parent</item>

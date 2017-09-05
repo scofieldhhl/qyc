@@ -2,6 +2,7 @@ package com.systemteam.adapter;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,17 +19,17 @@ public class MyCarAdapter extends BaseAdapter {
         this.list = list;
     }
 
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = null;
         switch (viewType){
             case TYPE_TITLE:
-                view = LayoutInflater.from(context).inflate(R.layout.item_my_car, null);
+                view = LayoutInflater.from(context).inflate(R.layout.item_layout_mycar, null);
                 break;
             case TYPE_CONTENT:
-                view = LayoutInflater.from(context).inflate(R.layout.item_my_car, null);
+                view = LayoutInflater.from(context).inflate(R.layout.item_layout_mycar, null);
                 break;
         }
-        MyViewHolder holder = new MyViewHolder(view);
+        MyCarViewHolder holder = new MyCarViewHolder(view);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,44 +53,40 @@ public class MyCarAdapter extends BaseAdapter {
         return holder;
     }
 
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         holder.itemView.setTag(position);
         switch(getItemViewType(position)){
             case TYPE_TITLE:
-                holder.bike_time.setText(context.getString(R.string.carNo));
-                holder.bike_distance.setText(context.getString(R.string.earn));
-                holder.bike_price.setText(context.getString(R.string.status));
-                holder.bike_date.setVisibility(View.GONE);
                 break;
             case TYPE_CONTENT:
                 Car car = (Car) list.get(position);
-                holder.bike_time.setText(car.getCarNo());
-                holder.bike_distance.setText(context.getString(R.string.earn_format,
+                MyCarViewHolder viewHolder = (MyCarViewHolder)holder;
+                viewHolder.tvCarNo.setText(car.getCarNo());
+                viewHolder.tvCarEarn.setText(context.getString(R.string.earn_format,
                         car.getEarn() == null ? 0.0 : car.getEarn()));
                 if(car.getStatus() == null){
-                    holder.bike_price.setText(context.getString(R.string.status_normal));
+                    viewHolder.tvCarStatus.setText(context.getString(R.string.status_normal));
                 }else {
                     int status = car.getStatus().intValue();
                     switch (status){
                         case Constant.STATUS_NORMAL:
-                            holder.bike_price.setText(context.getString(R.string.status_normal));
-                            holder.bike_price.setTextColor(ContextCompat.getColor(context, R.color.black));
+                            viewHolder.tvCarStatus.setText(context.getString(R.string.status_normal));
+                            viewHolder.tvCarStatus.setTextColor(ContextCompat.getColor(context, R.color.black));
                             break;
                         case Constant.BREAK_STATUS_LOCK:
-                            holder.bike_price.setText(context.getString(R.string.status_lock));
-                            holder.bike_price.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                            viewHolder.tvCarStatus.setText(context.getString(R.string.status_lock));
+                            viewHolder.tvCarStatus.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
                             break;
                         default:
-                            holder.bike_price.setText(context.getString(R.string.status_break));
-                            holder.bike_price.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
+                            viewHolder.tvCarStatus.setText(context.getString(R.string.status_break));
+                            viewHolder.tvCarStatus.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
                             break;
                     }
                 }
                 if(car.getStatusExpert() != null && car.getStatusExpert() == Constant.STATUS_EXPERT_WAITING){
-                    holder.bike_price.setText(context.getString(R.string.status_experting));
-                    holder.bike_price.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    viewHolder.tvCarStatus.setText(context.getString(R.string.status_experting));
+                    viewHolder.tvCarStatus.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
                 }
-                holder.bike_date.setText(car.getUpdatedAt());
                 break;
         }
     }

@@ -846,8 +846,9 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
     private void loadCarlistNear(double _latitude, double _longitude){
         mProgressHelper.showProgressDialog(getString(R.string.initing));
         BmobQuery<Car> query = new BmobQuery<>();
-        query.addWhereNear("position", new BmobGeoPoint(_longitude, _latitude));
-        query.order("-position");
+//        query.addWhereNear("position", new BmobGeoPoint(_longitude, _latitude));
+        query.addWhereWithinRadians("position", new BmobGeoPoint(_longitude, _latitude), 100.0);
+//        query.order("-position");
         addSubscription(query.findObjects(new FindListener<Car>() {
 
             @Override

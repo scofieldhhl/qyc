@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-public class BaseAdapter extends RecyclerView.Adapter<MyViewHolder> {
+public class BaseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     protected final int TYPE_TITLE = 0;
     protected final int TYPE_CONTENT = 1;
 
@@ -16,12 +16,12 @@ public class BaseAdapter extends RecyclerView.Adapter<MyViewHolder> {
     OnItemLongClickListener longClickListener;
     List<Object> list;
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return null;
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
     }
 

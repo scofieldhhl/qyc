@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="70dp"
+    android:clickable="true"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@drawable/edge_shadow_bg_selector">
+    <ImageView
+        android:id="@+id/iv_icon"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:src="@drawable/icon_logo"/>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:stretchColumns="1,3">
+        <TableRow>
+
+            <TextView
+                style="@style/item_tip_text_style"
+                android:text="@string/carNo" />
+
+            <TextView
+                android:id="@+id/tv_carno"
+                android:padding="5dp"
+                android:gravity="center"
+                style="@style/info_text_style"/>
+            <TextView
+                style="@style/item_tip_text_style"
+                android:text="@string/earn" />
+
+            <TextView
+                android:id="@+id/tv_earn"
+                android:padding="5dp"
+                android:gravity="center"
+                style="@style/info_text_style"/>
+        </TableRow>
+        <View style="@style/menu_divider_style" />
+        <TableRow>
+
+            <TextView
+                style="@style/item_tip_text_style"
+                android:text="@string/status" />
+
+            <TextView
+                android:id="@+id/tv_status"
+                android:padding="5dp"
+                android:gravity="center"
+                style="@style/info_text_style"/>
+
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>
