@@ -17,6 +17,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,6 +27,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.systemteam.BaseActivity;
 import com.systemteam.R;
@@ -38,10 +40,9 @@ import com.systemteam.bean.UseRecord;
 import com.systemteam.bean.Withdraw;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
+import com.systemteam.util.Util;
 import com.systemteam.util.Utils;
-import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
-import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
-import com.tencent.mm.opensdk.modelmsg.WXTextObject;
+import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
@@ -362,21 +363,44 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     }
 
     private void wxRequest(){
-        //TODO Wechat pay
         IWXAPI api = WXAPIFactory.createWXAPI(this, Constant.WX_APP_ID);
-        WXTextObject textObj = new WXTextObject();
-        textObj.text = "text";
-
-        WXMediaMessage msg = new WXMediaMessage();
-        msg.mediaObject = textObj;
-        msg.description = "text";
-
-        SendMessageToWX.Req req = new SendMessageToWX.Req();
-        req.transaction = buildTransaction("text");
-        req.message = msg;
-        req.scene = SendMessageToWX.Req.WXSceneSession;
-
-        api.sendReq(req);
+        String url = "http://wxpay.wxutil.com/pub_v2/app/app_pay.php";
+        Button payBtn = (Button) findViewById(R.id.btn_book);
+        payBtn.setEnabled(false);
+        Toast.makeText(mContext, "获取订单中...", Toast.LENGTH_SHORT).show();
+        try{
+            byte[] buf = Util.httpGet(url);
+            if (buf != null && buf.length > 0) {
+                String content = new String(buf);
+                Log.e("get server pay params:",content);
+                JSONObject json = new JSONObject(content);
+                if(null != json && !json.has("retcode") ){
+                    PayReq req = new PayReq();
+                    //req.appId = "wxf8b4f85f3a794e77";  // 测试用appId
+                    req.appId			= json.getString("appid");
+                    req.partnerId		= json.getString("partnerid");
+                    req.prepayId		= json.getString("prepayid");
+                    req.nonceStr		= json.getString("noncestr");
+                    req.timeStamp		= json.getString("timestamp");
+                    req.packageValue	= json.getString("package");
+                    req.sign			= json.getString("sign");
+                    req.extData			= "app data"; // optional
+                    Toast.makeText(mContext, "正常调起支付", Toast.LENGTH_SHORT).show();
+                    // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
+                    api.sendReq(req);
+                }else{
+                    Log.d("PAY_GET", "返回错误"+json.getString("retmsg"));
+                    Toast.makeText(mContext, "返回错误"+json.getString("retmsg"), Toast.LENGTH_SHORT).show();
+                }
+            }else{
+                Log.d("PAY_GET", "服务器请求错误");
+                Toast.makeText(mContext, "服务器请求错误", Toast.LENGTH_SHORT).show();
+            }
+        }catch(Exception e){
+            Log.e("PAY_GET", "异常："+e.getMessage());
+            Toast.makeText(mContext, "异常："+e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        payBtn.setEnabled(true);
     }
 
     private String buildTransaction(final String type) {
