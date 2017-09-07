@@ -2,6 +2,7 @@ package com.systemteam.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
@@ -10,38 +11,74 @@ import com.systemteam.R;
 import com.systemteam.bean.Car;
 import com.systemteam.bean.EventMessage;
 import com.systemteam.util.Constant;
+import com.systemteam.util.LogTool;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
+
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 
 import static com.systemteam.util.Constant.BUNDLE_KEY_SUBMIT_SUCCESS;
 import static com.systemteam.util.Constant.REQUEST_CODE_BREAK;
 
+//TODO 5588输码解锁变成2588
 public abstract class BaseActiveActivity extends BaseActivity {
+    private Car mCar;
     protected boolean isGaming = false;   //游戏是否在游戏中
     protected boolean isFree = false;     //是否免费使用：使用过程中申报故障成功。
 
-    protected void checkCarAvaliable(Activity activity, Car car){
+    protected void checkCarExist(final Context context, String carNo) {
+        mProgressHelper.showProgressDialog(getString(R.string.initing));
+        BmobQuery<Car> query = new BmobQuery<>();
+        query.addWhereEqualTo("carNo", carNo);
+        addSubscription(query.findObjects(new FindListener<Car>() {
+
+            @Override
+            public void done(List<Car> object, BmobException e) {
+                mProgressHelper.dismissProgressDialog();
+                if(e==null){
+                    if(object != null && object.size() > 0){
+                        mCar = object.get(0);
+                        checkCarAvaliable(context, mCar);
+                    }else {
+                        toast(getString(R.string.error_car_no));
+                    }
+                }else{
+                    toast(getString(R.string.initing_fail));
+                    if(e instanceof BmobException){
+                        LogTool.e("错误码："+((BmobException)e).getErrorCode()+",错误描述："+((BmobException)e).getMessage());
+                    }else{
+                        LogTool.e("错误描述："+e.getMessage());
+                    }
+                }
+            }
+        }));
+    }
+    protected void checkCarAvaliable(Context context, Car car){
         if(car == null){
            return;
         }
         if(car.getStatus() == null){
-            startRouteService(activity, car);
+            startRouteService(context, car);
         }else {
             switch (car.getStatus()){
                 case Constant.STATUS_NORMAL:
-                    startRouteService(activity, car);
+                    startRouteService(context, car);
                     break;
                 case Constant.BREAK_STATUS_LOCK:
-                    showTipDialog(activity, getString(R.string.tip_lock), car);
+                    showTipDialog(context, getString(R.string.tip_lock), car);
                     break;
                 default:
-                    showTipDialog(activity, getString(R.string.tip_break), car);
+                    showTipDialog(context, getString(R.string.tip_break), car);
                     break;
             }
         }
     }
 
-    private void showTipDialog(final Activity context, String msg, final Car car){
+    private void showTipDialog(final Context context, String msg, final Car car){
         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
         alertDialog.setTitle(getString(R.string.tip));
         alertDialog.setMessage(msg);

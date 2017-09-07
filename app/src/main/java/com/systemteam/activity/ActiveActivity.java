@@ -17,12 +17,8 @@ import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 
-import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
 import static com.systemteam.util.Constant.BUNDLE_CAR;
@@ -79,7 +75,7 @@ public class ActiveActivity extends BaseActiveActivity {
     protected void initData() {
         mReceiver = new LocationReceiver();
         registerBroadcast(ACTION_BROADCAST_ACTIVE, mReceiver);
-        checkCarExist(getIntent().getStringExtra(BUNDLE_KEY_CODE));
+        checkCarExist(this, getIntent().getStringExtra(BUNDLE_KEY_CODE));
     }
 
     @Override
@@ -145,34 +141,6 @@ public class ActiveActivity extends BaseActiveActivity {
             startRouteService(this, mCar);
             isGaming = true;
         }
-    }
-
-    private void checkCarExist(String carNo) {
-        mProgressHelper.showProgressDialog(getString(R.string.initing));
-        BmobQuery<Car> query = new BmobQuery<>();
-        query.addWhereEqualTo("carNo", carNo);
-        addSubscription(query.findObjects(new FindListener<Car>() {
-
-            @Override
-            public void done(List<Car> object, BmobException e) {
-                mProgressHelper.dismissProgressDialog();
-                if(e==null){
-                    if(object != null && object.size() > 0){
-                        mCar = object.get(0);
-                        checkCarAvaliable(ActiveActivity.this, mCar);
-                    }else {
-                        toast(getString(R.string.error_car_no));
-                    }
-                }else{
-                    toast(getString(R.string.initing_fail));
-                    if(e instanceof BmobException){
-                        LogTool.e("错误码："+((BmobException)e).getErrorCode()+",错误描述："+((BmobException)e).getMessage());
-                    }else{
-                        LogTool.e("错误描述："+e.getMessage());
-                    }
-                }
-            }
-        }));
     }
 
     @Override

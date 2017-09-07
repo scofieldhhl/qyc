@@ -2,7 +2,7 @@ package com.systemteam.util;
 
 public class Constant {
     //默认值
-    public static final float EARN_RATE_DEFAULT = 0.3f;
+    public static final float EARN_RATE_DEFAULT = 0.8f;
     public static final float COST_BASE_DEFAULT = 1.0f;
     public static final long TIME_ONCE_ACTIVE = 3 * 60 * 1000;
     public static int COUPON_DEFAULT = 3;
@@ -31,7 +31,7 @@ public class Constant {
     public static final int USER_TYPE_APPLYING = -1;    //申请成为商户
     public static final int USER_TYPE_EXPERTER = 2;     //维护维修人员
     //map
-    public static final int MAP_SCAN_SPAN = 10 * 1000;  //设置地图扫描间隔，单位是毫秒
+    public static final int MAP_SCAN_SPAN = 4 * 1000;  //设置地图扫描间隔，单位是毫秒
     public static final float MAP_SCALING = 18.0f;      ////地图缩放比设置为18
     //map
     public static final String REQUEST_KEY_BY_USER = "author";

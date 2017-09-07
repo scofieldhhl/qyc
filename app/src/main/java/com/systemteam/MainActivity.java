@@ -79,6 +79,7 @@ import com.systemteam.activity.SettingActivity;
 import com.systemteam.activity.WalletActivity;
 import com.systemteam.bean.BikeInfo;
 import com.systemteam.bean.Car;
+import com.systemteam.bean.MyUser;
 import com.systemteam.callback.AllInterface;
 import com.systemteam.car.MyCarActivity;
 import com.systemteam.custom.LeftDrawerLayout;
@@ -101,6 +102,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobGeoPoint;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
@@ -111,6 +113,7 @@ import static com.systemteam.bean.BikeInfo.infos;
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
 import static com.systemteam.util.Constant.BUNDLE_CAR;
 import static com.systemteam.util.Constant.BUNDLE_CARNO;
+import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
 import static com.systemteam.util.Constant.BUNDLE_KEY_IS_ACTIVING;
 import static com.systemteam.util.Constant.DISMISS_SPLASH;
 import static com.systemteam.util.Constant.MAP_SCAN_SPAN;
@@ -218,8 +221,12 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
                 case MSG_UPDATE_UI:
                     if(theActivity.isGaming){
                         theActivity.bikeOnUsing();
+                        theActivity.btn_locale.setEnabled(false);
+                        theActivity.mIvScan.setEnabled(false);
                     }else {
                         theActivity.backFromRouteDetail();
+                        theActivity.btn_locale.setEnabled(true);
+                        theActivity.mIvScan.setEnabled(true);
                     }
                     break;
             }
@@ -280,6 +287,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         // 地图初始化
         mMapView = (MapView) findViewById(R.id.id_bmapView);
         mBaiduMap = mMapView.getMap();
+        mMapView.showZoomControls(false);
         // 开启定位图层
         mBaiduMap.setMyLocationEnabled(true);
         mBaiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
@@ -1054,6 +1062,9 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
     public void gotoCodeUnlock(View view) {
         if(!checkUser(this))
             return;
+        if(!checkBalance(BmobUser.getCurrentUser(MyUser.class), MainActivity.this)){
+            return;
+        }
 //        startActivity(new Intent(this, CodeUnlockActivity.class));
         Intent intent = new Intent(this, QRCodeScanActivity.class);
         intent.putExtra(Constant.BUNDLE_KEY_UNLOCK, true);
@@ -1137,16 +1148,26 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
 
         bike_layout.setVisibility(View.GONE);
         prompt.setVisibility(View.GONE);
-        current_addr.setVisibility(View.VISIBLE);
+        /*current_addr.setVisibility(View.VISIBLE);
 //        mIvMenu.setVisibility(View.VISIBLE);
         book_bt.setVisibility(View.VISIBLE);
 //        unlock.setVisibility(View.VISIBLE);
         mIvScan.setVisibility(View.VISIBLE);
         divider.setVisibility(View.VISIBLE);
         btn_refresh.setVisibility(View.VISIBLE);
+        btn_locale.setVisibility(View.VISIBLE);*/
+        //隐藏使用时长显示
+        current_addr.setVisibility(View.GONE);
+//        mIvMenu.setVisibility(View.VISIBLE);
+        book_bt.setVisibility(View.GONE);
+//        unlock.setVisibility(View.VISIBLE);
+        mIvScan.setVisibility(View.VISIBLE);
+        divider.setVisibility(View.GONE);
+        btn_refresh.setVisibility(View.GONE);
         btn_locale.setVisibility(View.VISIBLE);
+
         end_route.setVisibility(View.GONE);
-        mMapView.showZoomControls(true);
+        mMapView.showZoomControls(false);
 
         getMyLocation();
         if (routeOverlay != null)
@@ -1191,12 +1212,12 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         bike_distance.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
         bike_price.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
 
-        prompt.setVisibility(View.VISIBLE);
-        bike_layout.setVisibility(View.VISIBLE);
+        prompt.setVisibility(View.GONE);
+        bike_layout.setVisibility(View.GONE);
         current_addr.setVisibility(View.GONE);
 //        mIvMenu.setVisibility(View.GONE);
 //        unlock.setVisibility(View.GONE);
-        mIvScan.setVisibility(View.GONE);
+        mIvScan.setVisibility(View.VISIBLE);
 
         divider.setVisibility(View.GONE);
         btn_refresh.setVisibility(View.GONE);
@@ -1204,14 +1225,14 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         countDownTimer.cancel();
         bike_info_layout.setVisibility(View.GONE);
         confirm_cancel_layout.setVisibility(View.GONE);
-        bike_distance_layout.setVisibility(View.VISIBLE);
+        bike_distance_layout.setVisibility(View.GONE);
         book_bt.setVisibility(View.GONE);
         if (routeOverlay != null)
             routeOverlay.removeFromMap();
 
-        btn_locale.setVisibility(View.GONE);
+        btn_locale.setVisibility(View.VISIBLE);
         bike_info_layout.setVisibility(View.GONE);
-        end_route.setVisibility(View.VISIBLE);
+        end_route.setVisibility(View.GONE);
         mMapView.showZoomControls(false);
         mBaiduMap.clear();
         if (isServiceLive)
@@ -1219,7 +1240,15 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        LogTool.d("onNewIntent");
+        super.onNewIntent(intent);
+        checkCarExist(this, getIntent().getStringExtra(BUNDLE_KEY_CODE));//启动使用
+    }
+
+    @Override
     protected void onResume() {
+        LogTool.d("onResume");
         mMapView.onResume();
         super.onResume();
         MobclickAgent.onPageStart("MainScreen");

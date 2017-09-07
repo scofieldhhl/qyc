@@ -350,8 +350,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    protected void startRouteService(Activity activity, Car car){
-        Intent intent = new Intent(activity, RouteService.class);
+    protected void startRouteService(Context context, Car car){
+        Intent intent = new Intent(context, RouteService.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(BUNDLE_CAR, car);
         intent.putExtras(bundle);

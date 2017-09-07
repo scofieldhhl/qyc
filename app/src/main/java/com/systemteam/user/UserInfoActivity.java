@@ -43,7 +43,7 @@ import static com.systemteam.util.Constant.REQUEST_IMAGE;
 import static com.systemteam.util.Constant.USER_TYPE_APPLYING;
 import static com.systemteam.util.Constant.USER_TYPE_CUSTOMER;
 import static com.systemteam.util.Constant.USER_TYPE_EXPERTER;
-
+//TODO 正在使用中是否允许登出
 public class UserInfoActivity extends BaseActivity {
     private String mAvatarPath;
     private ImageView mIvUserPhoto, mIvAddPhoto;
