@@ -19,6 +19,7 @@ import com.systemteam.bean.Withdraw;
 import com.systemteam.util.Constant;
 import com.systemteam.util.DateUtil;
 import com.systemteam.util.LogTool;
+import com.systemteam.util.ProtocolPreferences;
 import com.systemteam.util.Utils;
 import com.systemteam.view.IconEditTextView;
 
@@ -49,8 +50,8 @@ import static com.systemteam.util.Constant.WITHDRAW_DAYS_DEFAULT;
  * @author scofield.hhl@gmail.com
  * @time 2017/8/18
  */
-//TODO 提现后金额显示,账户余额不提现
-//TODO 账户余额记录增加提现记录
+//提现后金额显示,账户余额不提现
+//账户余额记录增加提现记录
 public class WithdrawActivity extends BaseListActivity {
     private BankCard mBankCard;
     private TextView mTvUserName, mTvPhone, mTvCard, mTvInfo;
@@ -58,7 +59,7 @@ public class WithdrawActivity extends BaseListActivity {
     private float mAmout = 0f, mAllEarn, mAllWithDraw, mBalance, mAllCost;
     private Withdraw mWithdraw;
     private boolean isWithDrawSuccess = false;
-    private boolean isWithdrawBalance = true;   //账户余额是否提现
+    private boolean isWithdrawBalance = false;   //账户余额是否提现
 
     private static class MyHandler extends Handler {
         private WeakReference<WithdrawActivity> mActivity;
@@ -112,6 +113,7 @@ public class WithdrawActivity extends BaseListActivity {
 
     @Override
     protected void initData() {
+        isWithdrawBalance = ProtocolPreferences.getIsWithdrawBalance(mContext);
         mAmout = getIntent().getFloatExtra(BUNDLE_KEY_AMOUNT, 0f);
         mAllEarn = getIntent().getFloatExtra(BUNDLE_KEY_ALL_EARN, 0f);
         mAllWithDraw = getIntent().getFloatExtra(BUNDLE_KEY_ALL_WITHDRAW, 0f);
@@ -126,7 +128,12 @@ public class WithdrawActivity extends BaseListActivity {
 
     private void refreshAmout(){
         ((TextView) findViewById(R.id.tv_amount)).setText(getString(R.string.amout_format, mAmout));
-        mTvInfo.setText(getString(R.string.withdraw_title_info, mAllEarn, mAllWithDraw, mBalance));
+        if(isWithdrawBalance){
+            mTvInfo.setText(getString(R.string.withdraw_title_info, mAllEarn, mAllWithDraw, mBalance));
+        }else {
+            mTvInfo.setText(getString(R.string.withdraw_title_info2, mAllEarn, mAllWithDraw));
+        }
+
     }
 
     @Override

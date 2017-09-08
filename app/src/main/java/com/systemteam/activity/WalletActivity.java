@@ -42,6 +42,7 @@ import com.systemteam.bean.UseRecord;
 import com.systemteam.bean.Withdraw;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
+import com.systemteam.util.ProtocolPreferences;
 import com.systemteam.util.Util;
 import com.systemteam.util.Utils;
 import com.tencent.mm.opensdk.modelpay.PayReq;
@@ -82,6 +83,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     boolean isPayByWechat = true;
     private float mAmout = 0f, mAllEarn, mAllWithDraw, mBalance,mAllCost,  mAmountPay = 5f;
     IWXAPI api;
+    private boolean isWithdrawBalance = false;
 
     private static class MyHandler extends Handler {
         private WeakReference<WalletActivity> mActivity;
@@ -179,7 +181,11 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
 
     private void updateBalance(){
         if(mUser != null && mUser.getType() != null && mUser.getType().intValue() == 1) {
-            mAmout = mAllEarn + mBalance - mAllWithDraw;
+            if(isWithdrawBalance){
+                mAmout = mAllEarn + mBalance - mAllWithDraw;
+            }else {
+                mAmout = mAllEarn - mAllWithDraw;
+            }
             if (mAmout < 0) {
                 mAmout = 0f;
             }
@@ -294,6 +300,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
 
     @Override
     protected void initData() {
+        isWithdrawBalance = ProtocolPreferences.getIsWithdrawBalance(mContext);
         initBalance();
     }
 

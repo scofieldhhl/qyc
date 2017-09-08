@@ -33,14 +33,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="8dp"
-            android:gravity="center"
+            android:gravity="bottom"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tv_amount"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:gravity="center_horizontal"
                 android:textSize="35sp"
                 android:textColor="@android:color/white"/>
@@ -48,6 +48,7 @@
                 style="@style/button_style"
                 android:layout_width="100dp"
                 android:layout_margin="0dp"
+                android:layout_gravity="bottom"
                 android:onClick="doSubmit"
                 android:text="@string/account_submit"/>
         </LinearLayout>

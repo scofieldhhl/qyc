@@ -41,6 +41,7 @@ public class CarDetailActivity extends BaseListActivity {
     private Menu mMenu;
     private TextView mTvCarNo, mTvEarn, mTvAddress, mTvStatus, mTvMark;
     Button mBtnUpdate, mBtnExpert;
+    View mLine;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,6 +111,7 @@ public class CarDetailActivity extends BaseListActivity {
 
         mBtnUpdate = (Button) findViewById(R.id.btn_update);
         mBtnExpert = (Button) findViewById(R.id.btn_expert);
+        mLine = findViewById(R.id.v_line);
         mLlDetail = (LinearLayout) findViewById(R.id.ll_detail);
     }
 
@@ -140,6 +142,7 @@ public class CarDetailActivity extends BaseListActivity {
                 mTvStatus.setText(getString(R.string.status_normal));
                 mBtnUpdate.setVisibility(View.GONE);
                 mBtnExpert.setVisibility(View.GONE);
+                mLine.setVisibility(View.GONE);
             }else {
                 switch (car.getStatus()){
                     case Constant.STATUS_NORMAL:
@@ -147,18 +150,21 @@ public class CarDetailActivity extends BaseListActivity {
                         mTvStatus.setTextColor(ContextCompat.getColor(mContext, R.color.black));
                         mBtnUpdate.setVisibility(View.GONE);
                         mBtnExpert.setVisibility(View.GONE);
+                        mLine.setVisibility(View.GONE);
                         break;
                     case Constant.BREAK_STATUS_LOCK:
                         mTvStatus.setText(getString(R.string.status_lock));
                         mTvStatus.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
                         mBtnUpdate.setVisibility(View.VISIBLE);
                         mBtnExpert.setVisibility(View.VISIBLE);
+                        mLine.setVisibility(View.VISIBLE);
                         break;
                     default:
                         mTvStatus.setText(getString(R.string.status_break));
                         mTvStatus.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
                         mBtnUpdate.setVisibility(View.VISIBLE);
                         mBtnExpert.setVisibility(View.VISIBLE);
+                        mLine.setVisibility(View.VISIBLE);
                         break;
                 }
             }
@@ -167,6 +173,7 @@ public class CarDetailActivity extends BaseListActivity {
                 mTvStatus.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
                 mBtnUpdate.setVisibility(View.GONE);
                 mBtnExpert.setVisibility(View.GONE);
+                mLine.setVisibility(View.GONE);
             }
             mTvMark.setText(car.getMark());
         }else {
@@ -178,6 +185,7 @@ public class CarDetailActivity extends BaseListActivity {
 
             mBtnUpdate.setVisibility(View.GONE);
             mBtnExpert.setVisibility(View.GONE);
+            mLine.setVisibility(View.GONE);
         }
     }
 
