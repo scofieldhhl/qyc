@@ -643,6 +643,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
             case R.id.end_route:
                 toastDialog(MainActivity.this, false);
                 break;
+            case R.id.iv_menu:
             case R.id.menu_icon:
                 openMenu();
                 break;

@@ -7,6 +7,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/toolbar"
+        android:visibility="gone"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
         <TextView
@@ -282,10 +283,22 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"/>
 
+    <ImageView
+        android:id="@+id/iv_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="30dp"
+        android:clickable="true"
+        android:onClick="onClick"
+        android:src="@mipmap/refresh_icon" />
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
         android:layout_margin="30dp"
         android:orientation="vertical">
 
@@ -295,6 +308,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
             android:clickable="true"
+            android:visibility="gone"
             android:src="@mipmap/refresh_icon" />
 
         <ImageView

@@ -9,10 +9,6 @@ import android.view.ViewGroup;
 
 import com.systemteam.callback.AllInterface;
 
-/**
- * Created by gaolei on 17/1/5.
- */
-
 public class LeftDrawerLayout extends ViewGroup {
     private static final int MIN_DRAWER_MARGIN = 64; // dp
     /**
