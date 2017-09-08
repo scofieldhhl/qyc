@@ -49,7 +49,8 @@ import static com.systemteam.util.Constant.WITHDRAW_DAYS_DEFAULT;
  * @author scofield.hhl@gmail.com
  * @time 2017/8/18
  */
-//TODO 提现后金额显示
+//TODO 提现后金额显示,账户余额不提现
+//TODO 账户余额记录增加提现记录
 public class WithdrawActivity extends BaseListActivity {
     private BankCard mBankCard;
     private TextView mTvUserName, mTvPhone, mTvCard, mTvInfo;

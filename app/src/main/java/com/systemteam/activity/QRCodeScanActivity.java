@@ -19,7 +19,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.systemteam.BaseActivity;
 import com.systemteam.MainActivity;
@@ -111,11 +110,16 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
 
     @Override
     public void onScanQRCodeSuccess(String result) {
-        //TODO 扫码成功，数据处理下一步操作
-        LogTool.d("result:" + result);
-        Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
+        // 扫码成功，数据处理下一步操作
+        LogTool.d("result:" + result);//result:http://pay.yiqiniubi.com/18789--
         vibrate();
-        exist(result);
+        if(result != null && !TextUtils.isEmpty(result)){
+            String[] arrResult = result.split("/");
+            checkCode(arrResult[arrResult.length - 1]);
+        }else {
+            toast(getString(R.string.code_unvalid));
+        }
+
     }
 
     @Override
@@ -327,30 +331,10 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
                 switch (v.getId()) {
                     case R.id.btn_unlock:
                         mImm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
-                        final String code = String.valueOf(((EditText) dialog.findViewById(R.id.et_code)).getText());
-                        if(!TextUtils.isEmpty(code) && code.length() > 5){
-                            //TODO 校验输入车牌的有效性
-                        }
-                        if(checkNetworkAvailable(mContext) == Constant.NETWORK_STATUS_NO){
-                            break;
-                        }
-                        if(isUnLock) {
-                            mUser = BmobUser.getCurrentUser(MyUser.class);
-                            if (!checkBalance(mUser, QRCodeScanActivity.this)) {
-                                return;
-                            }
+                        String code = String.valueOf(((EditText) dialog.findViewById(R.id.et_code)).getText());
+                        if(checkCode(code)){
                             dialog.dismiss();
-                            new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-//                                        Intent intent = new Intent(mContext, ActiveActivity.class);
-                                        Intent intent = new Intent(mContext, MainActivity.class);
-                                        intent.putExtra(BUNDLE_KEY_CODE, code);
-                                        startActivity(intent);
-                                    }
-                                }, 100);
                         }
-                        exist(code);
                         break;
                     case R.id.iv_light:
                         switchFlashlight();
@@ -373,6 +357,32 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
         dialog.show();
 //        mImm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
         return dialog;
+    }
+
+    private boolean checkCode(final String code){
+        if(!TextUtils.isEmpty(code) && code.length() > 5){
+            //TODO 校验输入车牌的有效性
+        }
+        if(checkNetworkAvailable(mContext) == Constant.NETWORK_STATUS_NO){
+            return false;
+        }
+        if(isUnLock) {
+            mUser = BmobUser.getCurrentUser(MyUser.class);
+            if (!checkBalance(mUser, QRCodeScanActivity.this)) {
+                return false;
+            }
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+//                                        Intent intent = new Intent(mContext, ActiveActivity.class);
+                    Intent intent = new Intent(mContext, MainActivity.class);
+                    intent.putExtra(BUNDLE_KEY_CODE, code);
+                    startActivity(intent);
+                }
+            }, 100);
+        }
+        exist(code);
+        return true;
     }
 
     private void checkSDK(){

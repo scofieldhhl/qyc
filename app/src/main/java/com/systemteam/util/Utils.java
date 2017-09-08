@@ -172,7 +172,7 @@ public class Utils {
         int size = myList.size();
         for (int i = 0; i < size; i++) {
             String mName = myList.get(i).service.getClassName().toString();
-            LogTool.d("mName="+mName);
+//            LogTool.d("mName="+mName);
             if (mName.equals(serviceName)) {
                 isWork = true;
                 break;

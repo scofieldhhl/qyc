@@ -1243,7 +1243,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
     protected void onNewIntent(Intent intent) {
         LogTool.d("onNewIntent");
         super.onNewIntent(intent);
-        checkCarExist(this, getIntent().getStringExtra(BUNDLE_KEY_CODE));//启动使用
+        checkCarExist(this, intent.getStringExtra(BUNDLE_KEY_CODE));//启动使用
     }
 
     @Override

@@ -12,6 +12,7 @@ import com.systemteam.bean.Car;
 import com.systemteam.bean.EventMessage;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
+import com.systemteam.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -24,13 +25,14 @@ import cn.bmob.v3.listener.FindListener;
 import static com.systemteam.util.Constant.BUNDLE_KEY_SUBMIT_SUCCESS;
 import static com.systemteam.util.Constant.REQUEST_CODE_BREAK;
 
-//TODO 5588输码解锁变成2588
+//5588输码解锁变成2588
 public abstract class BaseActiveActivity extends BaseActivity {
     private Car mCar;
     protected boolean isGaming = false;   //游戏是否在游戏中
     protected boolean isFree = false;     //是否免费使用：使用过程中申报故障成功。
 
     protected void checkCarExist(final Context context, String carNo) {
+        LogTool.d("checkCarExist :" + carNo);
         mProgressHelper.showProgressDialog(getString(R.string.initing));
         BmobQuery<Car> query = new BmobQuery<>();
         query.addWhereEqualTo("carNo", carNo);
@@ -44,7 +46,8 @@ public abstract class BaseActiveActivity extends BaseActivity {
                         mCar = object.get(0);
                         checkCarAvaliable(context, mCar);
                     }else {
-                        toast(getString(R.string.error_car_no));
+//                        toast(getString(R.string.error_car_no));
+                        Utils.showDialog(context, getString(R.string.tip), getString(R.string.error_car_no));
                     }
                 }else{
                     toast(getString(R.string.initing_fail));
