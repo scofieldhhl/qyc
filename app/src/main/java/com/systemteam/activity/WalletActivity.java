@@ -40,6 +40,7 @@ import com.systemteam.bean.CashRecord;
 import com.systemteam.bean.MyUser;
 import com.systemteam.bean.UseRecord;
 import com.systemteam.bean.Withdraw;
+import com.systemteam.provider.WXpayManager;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.ProtocolPreferences;
@@ -377,6 +378,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
 
     private void wxRequest(){
         //TODO 微信支付订单
+        WXpayManager wXpayManager = new WXpayManager(mContext);
         String url = "http://wxpay.wxutil.com/pub_v2/app/app_pay.php";
         Button payBtn = (Button) findViewById(R.id.btn_book);
         payBtn.setEnabled(false);
