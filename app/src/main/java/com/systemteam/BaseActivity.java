@@ -33,12 +33,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.systemteam.activity.BreakActivity;
 import com.systemteam.activity.WalletActivity;
 import com.systemteam.bean.Car;
 import com.systemteam.bean.MyUser;
+import com.systemteam.provider.ProtocolEncode;
 import com.systemteam.service.RouteService;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
@@ -350,12 +357,33 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    protected void startRouteService(Context context, Car car){
-        Intent intent = new Intent(context, RouteService.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(BUNDLE_CAR, car);
-        intent.putExtras(bundle);
-        startService(intent);
+    protected void startRouteService(final Context context, final Car car){
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,
+                ProtocolEncode.encodeUnlockUrl(),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        LogTool.d(response);
+                        if(response.contains("1000")){
+                            Intent intent = new Intent(context, RouteService.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(BUNDLE_CAR, car);
+                            intent.putExtras(bundle);
+                            startService(intent);
+                        }else {
+                            LogTool.e("response error!");
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                LogTool.e("Error: " + error.getMessage());
+            }
+        });
+        RequestQueue mQueue = Volley.newRequestQueue(mContext);
+        mQueue.add(stringRequest);
+
+
     }
 
     protected void initBackgroudColor(){

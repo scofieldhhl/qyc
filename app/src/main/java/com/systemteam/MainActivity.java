@@ -256,15 +256,14 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
 
     protected void initToolBar(Activity act, int titleId) {
         mToolbar = (Toolbar) act.findViewById(R.id.toolbar);
-        mToolbarTitle = (TextView) act.findViewById(R.id.toolbar_title);
         mToolbar.getVisibility();
         mToolbar.setTitle("");
-        if (titleId == 0) {
+        /*if (titleId == 0) {
             mToolbarTitle.setText("");
         } else {
             mToolbarTitle.setText(titleId);
-        }
-        if (mToolbar != null) {
+        }*/
+        /*if (mToolbar != null) {
             setSupportActionBar(mToolbar);
             mToolbar.setNavigationIcon(R.drawable.ic_menu_white);
         }
@@ -273,7 +272,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
             public void onClick(View v) {
                 openMenu();
             }
-        });
+        });*/
     }
 
     private void checkLogin(){
@@ -944,7 +943,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
     @Override

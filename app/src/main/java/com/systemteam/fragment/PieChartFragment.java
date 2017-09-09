@@ -245,14 +245,24 @@ public class PieChartFragment extends DemoBase implements OnChartValueSelectedLi
 
             for(Object object : routeList){
                 if(object instanceof Car){
-                    sumEarn += ((Car)object).getEarn();
+                    if(((Car)object).getEarn() == null){
+                        sumEarn += 0.0;
+                    }else {
+                        sumEarn += ((Car)object).getEarn();
+                    }
                 }
             }
             mChart.setCenterText(getString(R.string.earn_total, sumEarn));
             mBeanList.clear();
             for(Object object : routeList){
                 if(object instanceof Car){
-                    ChartBean bean = new ChartBean(0, ((Car)object).getEarn() / sumEarn);
+                    ChartBean bean;
+                    if(((Car)object).getEarn() == null){
+                        bean = new ChartBean(0, 0);
+                    }else {
+                        bean = new ChartBean(0, ((Car)object).getEarn() / sumEarn);
+                    }
+
                     bean.carNo = ((Car)object).getCarNo();
                     mBeanList.add(bean);
                 }
