@@ -371,6 +371,17 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                             intent.putExtras(bundle);
                             startService(intent);
                         }else {
+                            String msg = "";
+                            if(response.contains("4000")){
+                                msg = getString(R.string.error_lock_4000);
+                            }else if(response.contains("4001")){
+                                msg = getString(R.string.error_lock_4001);
+                            }else if(response.contains("4002")){
+                                msg = getString(R.string.error_lock_4002);
+                            }else if(response.contains("4003")){
+                                msg = getString(R.string.error_lock_4003);
+                            }
+                            Utils.showDialog(context, getString(R.string.error_lock_failed), msg);
                             LogTool.e("response error!");
                         }
                     }

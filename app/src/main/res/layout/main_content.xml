@@ -16,10 +16,11 @@
             android:visibility="gone"
             style="@style/toolbar_title" />
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="25dp"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/logo"/>
+            android:scaleType="fitXY"
+            android:src="@drawable/logo" />
     </android.support.v7.widget.Toolbar>
     <RelativeLayout
         android:id="@+id/rl_action"
@@ -31,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="10dp"
             android:layout_centerVertical="true"
-            android:background="@color/colorAccent"/>
+            android:background="@color/line_main"/>
 
         <ImageView
             android:id="@+id/iv_menu"
@@ -67,15 +68,26 @@
 
 
     </RelativeLayout>
-    <com.baidu.mapapi.map.MapView
-        android:id="@+id/id_bmapView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_margin="15dp"
-        android:padding="10dp"
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:layout_below="@id/toolbar"
-        android:layout_above="@id/rl_action"
-        android:clickable="true" />
+        android:layout_above="@id/rl_action">
+        <com.baidu.mapapi.map.MapView
+            android:id="@+id/id_bmapView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:clickable="true" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:clickable="false"
+            android:visibility="visible"
+            android:background="@drawable/main_map_shape"/>
+    </FrameLayout>
 
     <View
         android:id="@+id/shadow"
