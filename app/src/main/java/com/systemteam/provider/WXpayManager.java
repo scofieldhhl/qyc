@@ -19,6 +19,7 @@ import com.systemteam.util.LogTool;
 import org.xmlpull.v1.XmlSerializer;
 
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -72,24 +73,29 @@ public class WXpayManager {
     };
 
     public WXpayManager(Context context){
-        mContext = context;
-        arrValue[4] = getRandomString(32);
-        arrValue[6] = getOrderId();
-        arrValue[7] = getIPAddress(context);
-        StringBuffer stringA = new StringBuffer("");
-        for(int i = 0; i < 11; i ++){
-            stringA.append(arrKey[i]);
-            stringA.append("=");
-            stringA.append(arrValue[i]);
-            stringA.append("&");
-        }
-        stringA.append("key=").append(KEY_PAY);
-        String stringSignTemp = stringA.toString();
-        String sign = MD5(stringSignTemp).toUpperCase();
+        try {
+            mContext = context;
+            arrValue[4] = getRandomString(32);
+            arrValue[6] = getOrderId();
+            arrValue[7] = getIPAddress(context);
+            StringBuffer stringA = new StringBuffer("");
+            for(int i = 0; i < 11; i ++){
+                stringA.append(arrKey[i]);
+                stringA.append("=");
+                stringA.append(arrValue[i]);
+                stringA.append("&");
+            }
+            stringA.append("key=").append(KEY_PAY);
+            String stringSignTemp = stringA.toString();
+//        String sign = MD5(stringSignTemp).toUpperCase();
+            String sign = MD5.getMessageDigest(stringSignTemp.getBytes("UTF-8")).toUpperCase();
 //        sign=hash_hmac("sha256",stringSignTemp, KEY_PAY).toUpperCase();
-        arrValue[10] = sign;
+            arrValue[10] = sign;
 
-        requestOrder(writeXmlSerial(arrKey, arrValue));
+            requestOrder(writeXmlSerial(arrKey, arrValue));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     public void requestOrder(final String params){

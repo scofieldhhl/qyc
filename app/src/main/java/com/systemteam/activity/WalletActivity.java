@@ -40,7 +40,9 @@ import com.systemteam.bean.CashRecord;
 import com.systemteam.bean.MyUser;
 import com.systemteam.bean.UseRecord;
 import com.systemteam.bean.Withdraw;
-import com.systemteam.provider.WXpayManager;
+import com.systemteam.provider.model.onRequestListener;
+import com.systemteam.provider.model.wechat.pay.WechatModel;
+import com.systemteam.provider.model.wechat.pay.WechatPayTools;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.ProtocolPreferences;
@@ -55,6 +57,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
@@ -64,6 +68,7 @@ import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
+import static com.systemteam.provider.WXpayManager.getRandomString;
 import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_EARN;
 import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_WITHDRAW;
 import static com.systemteam.util.Constant.BUNDLE_KEY_AMOUNT;
@@ -72,6 +77,9 @@ import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 import static com.systemteam.util.Constant.PAY_AMOUNT_DEFAULT;
 import static com.systemteam.util.Constant.REQUEST_CODE;
 import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
+import static com.systemteam.util.Constant.WX_APP_ID;
+import static com.systemteam.util.Constant.WX_MCH_ID;
+import static com.systemteam.util.Constant.WX_PRIVATE_KEY;
 
 public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.OnItemClickListener{
 
@@ -111,7 +119,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet);
         mContext = this;
-        api = WXAPIFactory.createWXAPI(this, Constant.WX_APP_ID);
+        api = WXAPIFactory.createWXAPI(this, WX_APP_ID);
         initView();
         initData();
     }
@@ -370,7 +378,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                     payV2(view);
                 }
                 if(BuildConfig.DEBUG){//TODO For TEST
-                    saveNewObject();
+//                    saveNewObject();
                 }
                 break;
         }
@@ -378,12 +386,36 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
 
     private void wxRequest(){
         //TODO 微信支付订单
-        WXpayManager wXpayManager = new WXpayManager(mContext);
+        /*WXpayManager wXpayManager = new WXpayManager(mContext);
         String url = "http://wxpay.wxutil.com/pub_v2/app/app_pay.php";
         Button payBtn = (Button) findViewById(R.id.btn_book);
         payBtn.setEnabled(false);
         Toast.makeText(mContext, "获取订单中...", Toast.LENGTH_SHORT).show();
-        new AsyncOrderTask().execute(url);
+        new AsyncOrderTask().execute(url);*/
+
+        WechatPayTools.wechatPayUnifyOrder(mContext,
+                WX_APP_ID, //微信分配的APP_ID
+                WX_MCH_ID, //微信分配的 PARTNER_ID (商户ID)
+                WX_PRIVATE_KEY, //微信分配的 PRIVATE_KEY (私钥)
+                new WechatModel(getOrderId(), //订单ID (唯一)
+                        "1", //价格
+                        "YoYo Pay", //商品名称
+                        "YoYo Pay"), //商品描述详情
+                new onRequestListener() {
+                    @Override
+                    public void onSuccess(String s) {}
+
+                    @Override
+                    public void onError(String s) {}
+                });
+    }
+
+    public String getOrderId(){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        Date curDate =  new Date(System.currentTimeMillis());
+        String strOrderId = formatter.format(curDate) + getRandomString(16);
+        LogTool.d("OrderId : " + strOrderId);
+        return strOrderId;
     }
 
     private String buildTransaction(final String type) {
