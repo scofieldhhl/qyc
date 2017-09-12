@@ -358,43 +358,49 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     }
 
     protected void startRouteService(final Context context, final Car car){
-        StringRequest stringRequest = new StringRequest(Request.Method.GET,
-                ProtocolEncode.encodeUnlockUrl(),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        LogTool.d(response);
-                        if(response.contains("1000")){
-                            Intent intent = new Intent(context, RouteService.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable(BUNDLE_CAR, car);
-                            intent.putExtras(bundle);
-                            startService(intent);
-                        }else {
-                            String msg = "";
-                            if(response.contains("4000")){
-                                msg = getString(R.string.error_lock_4000);
-                            }else if(response.contains("4001")){
-                                msg = getString(R.string.error_lock_4001);
-                            }else if(response.contains("4002")){
-                                msg = getString(R.string.error_lock_4002);
-                            }else if(response.contains("4003")){
-                                msg = getString(R.string.error_lock_4003);
+        if(BuildConfig.DEBUG){
+            Intent intent = new Intent(context, RouteService.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(BUNDLE_CAR, car);
+            intent.putExtras(bundle);
+            startService(intent);
+        }else {
+            StringRequest stringRequest = new StringRequest(Request.Method.GET,
+                    ProtocolEncode.encodeUnlockUrl(car.getCarNo()),
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            LogTool.d(response);
+                            if(response.contains("1000")){
+                                Intent intent = new Intent(context, RouteService.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable(BUNDLE_CAR, car);
+                                intent.putExtras(bundle);
+                                startService(intent);
+                            }else {
+                                String msg = "";
+                                if(response.contains("4000")){
+                                    msg = getString(R.string.error_lock_4000);
+                                }else if(response.contains("4001")){
+                                    msg = getString(R.string.error_lock_4001);
+                                }else if(response.contains("4002")){
+                                    msg = getString(R.string.error_lock_4002);
+                                }else if(response.contains("4003")){
+                                    msg = getString(R.string.error_lock_4003);
+                                }
+                                Utils.showDialog(context, getString(R.string.error_lock_failed), msg);
+                                LogTool.e("response error!");
                             }
-                            Utils.showDialog(context, getString(R.string.error_lock_failed), msg);
-                            LogTool.e("response error!");
                         }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                LogTool.e("Error: " + error.getMessage());
-            }
-        });
-        RequestQueue mQueue = Volley.newRequestQueue(mContext);
-        mQueue.add(stringRequest);
-
-
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    LogTool.e("Error: " + error.getMessage());
+                }
+            });
+            RequestQueue mQueue = Volley.newRequestQueue(mContext);
+            mQueue.add(stringRequest);
+        }
     }
 
     protected void initBackgroudColor(){

@@ -2,6 +2,7 @@ package com.systemteam.view;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.widget.TextView;
 
 import com.systemteam.R;
@@ -32,6 +33,9 @@ public class ProgressDialogHelper {
             mProgressDialog.setContentView(R.layout.dialog_process);
             TextView text = (TextView) mProgressDialog.findViewById(R.id.progress_text);
             text.setText(message);
+            LVCircularSmile lvCircularSmile = (LVCircularSmile) mProgressDialog.findViewById(R.id.lv_circularSmile);
+            lvCircularSmile.setViewColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+            lvCircularSmile.startAnim();
             mProgressDialog.setCanceledOnTouchOutside(false);
 
             mProgressDialog.show();
@@ -52,4 +56,5 @@ public class ProgressDialogHelper {
             e.printStackTrace();
         }
     }
+
 }

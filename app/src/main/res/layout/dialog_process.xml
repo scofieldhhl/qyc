@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/dialog_background"
+    style="@style/info_layout_style"
     android:gravity="center"
     android:orientation="vertical"
     android:minWidth="200dp"
@@ -11,12 +9,16 @@
     android:paddingRight="24dp"
     android:paddingTop="24dp">
 
-    <ProgressBar
+    <!--<ProgressBar
         android:id="@+id/recovering_circle_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminateDrawable="@drawable/scan_progress"
-        android:indeterminateDuration="1000" />
+        android:indeterminateDuration="1000" />-->
+    <com.systemteam.view.LVCircularSmile
+        android:id="@+id/lv_circularSmile"
+        android:layout_width="50dp"
+        android:layout_height="50dp"/>
 
     <TextView
         android:id="@+id/progress_text"

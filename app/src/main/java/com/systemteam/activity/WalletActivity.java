@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,7 +17,6 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,7 +26,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.systemteam.BaseActivity;
 import com.systemteam.BuildConfig;
@@ -46,9 +43,7 @@ import com.systemteam.provider.model.wechat.pay.WechatPayTools;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.ProtocolPreferences;
-import com.systemteam.util.Util;
 import com.systemteam.util.Utils;
-import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
@@ -384,14 +379,9 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         }
     }
 
+    //TODO 获取支付结果
     private void wxRequest(){
         //TODO 微信支付订单
-        /*WXpayManager wXpayManager = new WXpayManager(mContext);
-        String url = "http://wxpay.wxutil.com/pub_v2/app/app_pay.php";
-        Button payBtn = (Button) findViewById(R.id.btn_book);
-        payBtn.setEnabled(false);
-        Toast.makeText(mContext, "获取订单中...", Toast.LENGTH_SHORT).show();
-        new AsyncOrderTask().execute(url);*/
 
         WechatPayTools.wechatPayUnifyOrder(mContext,
                 WX_APP_ID, //微信分配的APP_ID
@@ -418,9 +408,6 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         return strOrderId;
     }
 
-    private String buildTransaction(final String type) {
-        return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
-    }
 
     /**
      * 支付宝支付业务
@@ -628,50 +615,4 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
 
     }
 
-    private class AsyncOrderTask extends AsyncTask<String, Void, byte[]> {
-        @Override
-        protected void onPreExecute() {
-            mProgressHelper.showProgressDialog(getString(R.string.initing));
-        }
-        protected byte[] doInBackground(String... params) {  //三个点，代表可变参数
-            return Util.httpGet(params[0]);
-        }
-        @Override
-        protected void onPostExecute(byte[] buf) {
-            super.onPostExecute(buf);
-            //更新UI
-            mProgressHelper.dismissProgressDialog();
-            try {
-                if (buf != null && buf.length > 0) {
-                    String content = new String(buf);
-                    Log.e("get server pay params:",content);
-                    JSONObject json = new JSONObject(content);
-                    if(null != json && !json.has("retcode") ){
-                        PayReq req = new PayReq();
-                        //req.appId = "wxf8b4f85f3a794e77";  // 测试用appId
-                        req.appId			= json.getString("appid");
-                        req.partnerId		= json.getString("partnerid");
-                        req.prepayId		= json.getString("prepayid");
-                        req.nonceStr		= json.getString("noncestr");
-                        req.timeStamp		= json.getString("timestamp");
-                        req.packageValue	= json.getString("package");
-                        req.sign			= json.getString("sign");
-                        req.extData			= "app data"; // optional
-                        Toast.makeText(mContext, "正常调起支付", Toast.LENGTH_SHORT).show();
-                        // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
-                        api.sendReq(req);
-                    }else{
-                        Log.d("PAY_GET", "返回错误"+json.getString("retmsg"));
-                        Toast.makeText(mContext, "返回错误"+json.getString("retmsg"), Toast.LENGTH_SHORT).show();
-                    }
-                }else{
-                    Log.d("PAY_GET", "服务器请求错误");
-                    Toast.makeText(mContext, "服务器请求错误", Toast.LENGTH_SHORT).show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            mBtnBook.setEnabled(true);
-        }
-    }
 }

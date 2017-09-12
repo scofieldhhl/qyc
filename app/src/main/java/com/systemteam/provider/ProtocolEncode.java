@@ -23,11 +23,9 @@ public class ProtocolEncode {
      * @return
      * @
      */
-    public static String encodeUnlockUrl() {
+    public static String encodeUnlockUrl(String deviceId) {
         String appId = "5pGH5pGH6L2m";
-        String deviceId = "18789";
         String nonce_str = WXpayManager.getRandomString(32);
-//        String nonce_str = "fa79ba697ed34654be734fe1067961f5";
 
         String key = "65696e5e3624af4e287bee8559b494d5";
         HashMap<String, String> map = new HashMap<>();

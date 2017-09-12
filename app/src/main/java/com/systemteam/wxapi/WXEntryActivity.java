@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.systemteam.R;
 import com.systemteam.util.Constant;
+import com.systemteam.util.LogTool;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
@@ -122,7 +123,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
 	@Override
 	public void onResp(BaseResp resp) {
 		int result = 0;
-
+		LogTool.e("onResp :" + resp.toString());
 		Toast.makeText(this, "baseresp.getType = " + resp.getType(), Toast.LENGTH_SHORT).show();
 
 		switch (resp.errCode) {

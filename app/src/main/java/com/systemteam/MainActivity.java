@@ -91,6 +91,7 @@ import com.systemteam.util.Constant;
 import com.systemteam.util.LocationManager;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
+import com.systemteam.view.CatLoadingView;
 import com.systemteam.welcome.WelcomeActivity;
 import com.umeng.analytics.MobclickAgent;
 
@@ -163,6 +164,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
     private BaiduMap mBaiduMap;
     private float mCurrentX;
     private boolean isFirstLoc = true; // 是否首次定位
+    CatLoadingView mView;
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -220,10 +222,17 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
                     break;
                 case MSG_UPDATE_UI:
                     if(theActivity.isGaming){
+                        if(theActivity.mView == null){
+                            theActivity.mView = new CatLoadingView();
+                            theActivity.mView.show(theActivity.getSupportFragmentManager(), "");
+                        }
                         theActivity.bikeOnUsing();
                         theActivity.btn_locale.setEnabled(false);
                         theActivity.mIvScan.setEnabled(false);
                     }else {
+                        if(theActivity.mView != null){
+                            theActivity.mView.dismiss();
+                        }
                         theActivity.backFromRouteDetail();
                         theActivity.btn_locale.setEnabled(true);
                         theActivity.mIvScan.setEnabled(true);
