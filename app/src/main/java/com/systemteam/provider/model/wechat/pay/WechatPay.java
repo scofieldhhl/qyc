@@ -3,6 +3,7 @@ package com.systemteam.provider.model.wechat.pay;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.systemteam.util.LogTool;
 import com.tencent.mm.opensdk.constants.Build;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -80,12 +81,19 @@ public class WechatPay {
 
         PayReq req = new PayReq();
         req.appId = param.optString("appid");
+        LogTool.d("appid :" + req.appId);
         req.partnerId = param.optString("partnerid");
+        LogTool.d("appid :" + req.partnerId);
         req.prepayId = param.optString("prepayid");
+        LogTool.d("appid :" + req.prepayId);
         req.packageValue = param.optString("packageValue");
+        LogTool.d("appid :" + req.packageValue);
         req.nonceStr = param.optString("noncestr");
+        LogTool.d("appid :" + req.nonceStr);
         req.timeStamp = param.optString("timestamp");
+        LogTool.d("appid :" + req.timeStamp);
         req.sign = param.optString("sign");
+        LogTool.d("appid :" + req.sign);
 
         mWXApi.sendReq(req);
     }

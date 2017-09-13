@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
 import android.view.Menu;
@@ -27,6 +28,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.systemteam.BaseActivity;
 import com.systemteam.BuildConfig;
 import com.systemteam.R;
@@ -37,6 +46,8 @@ import com.systemteam.bean.CashRecord;
 import com.systemteam.bean.MyUser;
 import com.systemteam.bean.UseRecord;
 import com.systemteam.bean.Withdraw;
+import com.systemteam.provider.OrderWx;
+import com.systemteam.provider.model.OrderWxResult;
 import com.systemteam.provider.model.onRequestListener;
 import com.systemteam.provider.model.wechat.pay.WechatModel;
 import com.systemteam.provider.model.wechat.pay.WechatPayTools;
@@ -44,6 +55,7 @@ import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.ProtocolPreferences;
 import com.systemteam.util.Utils;
+import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
@@ -86,8 +98,10 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     Button mBtnBook;
     boolean isPayByWechat = true;
     private float mAmout = 0f, mAllEarn, mAllWithDraw, mBalance,mAllCost,  mAmountPay = 5f;
-    IWXAPI api;
+    IWXAPI mWXApi;
     private boolean isWithdrawBalance = false;
+    RequestQueue mQueue;
+    private String mWXTradeNo;//微信订单号
 
     private static class MyHandler extends Handler {
         private WeakReference<WalletActivity> mActivity;
@@ -114,7 +128,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet);
         mContext = this;
-        api = WXAPIFactory.createWXAPI(this, WX_APP_ID);
+        mWXApi = WXAPIFactory.createWXAPI(this, WX_APP_ID);
         initView();
         initData();
     }
@@ -170,6 +184,12 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         inflater.inflate(R.menu.menu_toolbar_wallet,menu);
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        requestPayResult();
     }
 
     private void initBalance(){
@@ -382,7 +402,11 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     //TODO 获取支付结果
     private void wxRequest(){
         //TODO 微信支付订单
+        requestWxPay("1");
+//        wxPayFromApp();
+    }
 
+    private void wxPayFromApp(){
         WechatPayTools.wechatPayUnifyOrder(mContext,
                 WX_APP_ID, //微信分配的APP_ID
                 WX_MCH_ID, //微信分配的 PARTNER_ID (商户ID)
@@ -613,6 +637,95 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         }
         });
 
+    }
+
+    public void requestWxPay(String amout){
+        mProgressHelper.showProgressDialog(getString(R.string.initing));
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,
+                "http://1.rockingcar.applinzi.com/wechatPay?amount=" + amout,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        mProgressHelper.dismissProgressDialog();
+                        LogTool.d(response);
+                        try {
+                            OrderWx order = new Gson().fromJson(response, OrderWx.class);
+                            if(order.data != null){
+                                mWXApi.registerApp(Constant.WX_APP_ID);
+                                PayReq req = new PayReq();
+                                req.appId = order.data.appId;
+                                LogTool.d("appId : " + order.data.appId);
+                                req.partnerId = order.data.partnerid;
+                                LogTool.d("appId : " + order.data.partnerid);
+                                req.prepayId = order.data.prepayid;
+                                LogTool.d("appId : " + order.data.prepayid);
+                                req.packageValue = order.data.packagevalue;
+                                LogTool.d("appId : " + order.data.packagevalue);
+                                req.nonceStr = order.data.nonceStr;
+                                LogTool.d("appId : " + order.data.nonceStr);
+                                req.timeStamp = order.data.timeStamp;
+                                LogTool.d("appId : " + order.data.timeStamp);
+                                req.sign = order.data.sign;
+                                LogTool.d("appId : " + order.data.sign);
+
+                                mWXApi.sendReq(req);
+                            }else {
+                                toast("请求订单失败");
+                            }
+                        } catch (JsonSyntaxException e) {
+                            toast("请求订单失败");
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mProgressHelper.dismissProgressDialog();
+                LogTool.e("Error: " + error.getMessage());
+            }
+        });
+        if(mQueue == null){
+            mQueue = Volley.newRequestQueue(mContext);
+        }
+        mQueue.add(stringRequest);
+    }
+
+    public void requestPayResult(){
+        String url;
+        if(isPayByWechat){
+            if(TextUtils.isEmpty(mWXTradeNo)){
+                toast("订单号为空");
+                return;
+            }
+            url = "http://1.rockingcar.applinzi.com/wechatPay?query=" + mWXTradeNo;
+        }else {
+            url = "";
+        }
+        mProgressHelper.showProgressDialog(getString(R.string.initing));
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        LogTool.d(response);
+                        try {
+                            OrderWxResult result = new Gson().fromJson(response, OrderWxResult.class);
+                            if(result != null && "SUCCESS".equalsIgnoreCase(result.result_code)){
+
+                            }
+                        } catch (JsonSyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                LogTool.e("Error: " + error.getMessage());
+            }
+        });
+        if(mQueue == null){
+            mQueue = Volley.newRequestQueue(mContext);
+        }
+        mQueue.add(stringRequest);
     }
 
 }
