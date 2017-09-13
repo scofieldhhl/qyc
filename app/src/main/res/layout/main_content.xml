@@ -26,18 +26,19 @@
         android:id="@+id/rl_action"
         android:layout_width="match_parent"
         android:layout_height="120dp"
+        android:layout_marginBottom="15dp"
         android:layout_alignParentBottom="true">
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="10dp"
+            android:layout_height="6dp"
             android:layout_centerVertical="true"
             android:background="@color/line_main"/>
 
         <ImageView
             android:id="@+id/iv_menu"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_margin="30dp"
@@ -47,8 +48,8 @@
 
         <ImageView
             android:id="@+id/iv_scan"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:src="@drawable/middle"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
@@ -58,8 +59,8 @@
 
         <ImageView
             android:id="@+id/btn_locale"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_margin="30dp"

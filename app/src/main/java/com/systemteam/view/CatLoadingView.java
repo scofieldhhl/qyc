@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -34,13 +35,25 @@ public class CatLoadingView extends DialogFragment {
 
   String text;
 
+  private DialogInterface.OnKeyListener keylistener = new DialogInterface.OnKeyListener() {
+    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+      if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
     if (mDialog == null) {
       mDialog = new Dialog(getActivity(), R.style.cart_dialog);
       mDialog.setContentView(R.layout.catloading_main);
-      mDialog.setCanceledOnTouchOutside(true);
-      mDialog.getWindow().setGravity(Gravity.CENTER);
+      mDialog.setOnKeyListener(keylistener);
+      mDialog.setCancelable(false);
+      mDialog.setCanceledOnTouchOutside(false);
+      mDialog.getWindow().setGravity(Gravity.BOTTOM);
 
       operatingAnim = new RotateAnimation(360f, 0f, Animation.RELATIVE_TO_SELF, 0.5f,
           Animation.RELATIVE_TO_SELF, 0.5f);

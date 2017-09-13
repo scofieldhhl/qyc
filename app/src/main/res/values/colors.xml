@@ -7,7 +7,7 @@
     <color name="colorAccent">#FF4081</color>-->
     <!--<color name="colorPrimary">#fd405c</color>-->
     <color name="colorPrimary">#f86433</color>
-    <color name="colorPrimaryDark">#D32F2F</color>
+    <color name="colorPrimaryDark">#e13900</color>
     <color name="colorAccent">#f8b502</color>
     <color name="color_toolbar_bg">#343333</color>
     <color name="color_343333">#343333</color>
@@ -101,5 +101,5 @@
     <color name="transparent_button_pressed">#44444444</color>
     <color name="transparent_button_focused">#44666666</color>
 
-    <color name="line_main">#fc5d2a</color>
+    <color name="line_main">#d26a01</color>
 </resources>
