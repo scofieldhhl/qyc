@@ -124,6 +124,7 @@ import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 // 关屏3min使用完成后，主界面没有推出使用中模式
 // 首次安装使用，main界面没有小车编号
 // 使用过程中申报故障后，main界面没有退出使用中模式
+//TODO BUG登出在登录，进入主界面后自动启动编号 2588
 public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanResultListener,
         AllInterface.OnMenuSlideListener, NavigationView.OnNavigationItemSelectedListener{
 

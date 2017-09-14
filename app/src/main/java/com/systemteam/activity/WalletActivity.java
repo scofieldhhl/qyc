@@ -97,7 +97,8 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     RelativeLayout wechat_layout, alipay_layout;
     Button mBtnBook;
     boolean isPayByWechat = true;
-    private float mAmout = 0f, mAllEarn, mAllWithDraw, mBalance,mAllCost,  mAmountPay = 5f;
+    private float mAmout = 0f, mAllEarn, mAllWithDraw, mBalance,mAllCost;
+    private int mAmountPay = PAY_AMOUNT_DEFAULT;
     IWXAPI mWXApi;
     private boolean isWithdrawBalance = false;
     RequestQueue mQueue;
@@ -204,8 +205,11 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     }
 
     private void updateBalance(){
+        mUser = BmobUser.getCurrentUser(MyUser.class);
+        mBalance = mUser.getBalance();
         if(mUser != null && mUser.getType() != null && mUser.getType().intValue() == 1) {
-            if(isWithdrawBalance){
+//            if(isWithdrawBalance){
+            if(true){
                 mAmout = mAllEarn + mBalance - mAllWithDraw;
             }else {
                 mAmout = mAllEarn - mAllWithDraw;
@@ -361,7 +365,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     public void onItemClick(View v, int position) {
         adapter.setSelectPosition(position);
         try {
-            mAmountPay = Float.valueOf(adapter.getValueSelect(position));
+            mAmountPay = Integer.valueOf(adapter.getValueSelect(position)) * 100;
         } catch (NumberFormatException e) {
             mAmountPay = PAY_AMOUNT_DEFAULT;
         }
@@ -384,7 +388,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                 Utils.showProtocol(mContext, Constant.GUIDE_TYPE_PAY);
                 break;
             case R.id.btn_book:
-                if(mAmountPay < 5f){
+                if(mAmountPay < PAY_AMOUNT_DEFAULT){
                     toast(getString(R.string.pay_error_amout));
                 }
                 if(isPayByWechat){
@@ -392,17 +396,19 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                 }else {
                     payV2(view);
                 }
-                if(BuildConfig.DEBUG){//TODO For TEST
-//                    saveNewObject();
-                }
                 break;
         }
     }
 
-    //TODO 获取支付结果
+    //获取支付结果
     private void wxRequest(){
-        //TODO 微信支付订单
-        requestWxPay("1");
+        //微信支付订单
+        if(BuildConfig.DEBUG){
+            mAmountPay = 10;
+            requestWxPay(String.valueOf(mAmountPay));
+        }else {
+            requestWxPay(String.valueOf(mAmountPay));
+        }
 //        wxPayFromApp();
     }
 
@@ -556,28 +562,32 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     public static final String RSA2_PRIVATE = "";
     public static final String RSA_PRIVATE = "";*/
 
-    private void saveNewObject() {
-        final MyUser user = BmobUser.getCurrentUser(MyUser.class);
+    private void paySuccess() {
+        mProgressHelper.showProgressDialog(getString(R.string.initing));
+        mUser = BmobUser.getCurrentUser(MyUser.class);
         MyUser newUser = new MyUser();
-        if(user.getBalance() == null){
-            newUser.setBalance(mAmountPay);
+        float balance;
+        if(mUser.getBalance() == null){
+            balance = Float.valueOf(mAmountPay) / 100;
         }else {
-            newUser.setBalance(user.getBalance() + mAmountPay);
+            balance = (mUser.getBalance() + Float.valueOf(mAmountPay) / 100);
         }
-        addSubscription(newUser.update(user.getObjectId(), new UpdateListener() {
+        newUser.setBalance(balance);
+        addSubscription(newUser.update(mUser.getObjectId(), new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if(e==null){
-                    toast(getString(R.string.pay_success));
-                    CashRecord cashRecord = new CashRecord(user,
-                            isPayByWechat ? Constant.PAY_TYPE_WX : Constant.PAY_TYPE_ALI, mAmountPay);
+                    LogTool.d("update balance success");
+                    mProgressHelper.dismissProgressDialog();
+                    mHandler.sendEmptyMessage(MSG_UPDATE_UI);
+                    CashRecord cashRecord = new CashRecord(mUser,
+                            isPayByWechat ? Constant.PAY_TYPE_WX : Constant.PAY_TYPE_ALI,
+                            Float.valueOf(mAmountPay) / 100);
                     addSubscription(cashRecord.save(new SaveListener<String>() {
                         @Override
                         public void done(String s, BmobException e) {
-                            mProgressHelper.dismissProgressDialog();
                             if(e==null){
-                                toast(getString(R.string.pay_success));
-//                    mHandler.sendEmptyMessage(MSG_UPDATE_UI);
+                                LogTool.d("save cash record success");
                             }else{
                                 loge(e);
                                 toast(getString(R.string.submit_faile));
@@ -651,29 +661,30 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                         try {
                             OrderWx order = new Gson().fromJson(response, OrderWx.class);
                             if(order.data != null){
+                                mWXTradeNo = order.data.tradeNo;
                                 mWXApi.registerApp(Constant.WX_APP_ID);
                                 PayReq req = new PayReq();
-                                req.appId = order.data.appId;
-                                LogTool.d("appId : " + order.data.appId);
+                                req.appId = order.data.appid;
+                                LogTool.d("appId : " + order.data.appid);
                                 req.partnerId = order.data.partnerid;
                                 LogTool.d("appId : " + order.data.partnerid);
                                 req.prepayId = order.data.prepayid;
                                 LogTool.d("appId : " + order.data.prepayid);
                                 req.packageValue = order.data.packagevalue;
                                 LogTool.d("appId : " + order.data.packagevalue);
-                                req.nonceStr = order.data.nonceStr;
-                                LogTool.d("appId : " + order.data.nonceStr);
-                                req.timeStamp = order.data.timeStamp;
-                                LogTool.d("appId : " + order.data.timeStamp);
+                                req.nonceStr = order.data.noncestr;
+                                LogTool.d("appId : " + order.data.noncestr);
+                                req.timeStamp = order.data.timestamp;
+                                LogTool.d("appId : " + order.data.timestamp);
                                 req.sign = order.data.sign;
                                 LogTool.d("appId : " + order.data.sign);
 
                                 mWXApi.sendReq(req);
                             }else {
-                                toast("请求订单失败");
+                                toast(getString(R.string.pay_order_fail));
                             }
                         } catch (JsonSyntaxException e) {
-                            toast("请求订单失败");
+                            toast(getString(R.string.pay_order_fail));
                             e.printStackTrace();
                         }
                     }
@@ -681,6 +692,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
             @Override
             public void onErrorResponse(VolleyError error) {
                 mProgressHelper.dismissProgressDialog();
+                toast(getString(R.string.initing_fail));
                 LogTool.e("Error: " + error.getMessage());
             }
         });
@@ -694,7 +706,6 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         String url;
         if(isPayByWechat){
             if(TextUtils.isEmpty(mWXTradeNo)){
-                toast("订单号为空");
                 return;
             }
             url = "http://1.rockingcar.applinzi.com/wechatPay?query=" + mWXTradeNo;
@@ -706,19 +717,33 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        mProgressHelper.dismissProgressDialog();
                         LogTool.d(response);
                         try {
                             OrderWxResult result = new Gson().fromJson(response, OrderWxResult.class);
-                            if(result != null && "SUCCESS".equalsIgnoreCase(result.result_code)){
-
+                            if(result != null){
+                                if("NOPAY".equalsIgnoreCase(result.trade_state)){
+                                    toast(getString(R.string.pay_fail_nopay));
+                                }else if("SUCCESS".equalsIgnoreCase(result.trade_state)){
+                                    toast(getString(R.string.pay_success,
+                                            Float.valueOf(result.total_fee) / 100));
+                                    paySuccess();
+                                }else {
+                                    toast(getString(R.string.pay_result_fail));
+                                }
+                            }else {
+                                toast(getString(R.string.pay_fail));
                             }
                         } catch (JsonSyntaxException e) {
+                            toast(getString(R.string.pay_result_fail));
                             e.printStackTrace();
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                mProgressHelper.dismissProgressDialog();
+                toast(getString(R.string.pay_result_fail));
                 LogTool.e("Error: " + error.getMessage());
             }
         });
@@ -726,6 +751,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
             mQueue = Volley.newRequestQueue(mContext);
         }
         mQueue.add(stringRequest);
+        mWXTradeNo = null;
     }
 
 }

@@ -119,6 +119,11 @@ public class WithdrawActivity extends BaseListActivity {
         mAllWithDraw = getIntent().getFloatExtra(BUNDLE_KEY_ALL_WITHDRAW, 0f);
         mBalance = getIntent().getFloatExtra(BUNDLE_KEY_BLANACE, 0f);
         mAllCost = getIntent().getFloatExtra(BUNDLE_KEY_ALL_COST, 0f);
+        if(isWithdrawBalance){
+            mAmout = mAllEarn + mBalance - mAllWithDraw;
+        }else {
+            mAmout = mAllEarn - mAllWithDraw;
+        }
         refreshAmout();
         mUser = BmobUser.getCurrentUser(MyUser.class);
         requestInfo();
