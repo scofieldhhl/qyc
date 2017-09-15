@@ -53,7 +53,7 @@ public class ChargeAmountAdapter extends RecyclerView.Adapter<ChargeAmountAdapte
         holder.itemView.setTag(position);
         if (position == selectPosition) {
             holder.textView.setTextColor(Color.parseColor("#343333"));
-            holder.textView.setBackgroundResource(R.drawable.charge_amount_select);
+            holder.textView.setBackgroundResource(R.drawable.item_selected);
         } else {
             holder.textView.setTextColor(Color.parseColor("#989898"));
             holder.textView.setBackgroundResource(R.drawable.charge_amount_unselect);

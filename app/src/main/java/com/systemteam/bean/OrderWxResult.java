@@ -1,4 +1,4 @@
-package com.systemteam.provider.model;
+package com.systemteam.bean;
 
 /**
  * 类描述：

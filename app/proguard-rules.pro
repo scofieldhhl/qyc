@@ -200,12 +200,22 @@ public static java.lang.String TABLENAME;
 -dontwarn cn.bmob.v3.**
 -keep class cn.bmob.v3.** {*;}
 
-# 确保JavaBean不被混淆-否则gson将无法将数据解析成具体对象
--keep class * extends cn.bmob.v3.BmobObject {*;}
--keep class com.systemteam.bean.BankCard{*;}
--keep class com.systemteam.bean.MyUser{*;}
--keep class com.systemteam.bean.Person{*;}
--keep class com.systemteam.bean.Car{*;}
+##---------------Begin: proguard configuration for Gson  ----------
+# Gson uses generic type information stored in a class file when working with fields. Proguard
+# removes such information by default, so configure it to keep all of it.
+-keepattributes Signature
+
+# For using GSON @Expose annotation
+-keepattributes *Annotation*
+
+# Gson specific classes
+-keep class sun.misc.Unsafe { *; }
+#-keep class com.google.gson.stream.** { *; }
+
+# Application classes that will be serialized/deserialized over Gson
+-keep class com.systemteam.bean.** { *; }
+
+##---------------End: proguard configuration for Gson  ----------
 
 # keep BmobPush
 -dontwarn  cn.bmob.push.**

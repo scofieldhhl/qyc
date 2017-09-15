@@ -119,11 +119,12 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
 		}
 	}
 
+
 	// 第三方应用发送到微信的请求处理后的响应结果，会回调到该方法
 	@Override
 	public void onResp(BaseResp resp) {
-		int result = 0;
-		LogTool.e("onResp :" + resp.toString());
+		int result;
+		LogTool.e("onPayFinish errCode = " + resp.errCode);
 		Toast.makeText(this, "baseresp.getType = " + resp.getType(), Toast.LENGTH_SHORT).show();
 
 		switch (resp.errCode) {

@@ -62,6 +62,7 @@ public class Constant {
     public static final int MSG_UPDATE_UI = 0x124;
     public static final int MSG_LOGOOUT = 0x125;
     public static final int MSG_WITHDRAW_SUCCESS = 0x126;
+    public static final int MSG_ORDER_SUCCESS_WX = 0x127;
 
 
     public static final String SHAERD_FILE_NAME = "shared_file_name";
@@ -71,8 +72,6 @@ public class Constant {
 
     //pay
     public static final String WX_APP_ID = "wx34a15429655e4678";
-    public static final String WX_MCH_ID = "1488489712";
-    public static final String WX_PRIVATE_KEY = "f085346874dd4e3b3438734779fbb787";
 
     public static final int PAY_TYPE_WX = 0;
     public static final int PAY_TYPE_ALI = 1;
