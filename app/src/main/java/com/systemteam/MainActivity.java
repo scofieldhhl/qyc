@@ -125,6 +125,7 @@ import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 // 首次安装使用，main界面没有小车编号
 // 使用过程中申报故障后，main界面没有退出使用中模式
 //TODO BUG登出在登录，进入主界面后自动启动编号 2588
+
 public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanResultListener,
         AllInterface.OnMenuSlideListener, NavigationView.OnNavigationItemSelectedListener{
 
@@ -297,6 +298,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         mMapView = (MapView) findViewById(R.id.id_bmapView);
         mBaiduMap = mMapView.getMap();
         mMapView.showZoomControls(false);
+        mMapView.showScaleControl(false);
         // 开启定位图层
         mBaiduMap.setMyLocationEnabled(true);
         mBaiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
@@ -605,7 +607,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         end_route.setOnClickListener(this);
         mMapView.setOnClickListener(this);
         dragLocationIcon = BitmapDescriptorFactory.fromResource(R.mipmap.drag_location);
-        bikeIcon = BitmapDescriptorFactory.fromResource(R.mipmap.bike_icon);
+        bikeIcon = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
         mHandler.sendEmptyMessageDelayed(DISMISS_SPLASH, 3000);
     }
 

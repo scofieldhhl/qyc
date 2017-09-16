@@ -48,6 +48,9 @@ import com.systemteam.bean.OrderWx;
 import com.systemteam.bean.OrderWxResult;
 import com.systemteam.bean.UseRecord;
 import com.systemteam.bean.Withdraw;
+import com.systemteam.provider.alipay.AliPayModel;
+import com.systemteam.provider.alipay.AliPayTools;
+import com.systemteam.provider.alipay.onRequestListener;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.ProtocolPreferences;
@@ -83,7 +86,7 @@ import static com.systemteam.util.Constant.PAY_AMOUNT_DEFAULT;
 import static com.systemteam.util.Constant.REQUEST_CODE;
 import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
 import static com.systemteam.util.Constant.WX_APP_ID;
-
+//TODO float数值增加精度运算
 public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.OnItemClickListener{
 
     RecyclerView recyclerview_acount;
@@ -461,7 +464,23 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
      *
      * @param v
      */
+    public static final String RSA2_PRIVATE = "";
     public void payV2(View v) {
+        AliPayTools.aliPay(WalletActivity.this, Constant.ALI_APP_ID, false, RSA2_PRIVATE,
+                new AliPayModel(getOrderId(),
+                        "1",
+                        "yoyocar",
+                        "yoyocar Pay"), new onRequestListener() {
+                    @Override
+                    public void onSuccess(String s) {
+                        LogTool.e("onSuccess : " + s);
+                    }
+
+                    @Override
+                    public void onError(String s) {
+                        LogTool.e("onError : " + s);
+                    }
+                });
         /*if (TextUtils.isEmpty(Constant.ALI_APP_ID) || (TextUtils.isEmpty(RSA2_PRIVATE) && TextUtils.isEmpty(RSA_PRIVATE))) {
             new AlertDialog.Builder(this).setTitle("警告").setMessage("需要配置APPID | RSA_PRIVATE")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {

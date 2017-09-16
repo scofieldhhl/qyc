@@ -76,7 +76,7 @@ public class Constant {
     public static final int PAY_TYPE_WX = 0;
     public static final int PAY_TYPE_ALI = 1;
 
-    public static final String ALI_APP_ID = "2017082708417182";
+    public static final String ALI_APP_ID = "2017082708417182";//2017082708417182
     public static final int PHONE_TYPE_IPHONE = 0;
     public static final int PHONE_TYPE_ANDROID = 1;
     public static final int PAY_COUPON_DEFAULT = 0;

@@ -87,6 +87,22 @@ public class MyCarAdapter extends BaseAdapter {
                     viewHolder.tvCarStatus.setText(context.getString(R.string.status_experting));
                     viewHolder.tvCarStatus.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
                 }
+                if(car.getCarType() != null){
+                    switch (car.getCarType()){
+                        case 1:
+                            viewHolder.ivIcon.setImageResource(R.drawable.car_icon1);
+                            break;
+                        case 2:
+                            viewHolder.ivIcon.setImageResource(R.drawable.car_icon2);
+                            break;
+                        case 3:
+                            viewHolder.ivIcon.setImageResource(R.drawable.car_icon3);
+                            break;
+                        case 4:
+                            viewHolder.ivIcon.setImageResource(R.drawable.car_icon4);
+                            break;
+                    }
+                }
                 break;
         }
     }
