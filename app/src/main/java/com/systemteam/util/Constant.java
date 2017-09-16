@@ -72,8 +72,6 @@ public class Constant {
 
     //pay
     public static final String WX_APP_ID = "wx34a15429655e4678";
-    public static final String WX_MCH_ID = "1488489712";
-    public static final String WX_PRIVATE_KEY = "f085346874dd4e3b3438734779fbb787";
 
     public static final int PAY_TYPE_WX = 0;
     public static final int PAY_TYPE_ALI = 1;

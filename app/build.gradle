@@ -12,8 +12,8 @@ android {
         release {
             keyAlias 'SystemStudio'
             keyPassword 'HUANGhl8811^'
-//            storeFile file('D:/appkey/systemstudio.jks')
-            storeFile file('/Users/ws/Desktop/systemstudio.jks')
+            storeFile file('D:/appkey/systemstudio.jks')
+//            storeFile file('/Users/ws/Desktop/systemstudio.jks')
             storePassword 'HUANGhl8811^'
         }
     }
@@ -107,6 +107,5 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
     testCompile 'junit:junit:4.12'
     compile files('libs/alipaySdk-20170623-proguard.jar')
-    //okgo 网络请求框架包
-    compile 'com.lzy.net:okgo:3.0.4'
+
 }

@@ -51,8 +51,6 @@ import com.systemteam.bean.Withdraw;
 import com.systemteam.provider.alipay.AliPayModel;
 import com.systemteam.provider.alipay.AliPayTools;
 import com.systemteam.provider.model.onRequestListener;
-import com.systemteam.provider.model.wechat.pay.WechatModel;
-import com.systemteam.provider.model.wechat.pay.WechatPayTools;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.ProtocolPreferences;
@@ -88,8 +86,6 @@ import static com.systemteam.util.Constant.PAY_AMOUNT_DEFAULT;
 import static com.systemteam.util.Constant.REQUEST_CODE;
 import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
 import static com.systemteam.util.Constant.WX_APP_ID;
-import static com.systemteam.util.Constant.WX_MCH_ID;
-import static com.systemteam.util.Constant.WX_PRIVATE_KEY;
 
 //TODO float数值增加精度运算
 public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.OnItemClickListener{
@@ -437,11 +433,11 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         }else {
             requestWxPay(String.valueOf(mAmountPay));
         }
-        wxPayFromApp();
+//        wxPayFromApp();
     }
 
     private void wxPayFromApp(){
-        WechatPayTools.wechatPayUnifyOrder(mContext,
+        /*WechatPayTools.wechatPayUnifyOrder(mContext,
                 WX_APP_ID, //微信分配的APP_ID
                 WX_MCH_ID, //微信分配的 PARTNER_ID (商户ID)
                 WX_PRIVATE_KEY, //微信分配的 PRIVATE_KEY (私钥)
@@ -455,7 +451,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
 
                     @Override
                     public void onError(String s) {}
-                });
+                });*/
     }
 
     public String getOrderId(){
@@ -474,7 +470,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
      */
     public static final String RSA2_PRIVATE = "";
     public void payV2(View v) {
-        AliPayTools.aliPay(WalletActivity.this, Constant.ALI_APP_ID, false, RSA2_PRIVATE,
+        AliPayTools.aliPay(WalletActivity.this, Constant.ALI_APP_ID, true, RSA2_PRIVATE,
                 new AliPayModel(getOrderId(),
                         "1",
                         "yoyocar",
