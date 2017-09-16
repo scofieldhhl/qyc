@@ -1,4 +1,4 @@
-package com.systemteam.provider.alipay;
+package com.systemteam.provider.model;
 
 /**
  * Created by Administrator on 2017/4/19.

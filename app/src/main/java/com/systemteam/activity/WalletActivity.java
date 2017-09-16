@@ -50,7 +50,9 @@ import com.systemteam.bean.UseRecord;
 import com.systemteam.bean.Withdraw;
 import com.systemteam.provider.alipay.AliPayModel;
 import com.systemteam.provider.alipay.AliPayTools;
-import com.systemteam.provider.alipay.onRequestListener;
+import com.systemteam.provider.model.onRequestListener;
+import com.systemteam.provider.model.wechat.pay.WechatModel;
+import com.systemteam.provider.model.wechat.pay.WechatPayTools;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.ProtocolPreferences;
@@ -86,6 +88,9 @@ import static com.systemteam.util.Constant.PAY_AMOUNT_DEFAULT;
 import static com.systemteam.util.Constant.REQUEST_CODE;
 import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
 import static com.systemteam.util.Constant.WX_APP_ID;
+import static com.systemteam.util.Constant.WX_MCH_ID;
+import static com.systemteam.util.Constant.WX_PRIVATE_KEY;
+
 //TODO float数值增加精度运算
 public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.OnItemClickListener{
 
@@ -121,23 +126,26 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                 case MSG_ORDER_SUCCESS_WX:
                     OrderWx.Data data = (OrderWx.Data) msg.obj;
                     if(data != null){
+                        theActivity.mWXTradeNo = data.getTradeNo();
+                        theActivity.mWXApi.registerApp(Constant.WX_APP_ID);
                         PayReq req = new PayReq();
                         req.appId = data.getAppid();
                         LogTool.d("appId : " + data.getAppid());
                         req.partnerId = data.getPartnerid();
-                        LogTool.d("appId : " + data.getPartnerid());
+                        LogTool.d("partnerId : " + data.getPartnerid());
                         req.prepayId = data.getPrepayid();
-                        LogTool.d("appId : " + data.getPrepayid());
+                        LogTool.d("prepayId : " + data.getPrepayid());
                         req.packageValue = data.getPackagevalue();
-                        LogTool.d("appId : " + data.getPackagevalue());
+                        LogTool.d("packageValue : " + data.getPackagevalue());
                         req.nonceStr = data.getNoncestr();
-                        LogTool.d("appId : " + data.getNoncestr());
+                        LogTool.d("nonceStr : " + data.getNoncestr());
                         req.timeStamp = data.getTimestamp();
-                        LogTool.d("appId : " + data.getTimestamp());
+                        LogTool.d("timeStamp : " + data.getTimestamp());
                         req.sign = data.getSign();
-                        LogTool.d("appId : " + data.getSign());
+                        LogTool.d("sign : " + data.getSign());
 
-                        theActivity.mWXApi.sendReq(req);
+                        boolean bool = theActivity.mWXApi.sendReq(req);
+                        LogTool.d("sendReq :" + bool);
                     }
             }
         }
@@ -429,11 +437,11 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         }else {
             requestWxPay(String.valueOf(mAmountPay));
         }
-//        wxPayFromApp();
+        wxPayFromApp();
     }
 
     private void wxPayFromApp(){
-        /*WechatPayTools.wechatPayUnifyOrder(mContext,
+        WechatPayTools.wechatPayUnifyOrder(mContext,
                 WX_APP_ID, //微信分配的APP_ID
                 WX_MCH_ID, //微信分配的 PARTNER_ID (商户ID)
                 WX_PRIVATE_KEY, //微信分配的 PRIVATE_KEY (私钥)
@@ -447,7 +455,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
 
                     @Override
                     public void onError(String s) {}
-                });*/
+                });
     }
 
     public String getOrderId(){
@@ -697,11 +705,9 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                         try {
                             OrderWx order = new Gson().fromJson(response, OrderWx.class);
                             if(order != null && order.getData() != null){
-                                mWXTradeNo = order.getData().getTradeNo();
-                                mWXApi.registerApp(Constant.WX_APP_ID);
                                 Message msg = mHandler.obtainMessage(MSG_ORDER_SUCCESS_WX);
                                 msg.obj = order.getData();
-                                mHandler.sendMessageDelayed(msg, 1000);
+                                msg.sendToTarget();
                             }else {
                                 LogTool.e("order or data null");
                                 toast(getString(R.string.pay_order_fail));

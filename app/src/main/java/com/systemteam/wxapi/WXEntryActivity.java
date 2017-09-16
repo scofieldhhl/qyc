@@ -29,6 +29,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		LogTool.d("onCreate");
 		/*setContentView(R.layout.entry);*/
 
 		// 通过WXAPIFactory工厂，获取IWXAPI的实例
@@ -88,7 +89,10 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
 		});*/
 
 		//注意：
-		//第三方开发者如果使用透明界面来实现WXEntryActivity，需要判断handleIntent的返回值，如果返回值为false，则说明入参不合法未被SDK处理，应finish当前透明界面，避免外部通过传递非法参数的Intent导致停留在透明界面，引起用户的疑惑
+		//第三方开发者如果使用透明界面来实现WXEntryActivity，
+		// 需要判断handleIntent的返回值，如果返回值为false，
+		// 则说明入参不合法未被SDK处理，应finish当前透明界面，
+		// 避免外部通过传递非法参数的Intent导致停留在透明界面，引起用户的疑惑
 		try {
 			api.handleIntent(getIntent(), this);
 		} catch (Exception e) {
@@ -99,7 +103,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-
+		LogTool.d("onNewIntent");
 		setIntent(intent);
 		api.handleIntent(intent, this);
 	}
@@ -107,6 +111,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
 	// 微信发送请求到第三方应用时，会回调到该方法
 	@Override
 	public void onReq(BaseReq req) {
+		LogTool.d("onReq");
 		switch (req.getType()) {
 			case ConstantsAPI.COMMAND_GETMESSAGE_FROM_WX:
 				goToGetMsg();
@@ -175,5 +180,35 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
 		intent.putExtra(Constants.ShowMsgActivity.BAThumbData, wxMsg.thumbData);
 		startActivity(intent);
 		finish();*/
+	}
+
+	@Override
+	protected void onStart() {
+		LogTool.d("onStart");
+		super.onStart();
+	}
+
+	@Override
+	protected void onRestart() {
+		LogTool.d("onRestart");
+		super.onRestart();
+	}
+
+	@Override
+	protected void onResume() {
+		LogTool.d("onResume");
+		super.onResume();
+	}
+
+	@Override
+	protected void onStop() {
+		LogTool.d("onStop");
+		super.onStop();
+	}
+
+	@Override
+	protected void onDestroy() {
+		LogTool.d("onDestroy");
+		super.onDestroy();
 	}
 }

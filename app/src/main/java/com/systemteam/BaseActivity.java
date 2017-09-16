@@ -364,14 +364,15 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             bundle.putSerializable(BUNDLE_CAR, car);
             intent.putExtras(bundle);
             startService(intent);
-        }else {
+        }else
+            {
             StringRequest stringRequest = new StringRequest(Request.Method.GET,
                     ProtocolEncode.encodeUnlockUrl(car.getCarNo()),
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             LogTool.d(response);
-                            if(response.contains("1000")){
+                            if(response.contains("1000") || response.contains("200")){
                                 Intent intent = new Intent(context, RouteService.class);
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable(BUNDLE_CAR, car);

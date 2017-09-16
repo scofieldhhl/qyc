@@ -133,7 +133,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />
         <activity
-            android:name=".wxapi.WXEntryActivity"
+            android:name="com.systemteam.wxapi.WXEntryActivity"
             android:exported="true"
             android:label="@string/app_name" >
             <intent-filter>

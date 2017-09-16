@@ -6,7 +6,6 @@ import android.os.Environment;
 import com.baidu.mapapi.SDKInitializer;
 import com.systemteam.bean.MyUser;
 import com.systemteam.database.db.DbCore;
-import com.systemteam.util.Constant;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.analytics.MobclickAgent;
@@ -17,6 +16,8 @@ import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobConfig;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobGeoPoint;
+
+import static com.systemteam.util.Constant.WX_APP_ID;
 
 public class BikeApplication extends Application {
 
@@ -96,7 +97,7 @@ public class BikeApplication extends Application {
     }
 
     private void regToWx(){
-        IWXAPI api = WXAPIFactory.createWXAPI(this, Constant.WX_APP_ID, true);
-        api.registerApp(Constant.WX_APP_ID);
+        IWXAPI api = WXAPIFactory.createWXAPI(this, WX_APP_ID, true);
+        api.registerApp(WX_APP_ID);
     }
 }
