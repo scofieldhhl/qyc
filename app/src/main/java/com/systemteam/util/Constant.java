@@ -80,7 +80,8 @@ public class Constant {
     public static final int PHONE_TYPE_IPHONE = 0;
     public static final int PHONE_TYPE_ANDROID = 1;
     public static final int PAY_COUPON_DEFAULT = 0;
-    public static final int PAY_AMOUNT_DEFAULT = 500;//支付分为单位
+    public static final int PAY_AMOUNT_MIN = 5 * 100;//支付分为单位
+    public static final int PAY_AMOUNT_DEFAULT = 100 * 100;//支付分为单位
     //pay
 
     public static final int NETWORK_STATUS_NO = 0;

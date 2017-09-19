@@ -129,7 +129,7 @@
     <string name="pay_result_fail">获取订单结果失败,如有扣款异常请联系客服！</string>
     <string name="pay_fail">支付失败,如有扣款异常请联系客服！</string>
     <string name="pay_fail_nopay">您已取消支付！</string>
-    <string name="pay_success">您已成功充值 %.2f 元！</string>
+    <string name="pay_success">恭喜，您已充值成功！</string>
     <string name="wallet_tip_1" formatted="false">点击马上充值，即表示已阅读和同意%s</string>
     <string name="wallet_tip_2">《充值协议》</string>
     <string name="about_us2">八客科技(深圳)有限公司</string>

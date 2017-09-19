@@ -108,7 +108,7 @@ public class RouteFragment extends BaseListFragment{
     }
 
     @Override
-    public void onItemClick(View v, int position) {//TODO 查看行程详情
+    public void onItemClick(View v, int position) {
         /*Intent intent = new Intent(getActivity(), RouteDetailActivity.class);
         UseRecord routeRecord = (UseRecord)routeList.get(position);
 //        bundle.putParcelable("routeContent",routeRecord );

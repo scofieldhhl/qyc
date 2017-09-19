@@ -260,9 +260,9 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         initToolBar(this, R.string.bybike);
         initView();
         initData();
-        isServiceLive = Utils.isServiceWork(this, getPackageName() + ".service.RouteService");
+        /*isServiceLive = Utils.isServiceWork(this, getPackageName() + ".service.RouteService");
         if (isServiceLive)
-            beginService();
+            beginService();*/
     }
 
     protected void initToolBar(Activity act, int titleId) {

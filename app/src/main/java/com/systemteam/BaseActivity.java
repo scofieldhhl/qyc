@@ -388,6 +388,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                                     msg = getString(R.string.error_lock_4002);
                                 }else if(response.contains("4003")){
                                     msg = getString(R.string.error_lock_4003);
+                                }else if(response.contains("403")){
+                                    msg = getString(R.string.error_lock_4001);
                                 }
                                 Utils.showDialog(context, getString(R.string.error_lock_failed), msg);
                                 LogTool.e("response error!");

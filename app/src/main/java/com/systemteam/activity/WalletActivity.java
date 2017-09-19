@@ -1,7 +1,6 @@
 package com.systemteam.activity;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,7 +30,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alipay.sdk.app.PayTask;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -55,7 +52,9 @@ import com.systemteam.bean.OrderWxResult;
 import com.systemteam.bean.PayResult;
 import com.systemteam.bean.UseRecord;
 import com.systemteam.bean.Withdraw;
-import com.systemteam.provider.OrderInfoUtil2_0;
+import com.systemteam.provider.alipay.AliPayModel;
+import com.systemteam.provider.alipay.AliPayTools;
+import com.systemteam.provider.model.onRequestListener;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.ProtocolPreferences;
@@ -81,7 +80,7 @@ import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
-import static com.systemteam.provider.WXpayManager.getRandomString;
+import static com.systemteam.provider.ProtocolEncode.getRandomString;
 import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_EARN;
 import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_WITHDRAW;
 import static com.systemteam.util.Constant.BUNDLE_KEY_AMOUNT;
@@ -89,6 +88,7 @@ import static com.systemteam.util.Constant.BUNDLE_KEY_BLANACE;
 import static com.systemteam.util.Constant.MSG_ORDER_SUCCESS_WX;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 import static com.systemteam.util.Constant.PAY_AMOUNT_DEFAULT;
+import static com.systemteam.util.Constant.PAY_AMOUNT_MIN;
 import static com.systemteam.util.Constant.REQUEST_CODE;
 import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
 import static com.systemteam.util.Constant.WX_APP_ID;
@@ -193,6 +193,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         adapter = new ChargeAmountAdapter(this);
         recyclerview_acount.setAdapter(adapter);
         adapter.setOnClickListener(this);
+        adapter.setSelectPosition(4);
         recyclerview_acount.addItemDecoration(new ChargeAmountDividerDecoration(10));
 
         mBtnBook = (Button) findViewById(R.id.btn_book);
@@ -418,8 +419,12 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                 Utils.showProtocol(mContext, Constant.GUIDE_TYPE_PAY);
                 break;
             case R.id.btn_book:
-                if(mAmountPay < PAY_AMOUNT_DEFAULT){
+                if(mAmountPay < PAY_AMOUNT_MIN){
                     toast(getString(R.string.pay_error_amout));
+                    return;
+                }
+                if(BuildConfig.DEBUG) {
+//                    mAmountPay = 10;
                 }
                 if(isPayByWechat){
                     wxRequest();
@@ -433,31 +438,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     //获取支付结果
     private void wxRequest(){
         //微信支付订单
-        if(BuildConfig.DEBUG){
-            mAmountPay = 10;
-            requestWxPay(String.valueOf(mAmountPay));
-        }else {
-            requestWxPay(String.valueOf(mAmountPay));
-        }
-//        wxPayFromApp();
-    }
-
-    private void wxPayFromApp(){
-        /*WechatPayTools.wechatPayUnifyOrder(mContext,
-                WX_APP_ID, //微信分配的APP_ID
-                WX_MCH_ID, //微信分配的 PARTNER_ID (商户ID)
-                WX_PRIVATE_KEY, //微信分配的 PRIVATE_KEY (私钥)
-                new WechatModel(getOrderId(), //订单ID (唯一)
-                        "1", //价格
-                        "YoYo Pay", //商品名称
-                        "YoYo Pay"), //商品描述详情
-                new onRequestListener() {
-                    @Override
-                    public void onSuccess(String s) {}
-
-                    @Override
-                    public void onError(String s) {}
-                });*/
+        requestWxPay(String.valueOf(mAmountPay));
     }
 
     public String getOrderId(){
@@ -474,23 +455,44 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
      *
      * @param v
      */
+
+    /**
+     * 这里只是为了方便直接向商户展示支付宝的整个支付流程；所以Demo中加签过程直接放在客户端完成；
+     * 真实App里，privateKey等数据严禁放在客户端，加签过程务必要放在服务端完成；
+     * 防止商户私密数据泄露，造成不必要的资金损失，及面临各种安全风险；
+     *
+     * orderInfo的获取必须来自服务端；
+     */
+    //TODO 增加支付宝支付返回码提示
     public void payV2(View v) {
-        /*AliPayTools.aliPay(WalletActivity.this, Constant.ALI_APP_ID, true, RSA2_PRIVATE,
+        String srtAmount = String.valueOf(Float.valueOf(mAmountPay) / 100);
+        AliPayTools.aliPay(WalletActivity.this, Constant.ALI_APP_ID, false, RSA_PRIVATE,
                 new AliPayModel(getOrderId(),
-                        "1",
-                        "yoyocar",
-                        "yoyocar Pay"), new onRequestListener() {
+                        srtAmount,
+                        "摇星球",
+                        "摇星球充值"), new onRequestListener() {
                     @Override
                     public void onSuccess(String s) {
                         LogTool.e("onSuccess : " + s);
+                        if("9000".equalsIgnoreCase(s)){
+                            toast(getString(R.string.pay_success));
+                            paySuccess();
+                        }else {
+                            toast(getString(R.string.pay_fail));
+                        }
                     }
 
                     @Override
                     public void onError(String s) {
                         LogTool.e("onError : " + s);
+                        if("6001".equalsIgnoreCase(s)){
+                            toast(getString(R.string.pay_fail_nopay));
+                        }else {
+                            toast(getString(R.string.pay_fail));
+                        }
                     }
-                });*/
-        if (TextUtils.isEmpty(Constant.ALI_APP_ID) || (TextUtils.isEmpty(RSA2_PRIVATE) && TextUtils.isEmpty(RSA_PRIVATE))) {
+                });
+        /*if (TextUtils.isEmpty(Constant.ALI_APP_ID) || (TextUtils.isEmpty(RSA2_PRIVATE) && TextUtils.isEmpty(RSA_PRIVATE))) {
             new AlertDialog.Builder(this).setTitle("警告").setMessage("需要配置APPID | RSA_PRIVATE")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialoginterface, int i) {
@@ -501,13 +503,6 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
             return;
         }
 
-        /**
-         * 这里只是为了方便直接向商户展示支付宝的整个支付流程；所以Demo中加签过程直接放在客户端完成；
-         * 真实App里，privateKey等数据严禁放在客户端，加签过程务必要放在服务端完成；
-         * 防止商户私密数据泄露，造成不必要的资金损失，及面临各种安全风险；
-         *
-         * orderInfo的获取必须来自服务端；
-         */
         boolean rsa2 = (RSA2_PRIVATE.length() > 0);
         Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, rsa2);
         String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
@@ -532,7 +527,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         };
 
         Thread payThread = new Thread(payRunnable);
-        payThread.start();
+        payThread.start();*/
     }
 
     private static final int SDK_PAY_FLAG = 1;
@@ -602,20 +597,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     /** RSA2_PRIVATE 可以保证商户交易在更加安全的环境下进行，建议使用 RSA2_PRIVATE */
     /** 获取 RSA2_PRIVATE，建议使用支付宝提供的公私钥生成工具生成， */
     /** 工具地址：https://doc.open.alipay.com/docs/doc.htm?treeId=291&articleId=106097&docType=1 */
-    public static final String RSA2_PRIVATE = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAJ5VsIVOrXJTyoJG\n" +
-            "InAg890eMiVWDwcxNW3KcjDjgDcRX+D+46QcO7bQB4kd8s1pLf1Cr2XDoc8kkeEh\n" +
-            "SqF31cBfbVFyQZr4l5GkCkRtrJSvjHpMk5vCxySdMgR02aOW43FTAj/iKov6lbaI\n" +
-            "eR+V70DGzxNfiadESZUMX6IAjcF3AgMBAAECgYBkDVfnVSlLNmGgYrs+ScRv9LXR\n" +
-            "XAlRDSpq/2ObOxd5NNR2c/rbaC/fvKMWZUNZw94YzLvTPYURRVWdgpELaZM65zMU\n" +
-            "rTOJUohYASbrJ8EUcA7dvdwZrcqQWI6TPoiHsYyT/buojSFYAatfpC56MqkxT5sX\n" +
-            "8f52Koa1pmmTrcArAQJBAND3YgDd6BOyBawF6h4XFthAVeQgs8Z9h09lquDXac8t\n" +
-            "+tBA5H3XfY1st9WFhUxdsLJv2LQsg/NTAXmYGXIlLoECQQDB+OsxxEou2YBpiw4L\n" +
-            "PQTSgs7ByWvHUmKm3RwLpkEDG0I8qGGmJans4fjihlJIaQSEoMHcdkcVUT9g9dIo\n" +
-            "smP3AkEAgW9aIxNQtzJj1QPs2iqPGe/vw9iFwoLql0FwMMj9XzkpzGkFnvUlbb5T\n" +
-            "uEx2HrFBy6T/48pXCRb3KOwPhuaFAQJAMRNORiAYeLP0xj81RWihwLTxpJvWVe6l\n" +
-            "IPyOLPBaQHP0FS6wzf13eYROmNlNFh7j0r5tbd7K6zzMITbwffVsTwJBAKm1Z1YT\n" +
-            "ZdJDg0w6EPpWInQYIzOfG1DL+3EJf2W4O3X1lyry1Zs/5+QhuxCjdEe2S/fNjbj+\n" +
-            "qnf5Ugf6qu5kego=";
+    public static final String RSA2_PRIVATE = "";
     public static final String RSA_PRIVATE = "";
 
     private void paySuccess() {
@@ -735,7 +717,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
             public void onErrorResponse(VolleyError error) {
                 mProgressHelper.dismissProgressDialog();
                 toast(getString(R.string.initing_fail));
-                LogTool.e("Error: " + error.getMessage());
+                LogTool.e("Error: " + error.toString());
             }
         });
         if(mQueue == null){
@@ -745,11 +727,11 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     }
 
     public void requestPayResult(){
+        if(TextUtils.isEmpty(mWXTradeNo)){
+            return;
+        }
         String url;
         if(isPayByWechat){
-            if(TextUtils.isEmpty(mWXTradeNo)){
-                return;
-            }
             url = "http://1.rockingcar.applinzi.com/wechatPay?query=" + mWXTradeNo;
         }else {
             url = "";
@@ -767,8 +749,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                                 if("NOTPAY".equalsIgnoreCase(result.trade_state)){
                                     toast(getString(R.string.pay_fail_nopay));
                                 }else if("SUCCESS".equalsIgnoreCase(result.trade_state)){
-                                    toast(getString(R.string.pay_success,
-                                            Float.valueOf(result.total_fee) / 100));
+                                    toast(getString(R.string.pay_success));
                                     paySuccess();
                                 }else {
                                     toast(getString(R.string.pay_result_fail));

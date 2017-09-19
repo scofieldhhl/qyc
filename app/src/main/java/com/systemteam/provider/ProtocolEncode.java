@@ -3,6 +3,7 @@ package com.systemteam.provider;
 import com.systemteam.util.LogTool;
 
 import java.util.HashMap;
+import java.util.Random;
 
 /**
  * @author rivers
@@ -18,14 +19,14 @@ public class ProtocolEncode {
     public final static String URL_NIU = "http://120.76.77.233:20022/start";
 
     /**
-     * 32、	B获取维修家/用户订单列表
+     * 开锁请求
      *
      * @return
      * @
      */
     public static String encodeUnlockUrl(String deviceId) {
         String appId = "5pGH5pGH6L2m";
-        String nonce_str = WXpayManager.getRandomString(32);
+        String nonce_str = getRandomString(32);
 
         String key = "65696e5e3624af4e287bee8559b494d5";
         HashMap<String, String> map = new HashMap<>();
@@ -44,5 +45,15 @@ public class ProtocolEncode {
         return sbUrl.toString();
     }
 
+    public static String getRandomString(int length) { //length表示生成字符串的长度
+        String base = "abcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < length; i++) {
+            int number = random.nextInt(base.length());
+            sb.append(base.charAt(number));
+        }
+        return sb.toString();
+    }
 
 }
