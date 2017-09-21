@@ -9,6 +9,13 @@ package com.systemteam.bean;
  * "trade_state_desc": "\u8ba2\u5355\u672a\u652f\u4ed8",
  * "appid": "wx34a15429655e4678", "result_code": "SUCCESS"}
  *
+ * {"code": "1", "data": {
+ * "trade_state": "NOTPAY", "nonce_str": "T1b4kSumaUCeu7G0", "return_code": "SUCCESS",
+ * "return_msg": "OK", "sign": "EECEEB02BEEF439BAE62DFB58AC9C67A", "mch_id": "1488489712",
+ * "out_trade_no": "W2017092114480475835",
+ * "trade_state_desc": "\u8ba2\u5355\u672a\u652f\u4ed8",
+ * "appid": "wx34a15429655e4678", "result_code": "SUCCESS"}}
+ *
  * SUCCESS
  * {"openid": "oaxY41fhWTbStB1wH9KViiBlDn1M", "trade_type": "APP",
  * "trade_state": "SUCCESS", "cash_fee": "1", "is_subscribe": "N",
@@ -19,31 +26,47 @@ package com.systemteam.bean;
  * "transaction_id": "4008372001201709142087471871", "total_fee": "1",
  * "appid": "wx34a15429655e4678", "fee_type": "CNY",
  * "time_end": "20170914194041", "result_code": "SUCCESS"}
+ *
+ * {"code": "1", "data": {
+ * "openid": "oaxY41fhWTbStB1wH9KViiBlDn1M", "trade_type": "APP",
+ * "trade_state": "SUCCESS", "cash_fee": "1", "is_subscribe": "N",
+ * "nonce_str": "VvbeY65JiGnKqLDF", "return_code": "SUCCESS",
+ * "return_msg": "OK", "sign": "1F2D266AC683CAD81A41885B4D826E6D",
+ * "bank_type": "CFT", "attach": null, "mch_id": "1488489712",
+ * "out_trade_no": "W2017092111570694599",
+ * "transaction_id": "4200000016201709213349475643", "total_fee": "1",
+ * "appid": "wx34a15429655e4678", "fee_type": "CNY",
+ * "time_end": "20170921115736", "result_code": "SUCCESS"}}
  * 创建人：ws
  * 创建时间：2017/9/13 下午8:35
  */
 
 public class OrderWxResult {
-    public String trade_state;
-    public String nonce_str;
-    public String return_code;
-    public String return_msg;
-    public String sign;
-    public String mch_id;
-    public String out_trade_no;
-    public String trade_state_desc;
-    public String appid;
-    public String result_code;
+    public int code;
+    public PayInfo data;
 
-    //success
-    public String openid;
-    public String trade_type;
-    public int cash_fee;
-    public String is_subscribe;
-    public String bank_type;
-    public String attach;
-    public String transaction_id;
-    public int total_fee;
-    public String fee_type;
-    public String time_end;
+    public class PayInfo{
+        public String trade_state;
+        public String nonce_str;
+        public String return_code;
+        public String return_msg;
+        public String sign;
+        public String mch_id;
+        public String out_trade_no;
+        public String trade_state_desc;
+        public String appid;
+        public String result_code;
+
+        //success
+        public String openid;
+        public String trade_type;
+        public int cash_fee;
+        public String is_subscribe;
+        public String bank_type;
+        public String attach;
+        public String transaction_id;
+        public int total_fee;
+        public String fee_type;
+        public String time_end;
+    }
 }

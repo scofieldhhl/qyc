@@ -18,10 +18,7 @@ import cn.bmob.v3.BmobUser;
 
 import static com.systemteam.util.Constant.BUNDLE_USER;
 
-/**
- * Created by gaolei on 17/1/5.
- */
-
+//普通用户menu也显示了我的摇摇车
 public class LeftMenuFragment extends BaseFragment {
 
     private LinearLayout mLLMycar;
@@ -72,10 +69,10 @@ public class LeftMenuFragment extends BaseFragment {
         } catch (Exception e) {
 
         }
-        if(mUser != null && mUser.getType() != null){
-            if(mUser.getType() == 1){
-                mLLMycar.setVisibility(View.VISIBLE);
-            }
+        if(mUser != null && mUser.getType() != null && mUser.getType() == 1){
+            mLLMycar.setVisibility(View.VISIBLE);
+        }else {
+            mLLMycar.setVisibility(View.GONE);
         }
     }
 

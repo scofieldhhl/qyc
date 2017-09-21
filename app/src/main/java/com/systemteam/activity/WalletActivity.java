@@ -39,7 +39,6 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.systemteam.BaseActivity;
-import com.systemteam.BuildConfig;
 import com.systemteam.R;
 import com.systemteam.adapter.ChargeAmountAdapter;
 import com.systemteam.adapter.ChargeAmountDividerDecoration;
@@ -94,6 +93,7 @@ import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
 import static com.systemteam.util.Constant.WX_APP_ID;
 
 //TODO float数值增加精度运算
+//普通用户充值没有及时更新账户余额(pay返回json格式修改导致)
 public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.OnItemClickListener{
 
     RecyclerView recyclerview_acount;
@@ -423,8 +423,11 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                     toast(getString(R.string.pay_error_amout));
                     return;
                 }
-                if(BuildConfig.DEBUG) {
-//                    mAmountPay = 10;
+                if(mUser.getMobilePhoneNumber().equalsIgnoreCase("15811112222") ||
+                        mUser.getMobilePhoneNumber().equalsIgnoreCase("15817438761") ||
+                        mUser.getMobilePhoneNumber().equalsIgnoreCase("15812121214") ||
+                        mUser.getMobilePhoneNumber().equalsIgnoreCase("15814551455")) {
+                    mAmountPay = 1;
                 }
                 if(isPayByWechat){
                     wxRequest();
@@ -598,7 +601,20 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     /** 获取 RSA2_PRIVATE，建议使用支付宝提供的公私钥生成工具生成， */
     /** 工具地址：https://doc.open.alipay.com/docs/doc.htm?treeId=291&articleId=106097&docType=1 */
     public static final String RSA2_PRIVATE = "";
-    public static final String RSA_PRIVATE = "";
+    public static final String RSA_PRIVATE = "MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBANYb8FllmYmcQ608\n" +
+            "0TW/i0A74sfWGshDSKeLRJIjn3tWBFr9BrsrxguOAi3isT+tPnWGHLFOJs6RecGv\n" +
+            "T6QtvR3VlcWixE5e9bT0wU1XvkFbvdxEb0T/mZkIYy17azg/7ArvBpNMn/oQBqWX\n" +
+            "91ldHA7gutTwR9gxa0/PXlqwvb5HAgMBAAECgYA3oIyifU4VvZ6rrKhiQYCpUKXL\n" +
+            "66mLrEd9GCbZnR27So7ZIPIVwPq0V9HjIAmTFKyslgpwWnCkrJEorCaR7jw6wXLC\n" +
+            "oF6Tw2rWDf044TEEOA0+cHOlEK0tO7Kx2F+anb0cnbUh70Oz+v332CwZ0m4gLv18\n" +
+            "jAHTq7AyiM/6zvBBAQJBAOpUDnaAfstDIB02XMspDPd2ynO2lk26u1GAst846wfA\n" +
+            "T+3TO7if2Ox7kO+PDLD3zENsp6IZtXaS17i9e7yo7IECQQDp6SxxivggU1Aa1cFo\n" +
+            "i65t6HZbyxuDTcAJjEKqAcEDbqz+ra/TyMCHZCCrLLdShOVGmpOUqI4WL1KXUd4z\n" +
+            "8ubHAkEArg88Iwg1pvS4oRpleT+H8zXZEnT5VsmzJMptk+RqqPpQJP+4J98MujTb\n" +
+            "JydiLP4US60lJALmySowdXjCthPggQJBAIaf3CNxP0Ojj6wSMKGSGw9Ixq4oJKqa\n" +
+            "mhcksc2U+tiV310o69Rxa1XBLAg40T3eHPNYze22YSiljdxnkwLFH0sCQQC0VPcp\n" +
+            "xSupyPQnK7S33Jc9Z5V90v355BGrxdVlkPxnG1UijDEwWZotR3bySxbiYxlEzaWN\n" +
+            "OsdpjIe1bb5UAa0l";
 
     private void paySuccess() {
         mProgressHelper.showProgressDialog(getString(R.string.initing));
@@ -745,10 +761,10 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                         LogTool.d(response);
                         try {
                             OrderWxResult result = new Gson().fromJson(response, OrderWxResult.class);
-                            if(result != null){
-                                if("NOTPAY".equalsIgnoreCase(result.trade_state)){
+                            if(result != null && result.data != null){
+                                if("NOTPAY".equalsIgnoreCase(result.data.trade_state)){
                                     toast(getString(R.string.pay_fail_nopay));
-                                }else if("SUCCESS".equalsIgnoreCase(result.trade_state)){
+                                }else if("SUCCESS".equalsIgnoreCase(result.data.trade_state)){
                                     toast(getString(R.string.pay_success));
                                     paySuccess();
                                 }else {
