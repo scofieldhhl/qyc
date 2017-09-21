@@ -1,106 +1,27 @@
 package com.systemteam.bean;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
- *
+ * SUCCESS
+ * {"code": "1", "data": {
+ * "tradeNo": "A2017092119330389953", "aliPayStr":
+ * "app_id=2017082708417182&biz_content=%7B%22out_trade_no%22%3A%22A2017092119330389953%22%2C%22
+ * product_code%22%3A%22QUICK_MSECURITY_PAY%22%2C%22total_amount%22%3A%221%22%2C%22
+ * subject%22%3A%22%5Cu6447%5Cu661f%5Cu7403-%5Cu7528%5Cu6237%5Cu5145%5Cu503c%22%7D&
+ * charset=utf-8&method=alipay.trade.app.pay&notify_url=http%3A%2F%2F1.rockingcar.applinzi.com%2Fnotify&
+ * sign_type=RSA&timestamp=2017-09-21+19%3A33%3A03&version=1.0&
+ * sign=gbRizbPBK7jatePSFQE87NmHx4eQv%2F%2BtZqh5LTA2bWRBKrgqEr9EavdWENeP43VYOXVZAHd3SvPSnBe5RPQ5w%2
+ * BlhI0IkKSjXt%2BAsrEvWlJpw5hwpcq1u5wx20M5XVYqpLRTPhBIyf%2BXxG2dlpzluuc%2FhwCHoiTVip6pyBOBr8UM%3D"}}
  * 创建人：ws
  * 创建时间：2017/9/13 下午8:07
  */
 
 public class OrderAli {
-    private int code;
-    private Data data;
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public Data getData() {
-        return data;
-    }
-
-    public void setData(Data data) {
-        this.data = data;
-    }
+    public int code;
+    public Data data;
 
     public class Data{
-        @SerializedName("package")
-        private String packagevalue;
-        private String timestamp;
-        private String sign;
-        private String prepayid;
-        private String partnerid;
-        private String appid;
-        private String tradeNo;
-        private String noncestr;
-
-        public String getPackagevalue() {
-            return packagevalue;
-        }
-
-        public void setPackagevalue(String packagevalue) {
-            this.packagevalue = packagevalue;
-        }
-
-        public String getTimestamp() {
-            return timestamp;
-        }
-
-        public void setTimestamp(String timestamp) {
-            this.timestamp = timestamp;
-        }
-
-        public String getSign() {
-            return sign;
-        }
-
-        public void setSign(String sign) {
-            this.sign = sign;
-        }
-
-        public String getPrepayid() {
-            return prepayid;
-        }
-
-        public void setPrepayid(String prepayid) {
-            this.prepayid = prepayid;
-        }
-
-        public String getPartnerid() {
-            return partnerid;
-        }
-
-        public void setPartnerid(String partnerid) {
-            this.partnerid = partnerid;
-        }
-
-        public String getAppid() {
-            return appid;
-        }
-
-        public void setAppid(String appid) {
-            this.appid = appid;
-        }
-
-        public String getTradeNo() {
-            return tradeNo;
-        }
-
-        public void setTradeNo(String tradeNo) {
-            this.tradeNo = tradeNo;
-        }
-
-        public String getNoncestr() {
-            return noncestr;
-        }
-
-        public void setNoncestr(String noncestr) {
-            this.noncestr = noncestr;
-        }
+        public String tradeNo;
+        public String aliPayStr;
+        public String app_id;
     }
 }

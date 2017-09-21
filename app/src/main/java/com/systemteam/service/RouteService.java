@@ -156,7 +156,7 @@ public class RouteService extends Service {
         }
 //        initLocation();//初始化LocationgClient
         initNotification();
-        //TODO 发送开锁指令，开锁成功后开始计时
+        //发送开锁指令，开锁成功后开始计时，扫码开锁时即发送开锁指令
         initCountDownTimer();
         Utils.acquireWakeLock(this);
         // 开启轨迹记录线程
@@ -254,7 +254,7 @@ public class RouteService extends Service {
         }
     }
 
-    //TODO 发送设备停止指令
+    // 发送设备停止指令,设备停止运作由硬件控制
     private void doGameOver(boolean isFree){
         LogTool.d("doGameOver");
         Gson gson = new Gson();

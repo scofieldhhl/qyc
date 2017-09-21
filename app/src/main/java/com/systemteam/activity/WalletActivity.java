@@ -637,7 +637,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     public void requestAliPay(String amout){
         mProgressHelper.showProgressDialog(getString(R.string.initing));
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
-                "http://1.rockingcar.applinzi.com/aliPay?amount" + amout,
+                "http://1.rockingcar.applinzi.com/aliPay?amount=" + amout,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
