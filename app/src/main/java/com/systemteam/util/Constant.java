@@ -63,6 +63,7 @@ public class Constant {
     public static final int MSG_LOGOOUT = 0x125;
     public static final int MSG_WITHDRAW_SUCCESS = 0x126;
     public static final int MSG_ORDER_SUCCESS_WX = 0x127;
+    public static final int MSG_ORDER_SUCCESS_ALI = 0x128;
 
 
     public static final String SHAERD_FILE_NAME = "shared_file_name";

@@ -22,6 +22,5 @@ public class OrderAli {
     public class Data{
         public String tradeNo;
         public String aliPayStr;
-        public String app_id;
     }
 }

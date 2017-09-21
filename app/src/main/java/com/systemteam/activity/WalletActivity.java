@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alipay.sdk.app.PayTask;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -39,12 +40,14 @@ import com.systemteam.adapter.ChargeAmountDividerDecoration;
 import com.systemteam.bean.Car;
 import com.systemteam.bean.CashRecord;
 import com.systemteam.bean.MyUser;
+import com.systemteam.bean.OrderAli;
 import com.systemteam.bean.OrderWx;
 import com.systemteam.bean.OrderWxResult;
 import com.systemteam.bean.UseRecord;
 import com.systemteam.bean.Withdraw;
 import com.systemteam.provider.alipay.AliPayModel;
 import com.systemteam.provider.alipay.AliPayTools;
+import com.systemteam.provider.alipay.PayResult;
 import com.systemteam.provider.model.onRequestListener;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
@@ -61,6 +64,7 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
@@ -74,6 +78,7 @@ import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_EARN;
 import static com.systemteam.util.Constant.BUNDLE_KEY_ALL_WITHDRAW;
 import static com.systemteam.util.Constant.BUNDLE_KEY_AMOUNT;
 import static com.systemteam.util.Constant.BUNDLE_KEY_BLANACE;
+import static com.systemteam.util.Constant.MSG_ORDER_SUCCESS_ALI;
 import static com.systemteam.util.Constant.MSG_ORDER_SUCCESS_WX;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 import static com.systemteam.util.Constant.PAY_AMOUNT_DEFAULT;
@@ -85,7 +90,6 @@ import static com.systemteam.util.Constant.WX_APP_ID;
 //TODO float数值增加精度运算
 //普通用户充值没有及时更新账户余额(pay返回json格式修改导致)
 public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.OnItemClickListener{
-
     RecyclerView recyclerview_acount;
     ChargeAmountAdapter adapter;
     TextView ballance;
@@ -139,6 +143,24 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                         boolean bool = theActivity.mWXApi.sendReq(req);
                         LogTool.d("sendReq :" + bool);
                     }
+                    break;
+                case MSG_ORDER_SUCCESS_ALI: {
+                    @SuppressWarnings("unchecked")
+                    PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+
+                    //对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
+
+                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                    String resultStatus = payResult.getResultStatus();
+                    // 判断resultStatus 为9000则代表支付成功
+                    if (TextUtils.equals(resultStatus, "9000")) {
+                        LogTool.d("success");
+                    } else {
+                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+                        LogTool.d("fail");
+                    }
+                    break;
+                }
             }
         }
     }
@@ -474,20 +496,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                 });
     }
 
-    public static final String RSA_PRIVATE = "MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBANYb8FllmYmcQ608\n" +
-            "0TW/i0A74sfWGshDSKeLRJIjn3tWBFr9BrsrxguOAi3isT+tPnWGHLFOJs6RecGv\n" +
-            "T6QtvR3VlcWixE5e9bT0wU1XvkFbvdxEb0T/mZkIYy17azg/7ArvBpNMn/oQBqWX\n" +
-            "91ldHA7gutTwR9gxa0/PXlqwvb5HAgMBAAECgYA3oIyifU4VvZ6rrKhiQYCpUKXL\n" +
-            "66mLrEd9GCbZnR27So7ZIPIVwPq0V9HjIAmTFKyslgpwWnCkrJEorCaR7jw6wXLC\n" +
-            "oF6Tw2rWDf044TEEOA0+cHOlEK0tO7Kx2F+anb0cnbUh70Oz+v332CwZ0m4gLv18\n" +
-            "jAHTq7AyiM/6zvBBAQJBAOpUDnaAfstDIB02XMspDPd2ynO2lk26u1GAst846wfA\n" +
-            "T+3TO7if2Ox7kO+PDLD3zENsp6IZtXaS17i9e7yo7IECQQDp6SxxivggU1Aa1cFo\n" +
-            "i65t6HZbyxuDTcAJjEKqAcEDbqz+ra/TyMCHZCCrLLdShOVGmpOUqI4WL1KXUd4z\n" +
-            "8ubHAkEArg88Iwg1pvS4oRpleT+H8zXZEnT5VsmzJMptk+RqqPpQJP+4J98MujTb\n" +
-            "JydiLP4US60lJALmySowdXjCthPggQJBAIaf3CNxP0Ojj6wSMKGSGw9Ixq4oJKqa\n" +
-            "mhcksc2U+tiV310o69Rxa1XBLAg40T3eHPNYze22YSiljdxnkwLFH0sCQQC0VPcp\n" +
-            "xSupyPQnK7S33Jc9Z5V90v355BGrxdVlkPxnG1UijDEwWZotR3bySxbiYxlEzaWN\n" +
-            "OsdpjIe1bb5UAa0l";
+    public static final String RSA_PRIVATE = "";
 
     private void paySuccess() {
         mProgressHelper.showProgressDialog(getString(R.string.initing));
@@ -644,11 +653,16 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                         mProgressHelper.dismissProgressDialog();
                         LogTool.d(response);
                         try {
-                            OrderWx order = new Gson().fromJson(response, OrderWx.class);
-                            if(order != null && order.getData() != null){
-                                Message msg = mHandler.obtainMessage(MSG_ORDER_SUCCESS_WX);
-                                msg.obj = order.getData();
-                                msg.sendToTarget();
+                            OrderAli order = new Gson().fromJson(response, OrderAli.class);
+                            if(order != null && order.data != null && order.data.aliPayStr != null){
+                                PayTask alipay = new PayTask(WalletActivity.this);
+                                Map<String, String> result = alipay.payV2(order.data.aliPayStr, true);
+                                LogTool.d("result :" + result.toString());
+
+                                Message msg = new Message();
+                                msg.what = MSG_ORDER_SUCCESS_ALI;
+                                msg.obj = result;
+                                mHandler.sendMessage(msg);
                             }else {
                                 LogTool.e("order or data null");
                                 toast(getString(R.string.pay_order_fail));
