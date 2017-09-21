@@ -1,15 +1,11 @@
 package com.systemteam.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -23,12 +19,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -42,13 +36,11 @@ import com.systemteam.BaseActivity;
 import com.systemteam.R;
 import com.systemteam.adapter.ChargeAmountAdapter;
 import com.systemteam.adapter.ChargeAmountDividerDecoration;
-import com.systemteam.bean.AuthResult;
 import com.systemteam.bean.Car;
 import com.systemteam.bean.CashRecord;
 import com.systemteam.bean.MyUser;
 import com.systemteam.bean.OrderWx;
 import com.systemteam.bean.OrderWxResult;
-import com.systemteam.bean.PayResult;
 import com.systemteam.bean.UseRecord;
 import com.systemteam.bean.Withdraw;
 import com.systemteam.provider.alipay.AliPayModel;
@@ -69,8 +61,6 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
@@ -167,7 +157,6 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     @Override
     protected void initView() {
         initToolBar(this, R.string.wallet);
-//        initBackgroudColor();
         mToolbar.inflateMenu(R.menu.menu_toolbar_wallet);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -430,19 +419,16 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                     mAmountPay = 1;
                 }
                 if(isPayByWechat){
-                    wxRequest();
+                    //微信支付订单
+                    requestWxPay(String.valueOf(mAmountPay));
                 }else {
-                    payV2(view);
+//                    payV2(view);
+                    requestAliPay(String.valueOf(mAmountPay));
                 }
                 break;
         }
     }
 
-    //获取支付结果
-    private void wxRequest(){
-        //微信支付订单
-        requestWxPay(String.valueOf(mAmountPay));
-    }
 
     public String getOrderId(){
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -455,16 +441,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
 
     /**
      * 支付宝支付业务
-     *
      * @param v
-     */
-
-    /**
-     * 这里只是为了方便直接向商户展示支付宝的整个支付流程；所以Demo中加签过程直接放在客户端完成；
-     * 真实App里，privateKey等数据严禁放在客户端，加签过程务必要放在服务端完成；
-     * 防止商户私密数据泄露，造成不必要的资金损失，及面临各种安全风险；
-     *
-     * orderInfo的获取必须来自服务端；
      */
     //TODO 增加支付宝支付返回码提示
     public void payV2(View v) {
@@ -495,112 +472,8 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                         }
                     }
                 });
-        /*if (TextUtils.isEmpty(Constant.ALI_APP_ID) || (TextUtils.isEmpty(RSA2_PRIVATE) && TextUtils.isEmpty(RSA_PRIVATE))) {
-            new AlertDialog.Builder(this).setTitle("警告").setMessage("需要配置APPID | RSA_PRIVATE")
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialoginterface, int i) {
-                            //
-                            finish();
-                        }
-                    }).show();
-            return;
-        }
-
-        boolean rsa2 = (RSA2_PRIVATE.length() > 0);
-        Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, rsa2);
-        String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
-
-        String privateKey = rsa2 ? RSA2_PRIVATE : RSA_PRIVATE;
-        String sign = OrderInfoUtil2_0.getSign(params, privateKey, rsa2);
-        final String orderInfo = orderParam + "&" + sign;
-
-        Runnable payRunnable = new Runnable() {
-
-            @Override
-            public void run() {
-                PayTask alipay = new PayTask(WalletActivity.this);
-                Map<String, String> result = alipay.payV2(orderInfo, true);
-                LogTool.d(result.toString());
-
-                Message msg = new Message();
-                msg.what = SDK_PAY_FLAG;
-                msg.obj = result;
-                ailiHandler.sendMessage(msg);
-            }
-        };
-
-        Thread payThread = new Thread(payRunnable);
-        payThread.start();*/
     }
 
-    private static final int SDK_PAY_FLAG = 1;
-    private static final int SDK_AUTH_FLAG = 2;
-
-    @SuppressLint("HandlerLeak")
-    private Handler ailiHandler = new Handler() {
-        @SuppressWarnings("unused")
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case SDK_PAY_FLAG: {
-                    @SuppressWarnings("unchecked")
-                    PayResult payResult = new PayResult((Map<String, String>) msg.obj);
-                    /**
-                     对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
-                     */
-                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
-                    String resultStatus = payResult.getResultStatus();
-                    // 判断resultStatus 为9000则代表支付成功
-                    if (TextUtils.equals(resultStatus, "9000")) {
-                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-                        Toast.makeText(WalletActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
-                    } else {
-                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                        Toast.makeText(WalletActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-                }
-                case SDK_AUTH_FLAG: {
-                    @SuppressWarnings("unchecked")
-                    AuthResult authResult = new AuthResult((Map<String, String>) msg.obj, true);
-                    String resultStatus = authResult.getResultStatus();
-
-                    // 判断resultStatus 为“9000”且result_code
-                    // 为“200”则代表授权成功，具体状态码代表含义可参考授权接口文档
-                    if (TextUtils.equals(resultStatus, "9000") && TextUtils.equals(authResult.getResultCode(), "200")) {
-                        // 获取alipay_open_id，调支付时作为参数extern_token 的value
-                        // 传入，则支付账户为该授权账户
-                        Toast.makeText(WalletActivity.this,
-                                "授权成功\n" + String.format("authCode:%s", authResult.getAuthCode()), Toast.LENGTH_SHORT)
-                                .show();
-                    } else {
-                        // 其他状态值则为授权失败
-                        Toast.makeText(WalletActivity.this,
-                                "授权失败" + String.format("authCode:%s", authResult.getAuthCode()), Toast.LENGTH_SHORT).show();
-
-                    }
-                    break;
-                }
-                default:
-                    break;
-            }
-        }
-    };
-
-    /** 支付宝支付业务：入参app_id */
-    public static final String APPID = "";
-
-    /** 支付宝账户登录授权业务：入参pid值 */
-    public static final String PID = "";
-    /** 支付宝账户登录授权业务：入参target_id值 */
-    public static final String TARGET_ID = "";
-
-    /** 商户私钥，pkcs8格式 */
-    /** 如下私钥，RSA2_PRIVATE 或者 RSA_PRIVATE 只需要填入一个 */
-    /** 如果商户两个都设置了，优先使用 RSA2_PRIVATE */
-    /** RSA2_PRIVATE 可以保证商户交易在更加安全的环境下进行，建议使用 RSA2_PRIVATE */
-    /** 获取 RSA2_PRIVATE，建议使用支付宝提供的公私钥生成工具生成， */
-    /** 工具地址：https://doc.open.alipay.com/docs/doc.htm?treeId=291&articleId=106097&docType=1 */
-    public static final String RSA2_PRIVATE = "";
     public static final String RSA_PRIVATE = "MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBANYb8FllmYmcQ608\n" +
             "0TW/i0A74sfWGshDSKeLRJIjn3tWBFr9BrsrxguOAi3isT+tPnWGHLFOJs6RecGv\n" +
             "T6QtvR3VlcWixE5e9bT0wU1XvkFbvdxEb0T/mZkIYy17azg/7ArvBpNMn/oQBqWX\n" +
@@ -655,52 +528,6 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                 }
             }
         }));
-    }
-
-    protected void initBackgroudColor(){
-        // 用来提取颜色的Bitmap
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.theme_bg);
-        // Palette的部分
-        Palette.Builder builder = Palette.from(bitmap);
-        builder.generate(new Palette.PaletteAsyncListener() {@Override public void onGenerated(Palette palette) {
-            //获取到充满活力的这种色调
-//            Palette.Swatch vibrant = palette.getVibrantSwatch();
-            Palette.Swatch s1 = palette.getVibrantSwatch();       //获取到充满活力的这种色调
-            Palette.Swatch s2 = palette.getDarkVibrantSwatch();    //获取充满活力的黑
-            Palette.Swatch s3 = palette.getLightVibrantSwatch();   //获取充满活力的亮
-            Palette.Swatch s4 = palette.getMutedSwatch();           //获取柔和的色调
-            Palette.Swatch s5 = palette.getDarkMutedSwatch();      //获取柔和的黑
-            Palette.Swatch s6 = palette.getLightMutedSwatch();    //获取柔和的亮
-            List<Palette.Swatch> swatches = palette.getSwatches();
-            for(Palette.Swatch s : swatches){
-                LogTool.d("swatch :" + s.getRgb());
-            }
-            //根据调色板Palette获取到图片中的颜色设置到toolbar和tab中背景，标题等，使整个UI界面颜色统一
-            /*toolbar_tab.setBackgroundColor(vibrant.getRgb());
-            toolbar_tab.setSelectedTabIndicatorColor(colorBurn(vibrant.getRgb()));*/
-            mToolbar.setBackgroundColor(s1.getRgb());
-            if(s2 != null)
-                ballance.setBackgroundColor(s2.getRgb());
-            if(s3 != null)
-                mBtnBook.setBackgroundColor(s3.getRgb());
-            if(s6 != null)
-                wechat_layout.setBackgroundColor(s6.getRgb());
-            if (android.os.Build.VERSION.SDK_INT >= 21) {
-                Window window = getWindow();
-                if(s4 != null)
-                    window.setStatusBarColor(s4.getRgb());
-                if(s5 != null)
-                    window.setNavigationBarColor(s5.getRgb());
-            }
-
-            /*if (android.os.Build.VERSION.SDK_INT >= 21) {
-                Window window = getWindow();
-                window.setStatusBarColor(colorBurn(vibrant.getRgb()));
-                window.setNavigationBarColor(colorBurn(vibrant.getRgb()));
-            }*/
-        }
-        });
-
     }
 
     public void requestWxPay(String amout){
@@ -793,6 +620,57 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         }
         mQueue.add(stringRequest);
         mWXTradeNo = null;
+    }
+
+    /**
+     * https://1.rockingcar.applinzi.com/aliPay?amount=5  amount充值多少
+     返回值：
+
+
+     https://1.rockingcar.applinzi.com/aliPay?query=tradeNo  tradeNo是前面返回的订单号，用来查询
+     返回值：
+     {"code": "1", "data": {"trade_no": "2017091721001004740266026815", "code": "10000", "buyer_user_id": "2088202211761743", "buyer_logon_id": "447***@qq.com", "send_pay_date": "2017-09-17 22:47:35", "receipt_amount": "0.00", "out_trade_no": "KV74Y2XHTUL9BJW", "buyer_pay_amount": "0.00", "invoice_amount": "0.00", "msg": "Success", "point_amount": "0.00", "trade_status": "TRADE_SUCCESS", "total_amount": "0.01"}}
+
+     失败：
+     {"code": "0","msg":{支付宝错误的结果}}
+     * */
+    public void requestAliPay(String amout){
+        mProgressHelper.showProgressDialog(getString(R.string.initing));
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,
+                "http://1.rockingcar.applinzi.com/aliPay?amount" + amout,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        mProgressHelper.dismissProgressDialog();
+                        LogTool.d(response);
+                        try {
+                            OrderWx order = new Gson().fromJson(response, OrderWx.class);
+                            if(order != null && order.getData() != null){
+                                Message msg = mHandler.obtainMessage(MSG_ORDER_SUCCESS_WX);
+                                msg.obj = order.getData();
+                                msg.sendToTarget();
+                            }else {
+                                LogTool.e("order or data null");
+                                toast(getString(R.string.pay_order_fail));
+                            }
+                        } catch (JsonSyntaxException e) {
+                            LogTool.e("e :" + e.toString());
+                            toast(getString(R.string.pay_order_fail));
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mProgressHelper.dismissProgressDialog();
+                toast(getString(R.string.initing_fail));
+                LogTool.e("Error: " + error.toString());
+            }
+        });
+        if(mQueue == null){
+            mQueue = Volley.newRequestQueue(mContext);
+        }
+        mQueue.add(stringRequest);
     }
 
 }

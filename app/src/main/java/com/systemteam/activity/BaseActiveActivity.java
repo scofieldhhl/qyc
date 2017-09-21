@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import com.systemteam.BaseActivity;
 import com.systemteam.R;
@@ -33,6 +34,9 @@ public abstract class BaseActiveActivity extends BaseActivity {
 
     protected void checkCarExist(final Context context, String carNo) {
         LogTool.d("checkCarExist :" + carNo);
+        if(carNo == null || TextUtils.isEmpty(carNo)){
+            return;
+        }
         mProgressHelper.showProgressDialog(getString(R.string.initing));
         BmobQuery<Car> query = new BmobQuery<>();
         query.addWhereEqualTo("carNo", carNo);

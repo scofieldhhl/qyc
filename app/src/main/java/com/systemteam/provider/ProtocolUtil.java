@@ -1,25 +1,18 @@
 package com.systemteam.provider;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.os.Build;
 
 import com.google.gson.Gson;
 import com.systemteam.util.LogTool;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.net.URLDecoder;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -53,98 +46,6 @@ public class ProtocolUtil {
     }
 
 
-    /**
-     * 获取mac地址
-     *
-     * @param context
-     * @return
-     */
-    public static String getMacAddress(Context context) {
-        String macAdd = "";
-        if (Build.VERSION.SDK_INT >= 23) {
-            try {
-                Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-                while (interfaces.hasMoreElements()) {
-                    NetworkInterface iF = interfaces.nextElement();
-
-                    byte[] addr = iF.getHardwareAddress();
-                    if (addr == null || addr.length == 0) {
-                        continue;
-                    }
-
-                    StringBuilder buf = new StringBuilder();
-                    for (byte b : addr) {
-                        buf.append(String.format("%02X:", b));
-                    }
-                    if (buf.length() > 0) {
-                        buf.deleteCharAt(buf.length() - 1);
-                    }
-                    if (iF.getName().equals("wlan0")) macAdd = buf.toString();
-//                    Log.d("mac", "interfaceName=" + iF.getName() + ", mac=" + macAdd);
-                }
-            } catch (SocketException e) {
-                e.printStackTrace();
-            }
-
-        } else {
-            WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-            WifiInfo info = wifi.getConnectionInfo();
-            macAdd = info.getMacAddress();
-        }
-        return macAdd;
-    }
-
-    /**
-     * 获取品牌
-     *
-     * @return
-     */
-    public static String getBrandModel() {
-        return Build.BRAND;
-    }
-
-    /***
-     * 根据参数创建vc值
-     *
-     * @param appKey
-     * @param fp
-     * @param data
-     * @return vc_url
-     */
-    public static String createVC(String appKey, String fp, Map<String, String> data) {
-        List<String> l = new ArrayList<>();
-        l.addAll(data.keySet());
-        Collections.sort(l);
-        StringBuffer sb = new StringBuffer();
-        sb.append("{");
-        for (String k : l) {
-            if (data.get(k) != null) {
-                sb.append(quoteStr(k) + ":" + quoteStr(URLDecoder.decode(data.get(k))) + ",");
-            }
-        }
-        sb.deleteCharAt(sb.lastIndexOf(","));
-        sb.append("}");
-        String jsonStr = sb.toString();
-        System.out.println(jsonStr);
-        String content = String.format("%s%s%s", appKey, jsonStr, fp);
-        System.out.println(content);
-
-        MessageDigest md = null;
-        try {
-            md = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        if (null == md)
-            return "";
-        else
-            try {
-                return toHex(md.digest(content.getBytes("UTF-8"))).toLowerCase();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-        return "";
-    }
 
 
     /***
@@ -261,38 +162,6 @@ public class ProtocolUtil {
 
     private static String quoteStr(String s) {
         return "\"" + s + "\"";
-    }
-
-    public String getProtocolHeadUrl() {
-        SharedPreferences sp = mContext.getSharedPreferences(
-                Constants.SHAERD_FILE_NAME, Context.MODE_PRIVATE);
-        String url = sp.getString(ProtocolConstant.PROTOCOL_HEAD_URL, ProtocolConstant.URL_HEAD);
-        return url;
-    }
-
-    public void setProtocolHeadUrl(String url) {
-        SharedPreferences sp = mContext.getSharedPreferences(
-                Constants.SHAERD_FILE_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor e = sp.edit();
-        e.putString(ProtocolConstant.PROTOCOL_HEAD_URL, url);
-        e.commit();
-    }
-
-
-
-    public boolean isLuckyDrawTimeOut() {
-        SharedPreferences sp = mContext.getSharedPreferences(
-                Constants.SHAERD_FILE_NAME, Context.MODE_PRIVATE);
-        boolean isTimeout = sp.getBoolean(ProtocolConstant.PROTOCOL_LUCKDRAW_TIMEOUT, false);
-        return isTimeout;
-    }
-
-    public void setLuckyDrawTimeOut(boolean isTimeout) {
-        SharedPreferences sp = mContext.getSharedPreferences(
-                Constants.SHAERD_FILE_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor e = sp.edit();
-        e.putBoolean(ProtocolConstant.PROTOCOL_LUCKDRAW_TIMEOUT, isTimeout);
-        e.commit();
     }
 
     public boolean isCorrectEmailFormat(String email) {

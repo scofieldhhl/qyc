@@ -22,6 +22,7 @@
     <string name="code_manual">手动输码</string>
     <string name="code_prompt">在车锁和车头位置，已有车辆编码</string>
     <string name="code_unvalid">无效的编号，请重新扫描或输码！</string>
+    <string name="code_null">请输入设备编号！</string>
     <string name="unlock_im">立即解锁</string>
     <string name="wallet">我的钱包</string>
     <string name="coupon">优惠券</string>

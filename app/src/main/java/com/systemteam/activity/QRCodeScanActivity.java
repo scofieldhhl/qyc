@@ -360,8 +360,9 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
     }
 
     private boolean checkCode(final String code){
-        if(!TextUtils.isEmpty(code) && code.length() > 5){
-            //TODO 校验输入车牌的有效性
+        if(TextUtils.isEmpty(code)){
+            toast(getString(R.string.code_null));
+            return false;
         }
         if(checkNetworkAvailable(mContext) == Constant.NETWORK_STATUS_NO){
             return false;

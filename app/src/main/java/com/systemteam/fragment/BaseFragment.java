@@ -78,18 +78,12 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
                 }
             }
         });*/
-        //TODO 发送失败dialog与 toast成功冲突
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                toast(context, mContext.getString(R.string.SMS_send));
-            }
-        }, 1000);
         BmobSMS.requestSMSCode(phone,"短信模板", new QueryListener<Integer>() {
 
             @Override
             public void done(Integer smsId,BmobException ex) {
                 if(ex==null){//验证码发送成功
+                    toast(context, mContext.getString(R.string.SMS_send));
                     LogTool.i("短信id："+smsId);//用于查询本次短信发送详情
                 }else {
                     Utils.showDialog(context, context.getString(R.string.notice),

@@ -41,7 +41,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
 			@Override
 			public void onClick(View v) {
 				// 将该app注册到微信
-				api.registerApp(Constants.APP_ID);
+				api.registerApp(Constant.APP_ID);
 			}
 		});
 
@@ -175,9 +175,9 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
 		msg.append(obj.filePath);
 
 		Intent intent = new Intent(this, ShowFromWXActivity.class);
-		intent.putExtra(Constants.ShowMsgActivity.STitle, wxMsg.title);
-		intent.putExtra(Constants.ShowMsgActivity.SMessage, msg.toString());
-		intent.putExtra(Constants.ShowMsgActivity.BAThumbData, wxMsg.thumbData);
+		intent.putExtra(Constant.ShowMsgActivity.STitle, wxMsg.title);
+		intent.putExtra(Constant.ShowMsgActivity.SMessage, msg.toString());
+		intent.putExtra(Constant.ShowMsgActivity.BAThumbData, wxMsg.thumbData);
 		startActivity(intent);
 		finish();*/
 	}

@@ -53,7 +53,9 @@
 
         <activity
             android:name=".activity.SplashActivity"
-            android:theme="@style/AppTheme.splash">
+            android:theme="@style/AppTheme.splash"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -62,7 +64,9 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait">
 
             <!--
             <intent-filter>
@@ -74,14 +78,25 @@
         </activity>
         <activity
             android:name=".activity.CodeUnlockActivity"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
-        <activity android:name=".activity.WalletActivity" />
-        <activity android:name=".activity.RouteDetailActivity" />
-        <activity android:name=".activity.MyRouteActivity" />
-        <activity android:name=".activity.NavigationActivity" />
+            android:windowSoftInputMode="stateVisible|adjustResize"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.WalletActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.RouteDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.MyRouteActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.NavigationActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.BDInnerNaviActivity"
-            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -127,9 +142,11 @@
 
         <activity
             android:name=".activity.QRCodeScanActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
         <activity
             android:name=".welcome.WelcomeActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />
         <activity
@@ -152,18 +169,30 @@
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind" />
-        <activity android:name=".activity.BreakActivity" />
-        <activity android:name=".activity.SettingActivity" />
-        <activity android:name=".user.UserInfoActivity" />
-        <activity android:name=".user.ApplyActivity" />
+        <activity android:name=".activity.BreakActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.SettingActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".user.UserInfoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".user.ApplyActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
-            android:configChanges="orientation|screenSize" />
-        <activity android:name=".activity.ActiveActivity" />
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.ActiveActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".car.MyCarActivity"
             android:label="@string/title_activity_my_car"
-            android:theme="@style/Custom.AppTheme.NoActionBar" />
+            android:theme="@style/Custom.AppTheme.NoActionBar"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".car.CarDetailActivity"
             android:label="@string/detail"
@@ -171,9 +200,15 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Custom.AppTheme.NoActionBar" />
         <activity android:name=".car.NewCarActivity" />
-        <activity android:name=".activity.BalanceDetailActivity" />
-        <activity android:name=".activity.WithdrawActivity" />
+        <activity android:name=".activity.BalanceDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.WithdrawActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
         <activity android:name=".activity.MyWelcomeActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomWelcomeScreenTheme"/>
     </application>
 

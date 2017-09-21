@@ -61,7 +61,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_weight="4"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="35dp"
         android:layout_marginBottom="30dp"
@@ -207,27 +207,6 @@
         <View style="@style/menu_divider_style" />
 
         <LinearLayout style="@style/menu_layout_style"
-            android:visibility="gone">
-
-            <ImageView
-                style="@style/menu_icon_style"
-                android:src="@mipmap/feedback" />
-
-            <TextView
-                style="@style/menu_text_style"
-                android:text="@string/feedback" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <ImageView style="@style/menu_right_arrow_style" />
-        </LinearLayout>
-
-        <View style="@style/menu_divider_style" />
-
-        <LinearLayout style="@style/menu_layout_style"
             android:onClick="gotoSetting">
 
             <ImageView
@@ -249,6 +228,7 @@
         <TextView
             android:id="@+id/tv_version"
             style="@style/menu_text_style"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:gravity="center" />
     </LinearLayout>

@@ -87,4 +87,5 @@ public class Constant {
     public static final int NETWORK_STATUS_NO = 0;
     public static final int NETWORK_STATUS_GRPS = 1;
     public static final int NETWORK_STATUS_WIFI = 2;
+
 }
