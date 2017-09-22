@@ -43,6 +43,7 @@ import static com.systemteam.util.Constant.BUNDLE_KEY_BLANACE;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 import static com.systemteam.util.Constant.MSG_WITHDRAW_SUCCESS;
 import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
+import static com.systemteam.util.Constant.WITHDRAW_AMOUNT_MIN;
 import static com.systemteam.util.Constant.WITHDRAW_DAYS_DEFAULT;
 
 /**
@@ -307,11 +308,11 @@ public class WithdrawActivity extends BaseListActivity {
     }
 
     private boolean checkWithdrawEnable(){
-        /*if(mAmout < WITHDRAW_AMOUNT_DEFAULT){
+        if(mAmout <= WITHDRAW_AMOUNT_MIN){
             Utils.showDialog(mContext, getString(R.string.tip), getString(R.string.withdraw_refund,
-                    WITHDRAW_AMOUNT_DEFAULT));
+                    WITHDRAW_AMOUNT_MIN));
             return false;
-        }else*/
+        }else
         if(mBankCard == null){
             toast(getString(R.string.bankcard_no_hint));
             new Handler().postDelayed(new Runnable() {
@@ -326,7 +327,7 @@ public class WithdrawActivity extends BaseListActivity {
             return false;
         }else if(routeList.size() > 0){
             Withdraw withdraw = (Withdraw) routeList.get(0);
-            if(withdraw.getStatus() != Constant.WITHDRAW_SUCCESS){
+            if(withdraw.getStatus()== null || withdraw.getStatus() != Constant.WITHDRAW_SUCCESS){
                 Utils.showDialog(mContext, getString(R.string.tip), getString(R.string.withdraw_refund_applying));
                 return false;
             }else if (DateUtil.differentDays(DateUtil.strToDate(withdraw.getCreatedAt()), new Date()) < WITHDRAW_DAYS_DEFAULT){

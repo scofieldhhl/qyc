@@ -49,6 +49,7 @@ import com.systemteam.provider.alipay.AliPayModel;
 import com.systemteam.provider.alipay.AliPayTools;
 import com.systemteam.provider.alipay.PayResult;
 import com.systemteam.provider.model.onRequestListener;
+import com.systemteam.util.Arith;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.ProtocolPreferences;
@@ -64,6 +65,7 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 
 import cn.bmob.v3.BmobQuery;
@@ -154,10 +156,12 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                     String resultStatus = payResult.getResultStatus();
                     // 判断resultStatus 为9000则代表支付成功
                     if (TextUtils.equals(resultStatus, "9000")) {
-                        LogTool.d("success");
-                    } else {
-                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                        LogTool.d("fail");
+                        theActivity.toast(theActivity.getString(R.string.pay_success));
+                        theActivity.paySuccess();
+                    } else if(TextUtils.equals(resultStatus, "6001")){
+                        theActivity.toast(theActivity.getString(R.string.pay_fail_nopay));
+                    }else {
+                        theActivity.toast(theActivity.getString(R.string.pay_fail));
                     }
                     break;
                 }
@@ -445,7 +449,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                     requestWxPay(String.valueOf(mAmountPay));
                 }else {
 //                    payV2(view);
-                    requestAliPay(String.valueOf(mAmountPay));
+                    requestAliPay(Arith.div(mAmountPay, 100f));
                 }
                 break;
         }
@@ -466,7 +470,12 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
      * @param v
      */
     //TODO 增加支付宝支付返回码提示
+    public static final String RSA_PRIVATE = "";
     public void payV2(View v) {
+        if(TextUtils.isEmpty(RSA_PRIVATE)){
+            toast(getString(R.string.pay_order_fail));
+            return;
+        }
         String srtAmount = String.valueOf(Float.valueOf(mAmountPay) / 100);
         AliPayTools.aliPay(WalletActivity.this, Constant.ALI_APP_ID, false, RSA_PRIVATE,
                 new AliPayModel(getOrderId(),
@@ -495,8 +504,6 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                     }
                 });
     }
-
-    public static final String RSA_PRIVATE = "";
 
     private void paySuccess() {
         mProgressHelper.showProgressDialog(getString(R.string.initing));
@@ -643,26 +650,37 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
      失败：
      {"code": "0","msg":{支付宝错误的结果}}
      * */
-    public void requestAliPay(String amout){
+    public void requestAliPay(float amout){
         mProgressHelper.showProgressDialog(getString(R.string.initing));
-        StringRequest stringRequest = new StringRequest(Request.Method.GET,
-                "http://1.rockingcar.applinzi.com/aliPay?amount=" + amout,
+        String url = String.format(Locale.US, "http://1.rockingcar.applinzi.com/aliPay?amount=%.2f", amout);
+        LogTool.d("url :" + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         mProgressHelper.dismissProgressDialog();
                         LogTool.d(response);
                         try {
-                            OrderAli order = new Gson().fromJson(response, OrderAli.class);
+                            final OrderAli order = new Gson().fromJson(response, OrderAli.class);
                             if(order != null && order.data != null && order.data.aliPayStr != null){
-                                PayTask alipay = new PayTask(WalletActivity.this);
-                                Map<String, String> result = alipay.payV2(order.data.aliPayStr, true);
-                                LogTool.d("result :" + result.toString());
+                                Runnable payRunnable = new Runnable() {
 
-                                Message msg = new Message();
-                                msg.what = MSG_ORDER_SUCCESS_ALI;
-                                msg.obj = result;
-                                mHandler.sendMessage(msg);
+                                    @Override
+                                    public void run() {
+                                        PayTask alipay = new PayTask(WalletActivity.this);
+                                        Map<String, String> result = alipay.payV2(order.data.aliPayStr, true);
+                                        LogTool.d("result :" + result.toString());
+
+                                        Message msg = new Message();
+                                        msg.what = MSG_ORDER_SUCCESS_ALI;
+                                        msg.obj = result;
+                                        mHandler.sendMessage(msg);
+                                    }
+                                };
+
+                                Thread payThread = new Thread(payRunnable);
+                                payThread.start();
+
                             }else {
                                 LogTool.e("order or data null");
                                 toast(getString(R.string.pay_order_fail));

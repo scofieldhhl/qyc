@@ -47,7 +47,7 @@
 
         </LinearLayout>
     </ScrollView>-->
-    <TextView
+    <!--<TextView
         android:id="@+id/tv_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -56,5 +56,10 @@
         android:background="@color/white"
         android:textSize="@dimen/text_size_16"
         android:singleLine="false"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"/>-->
+    <WebView
+        android:id="@+id/wv_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title_layout"></WebView>
 </RelativeLayout>

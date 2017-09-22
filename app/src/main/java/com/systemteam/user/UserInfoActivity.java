@@ -170,13 +170,13 @@ public class UserInfoActivity extends BaseActivity {
     }
 
     public void doSubmit(View view){
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        /*AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle(R.string.notice_apply);
         builder.setMessage(R.string.notice_apply_content);
         builder.setPositiveButton(R.string.agree, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                startActivity(new Intent(UserInfoActivity.this, ApplyActivity.class));
+
             }
         });
         builder.setNegativeButton(R.string.disagree, new DialogInterface.OnClickListener() {
@@ -184,7 +184,8 @@ public class UserInfoActivity extends BaseActivity {
                 dialog.dismiss();
             }
         });
-        builder.create().show();
+        builder.create().show();*/
+        startActivity(new Intent(UserInfoActivity.this, ApplyActivity.class));
     }
 
     public void doSignOut(View view){

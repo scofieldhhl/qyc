@@ -18,7 +18,6 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.DisplayMetrics;
@@ -27,6 +26,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.systemteam.R;
@@ -340,20 +340,25 @@ public class Utils {
         dialog.findViewById(R.id.menu_icon).setOnClickListener(listener);
         int title = R.string.setting_pay;
         int content = R.string.protocol_pay;
+        String url = "http://1.rockingcar.applinzi.com/LegalStatement.html";
         switch (typeDialog){
             case Constant.GUIDE_TYPE_PAY:
                 title = R.string.setting_pay;
                 content = R.string.protocol_pay;
+                url = "http://1.rockingcar.applinzi.com/PayStatement.html";
                 break;
             case Constant.GUIDE_TYPE_PROCOTOL:
                 title = R.string.setting_protocol;
                 content = R.string.protocol_user;
+                url = "http://1.rockingcar.applinzi.com/LegalStatement.html";
                 break;
         }
+        WebView webview = (WebView) dialog.findViewById(R.id.wv_content);
+        webview.loadUrl(url);
         ((TextView)dialog.findViewById(R.id.tv_title)).setText(context.getString(title));
-        TextView tvCotent = (TextView)dialog.findViewById(R.id.tv_content);
+        /*TextView tvCotent = (TextView)dialog.findViewById(R.id.tv_content);
         (tvCotent).setText(context.getString(content));
-        tvCotent.setMovementMethod(ScrollingMovementMethod.getInstance());
+        tvCotent.setMovementMethod(ScrollingMovementMethod.getInstance());*/
         dialog.show();
     }
 }

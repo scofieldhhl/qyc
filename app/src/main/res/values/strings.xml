@@ -334,6 +334,8 @@
     <string name="light_open">开灯</string>
     <string name="light_close">关灯</string>
     <string name="input_limit">0/200</string>
+    <string name="main_scan">扫码开锁</string>
+    <string name="main_using">使用中</string>
     <!--scan-->
 
     <!--break-->

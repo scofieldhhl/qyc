@@ -130,11 +130,11 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         AllInterface.OnMenuSlideListener, NavigationView.OnNavigationItemSelectedListener{
 
     private double currentLatitude, currentLongitude, changeLatitude, changeLongitude;
-    private ImageView splash_img, btn_locale, btn_refresh, mIvScan;
+    private ImageView splash_img, btn_locale, btn_refresh, mIvScan, mIvMenu;
     private TextView book_bt, cancel_book, end_route, current_addr, bike_distance, bike_time, bike_price;
     private LinearLayout bike_layout, bike_distance_layout, bike_info_layout, confirm_cancel_layout;
     private TextView bike_code, bike_sound, book_countdown, prompt,
-            textview_time, textview_distance, textview_price, unlock;
+            textview_time, textview_distance, textview_price, unlock, mTvUsingStatus;
     private long exitTime = 0;
     private View divider;
     private boolean isFirstIn;
@@ -224,13 +224,15 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
                     break;
                 case MSG_UPDATE_UI:
                     if(theActivity.isGaming){
-                        if(theActivity.mView == null){
+                        /*if(theActivity.mView == null){
                             theActivity.mView = new CatLoadingView();
                             theActivity.mView.show(theActivity.getSupportFragmentManager(), "");
-                        }
+                        }*/
                         theActivity.bikeOnUsing();
                         theActivity.btn_locale.setEnabled(false);
                         theActivity.mIvScan.setEnabled(false);
+                        theActivity.mIvMenu.setEnabled(false);
+                        theActivity.mTvUsingStatus.setText(R.string.main_using);
                     }else {
                         if(theActivity.mView != null){
                             theActivity.mView.dismiss();
@@ -238,6 +240,8 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
                         theActivity.backFromRouteDetail();
                         theActivity.btn_locale.setEnabled(true);
                         theActivity.mIvScan.setEnabled(true);
+                        theActivity.mIvMenu.setEnabled(true);
+                        theActivity.mTvUsingStatus.setText(R.string.main_scan);
                     }
                     break;
             }
@@ -552,6 +556,8 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         unlock = (TextView) findViewById(R.id.unlock);
         divider = (View) findViewById(R.id.divider);
         mIvScan = (ImageView) findViewById(R.id.iv_scan);
+        mIvMenu = (ImageView) findViewById(R.id.iv_menu);
+        mTvUsingStatus = (TextView) findViewById(R.id.tv_status);
 
         bike_code = (TextView) findViewById(R.id.bike_code);
         bike_sound = (TextView) findViewById(R.id.bike_sound);

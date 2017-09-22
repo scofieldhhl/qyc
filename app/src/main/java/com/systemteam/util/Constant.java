@@ -23,6 +23,7 @@ public class Constant {
     public static final int QUERY_LIMIT_DEFAULT = 10;
     public static int WITHDRAW_DAYS_DEFAULT = 15;
     public static float WITHDRAW_AMOUNT_DEFAULT = 300f;
+    public static float WITHDRAW_AMOUNT_MIN = 1f;
     public static final int WITHDRAW_SUCCESS = 10;
     public static final int WITHDRAW_FAIL = -1;
 
