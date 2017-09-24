@@ -19,6 +19,7 @@ import com.systemteam.R;
 import com.systemteam.bean.MyUser;
 import com.systemteam.fragment.BaseFragment;
 import com.systemteam.util.Utils;
+import com.tencent.mm.opensdk.modelmsg.SendAuth;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
@@ -83,7 +84,7 @@ public class LoginFragment extends BaseFragment {
                 onLoginWeibo(v);
                 break;
             case R.id.iv_wechat:
-//                onLoginWechat(v);
+                onLoginWechat(v);
                 break;
             case R.id.tv_forgetpsw:
                 requestSMSCode(mContext, mPhone);
@@ -199,19 +200,26 @@ public class LoginFragment extends BaseFragment {
         iLoginManager.login(new PlatformActionListener() {
             @Override
             public void onComplete(HashMap<String, Object> userInfo) {
-                //TODO
             }
 
             @Override
             public void onError() {
-                //TODO
             }
 
             @Override
             public void onCancel() {
-                //TODO
             }
         });*/
+
+        if (!BikeApplication.mWxApi.isWXAppInstalled()) {
+            toast(mContext,"您还未安装微信客户端");
+            return;
+        }
+        final SendAuth.Req req = new SendAuth.Req();
+        req.scope = "snsapi_userinfo";
+        req.state = "diandi_wx_login";
+        BikeApplication.mWxApi.sendReq(req);
+
     }
 
     public void onLoginQQ(View view){

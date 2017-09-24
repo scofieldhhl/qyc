@@ -9,8 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -19,12 +17,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -66,10 +62,10 @@ import static com.systemteam.util.Constant.REQUEST_CODE;
 import static com.systemteam.util.Utils.dp2px;
 
 
-public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener{
+public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
 
     protected final int REQUEST_CODE_SOME_FEATURES_PERMISSIONS = 101;
-    public int statusBarHeight = 0,titleHeight;
+    public int statusBarHeight = 0, titleHeight;
     protected Toolbar mToolbar;
     protected TextView mToolbarTitle;
     protected Context mContext;
@@ -96,7 +92,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 //            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }*/
         statusBarHeight = getStatusBarHeight();
-        titleHeight=dp2px(this,50);
+        titleHeight = dp2px(this, 50);
         mImm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
         mProgressHelper = new ProgressDialogHelper(this);
         checkNetworkAvailable(this);
@@ -110,7 +106,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                 @Override
                 public void run() {
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) linear_bar.getLayoutParams();
-                    params.height = statusHeight ;
+                    params.height = statusHeight;
                     linear_bar.setLayoutParams(params);
                 }
             });
@@ -151,6 +147,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     /**
      * 解决Subscription内存泄露问题
+     *
      * @param s
      */
     protected void addSubscription(Subscription s) {
@@ -160,7 +157,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         this.mCompositeSubscription.add(s);
     }
 
-    public void toast(String msg){
+    public void toast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
@@ -171,10 +168,10 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     public static void loge(Throwable e) {
         LogTool.d("===============================================================================");
-        if(e instanceof BmobException){
-            LogTool.e("错误码："+((BmobException)e).getErrorCode()+",错误描述："+((BmobException)e).getMessage());
-        }else{
-            LogTool.e("错误描述："+e.getMessage());
+        if (e instanceof BmobException) {
+            LogTool.e("错误码：" + ((BmobException) e).getErrorCode() + ",错误描述：" + ((BmobException) e).getMessage());
+        } else {
+            LogTool.e("错误描述：" + e.getMessage());
         }
     }
 
@@ -234,8 +231,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    protected boolean checkUser(final Activity act){
-        if(((BikeApplication)act.getApplication()).getmUser() == null){
+    protected boolean checkUser(final Activity act) {
+        if (((BikeApplication) act.getApplication()).getmUser() == null) {
             AlertDialog alertDialog = new AlertDialog.Builder(act).create();
             alertDialog.setTitle(act.getString(R.string.tip));
             alertDialog.setMessage(act.getString(R.string.user_no));
@@ -245,8 +242,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             startActivity(new Intent(act, WelcomeActivity.class));
-                            if(act instanceof MainActivity){
-                            }else {
+                            if (act instanceof MainActivity) {
+                            } else {
                                 act.finish();
                             }
                         }
@@ -264,19 +261,19 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         return true;
     }
 
-    public void gotoBreak(View view){
+    public void gotoBreak(View view) {
         Intent intentBreak = new Intent(mContext, BreakActivity.class);
         intentBreak.putExtra(Constant.BUNDLE_TYPE_MENU, Constant.BREAK_TYPE_BREAK);
         startActivityForResult(intentBreak, Constant.REQUEST_CODE_BREAK);
     }
 
-    public void gotoBreakLock(View view){
+    public void gotoBreakLock(View view) {
         Intent intent = new Intent(mContext, BreakActivity.class);
         intent.putExtra(Constant.BUNDLE_TYPE_MENU, Constant.BREAK_TYPE_LOCK);
         startActivityForResult(intent, Constant.REQUEST_CODE_BREAK);
     }
 
-    public void loadAvatar(final Context context, String path, final ImageView imageView){
+    public void loadAvatar(final Context context, String path, final ImageView imageView) {
         if (!TextUtils.isEmpty(path)) {
             File file = new File(path);
             if (file.exists()) {
@@ -298,25 +295,25 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    protected void registerBroadcast(String action, BroadcastReceiver receiver){
+    protected void registerBroadcast(String action, BroadcastReceiver receiver) {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(action);  //添加要收到的广播
         registerReceiver(receiver, intentFilter);
     }
 
-    protected void unRegisterBroadcast(BroadcastReceiver receiver){
-        if(receiver != null){
+    protected void unRegisterBroadcast(BroadcastReceiver receiver) {
+        if (receiver != null) {
             unregisterReceiver(receiver);
             receiver = null;
         }
     }
 
-    protected boolean checkBalance(MyUser user,final Activity activity){
-        if(user.getCoupon() != null && user.getCoupon().intValue() > 0){
+    protected boolean checkBalance(MyUser user, final Activity activity) {
+        if (user.getCoupon() != null && user.getCoupon().intValue() > 0) {
             return true;
-        }else if(user.getBalance() != null && user.getBalance().floatValue() > COST_BASE_DEFAULT){
+        } else if (user.getBalance() != null && user.getBalance().floatValue() > COST_BASE_DEFAULT) {
             return true;
-        }else {
+        } else {
             AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
             alertDialog.setTitle(activity.getString(R.string.tip));
             alertDialog.setMessage(activity.getString(R.string.ballance_no));
@@ -357,38 +354,38 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    protected void startRouteService(final Context context, final Car car){
-        if(BuildConfig.DEBUG){
+    protected void startRouteService(final Context context, final Car car) {
+        //TODO 测试使用
+        if (BuildConfig.DEBUG || car.getCarNo().startsWith("1878")) {
             Intent intent = new Intent(context, RouteService.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable(BUNDLE_CAR, car);
             intent.putExtras(bundle);
             startService(intent);
-        }else
-            {
+        } else {
             StringRequest stringRequest = new StringRequest(Request.Method.GET,
                     ProtocolEncode.encodeUnlockUrl(car.getCarNo()),
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             LogTool.d(response);
-                            if(response.contains("1000") || response.contains("200")){
+                            if (response.contains("1000") || response.contains("200")) {
                                 Intent intent = new Intent(context, RouteService.class);
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable(BUNDLE_CAR, car);
                                 intent.putExtras(bundle);
                                 startService(intent);
-                            }else {
+                            } else {
                                 String msg = "";
-                                if(response.contains("4000")){
+                                if (response.contains("4000")) {
                                     msg = getString(R.string.error_lock_4000);
-                                }else if(response.contains("4001")){
+                                } else if (response.contains("4001")) {
                                     msg = getString(R.string.error_lock_4001);
-                                }else if(response.contains("4002")){
+                                } else if (response.contains("4002")) {
                                     msg = getString(R.string.error_lock_4002);
-                                }else if(response.contains("4003")){
+                                } else if (response.contains("4003")) {
                                     msg = getString(R.string.error_lock_4003);
-                                }else if(response.contains("403")){
+                                } else if (response.contains("403")) {
                                     msg = getString(R.string.error_lock_4001);
                                 }
                                 Utils.showDialog(context, getString(R.string.error_lock_failed), msg);
@@ -404,55 +401,5 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             RequestQueue mQueue = Volley.newRequestQueue(mContext);
             mQueue.add(stringRequest);
         }
-    }
-
-    protected void initBackgroudColor(){
-        // 用来提取颜色的Bitmap
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.theme_bg);
-        // Palette的部分
-        Palette.Builder builder = Palette.from(bitmap);
-        builder.generate(new Palette.PaletteAsyncListener() {@Override public void onGenerated(Palette palette) {
-            //获取到充满活力的这种色调
-            Palette.Swatch vibrant = palette.getVibrantSwatch();
-//            Palette.Swatch s = p.getVibrantSwatch();       //获取到充满活力的这种色调
-//            Palette.Swatch s = p.getDarkVibrantSwatch();    //获取充满活力的黑
-//            Palette.Swatch s = p.getLightVibrantSwatch();   //获取充满活力的亮
-//            Palette.Swatch s = p.getMutedSwatch();           //获取柔和的色调
-//            Palette.Swatch s = p.getDarkMutedSwatch();      //获取柔和的黑
-//            Palette.Swatch s = p.getLightMutedSwatch();    //获取柔和的亮
-            //根据调色板Palette获取到图片中的颜色设置到toolbar和tab中背景，标题等，使整个UI界面颜色统一
-            /*toolbar_tab.setBackgroundColor(vibrant.getRgb());
-            toolbar_tab.setSelectedTabIndicatorColor(colorBurn(vibrant.getRgb()));*/
-            mToolbar.setBackgroundColor(vibrant.getRgb());
-
-            if (android.os.Build.VERSION.SDK_INT >= 21) {
-                Window window = getWindow();
-                window.setStatusBarColor(colorBurn(vibrant.getRgb()));
-                window.setNavigationBarColor(colorBurn(vibrant.getRgb()));
-            }
-        }
-        });
-
-    }
-
-    /**
-     * 颜色加深处理
-     *
-     * @param RGBValues RGB的值，由alpha（透明度）、red（红）、green（绿）、blue（蓝）构成，
-     *                  Android中我们一般使用它的16进制，
-     *                  例如："#FFAABBCC",最左边到最右每两个字母就是代表alpha（透明度）、
-     *                  red（红）、green（绿）、blue（蓝）。每种颜色值占一个字节(8位)，值域0~255
-     *                  所以下面使用移位的方法可以得到每种颜色的值，然后每种颜色值减小一下，在合成RGB颜色，颜色就会看起来深一些了
-     * @return
-     */
-    private int colorBurn(int RGBValues) {
-        int alpha = RGBValues >> 24;
-        int red = RGBValues >> 16 & 0xFF;
-        int green = RGBValues >> 8 & 0xFF;
-        int blue = RGBValues & 0xFF;
-        red = (int) Math.floor(red * (1 - 0.1));
-        green = (int) Math.floor(green * (1 - 0.1));
-        blue = (int) Math.floor(blue * (1 - 0.1));
-        return Color.rgb(red, green, blue);
     }
 }

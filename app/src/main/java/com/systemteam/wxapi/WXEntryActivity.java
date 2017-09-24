@@ -1,23 +1,41 @@
 package com.systemteam.wxapi;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.systemteam.BaseActivity;
+import com.systemteam.MainActivity;
 import com.systemteam.R;
+import com.systemteam.bean.MyUser;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
+import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.modelmsg.ShowMessageFromWX;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
-public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
+
+public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 
 	private static final int TIMELINE_SUPPORTED_VERSION = 0x21020001;
 
@@ -25,11 +43,13 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
 
 	// IWXAPI 是第三方app和微信通信的openapi接口
 	private IWXAPI api;
+	private Context mContext;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		LogTool.d("onCreate");
+		mContext = this;
 		/*setContentView(R.layout.entry);*/
 
 		// 通过WXAPIFactory工厂，获取IWXAPI的实例
@@ -124,6 +144,8 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
 		}
 	}
 
+	private static final int RETURN_MSG_TYPE_LOGIN = 1;
+	private static final int RETURN_MSG_TYPE_SHARE = 2;
 
 	// 第三方应用发送到微信的请求处理后的响应结果，会回调到该方法
 	@Override
@@ -133,24 +155,41 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
 		Toast.makeText(this, "baseresp.getType = " + resp.getType(), Toast.LENGTH_SHORT).show();
 
 		switch (resp.errCode) {
-			case BaseResp.ErrCode.ERR_OK:
-				result = R.string.errcode_success;
-				break;
-			case BaseResp.ErrCode.ERR_USER_CANCEL:
-				result = R.string.errcode_cancel;
-				break;
 			case BaseResp.ErrCode.ERR_AUTH_DENIED:
 				result = R.string.errcode_deny;
 				break;
 			case BaseResp.ErrCode.ERR_UNSUPPORT:
 				result = R.string.errcode_unsupported;
 				break;
+			case BaseResp.ErrCode.ERR_USER_CANCEL:
+				if (RETURN_MSG_TYPE_SHARE == resp.getType())
+					Toast.makeText(this,"分享失败", Toast.LENGTH_SHORT).show();
+				else
+					Toast.makeText(this,"登录失败", Toast.LENGTH_SHORT).show();
+				break;
+			case BaseResp.ErrCode.ERR_OK:
+				switch (resp.getType()) {
+					case RETURN_MSG_TYPE_LOGIN:
+						//拿到了微信返回的code,立马再去请求access_token
+						String code = ((SendAuth.Resp) resp).code;
+						LogTool.d("code = " + code);
+						getAccess_token(code);
+						//就在这个地方，用网络库什么的或者自己封的网络api，发请求去咯，注意是get请求
+
+						break;
+
+					case RETURN_MSG_TYPE_SHARE:
+						Toast.makeText(this,"微信分享成功", Toast.LENGTH_SHORT).show();
+						finish();
+						break;
+				}
+				break;
+
 			default:
 				result = R.string.errcode_unknown;
 				break;
 		}
 
-		Toast.makeText(this, result, Toast.LENGTH_LONG).show();
 	}
 
 	private void goToGetMsg() {
@@ -210,5 +249,140 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
 	protected void onDestroy() {
 		LogTool.d("onDestroy");
 		super.onDestroy();
+	}
+
+	@Override
+	protected void initView() {
+
+	}
+
+	@Override
+	protected void initData() {
+
+	}
+
+	RequestQueue mQueue;
+	/**
+	 * 获取openid accessToken值用于后期操作
+	 * @param code 请求码
+	 */
+	private void getAccess_token(final String code) {
+		String path = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="
+				+ Constant.WX_APP_ID
+				+ "&secret="
+				+ "f085346874dd4e3b3438734779fbb787"
+				+ "&code="
+				+ code
+				+ "&grant_type=authorization_code";
+		LogTool.d("getAccess_token：" + path);
+		//网络请求，根据自己的请求方式
+
+		StringRequest stringRequest = new StringRequest(Request.Method.GET, path,
+				new Response.Listener<String>() {
+					@Override
+					public void onResponse(String response) {
+						LogTool.d("getAccess_token_result:" + response);
+						JSONObject jsonObject = null;
+						try {
+							jsonObject = new JSONObject(response);
+							String openid = jsonObject.getString("openid").toString().trim();
+							String access_token = jsonObject.getString("access_token").toString().trim();
+							getUserMesg(access_token, openid);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+				}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				LogTool.e("Error: " + error.getMessage());
+			}
+		});
+		if(mQueue == null){
+			mQueue = Volley.newRequestQueue(mContext);
+		}
+		mQueue.add(stringRequest);
+	}
+
+
+	/**
+	 * 获取微信的个人信息
+	 * @param access_token
+	 * @param openid
+	 */
+	private void getUserMesg(final String access_token, final String openid) {
+		String path = "https://api.weixin.qq.com/sns/userinfo?access_token="
+				+ access_token
+				+ "&openid="
+				+ openid;
+		LogTool.d("getUserMesg：" + path);
+
+
+		StringRequest stringRequest = new StringRequest(Request.Method.GET, path,
+				new Response.Listener<String>() {
+					@Override
+					public void onResponse(String response) {
+						/**
+						 * {"openid":"oaxY41fhWTbStB1wH9KViiBlDn1M",
+						 * "nickname":"Scofield.H","sex":1,"language":"zh_CN","city":"Shenzhen",
+						 * "province":"Guangdong","country":"CN",
+						 * "headimgurl":"http:\/\/wx.qlogo.cn\/mmopen\/vi_32\/ibYCL2nbctJCDm3ZH9kWYYuCI3yibjKy5x67GEJVREqZwB0iaEV8m41ObgFnZBWrnGAxmmFO8uqwNYqzAmoO7Ku3w\/0","privilege":[],"unionid":"oTojM1BRcHkr2TWRsOq3IShP9fyI"}
+						 * */
+						LogTool.d("getAccess_token_result:" + response);
+						try {
+							JSONObject jsonObject = new JSONObject(response);
+							String openId = jsonObject.getString("nickname");
+							String nickname = jsonObject.getString("nickname");
+							int sex = Integer.parseInt(jsonObject.get("sex").toString());
+							String headimgurl = jsonObject.getString("headimgurl");
+							MyUser myUser = new MyUser();
+							myUser.setOpenid(openId);
+							myUser.setUsername(nickname);
+							myUser.setPhotoPath(headimgurl);
+							registerUser(myUser);
+							LogTool.d("用户基本信息:");
+							LogTool.d("nickname:" + nickname);
+							LogTool.d("sex:" + sex);
+							LogTool.d("headimgurl:" + headimgurl);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+				}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				LogTool.e("Error: " + error.getMessage());
+			}
+		});
+		if(mQueue == null){
+			mQueue = Volley.newRequestQueue(mContext);
+		}
+		mQueue.add(stringRequest);
+	}
+
+	@Override
+	public void onClick(View view) {
+
+	}
+
+	private void registerUser(MyUser myUser){
+		addSubscription(myUser.signOrLogin("123456", new SaveListener<MyUser>() {
+			@Override
+			public void done(MyUser s, BmobException e) {
+				if(e==null){
+					toast(getString(R.string.reg_success));
+					new Handler().postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							startActivity(new Intent(mContext, MainActivity.class));
+							finish();
+						}
+					}, 500);
+				}else{
+					toast(getString(R.string.reg_failed));
+					loge(e);
+				}
+			}
+		}));
 	}
 }

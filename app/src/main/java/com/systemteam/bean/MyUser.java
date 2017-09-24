@@ -16,6 +16,7 @@ public class MyUser extends BmobUser {
 	private Integer coupon; //优惠券数
 	private String photoPath;//头像路径
 	private String address;	 //地址
+	private String openid;	//微信openid
 
 	public Integer getAge() {
 		return age;
@@ -103,6 +104,14 @@ public class MyUser extends BmobUser {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getOpenid() {
+		return openid;
+	}
+
+	public void setOpenid(String openid) {
+		this.openid = openid;
 	}
 
 	@Override

@@ -14,7 +14,7 @@
         android:layout_width="300dp"
         android:layout_height="150dp"
         android:layout_gravity="center"
-        android:src="@drawable/img"/>
+        android:src="@drawable/logo"/>
 
     <com.systemteam.welcome.view.ParentViewPager
         android:id="@+id/vp_parent"

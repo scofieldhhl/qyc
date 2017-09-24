@@ -151,16 +151,34 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                     PayResult payResult = new PayResult((Map<String, String>) msg.obj);
 
                     //对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
-
+                    /**
+                     * 9000	订单支付成功
+                     8000	正在处理中，支付结果未知（有可能已经支付成功），请查询商户订单列表中订单的支付状态
+                     4000	订单支付失败
+                     5000	重复请求
+                     6001	用户中途取消
+                     6002	网络连接出错
+                     6004	支付结果未知（有可能已经支付成功），请查询商户订单列表中订单的支付状态
+                     * */
                     String resultInfo = payResult.getResult();// 同步返回需要验证的信息
                     String resultStatus = payResult.getResultStatus();
                     // 判断resultStatus 为9000则代表支付成功
                     if (TextUtils.equals(resultStatus, "9000")) {
                         theActivity.toast(theActivity.getString(R.string.pay_success));
                         theActivity.paySuccess();
-                    } else if(TextUtils.equals(resultStatus, "6001")){
+                    } else if(TextUtils.equals(resultStatus, "8000")){
+                        theActivity.toast(theActivity.getString(R.string.pay_fail_8000));
+                    }else if(TextUtils.equals(resultStatus, "4000")){
+                        theActivity.toast(theActivity.getString(R.string.pay_fail_4000));
+                    }else if(TextUtils.equals(resultStatus, "5000")){
+                        theActivity.toast(theActivity.getString(R.string.pay_fail_5000));
+                    }else if(TextUtils.equals(resultStatus, "6001")){
                         theActivity.toast(theActivity.getString(R.string.pay_fail_nopay));
-                    }else {
+                    }else if(TextUtils.equals(resultStatus, "6002")){
+                        theActivity.toast(theActivity.getString(R.string.pay_fail_6002));
+                    }else if(TextUtils.equals(resultStatus, "6004")){
+                        theActivity.toast(theActivity.getString(R.string.pay_fail_6004));
+                    }else{
                         theActivity.toast(theActivity.getString(R.string.pay_fail));
                     }
                     break;
@@ -469,7 +487,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
      * 支付宝支付业务
      * @param v
      */
-    //TODO 增加支付宝支付返回码提示
+    //增加支付宝支付返回码提示
     public static final String RSA_PRIVATE = "";
     public void payV2(View v) {
         if(TextUtils.isEmpty(RSA_PRIVATE)){

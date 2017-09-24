@@ -129,7 +129,18 @@
     <string name="pay_order_fail">请求订单失败,请稍后重试！</string>
     <string name="pay_result_fail">获取订单结果失败,如有扣款异常请联系客服！</string>
     <string name="pay_fail">支付失败,如有扣款异常请联系客服！</string>
-    <string name="pay_fail_nopay">您已取消支付！</string>
+
+
+
+
+
+
+    <string name="pay_fail_8000">正在处理中，支付结果未知（有可能已经支付成功），请查询商户订单列表中订单的支付状态！</string>
+    <string name="pay_fail_4000">订单支付失败！</string>
+    <string name="pay_fail_5000">重复请求！</string>
+    <string name="pay_fail_6004">支付结果未知（有可能已经支付成功），请查询商户订单列表中订单的支付状态！</string>
+    <string name="pay_fail_6002">您已取消支付！</string>
+    <string name="pay_fail_nopay">网络连接出错！</string>
     <string name="pay_success">恭喜，您已充值成功！</string>
     <string name="wallet_tip_1" formatted="false">点击马上充值，即表示已阅读和同意%s</string>
     <string name="wallet_tip_2">《充值协议》</string>

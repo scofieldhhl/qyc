@@ -96,8 +96,9 @@ public class BikeApplication extends Application {
 		Bmob.initialize(config);
     }
 
+    public static IWXAPI mWxApi;
     private void regToWx(){
-        IWXAPI api = WXAPIFactory.createWXAPI(this, WX_APP_ID, true);
-        api.registerApp(WX_APP_ID);
+        mWxApi = WXAPIFactory.createWXAPI(this, WX_APP_ID, true);
+        mWxApi.registerApp(WX_APP_ID);
     }
 }

@@ -101,5 +101,5 @@
     <color name="transparent_button_pressed">#44444444</color>
     <color name="transparent_button_focused">#44666666</color>
 
-    <color name="line_main">#d26a01</color>
+    <color name="line_main">#c11209</color>
 </resources>

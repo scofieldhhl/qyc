@@ -17,7 +17,7 @@
             style="@style/toolbar_title" />
         <ImageView
             android:layout_width="100dp"
-            android:layout_height="25dp"
+            android:layout_height="34dp"
             android:layout_gravity="center_horizontal"
             android:scaleType="fitXY"
             android:src="@drawable/logo" />
@@ -31,14 +31,14 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="6dp"
+            android:layout_height="7dp"
             android:layout_centerVertical="true"
             android:background="@color/line_main"/>
 
         <ImageView
             android:id="@+id/iv_menu"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_margin="30dp"
@@ -59,8 +59,8 @@
 
         <ImageView
             android:id="@+id/btn_locale"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_margin="30dp"
@@ -74,7 +74,7 @@
             android:textColor="@color/white"
             android:gravity="center"
             android:layout_alignParentBottom="true"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:text="@string/main_scan"/>
     </RelativeLayout>
     <FrameLayout
