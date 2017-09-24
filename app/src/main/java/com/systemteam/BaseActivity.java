@@ -368,6 +368,15 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
+                            /**
+                             * 200：机器启动成功
+                             401：appid错误
+                             402：签名验证错误
+                             403：机器号有误
+                             404：机器不在线
+                             405：机器正在使用中
+                             406：响应超时
+                             * */
                             LogTool.d(response);
                             if (response.contains("1000") || response.contains("200")) {
                                 Intent intent = new Intent(context, RouteService.class);
@@ -385,8 +394,18 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                                     msg = getString(R.string.error_lock_4002);
                                 } else if (response.contains("4003")) {
                                     msg = getString(R.string.error_lock_4003);
+                                } else if (response.contains("401")) {
+                                    msg = getString(R.string.error_lock_401);
+                                } else if (response.contains("402")) {
+                                    msg = getString(R.string.error_lock_402);
                                 } else if (response.contains("403")) {
-                                    msg = getString(R.string.error_lock_4001);
+                                    msg = getString(R.string.error_lock_403);
+                                } else if (response.contains("404")) {
+                                    msg = getString(R.string.error_lock_404);
+                                } else if (response.contains("405")) {
+                                    msg = getString(R.string.error_lock_405);
+                                } else if (response.contains("406")) {
+                                    msg = getString(R.string.error_lock_406);
                                 }
                                 Utils.showDialog(context, getString(R.string.error_lock_failed), msg);
                                 LogTool.e("response error!");

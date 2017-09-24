@@ -113,6 +113,13 @@
     <string name="error_lock_4001">错误的摇摇车编号，请重新扫码或输入编号！</string>
     <string name="error_lock_4002">摇摇车不可用或已断电，请更换其他摇摇车使用！</string>
     <string name="error_lock_4003">摇摇车启动超时，请稍后重试！</string>
+    <string name="error_lock_401">appid错误！</string>
+    <string name="error_lock_402">签名验证错误！</string>
+    <string name="error_lock_403">机器号有误！</string>
+    <string name="error_lock_404">机器不在线！</string>
+    <string name="error_lock_405">机器正在使用中！</string>
+    <string name="error_lock_406">响应超时！</string>
+
     <string name="earn_format" formatted="false">%.2f</string>
     <string name="balance_format" formatted="false">%.1f</string>
     <string name="submit">提交</string>

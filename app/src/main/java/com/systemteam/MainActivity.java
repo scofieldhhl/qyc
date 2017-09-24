@@ -232,7 +232,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
                         theActivity.btn_locale.setEnabled(false);
                         theActivity.mIvScan.setEnabled(false);
                         theActivity.mIvMenu.setEnabled(false);
-                        theActivity.mIvScan.setImageResource(R.drawable.middle);
+                        theActivity.mIvScan.setImageResource(R.drawable.middle_using);
                         theActivity.mTvUsingStatus.setText(R.string.main_using);
                     }else {
                         if(theActivity.mView != null){

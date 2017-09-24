@@ -16,7 +16,8 @@ public class ProtocolEncode {
     public static final String IM_AUTH_GET = "http://api.drfone.wondershare.com/im/auth/get?";
     public static final String IM_AUTH_EXPERT_INFO = "http://api.drfone.wondershare.com/im/auth/expert-info?";
 
-    public final static String URL_NIU = "http://120.76.77.233:20022/start";
+//    public final static String URL_NIU = "http://120.76.77.233:20022/start";
+    public final static String URL_NIU = "http://yyc.yiqiniubi.com:20022/start";
 
     /**
      * 开锁请求
