@@ -356,7 +356,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     protected void startRouteService(final Context context, final Car car) {
         //TODO 测试使用
-        if (BuildConfig.DEBUG || car.getCarNo().startsWith("1878")) {
+        if (car.getCarNo().startsWith("1878")) {
             Intent intent = new Intent(context, RouteService.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable(BUNDLE_CAR, car);
