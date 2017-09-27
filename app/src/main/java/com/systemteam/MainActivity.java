@@ -125,7 +125,9 @@ import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 // 首次安装使用，main界面没有小车编号
 // 使用过程中申报故障后，main界面没有退出使用中模式
 // BUG登出在登录，进入主界面后自动启动编号 2588
-
+// TODO 优化首页初始化频率和速度（通过本地数据库方式），减少主界面多次调用初始化，地图跳动
+// TODO 动态配置使用时长（3min）/ 分成比例。
+// TODO 扫码后，到使用中模式启动时间比较长
 public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanResultListener,
         AllInterface.OnMenuSlideListener, NavigationView.OnNavigationItemSelectedListener{
 
@@ -842,7 +844,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
      * @param _latitude
      * @param _longitude
      */
-    private void addOverLayout(double _latitude, double _longitude) {
+    private void addOverLayout(double _latitude, double _longitude) {//TODO 减少界面更新，地图跳跃
         //先清除图层
         mBaiduMap.clear();
         mlocationClient.requestLocation();

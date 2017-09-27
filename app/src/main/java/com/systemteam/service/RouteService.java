@@ -88,7 +88,7 @@ import static com.systemteam.util.Constant.TIME_ONCE_ACTIVE;
 //        初步Demo效果图，获取的经纬度有偏移，明天看看哪里的问题：
 //        LBS
 //        先贴一个保存经纬度点的Service的核心代码：
-
+// TODO 将扣费顺序改为可配置
 public class RouteService extends Service {
 
     private double currentLatitude, currentLongitude;

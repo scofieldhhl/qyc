@@ -27,6 +27,7 @@ import static com.systemteam.util.Constant.BUNDLE_KEY_SUBMIT_SUCCESS;
 import static com.systemteam.util.Constant.REQUEST_CODE_BREAK;
 
 //5588输码解锁变成2588
+//TODO 扫码or输码启动后，校准遥遥车定位，更新遥遥车定位。移动偏差比较大时记录。
 public abstract class BaseActiveActivity extends BaseActivity {
     private Car mCar;
     protected boolean isGaming = false;   //游戏是否在游戏中
