@@ -263,7 +263,7 @@ public class RouteService extends Service {
         stopForeground(true);
         isBikeUsing = false;
         if(!isFree){
-            requestBalance();
+//            requestBalance();
             if(mTime.equalsIgnoreCase("02 : 58") || mTime.equalsIgnoreCase("02 : 59")){
                 mTime = getString(R.string.time_start);
             }
@@ -277,9 +277,11 @@ public class RouteService extends Service {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             insertData(routeListStr);
+
         }else {
-            stopSelf();
+
         }
+        stopSelf();
     }
 
 
@@ -396,7 +398,7 @@ public class RouteService extends Service {
             public void run() {
                 if(!isBikeUsing){
                     countDownTimer.start();
-//                    requestBalance();
+                    requestBalance();
                 }
             }
         }, 0);
@@ -469,9 +471,10 @@ public class RouteService extends Service {
 
     private void requestBalance(){
         //1.扣费
+        mUser = BmobUser.getCurrentUser(MyUser.class);
         if(mUser == null){
             LogTool.e("mUser == null");
-            stopSelf();
+//            stopSelf();
             return;
         }
         MyUser newUser = new MyUser();
@@ -494,7 +497,7 @@ public class RouteService extends Service {
                 //2.修改car收益
                 if(mCar == null){
                     LogTool.e("mCar == null");
-                    stopSelf();
+//                    stopSelf();
                     return;
                 }
                 mEarn = totalPrice * EARN_RATE_DEFAULT;
@@ -504,7 +507,7 @@ public class RouteService extends Service {
                 addSubscription(newCar.update(mCar.getObjectId(), new UpdateListener() {
                     @Override
                     public void done(BmobException e) {
-                        stopSelf();
+//                        stopSelf();
                         if(e==null){
                         }else{
                             if(e instanceof BmobException){
