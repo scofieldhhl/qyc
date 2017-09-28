@@ -4,7 +4,7 @@ public class Constant {
     //默认值
     public static final float EARN_RATE_DEFAULT = 0.8f;
     public static final float COST_BASE_DEFAULT = 1.0f;
-    public static final long TIME_ONCE_ACTIVE = 3 * 60 * 1000;
+    public static int TIME_ONCE_ACTIVE = 3 * 60 * 1000;     //单次使用时长，默认3min，ms
     public static int COUPON_DEFAULT = 3;
     public static int CYCLE_DAY_CHART = 15;
 
@@ -32,13 +32,13 @@ public class Constant {
     public static final int USER_TYPE_APPLYING = -1;    //申请成为商户
     public static final int USER_TYPE_EXPERTER = 2;     //维护维修人员
     //map
-    public static final int MAP_SCAN_SPAN = 4 * 1000;  //设置地图扫描间隔，单位是毫秒
+    public static final int MAP_SCAN_SPAN = 1 * 1000;  //设置地图扫描间隔，单位是毫秒
+    public static final int MAP_SCAN_SPAN_DEFAULT = 5 * 1000;  //设置地图扫描间隔，单位是毫秒
     public static final float MAP_SCALING = 18.0f;      ////地图缩放比设置为18
     //map
     public static final String REQUEST_KEY_BY_USER = "author";
     public static final String REQUEST_KEY_BY_CAR = "car";
     public static final String REQUEST_KEY_BY_CARNO = "carNo";
-    public static final String TIME_ONCE_ACTIVE_STR = "03 : 00";
     public static final String BUNDLE_CAR = "key_car";
     public static final String BUNDLE_CARNO = "key_carno";
     public static final String BUNDLE_USER = "key_user";
@@ -70,7 +70,7 @@ public class Constant {
     public static final String SHAERD_FILE_NAME = "shared_file_name";
     public static final String ACTION_BROADCAST_ACTIVE = "com.locationreceiver";
 
-    public static final String FORMAT_TIME = "0%s : %s";
+    public static final String FORMAT_TIME = "0%s:%s";
 
     //pay
     public static final String WX_APP_ID = "wx34a15429655e4678";

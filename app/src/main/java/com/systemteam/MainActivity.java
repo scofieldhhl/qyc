@@ -74,7 +74,6 @@ import com.systemteam.activity.BreakActivity;
 import com.systemteam.activity.MyRouteActivity;
 import com.systemteam.activity.NavigationActivity;
 import com.systemteam.activity.QRCodeScanActivity;
-import com.systemteam.activity.RouteDetailActivity;
 import com.systemteam.activity.SettingActivity;
 import com.systemteam.activity.WalletActivity;
 import com.systemteam.bean.BikeInfo;
@@ -215,14 +214,29 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
                 case MSG_RESPONSE_SUCCESS:
                     List<Car> list = (List<Car>) msg.obj;
                     if(list != null && list.size() > 0){
-                        List<BikeInfo> listBike = new ArrayList<>();
+                        if(infos == null){
+                            infos = new ArrayList<>();
+                        }
                         for(Car car : list){//TODO 两层for循环效率低
                             if(car != null){
-                                listBike.add(new BikeInfo(car));
+                                infos.add(new BikeInfo(car));
                             }
                         }
-                        theActivity.addInfosOverlay(listBike);
                     }
+                    infos.add(new BikeInfo(theActivity.currentLatitude - new Random().nextInt(5) * 0.0005,
+                            theActivity.currentLongitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_icon, "001", "100米", "1分钟"));
+                    infos.add(new BikeInfo(theActivity.currentLatitude - new Random().nextInt(5) * 0.0005,
+                            theActivity.currentLongitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_icon, "002", "200米", "2分钟"));
+                    infos.add(new BikeInfo(theActivity.currentLatitude - new Random().nextInt(5) * 0.0005,
+                            theActivity.currentLongitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_icon, "003", "300米", "3分钟"));
+                    infos.add(new BikeInfo(theActivity.currentLatitude - new Random().nextInt(5) * 0.0005,
+                            theActivity.currentLongitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_icon, "004", "400米", "4分钟"));
+                    BikeInfo bikeInfo = new BikeInfo(theActivity.currentLatitude - 0.0005,
+                            theActivity.currentLongitude - 0.0005, R.mipmap.bike_icon, "005",
+                            "50米", "0.5分钟");
+                    infos.add(bikeInfo);
+                    theActivity.addInfosOverlay(infos);
+//                  initNearestBike(bikeInfo, new LatLng(_latitude - 0.0005, _longitude - 0.0005));
                     break;
                 case MSG_UPDATE_UI:
                     if(theActivity.isGaming){
@@ -268,6 +282,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         initToolBar(this, R.string.bybike);
         initView();
         initData();
+        LogTool.d("oncreate end");
         /*isServiceLive = Utils.isServiceWork(this, getPackageName() + ".service.RouteService");
         if (isServiceLive)
             beginService();*/
@@ -345,6 +360,8 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         mSearch = RoutePlanSearch.newInstance();
         mSearch.setOnGetRoutePlanResultListener(this);
         initMarkerClickEvent();
+
+        //TODO 预加载设备图标
     }
 
     private void initLocation(){
@@ -354,8 +371,8 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
 
         option.setCoorType("bd09ll");
         //可选，默认gcj02，设置返回的定位结果坐标系
-
         option.setScanSpan(MAP_SCAN_SPAN);
+
         //可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
 
         option.setIsNeedAddress(true);
@@ -392,6 +409,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
 
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
+            LogTool.d("onReceiveLocation  isFirstLoc:" + isFirstLoc);
             // map view 销毁后不在处理新接收的位置
             if (bdLocation == null || mMapView == null) {
                 return;
@@ -424,6 +442,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
                 if (!isServiceLive) {
                     addOverLayout(currentLatitude, currentLongitude);
                 }
+                initLocation();
             }
             getLocationInfo(bdLocation);
         }
@@ -820,6 +839,10 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         return str;
     }
 
+    /**
+     * 根据经纬度将图标绘制地图上
+     * @param infos
+     */
     public void addInfosOverlay(List<BikeInfo> infos) {
         LatLng latLng = null;
         OverlayOptions overlayOptions = null;
@@ -845,32 +868,19 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
      * @param _longitude
      */
     private void addOverLayout(double _latitude, double _longitude) {//TODO 减少界面更新，地图跳跃
+        LogTool.d("addOverLayout");
         //先清除图层
         mBaiduMap.clear();
         mlocationClient.requestLocation();
         // 定义Maker坐标点
         LatLng point = new LatLng(_latitude, _longitude);
         // 构建MarkerOption，用于在地图上添加Marker
-        MarkerOptions options = new MarkerOptions().position(point)
-                .icon(dragLocationIcon);
+        MarkerOptions options = new MarkerOptions().position(point).icon(dragLocationIcon);
         // 在地图上添加Marker，并显示
         mBaiduMap.addOverlay(options);
         infos.clear();
         //loading car
         loadCarlistNear(_latitude, _longitude);
-        infos.add(new BikeInfo(_latitude - new Random().nextInt(5) * 0.0005,
-                _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_icon, "001", "100米", "1分钟"));
-        infos.add(new BikeInfo(_latitude - new Random().nextInt(5) * 0.0005,
-                _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_icon, "002", "200米", "2分钟"));
-        infos.add(new BikeInfo(_latitude - new Random().nextInt(5) * 0.0005,
-                _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_icon, "003", "300米", "3分钟"));
-        infos.add(new BikeInfo(_latitude - new Random().nextInt(5) * 0.0005,
-                _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_icon, "004", "400米", "4分钟"));
-        BikeInfo bikeInfo = new BikeInfo(_latitude - 0.0005, _longitude - 0.0005, R.mipmap.bike_icon, "005",
-                "50米", "0.5分钟");
-        infos.add(bikeInfo);
-        addInfosOverlay(infos);
-//        initNearestBike(bikeInfo, new LatLng(_latitude - 0.0005, _longitude - 0.0005));
     }
 
     private void loadCarlistNear(double _latitude, double _longitude){
@@ -1150,11 +1160,12 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         /*if (CodeUnlockActivity.unlockSuccess || isServiceLive) {
             beginService();
         }*/
-        if (RouteDetailActivity.completeRoute || !isServiceLive)
-            backFromRouteDetail();
+        /*if (RouteDetailActivity.completeRoute || !isServiceLive)//重新获取地图小车
+            backFromRouteDetail();*/
     }
 
     private void backFromRouteDetail() {
+        LogTool.d("backFromRouteDetail");
         isFirstIn = true;
 //        mTvTitle.setText(getString(R.string.bybike));
         textview_time.setText(getString(R.string.foot));
@@ -1249,14 +1260,14 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         confirm_cancel_layout.setVisibility(View.GONE);
         bike_distance_layout.setVisibility(View.GONE);
         book_bt.setVisibility(View.GONE);
-        if (routeOverlay != null)
-            routeOverlay.removeFromMap();
 
         btn_locale.setVisibility(View.VISIBLE);
         bike_info_layout.setVisibility(View.GONE);
         end_route.setVisibility(View.GONE);
         mMapView.showZoomControls(false);
-        mBaiduMap.clear();
+        //        if (routeOverlay != null)     //清除地图所有标记
+//            routeOverlay.removeFromMap();
+//        mBaiduMap.clear();
         if (isServiceLive)
             mlocationClient.requestLocation();
     }

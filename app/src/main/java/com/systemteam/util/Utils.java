@@ -91,6 +91,34 @@ public class Utils {
         }
     }
 
+    /**
+     * ms 转换成 00:00:00
+     * @param time
+     * @return
+     */
+    public static String formatTime(long time) {
+        time = time/ 1000;
+        String strHour = "" + (time / 3600);
+        String strMinute = "" + time % 3600 / 60;
+        String strSecond = "" + time % 3600 % 60;
+
+        strHour = strHour.length() < 2 ? "0" + strHour : strHour;
+        strMinute = strMinute.length() < 2 ? "0" + strMinute : strMinute;
+        strSecond = strSecond.length() < 2 ? "0" + strSecond : strSecond;
+
+        String strRsult = "";
+
+        if (!strHour.equals("00")) {
+            strRsult += strHour + ":";
+        }
+
+        strRsult += strMinute + ":";
+
+        strRsult += strSecond;
+
+        return strRsult;
+    }
+
     public static int dp2px(Context context, int dp) {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);

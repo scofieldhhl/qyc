@@ -25,10 +25,9 @@ import static com.systemteam.util.Constant.BUNDLE_CAR;
 import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
 import static com.systemteam.util.Constant.BUNDLE_KEY_IS_ACTIVING;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
-import static com.systemteam.util.Constant.TIME_ONCE_ACTIVE_STR;
 
 public class ActiveActivity extends BaseActiveActivity {
-    private String mTime = TIME_ONCE_ACTIVE_STR;
+    private String mTime;
     private LocationReceiver mReceiver;
     private TextView mTvTick;
     private Car mCar;
@@ -61,6 +60,7 @@ public class ActiveActivity extends BaseActiveActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_active);
         mContext = this;
+        mTime = Utils.formatTime(Constant.TIME_ONCE_ACTIVE);
         initToolBar(this, R.string.bybike);
         initView();
         initData();

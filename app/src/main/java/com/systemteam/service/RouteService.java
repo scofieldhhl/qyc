@@ -264,8 +264,9 @@ public class RouteService extends Service {
         isBikeUsing = false;
         if(!isFree){
 //            requestBalance();
-            if(mTime.equalsIgnoreCase("02 : 58") || mTime.equalsIgnoreCase("02 : 59")){
-                mTime = getString(R.string.time_start);
+            if(mTime.trim().equalsIgnoreCase(Utils.formatTime(Constant.TIME_ONCE_ACTIVE - 1000)) ||
+                    mTime.trim().equalsIgnoreCase(Utils.formatTime(Constant.TIME_ONCE_ACTIVE - 2000))){
+                mTime = Utils.formatTime(Constant.TIME_ONCE_ACTIVE);
             }
             Bundle bundle = new Bundle();
             bundle.putString("totalTime", mTime);
