@@ -20,15 +20,6 @@ import android.support.v7.app.NotificationCompat;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.map.BitmapDescriptor;
-import com.baidu.mapapi.map.BitmapDescriptorFactory;
-import com.baidu.mapapi.map.MyLocationConfiguration;
-import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.utils.DistanceUtil;
 import com.google.gson.Gson;
 import com.systemteam.MainActivity;
 import com.systemteam.R;
@@ -38,8 +29,6 @@ import com.systemteam.bean.EventMessage;
 import com.systemteam.bean.MyUser;
 import com.systemteam.bean.RoutePoint;
 import com.systemteam.bean.UseRecord;
-import com.systemteam.callback.AllInterface;
-import com.systemteam.map.MyOrientationListener;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
@@ -50,13 +39,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
-import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import rx.Subscription;
@@ -93,14 +79,8 @@ public class RouteService extends Service {
 
     private double currentLatitude, currentLongitude;
 
-    private LocationClient mlocationClient = null;
-    private MylocationListener mlistener;
-    private BitmapDescriptor mIconLocation;
-    private MyOrientationListener myOrientationListener;
     private String rt_time, rt_distance, rt_price;
     //定位图层显示方式
-    private MyLocationConfiguration.LocationMode locationMode;
-    AllInterface.IUpdateLocation iUpdateLocation;
     public ArrayList<RoutePoint> routPointList = new ArrayList<>();
     public  int totalDistance = 0;
     private float totalPrice = COST_BASE_DEFAULT;
@@ -114,16 +94,9 @@ public class RouteService extends Service {
     private MyUser mUser;
     private boolean isUseFree = false;
 
-    public void setiUpdateLocation(AllInterface.IUpdateLocation iUpdateLocation) {
-        this.iUpdateLocation = iUpdateLocation;
-    }
-
     public void onCreate() {
         super.onCreate();
         beginTime = System.currentTimeMillis();
-//        RouteDBHelper dbHelper = new RouteDBHelper(this);
-//        // 只有调用了DatabaseHelper的getWritableDatabase()方法或者getReadableDatabase()方法之后，才会创建或打开一个连接
-//        SQLiteDatabase sqliteDatabase = dbHelper.getReadableDatabase();
         totalTime = 0;
         totalDistance = 0;
         totalPrice = COST_BASE_DEFAULT;
@@ -173,49 +146,6 @@ public class RouteService extends Service {
         Intent notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent.putExtra("flag", "notification");
         notification.contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-    }
-
-    private void initLocation() {
-        mIconLocation = BitmapDescriptorFactory.fromResource(R.mipmap.location_marker);
-        locationMode = MyLocationConfiguration.LocationMode.NORMAL;
-
-        //定位服务的客户端。宿主程序在客户端声明此类，并调用，目前只支持在主线程中启动
-        mlocationClient = new LocationClient(this);
-        mlistener = new MylocationListener();
-//        initMarkerClickEvent();
-        //注册监听器
-        mlocationClient.registerLocationListener(mlistener);
-        //配置定位SDK各配置参数，比如定位模式、定位时间间隔、坐标系类型等
-        LocationClientOption mOption = new LocationClientOption();
-        //设置坐标类型
-        mOption.setCoorType("bd09ll");
-        //设置是否需要地址信息，默认为无地址
-        mOption.setIsNeedAddress(true);
-        //设置是否打开gps进行定位
-        mOption.setOpenGps(true);
-        //设置扫描间隔，单位是毫秒 当<1000(1s)时，定时定位无效
-        mOption.setScanSpan(Constant.MAP_SCAN_SPAN);
-        //设置 LocationClientOption
-        mlocationClient.setLocOption(mOption);
-
-        //初始化图标,BitmapDescriptorFactory是bitmap 描述信息工厂类.
-        mIconLocation = BitmapDescriptorFactory.fromResource(R.mipmap.location_marker);
-
-        myOrientationListener = new MyOrientationListener(this);
-        //通过接口回调来实现实时方向的改变
-        myOrientationListener.setOnOrientationListener(new MyOrientationListener.OnOrientationListener() {
-            @Override
-            public void onOrientationChanged(float x) {
-            }
-        });
-//        mSearch = RoutePlanSearch.newInstance();
-//        mSearch.setOnGetRoutePlanResultListener(this);
-//        //开启定位
-//        mBaiduMap.setMyLocationEnabled(true);
-        if (!mlocationClient.isStarted()) {
-            mlocationClient.start();
-        }
-        myOrientationListener.start();
     }
 
     private void startNotifi(String time, String distance, String price) {
@@ -286,65 +216,6 @@ public class RouteService extends Service {
     }
 
 
-    //所有的定位信息都通过接口回调来实现
-    public class MylocationListener implements BDLocationListener {
-        //定位请求回调接口
-        private boolean isFirstIn = true;
-
-        //定位请求回调函数,这里面会得到定位信息
-        @Override
-        public void onReceiveLocation(BDLocation bdLocation) {
-            if (null == bdLocation) return;
-            //"4.9E-324"表示目前所处的环境（室内或者是网络状况不佳）造成无法获取到经纬度
-            if ("4.9E-324".equals(String.valueOf(bdLocation.getLatitude())) ||
-                    "4.9E-324".equals(String.valueOf(bdLocation.getLongitude()))) {
-                return;
-            }//过滤百度定位失败
-
-            LogTool.d("RouteService---------getAddrStr()-------------" + bdLocation.getAddrStr());
-            double routeLat = bdLocation.getLatitude();
-            double routeLng = bdLocation.getLongitude();
-            RoutePoint routePoint = new RoutePoint();
-            routePoint.setRouteLat(routeLat);
-            routePoint.setRouteLng(routeLng);
-            if (routPointList.size() == 0)
-                routPointList.add(routePoint);
-            else {
-                RoutePoint lastPoint = routPointList.get(routPointList.size() - 1);
-
-                if (routeLat == lastPoint.getRouteLat() && routeLng == lastPoint.getRouteLng()) {
-
-                } else {
-
-                    LatLng lastLatLng = new LatLng(lastPoint.getRouteLat(),
-                            lastPoint.getRouteLng());
-                    LatLng currentLatLng = new LatLng(routeLat, routeLng);
-                    if (routeLat > 0 && routeLng > 0) {
-                        double distantce = DistanceUtil.getDistance(lastLatLng, currentLatLng);
-//                        LogTool.d("distantce--------------" + distantce);
-                        if (distantce > 5) {
-                            routPointList.add(routePoint);
-                            totalDistance += distantce;
-                        }
-                    }
-                }
-            }
-
-            totalTime = (int) (System.currentTimeMillis() - beginTime) / 1000 / 60;
-//            totalPrice = (float) (Math.floor(totalTime / 30) * COST_BASE_DEFAULT + COST_BASE_DEFAULT);
-            startNotifi(getString(R.string.cost_time, String.valueOf(totalTime)),
-                    getString(R.string.cost_distance, String.valueOf(totalDistance)),
-                    getString(R.string.cost_num, String.valueOf(totalPrice)));
-            Intent intent = new Intent("com.locationreceiver");
-            Bundle bundle = new Bundle();
-            bundle.putString("totalTime", getString(R.string.cost_time, String.valueOf(totalTime)));
-            bundle.putString("totalDistance", getString(R.string.cost_distance, String.valueOf(totalDistance)));
-            bundle.putString("totalPrice", getString(R.string.cost_num, String.valueOf(totalPrice)));
-            intent.putExtras(bundle);
-            sendBroadcast(intent);
-        }
-    }
-
     public static class NetWorkReceiver extends BroadcastReceiver{
         public NetWorkReceiver() {
         }
@@ -377,20 +248,6 @@ public class RouteService extends Service {
 
     public void insertData(String routeListStr) {
         newUseRecord(mTime);
-        /*RouteRecord record = new RouteRecord();
-        record.setCycle_date(Utils.getDateFromMillisecond(beginTime));
-        record.setCycle_time(String.valueOf(mTime));
-        record.setCycle_distance(String.valueOf(totalDistance));
-        record.setCycle_price(String.valueOf(totalPrice));
-        record.setCycle_points(routeListStr);
-        record.setUserId(BmobUser.getCurrentUser().getObjectId());
-        record.setCarNo(mCarNo);
-        record.setCost(totalPrice);
-        record.setTime(new Date());
-        record.setTimeUse(String.valueOf(mTime));
-        record.setEarnRate(EARN_RATE_DEFAULT);
-        record.setEarn(totalPrice * EARN_RATE_DEFAULT);
-        new DBManager().save(record);*/
     }
 
     private void initCountDownTimer(){
@@ -523,27 +380,6 @@ public class RouteService extends Service {
         }));
     }
 
-    private void checkCarExist(String carNo) {
-        BmobQuery<Car> query = new BmobQuery<>();
-        query.addWhereEqualTo("carNo", carNo);
-        addSubscription(query.findObjects(new FindListener<Car>() {
-
-            @Override
-            public void done(List<Car> object, BmobException e) {
-                if(e==null){
-                    if(object != null && object.size() > 0){
-                        mCar = object.get(0);
-                    }
-                }else{
-                    if(e instanceof BmobException){
-                        LogTool.e("错误码："+((BmobException)e).getErrorCode()+",错误描述："+((BmobException)e).getMessage());
-                    }else{
-                        LogTool.e("错误描述："+e.getMessage());
-                    }
-                }
-            }
-        }));
-    }
     float mEarn = COST_BASE_DEFAULT * EARN_RATE_DEFAULT;
     private void newUseRecord(String timeUse){
         //2.增加使用记录

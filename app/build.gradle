@@ -12,8 +12,8 @@ android {
         release {
             keyAlias 'SystemStudio'
             keyPassword 'HUANGhl8811^'
-            storeFile file('D:/appkey/systemstudio.jks')
-//            storeFile file('/Users/ws/Desktop/systemstudio.jks')
+//            storeFile file('D:/appkey/systemstudio.jks')
+            storeFile file('/Users/ws/Desktop/systemstudio.jks')
             storePassword 'HUANGhl8811^'
         }
     }
@@ -86,8 +86,6 @@ dependencies {
     compile files('libs/BaiduNaviSDK_3.2.0.jar')
     compile files('libs/httpmime-4.1.2.jar')
     compile files('libs/Msc.jar')
-    compile files('libs/Sunflower.jar')
-    //    compile 'com.echodjb.shareloginlib:share:0.6'
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.android.support:recyclerview-v7:25.1.0'

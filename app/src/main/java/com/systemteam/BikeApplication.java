@@ -51,15 +51,11 @@ public class BikeApplication extends Application {
         super.onCreate();
         //百度地图
         SDKInitializer.initialize(getApplicationContext());
-        //科大讯飞初始化
-//        SpeechUtility.createUtility(this, APPID +"=58f9ff61");
 
         initDirs();
         initBmob();
         regToWx();
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
-        //TODO 第三方登录ID
-//        ShareBlock.getInstance().initShare("", "", "", "");
         DbCore.init(this);
     }
 
