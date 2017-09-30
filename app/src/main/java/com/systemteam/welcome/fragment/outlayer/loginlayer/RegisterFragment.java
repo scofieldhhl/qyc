@@ -13,7 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.systemteam.MainActivity;
+import com.systemteam.Main2Activity;
 import com.systemteam.R;
 import com.systemteam.bean.MyUser;
 import com.systemteam.fragment.BaseFragment;
@@ -101,7 +101,7 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            startActivity(new Intent(getActivity(), MainActivity.class));
+                            startActivity(new Intent(getActivity(), Main2Activity.class));
                             getActivity().finish();
                         }
                     }, 500);

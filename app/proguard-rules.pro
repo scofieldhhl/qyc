@@ -163,10 +163,6 @@ public static java.lang.String TABLENAME;
 -keep class com.android.volley.toolbox.ImageLoader$* { *; }
 #volley
 
-#科大讯飞
--keep class com.iflytek.**{*;}
-#科大讯飞
-
 #Umeng
 -keepclassmembers class * {
    public <init> (org.json.JSONObject);
@@ -176,12 +172,6 @@ public static java.lang.String TABLENAME;
     public static ** valueOf(java.lang.String);
 }
 #Umeng
-
-#baidumap
--keep class com.baidu.** {*;}
--keep class vi.com.** {*;}
--dontwarn com.baidu.**
-#baidumap
 
 #picasso
 -keepattributes SourceFile,LineNumberTable
@@ -302,3 +292,20 @@ public static java.lang.String TABLENAME; }
 }
 #welcome
 
+#gaode
+-keep class com.amap.api.maps.**{*;}
+-keep class com.autonavi.**{*;}
+-keep class com.amap.api.trace.**{*;}
+#定位
+-keep class com.amap.api.location.**{*;}
+-keep class com.amap.api.fence.**{*;}
+-keep class com.autonavi.aps.amapapi.model.**{*;}
+#搜索
+-keep class com.amap.api.services.**{*;}
+#2D地图
+-keep class com.amap.api.maps2d.**{*;}
+-keep class com.amap.api.mapcore2d.**{*;}
+#导航
+-keep class com.amap.api.navi.**{*;}
+-keep class com.autonavi.**{*;}
+#gaode

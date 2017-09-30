@@ -3,7 +3,6 @@ package com.systemteam;
 import android.app.Application;
 import android.os.Environment;
 
-import com.baidu.mapapi.SDKInitializer;
 import com.systemteam.bean.MyUser;
 import com.systemteam.database.db.DbCore;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -27,7 +26,10 @@ public class BikeApplication extends Application {
     public static BmobGeoPoint mCurrentPosition; //当前定位经纬度信息
     public static boolean isHaveUpdate;
     private MyUser mUser;
-
+    private static BikeApplication myApplication;
+    public static BikeApplication getInstance() {
+        return myApplication;
+    }
     public MyUser getmUser() {
         if(mUser == null){
             mUser = BmobUser.getCurrentUser(MyUser.class);
@@ -49,8 +51,7 @@ public class BikeApplication extends Application {
 
     public void onCreate() {
         super.onCreate();
-        //百度地图
-        SDKInitializer.initialize(getApplicationContext());
+        myApplication = this;
 
         initDirs();
         initBmob();

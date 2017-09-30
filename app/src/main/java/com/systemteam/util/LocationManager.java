@@ -1,12 +1,10 @@
 package com.systemteam.util;
 
-import com.baidu.mapapi.model.LatLng;
-
 /**
  * Created by gaolei on 17/3/
  */
 
-public class LocationManager {
+/*public class LocationManager {
 
     LatLng currentLL;
     String address;
@@ -34,4 +32,4 @@ public class LocationManager {
     private static class SingletonFactory {
         private static LocationManager singletonInstance = new LocationManager();
     }
-}
+}*/

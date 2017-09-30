@@ -15,7 +15,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.systemteam.BaseActivity;
-import com.systemteam.MainActivity;
+import com.systemteam.Main2Activity;
 import com.systemteam.R;
 import com.systemteam.bean.MyUser;
 import com.systemteam.util.Constant;
@@ -374,7 +374,7 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 					new Handler().postDelayed(new Runnable() {
 						@Override
 						public void run() {
-							startActivity(new Intent(mContext, MainActivity.class));
+							startActivity(new Intent(mContext, Main2Activity.class));
 							finish();
 						}
 					}, 500);

@@ -21,7 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.systemteam.BaseActivity;
-import com.systemteam.MainActivity;
+import com.systemteam.Main2Activity;
 import com.systemteam.R;
 import com.systemteam.bean.MyUser;
 import com.systemteam.util.Constant;
@@ -376,7 +376,7 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
                 @Override
                 public void run() {
 //                                        Intent intent = new Intent(mContext, ActiveActivity.class);
-                    Intent intent = new Intent(mContext, MainActivity.class);
+                    Intent intent = new Intent(mContext, Main2Activity.class);
                     intent.putExtra(BUNDLE_KEY_CODE, code);
                     startActivity(intent);
                 }

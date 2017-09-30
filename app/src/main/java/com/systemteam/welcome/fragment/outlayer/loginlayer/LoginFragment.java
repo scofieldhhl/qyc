@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.systemteam.BikeApplication;
-import com.systemteam.MainActivity;
+import com.systemteam.Main2Activity;
 import com.systemteam.R;
 import com.systemteam.bean.MyUser;
 import com.systemteam.fragment.BaseFragment;
@@ -143,7 +143,7 @@ public class LoginFragment extends BaseFragment {
                 toast(mContext, bmobUser.getUsername() + getString(R.string.reg_success));
                 testGetCurrentUser();
                 ((BikeApplication)getActivity().getApplication()).getmUser();
-                startActivity(new Intent(getActivity(), MainActivity.class));
+                startActivity(new Intent(getActivity(), Main2Activity.class));
                 getActivity().finish();
             }
         });

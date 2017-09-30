@@ -9,24 +9,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.MapStatus;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
-import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.model.LatLng;
+import com.amap.api.maps.MapView;
 import com.systemteam.BaseActivity;
 import com.systemteam.R;
 import com.systemteam.activity.QRCodeScanActivity;
 import com.systemteam.bean.Car;
 import com.systemteam.bean.MyUser;
-import com.systemteam.util.Constant;
-import com.systemteam.util.LocationManager;
-import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
 
 import java.lang.ref.WeakReference;
@@ -50,12 +38,12 @@ public class NewCarActivity extends BaseActivity {
     private String mCarNo;
     private Car mCar = null;
     private MapView mMapView;
-    private BaiduMap mBaiduMap;
+//    private BaiduMap mBaiduMap;
     private double mLatitude; //纬度
     private double mLongitude;
     private Button mBtnSubmit;
-    public MyLocationListenner myListener = new MyLocationListenner();
-    private LocationClient mlocationClient;
+//    public MyLocationListenner myListener = new MyLocationListenner();
+//    private LocationClient mlocationClient;
 
     private static class MyHandler extends Handler {
         private WeakReference<NewCarActivity> mActivity;
@@ -94,9 +82,9 @@ public class NewCarActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         // 退出时销毁定位
-        mlocationClient.stop();
+//        mlocationClient.stop();
         // 关闭定位图层
-        mBaiduMap.setMyLocationEnabled(false);
+//        mBaiduMap.setMyLocationEnabled(false);
         mMapView.onDestroy();
         mMapView = null;
     }
@@ -112,7 +100,7 @@ public class NewCarActivity extends BaseActivity {
             Utils.showDialog(this);
             return;
         }
-        mBaiduMap = mMapView.getMap();
+        /*mBaiduMap = mMapView.getMap();
         // 开启定位图层
         mBaiduMap.setMyLocationEnabled(true);
         // 定位初始化
@@ -124,7 +112,7 @@ public class NewCarActivity extends BaseActivity {
         option.setScanSpan(Constant.MAP_SCAN_SPAN);//设置onReceiveLocation()获取位置的频率
         option.setIsNeedAddress(true);//如想获得具体位置就需要设置为true
         mlocationClient.setLocOption(option);
-        mlocationClient.start();
+        mlocationClient.start();*/
     }
 
     @Override
@@ -248,7 +236,7 @@ public class NewCarActivity extends BaseActivity {
     /**
      * 定位SDK监听函数
      */
-    public class MyLocationListenner implements BDLocationListener {
+    /*public class MyLocationListenner implements BDLocationListener {
 
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
@@ -272,5 +260,5 @@ public class NewCarActivity extends BaseActivity {
             builder.target(ll).zoom(Constant.MAP_SCALING);
             mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
         }
-    }
+    }*/
 }

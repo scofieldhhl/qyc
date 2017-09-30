@@ -77,6 +77,11 @@
             -->
         </activity>
         <activity
+            android:name=".Main2Activity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activity.CodeUnlockActivity"
             android:windowSoftInputMode="stateVisible|adjustResize"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -90,20 +95,6 @@
         <activity android:name=".activity.MyRouteActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.NavigationActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.BDInnerNaviActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
 
         <!--
         <receiver android:name=".MainActivity$LocationReceiver">
@@ -210,6 +201,14 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/CustomWelcomeScreenTheme"/>
+
+        <!--设置key-->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="0903c96d3d0e16bc4381cc6fef0f39cf" />
+        <!--声明定位service-->
+        <service android:name="com.amap.api.location.APSService"></service>
+
     </application>
 
 </manifest>

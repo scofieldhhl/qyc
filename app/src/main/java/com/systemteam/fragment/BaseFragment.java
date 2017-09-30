@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import com.systemteam.MainActivity;
+import com.systemteam.Main2Activity;
 import com.systemteam.R;
 import com.systemteam.bean.MyUser;
 import com.systemteam.util.LogTool;
@@ -108,7 +108,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            startActivity(new Intent(getActivity(), MainActivity.class));
+                            startActivity(new Intent(getActivity(), Main2Activity.class));
                             getActivity().finish();
                         }
                     }, 500);

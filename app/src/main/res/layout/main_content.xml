@@ -84,11 +84,21 @@
         android:layout_marginRight="15dp"
         android:layout_below="@id/toolbar"
         android:layout_above="@id/rl_action">
-        <com.baidu.mapapi.map.MapView
+        <!--<com.baidu.mapapi.map.MapView
             android:id="@+id/id_bmapView"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:clickable="true" />
+            android:clickable="true" />-->
+
+        <!--<com.amap.api.maps2d.MapView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/map"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />-->
+        <com.amap.api.maps.MapView
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
         <View
             android:layout_width="fill_parent"

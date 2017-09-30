@@ -1,3 +1,5 @@
+/*
+
 package com.systemteam;
 
 import android.Manifest;
@@ -7,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,43 +36,24 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.Poi;
 import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.baidu.location.Poi;
-import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
-import com.baidu.mapapi.map.BitmapDescriptorFactory;
-import com.baidu.mapapi.map.InfoWindow;
-import com.baidu.mapapi.map.MapPoi;
-import com.baidu.mapapi.map.MapStatus;
-import com.baidu.mapapi.map.MapStatusUpdate;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.Marker;
-import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
-import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.RouteLine;
-import com.baidu.mapapi.search.core.SearchResult;
-import com.baidu.mapapi.search.route.BikingRouteResult;
-import com.baidu.mapapi.search.route.DrivingRouteResult;
-import com.baidu.mapapi.search.route.IndoorRouteResult;
-import com.baidu.mapapi.search.route.MassTransitRouteResult;
 import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
 import com.baidu.mapapi.search.route.PlanNode;
 import com.baidu.mapapi.search.route.RoutePlanSearch;
-import com.baidu.mapapi.search.route.TransitRouteResult;
-import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.systemteam.activity.BaseActiveActivity;
 import com.systemteam.activity.BreakActivity;
 import com.systemteam.activity.MyRouteActivity;
-import com.systemteam.activity.NavigationActivity;
 import com.systemteam.activity.QRCodeScanActivity;
 import com.systemteam.activity.SettingActivity;
 import com.systemteam.activity.WalletActivity;
@@ -81,14 +65,11 @@ import com.systemteam.car.MyCarActivity;
 import com.systemteam.custom.LeftDrawerLayout;
 import com.systemteam.fragment.LeftMenuFragment;
 import com.systemteam.map.MyOrientationListener;
-import com.systemteam.map.RouteLineAdapter;
 import com.systemteam.user.UserInfoActivity;
 import com.systemteam.util.Constant;
-import com.systemteam.util.LocationManager;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
 import com.systemteam.view.CatLoadingView;
-import com.systemteam.welcome.WelcomeActivity;
 import com.umeng.analytics.MobclickAgent;
 
 import java.lang.ref.WeakReference;
@@ -104,7 +85,6 @@ import cn.bmob.v3.datatype.BmobGeoPoint;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import overlayutil.OverlayManager;
-import overlayutil.WalkingRouteOverlay;
 
 import static com.systemteam.R.id.book_bt;
 import static com.systemteam.bean.BikeInfo.infos;
@@ -133,14 +113,18 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
     private TextView mTvUsingStatus;
     private long exitTime = 0;
     private boolean isFirstIn;
+    private BikeInfo bInfo;
+    private String mCarNo;
+    private float mCurrentX;
+    private boolean isFirstLoc = true; // 是否首次定位
+    CatLoadingView mView;
 
     //自定义图标
     private BitmapDescriptor mIconLocation, dragLocationIcon, bikeIcon, nearestIcon;
     RoutePlanSearch mSearch = null;    // 搜索模块，也可去掉地图模块独立使用
     //定位图层显示方式
     private MyLocationConfiguration.LocationMode locationMode;
-    private BikeInfo bInfo;
-    private String mCarNo;
+
 
     PlanNode startNodeStr, endNodeStr;
     int nodeIndex = -1;
@@ -158,9 +142,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
     private MyOrientationListener myOrientationListener;
     private MapView mMapView;
     private BaiduMap mBaiduMap;
-    private float mCurrentX;
-    private boolean isFirstLoc = true; // 是否首次定位
-    CatLoadingView mView;
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -200,9 +182,6 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
             super.handleMessage(msg);
             switch (msg.what){
                 case DISMISS_SPLASH:
-                    /*Animator animator = AnimatorInflater.loadAnimator(MainActivity.this, R.animator.splash);
-                    animator.setTarget(splash_img);
-                    animator.start();*/
                     break;
                 case MSG_RESPONSE_SUCCESS:
                     List<Car> list = (List<Car>) msg.obj;
@@ -261,7 +240,6 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //在Application的onCreate()不行，必须在activity的onCreate()中
-        SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
         checkSDK();
         LogTool.i("MainActivity---------onCreate---------------");
@@ -272,21 +250,28 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         initView();
         initData();
         LogTool.d("oncreate end");
-        /*isServiceLive = Utils.isServiceWork(this, getPackageName() + ".service.RouteService");
+*/
+/*isServiceLive = Utils.isServiceWork(this, getPackageName() + ".service.RouteService");
         if (isServiceLive)
-            beginService();*/
+            beginService();*//*
+
+
     }
 
     protected void initToolBar(Activity act, int titleId) {
         mToolbar = (Toolbar) act.findViewById(R.id.toolbar);
         mToolbar.getVisibility();
         mToolbar.setTitle("");
-        /*if (titleId == 0) {
+*/
+/*if (titleId == 0) {
             mToolbarTitle.setText("");
         } else {
             mToolbarTitle.setText(titleId);
-        }*/
-        /*if (mToolbar != null) {
+        }*//*
+
+
+*/
+/*if (mToolbar != null) {
             setSupportActionBar(mToolbar);
             mToolbar.setNavigationIcon(R.drawable.ic_menu_white);
         }
@@ -295,7 +280,9 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
             public void onClick(View v) {
                 openMenu();
             }
-        });*/
+        });*//*
+
+
     }
 
     private void checkLogin(){
@@ -385,9 +372,12 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         mlocationClient.setLocOption(option);
     }
 
-    /**
+*/
+/**
      * 定位SDK监听函数
-     */
+     *//*
+
+
     public class MyLocationListenner implements BDLocationListener {
 
         @Override
@@ -656,20 +646,6 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         }
     }
 
-    public void onGetTransitRouteResult(TransitRouteResult transitRouteResult) {
-    }
-
-    public void onGetMassTransitRouteResult(MassTransitRouteResult massTransitRouteResult) {
-    }
-
-    public void onGetDrivingRouteResult(DrivingRouteResult drivingRouteResult) {
-    }
-
-    public void onGetIndoorRouteResult(IndoorRouteResult indoorRouteResult) {
-    }
-
-    public void onGetBikingRouteResult(BikingRouteResult bikingRouteResult) {
-    }
 
     @Override
     public void onMenuSlide(float offset) {
@@ -705,10 +681,13 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         return str;
     }
 
-    /**
+*/
+/**
      * 根据经纬度将图标绘制地图上
      * @param infos
-     */
+     *//*
+
+
     public void addInfosOverlay(List<BikeInfo> infos) {
         LatLng latLng = null;
         OverlayOptions overlayOptions = null;
@@ -728,22 +707,19 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         mBaiduMap.setMapStatus(u);
     }
 
-    /**
+*/
+/**
      * 添加坐标点
      * @param _latitude
      * @param _longitude
-     */
+     *//*
+
     private void addOverLayout(double _latitude, double _longitude) {//TODO 减少界面更新，地图跳跃
         LogTool.d("addOverLayout");
         //先清除图层
         mBaiduMap.clear();
         mlocationClient.requestLocation();
-        /*// 定义Maker坐标点
-        LatLng point = new LatLng(_latitude, _longitude);
-        // 构建MarkerOption，用于在地图上添加Marker
-        MarkerOptions options = new MarkerOptions().position(point).icon(dragLocationIcon);
-        // 在地图上添加Marker，并显示
-        mBaiduMap.addOverlay(options);*/
+
         infos.clear();
         //loading car
         loadCarlistNear(_latitude, _longitude);
@@ -804,9 +780,12 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
     private void updateBikeInfo(BikeInfo bikeInfo) {
 
         if (!hasPlanRoute) {
-            /*bike_layout.setVisibility(View.VISIBLE);
+*/
+/*bike_layout.setVisibility(View.VISIBLE);
             bike_time.setText(bikeInfo.getTime());
-            bike_distance.setText(bikeInfo.getDistance());*/
+            bike_distance.setText(bikeInfo.getDistance());*//*
+
+
             bInfo = bikeInfo;
             endNodeStr = PlanNode.withLocation(new LatLng(bikeInfo.getLatitude(), bikeInfo.getLongitude()));
             drawPlanRoute(endNodeStr);
@@ -1019,11 +998,17 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         mlocationClient.requestLocation();
         isServiceLive = Utils.isServiceWork(this, getPackageName() + ".service.RouteService");
         LogTool.i("MainActivity------------onRestart------------------");
-        /*if (CodeUnlockActivity.unlockSuccess || isServiceLive) {
+*/
+/*if (CodeUnlockActivity.unlockSuccess || isServiceLive) {
             beginService();
-        }*/
-        /*if (RouteDetailActivity.completeRoute || !isServiceLive)//重新获取地图小车
-            backFromRouteDetail();*/
+        }*//*
+
+
+*/
+/*if (RouteDetailActivity.completeRoute || !isServiceLive)//重新获取地图小车
+            backFromRouteDetail();*//*
+
+
     }
 
     private void backFromRouteDetail() {
@@ -1210,3 +1195,4 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
     }
 
 }
+*/

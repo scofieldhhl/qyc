@@ -8,7 +8,7 @@ import android.view.View;
 
 import com.systemteam.BaseActivity;
 import com.systemteam.BikeApplication;
-import com.systemteam.MainActivity;
+import com.systemteam.Main2Activity;
 import com.systemteam.R;
 import com.systemteam.util.LogTool;
 import com.systemteam.welcome.WelcomeActivity;
@@ -16,6 +16,7 @@ import com.systemteam.welcome.WelcomeActivity;
 public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LogTool.d("onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 //        checkSDK();
@@ -28,9 +29,9 @@ public class SplashActivity extends BaseActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    startActivity(new Intent(SplashActivity.this, Main2Activity.class));
                 }
-            }, 0);
+            }, 2000);
         }
     }
 

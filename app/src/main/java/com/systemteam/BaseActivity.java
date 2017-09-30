@@ -242,7 +242,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             startActivity(new Intent(act, WelcomeActivity.class));
-                            if (act instanceof MainActivity) {
+                            if (act instanceof Main2Activity) {
                             } else {
                                 act.finish();
                             }

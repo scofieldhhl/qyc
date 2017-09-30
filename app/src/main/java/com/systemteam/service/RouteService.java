@@ -21,7 +21,7 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.systemteam.MainActivity;
+import com.systemteam.Main2Activity;
 import com.systemteam.R;
 import com.systemteam.activity.RouteDetailActivity;
 import com.systemteam.bean.Car;
@@ -143,7 +143,7 @@ public class RouteService extends Service {
         int icon = R.mipmap.bike_icon2;
         contentView = new RemoteViews(getPackageName(), R.layout.notification_layout);
         notification = new NotificationCompat.Builder(this).setContent(contentView).setSmallIcon(icon).build();
-        Intent notificationIntent = new Intent(this, MainActivity.class);
+        Intent notificationIntent = new Intent(this, Main2Activity.class);
         notificationIntent.putExtra("flag", "notification");
         notification.contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
     }
