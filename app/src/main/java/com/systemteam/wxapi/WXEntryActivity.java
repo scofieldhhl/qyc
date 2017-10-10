@@ -34,7 +34,12 @@ import org.json.JSONObject;
 
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
-
+/**
+ * 微信登陆AccessToken查询https://1.rockingcar.applinzi.com/wxAccessToken?code="123456"
+ * 返回：{"code": "1", "data": "{\"errcode\":40029,\"errmsg\":\"invalid code,
+ * hints: [ req_id: QATHsa0479th48 ]\"}"}{"code": "0","msg":"错误原因"}
+ * https://1.rockingcar.applinzi.com/wxAccessToken?code= 这个是微信SDK返回的
+ * **/
 public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 
 	private static final int TIMELINE_SUPPORTED_VERSION = 0x21020001;
