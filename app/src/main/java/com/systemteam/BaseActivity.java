@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -420,5 +421,19 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             RequestQueue mQueue = Volley.newRequestQueue(mContext);
             mQueue.add(stringRequest);
         }
+    }
+
+    /**
+     * 设置为全屏显示
+     */
+    protected void setFullScreen() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
+    /**
+     * 退出全屏显示
+     */
+    protected void cancelFullScreen() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 }

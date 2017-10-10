@@ -173,6 +173,7 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 						//拿到了微信返回的code,立马再去请求access_token
 						String code = ((SendAuth.Resp) resp).code;
 						LogTool.d("code = " + code);
+						//TODO 改成通过后台方式
 						getAccess_token(code);
 						//就在这个地方，用网络库什么的或者自己封的网络api，发请求去咯，注意是get请求
 

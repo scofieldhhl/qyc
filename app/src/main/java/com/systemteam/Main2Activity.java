@@ -96,6 +96,11 @@ import static com.systemteam.util.Constant.DISMISS_SPLASH;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 
+//TODO 首次打开app都是北京界面换成上次定位结果
+//TODO 定位不准，5D定位成 A8 (移动网络定位不准确，通过WI-FI定位准确率高)
+//TODO 首次定位绘制marker，中心点和定位位置不一致。
+//TODO 移动地图中心位置，加载周边车辆信息
+//TODO 首次20个测试数据太过分散（部分设备标记到海里去了）
 //63:EA:F2:A9:F8:38:29:90:CB:E5:07:2E:D3:71:37:DC:4B:A3:A3:E2
 public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraChangeListener,
         AMap.OnMapLoadedListener, OnLocationGetListener, View.OnClickListener,RouteTask.OnRouteCalculateListener,
@@ -161,6 +166,8 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
             super.handleMessage(msg);
             switch (msg.what){
                 case DISMISS_SPLASH:
+                    theActivity.findViewById(R.id.v_splash).setVisibility(View.GONE);
+                    theActivity.cancelFullScreen();
                     break;
                 case MSG_RESPONSE_SUCCESS:
                     List<Car> list = (List<Car>) msg.obj;
@@ -235,6 +242,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setFullScreen();
         setContentView(R.layout.activity_main);
         checkSDK();
         LogTool.i("Main2Activity---------onCreate---------------");
@@ -254,6 +262,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         RouteTask.getInstance(getApplicationContext()).addRouteCalculateListener(this);
         LogTool.e("sha1" + Sha1.sHA1(this));
         LogTool.d("oncreate end");
+        mHandler.sendEmptyMessageDelayed(DISMISS_SPLASH, 4 * 1000);
     }
 
     private void initBitmap()
@@ -459,20 +468,16 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         mRegeocodeTask.setOnLocationGetListener(this);
         mRegeocodeTask.search(mStartPosition.latitude, mStartPosition.longitude);
 //        Utils.removeMarkers();
+        currentLatitude = cameraPosition.target.latitude;
+        currentLongitude = cameraPosition.target.longitude;
         if(mIsFirst) {
             //添加模拟测试的车的点
-            Utils.addEmulateData(aMap, mStartPosition);
-            currentLatitude = cameraPosition.target.latitude;
-            currentLongitude = cameraPosition.target.longitude;
-//            addOverLayout(currentLatitude, currentLongitude);
+//            Utils.addEmulateData(aMap, mStartPosition);
             createInitialPosition(cameraPosition.target.latitude, cameraPosition.target.longitude);
             createMovingPosition();
             mIsFirst = false;
-            if(mStartPosition == null){
-                mStartPosition = new LatLng(currentLatitude, currentLongitude);
-            }
         }else {
-//            addOverLayout(currentLatitude, currentLongitude);
+            addOverLayout(currentLatitude, currentLongitude);
         }
         if (mInitialMark != null) {
             mInitialMark.setToTop();
@@ -538,6 +543,8 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
             CameraUpdate cameraUpate = CameraUpdateFactory.newLatLngZoom(mStartPosition, 17);
             aMap.animateCamera(cameraUpate);
             mIsFirstShow = false;
+            //添加模拟测试的车的点
+            Utils.addEmulateData(aMap, mStartPosition);
         }
         mInitialMark.setPosition(mStartPosition);
         initLocation = mStartPosition;
@@ -735,7 +742,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
     }
 
     private void checkSDK(){
-        CheckPermission();
+//        CheckPermission();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int hasWritePermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
             int hasReadPermission = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -766,6 +773,9 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
     }
 
 
+    /**
+     * 获取修改系统设置的权限
+     */
     private void CheckPermission() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -876,11 +886,14 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
     }
 
     private void loadCarlistNear(double _latitude, double _longitude){
-        mProgressHelper.showProgressDialog(getString(R.string.initing));
+        double distance = Utils.GetDistance(mStartPosition.latitude, mStartPosition.longitude, _latitude, _longitude);
+        if(distance < 30){
+            LogTool.d("distance : " + distance + " mStartPosition.latitude :" + mStartPosition.latitude +
+                    " mStartPosition.longitude :" + mStartPosition.longitude + " _latitude: " + _latitude + " _longitude: " + _longitude);
+            return;
+        }
         BmobQuery<Car> query = new BmobQuery<>();
-//        query.addWhereNear("position", new BmobGeoPoint(_longitude, _latitude));
         query.addWhereWithinRadians("position", new BmobGeoPoint(_longitude, _latitude), 100.0);
-//        query.order("-position");
         addSubscription(query.findObjects(new FindListener<Car>() {
 
             @Override
