@@ -50,6 +50,7 @@ import rx.subscriptions.CompositeSubscription;
 
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
 import static com.systemteam.util.Constant.BUNDLE_CAR;
+import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
 import static com.systemteam.util.Constant.COST_BASE_DEFAULT;
 import static com.systemteam.util.Constant.EARN_RATE_DEFAULT;
 import static com.systemteam.util.Constant.FORMAT_TIME;
@@ -203,6 +204,7 @@ public class RouteService extends Service {
             bundle.putString("totalDistance", mCarNo + "");
             bundle.putString("totalPrice", totalPrice + "");
             bundle.putString("routePoints", routeListStr);
+            bundle.putString(BUNDLE_KEY_CODE, mCarNo);
             Intent intent = new Intent(this, RouteDetailActivity.class);
             intent.putExtras(bundle);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -247,6 +249,7 @@ public class RouteService extends Service {
     }
 
     public void insertData(String routeListStr) {
+        LogTool.d("insertData");
         newUseRecord(mTime);
     }
 
@@ -354,6 +357,7 @@ public class RouteService extends Service {
                 }
                 //2.修改car收益
                 if(mCar == null){
+                    //TODO 360
                     LogTool.e("mCar == null");
 //                    stopSelf();
                     return;

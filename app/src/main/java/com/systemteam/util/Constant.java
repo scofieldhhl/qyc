@@ -5,6 +5,7 @@ public class Constant {
     public static final float EARN_RATE_DEFAULT = 0.8f;
     public static final float COST_BASE_DEFAULT = 1.0f;
     public static int TIME_ONCE_ACTIVE = 3 * 60 * 1000;     //单次使用时长，默认3min，ms
+//    public static int TIME_ONCE_ACTIVE = 15 * 1000;
     public static int COUPON_DEFAULT = 3;
     public static int CYCLE_DAY_CHART = 15;
 

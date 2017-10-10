@@ -15,6 +15,7 @@
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout
+        android:id="@+id/ll_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
@@ -23,12 +24,6 @@
         android:padding="5dp"
         android:layout_margin="10dp">
 
-        <com.baidu.mapapi.map.MapView
-            android:id="@+id/route_detail_mapview"
-            android:layout_width="fill_parent"
-            android:layout_height="240dp"
-            android:visibility="gone"
-            android:clickable="true" />
         <TextView
             android:id="@+id/total_time"
             android:layout_width="match_parent"
@@ -61,5 +56,30 @@
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:id="@+id/ll_again"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:orientation="vertical"
+        android:layout_below="@id/ll_detail"
+        android:gravity="center"
+        android:layout_margin="20dp">
 
+        <ImageView
+            android:id="@+id/iv_again"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:src="@drawable/once_again"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/play_onemore"
+            android:textColor="@color/white"
+            android:gravity="center_horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:textSize="27sp" />
+
+    </RelativeLayout>
 </RelativeLayout>

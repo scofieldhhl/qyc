@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/menu_bg"
     android:clickable="true"
     android:orientation="vertical">
 
@@ -11,9 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
-        android:layout_marginRight="18dp"
-        android:padding="10dp"
-        android:onClick="gotoUser">
+        android:background="@color/colorPrimary"
+        android:onClick="gotoUser"
+        android:padding="10dp">
 
         <com.systemteam.custom.CircleImageView
             android:id="@+id/user_photo"
@@ -27,18 +26,18 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_below="@+id/user_photo"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/user_photo">
+            android:layout_centerVertical="true"
+            android:layout_marginTop="10dp">
 
             <TextView
                 android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/uername"
                 android:clickable="false"
                 android:enabled="false"
+                android:text="@string/uername"
                 android:textColor="@color/color_f2f2f2"
                 android:textSize="16sp" />
 
@@ -47,12 +46,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/user_name"
-                android:visibility="gone"
-                android:text="@string/phone"
                 android:clickable="false"
                 android:enabled="false"
+                android:text="@string/phone"
                 android:textColor="@color/color_f2f2f2"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="gone" />
 
         </RelativeLayout>
 
@@ -62,9 +61,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="35dp"
-        android:layout_marginBottom="30dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="35dp"
+        android:background="@color/white"
         android:orientation="vertical">
 
         <LinearLayout
@@ -73,7 +72,7 @@
 
             <ImageView
                 style="@style/menu_icon_style"
-                android:src="@mipmap/wallet" />
+                android:src="@drawable/wallet" />
 
             <TextView
                 style="@style/menu_text_style"
@@ -94,8 +93,9 @@
             style="@style/menu_layout_style">
 
             <ImageView
+                android:id="@+id/imageView7"
                 style="@style/menu_icon_style"
-                android:src="@mipmap/route" />
+                android:src="@drawable/ic_yhq" />
 
             <TextView
                 style="@style/menu_text_style"
@@ -121,9 +121,12 @@
             <LinearLayout
                 style="@style/menu_layout_style"
                 android:onClick="gotoMycar">
+
                 <ImageView
+                    android:id="@+id/imageView8"
                     style="@style/menu_icon_style"
-                    android:src="@mipmap/route" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_mycar" />
 
                 <TextView
                     style="@style/menu_text_style"
@@ -147,8 +150,9 @@
             android:visibility="visible">
 
             <ImageView
+                android:id="@+id/imageView6"
                 style="@style/menu_icon_style"
-                android:src="@mipmap/route" />
+                android:src="@drawable/ic_record" />
 
             <TextView
                 style="@style/menu_text_style"
@@ -190,7 +194,7 @@
 
             <ImageView
                 style="@style/menu_icon_style"
-                android:src="@mipmap/guide" />
+                android:src="@drawable/guide" />
 
             <TextView
                 style="@style/menu_text_style"
@@ -211,7 +215,7 @@
 
             <ImageView
                 style="@style/menu_icon_style"
-                android:src="@mipmap/setting" />
+                android:src="@drawable/setting" />
 
             <TextView
                 style="@style/menu_text_style"

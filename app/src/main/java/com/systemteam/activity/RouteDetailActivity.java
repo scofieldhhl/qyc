@@ -5,12 +5,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
 import com.systemteam.BaseActivity;
+import com.systemteam.Main2Activity;
 import com.systemteam.R;
+import com.systemteam.util.LogTool;
+import com.systemteam.util.Utils;
+
+import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
 
 /**
  * @Description 使用完成后点击toolbar返回值Main界面，Main界面没有退出使用中模式
@@ -21,8 +27,10 @@ public class RouteDetailActivity extends BaseActivity {
 
     TextView total_time, total_distance, total_price;
     public static boolean completeRoute = false;
+    private String mCarNo;
 
     public void onCreate(Bundle savedInstanceState) {
+        LogTool.d("onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_detail);
         mContext = this;
@@ -32,11 +40,23 @@ public class RouteDetailActivity extends BaseActivity {
 
     @Override
     public void onClick(View view) {
-
+        switch (view.getId()){
+            case R.id.iv_again:
+                if(!TextUtils.isEmpty(mCarNo)){
+                    Intent intent = new Intent(mContext, Main2Activity.class);
+                    intent.putExtra(BUNDLE_KEY_CODE, mCarNo);
+                    startActivity(intent);
+                }else {
+                    Utils.showDialog(mContext,
+                            getString(R.string.error_lock_failed), getString(R.string.break_car_no));
+                }
+            break;
+        }
     }
 
 
     public void onDestroy() {
+        LogTool.d("onDestroy");
         super.onDestroy();
         completeRoute = false;
     }
@@ -85,6 +105,7 @@ public class RouteDetailActivity extends BaseActivity {
         total_distance.setText(getString(R.string.bike_distance)+ " ：" + String.valueOf(distance));
         total_price.setText(getString(R.string.bike_price)+ " ：" +
                 getString(R.string.cost_num, String.valueOf(price)));
+        mCarNo = intent.getStringExtra(BUNDLE_KEY_CODE);
     }
 
     public void finishActivity(View view) {

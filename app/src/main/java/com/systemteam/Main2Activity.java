@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -49,9 +50,15 @@ import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkPath;
 import com.amap.api.services.route.WalkRouteResult;
 import com.systemteam.activity.BaseActiveActivity;
+import com.systemteam.activity.MyRouteActivity;
+import com.systemteam.activity.QRCodeScanActivity;
+import com.systemteam.activity.SettingActivity;
+import com.systemteam.activity.WalletActivity;
 import com.systemteam.bean.BikeInfo;
 import com.systemteam.bean.Car;
+import com.systemteam.bean.MyUser;
 import com.systemteam.callback.AllInterface;
+import com.systemteam.car.MyCarActivity;
 import com.systemteam.custom.LeftDrawerLayout;
 import com.systemteam.fragment.LeftMenuFragment;
 import com.systemteam.gdmap.AMapUtil;
@@ -61,10 +68,11 @@ import com.systemteam.gdmap.lib.PositionEntity;
 import com.systemteam.gdmap.lib.RegeocodeTask;
 import com.systemteam.gdmap.lib.RouteTask;
 import com.systemteam.gdmap.lib.Sha1;
-import com.systemteam.gdmap.lib.Utils;
 import com.systemteam.gdmap.overlay.WalkRouteOverlay;
+import com.systemteam.user.UserInfoActivity;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
+import com.systemteam.util.Utils;
 import com.systemteam.view.CatLoadingView;
 import com.systemteam.welcome.WelcomeActivity;
 import com.umeng.analytics.MobclickAgent;
@@ -75,6 +83,7 @@ import java.util.List;
 import java.util.Random;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobGeoPoint;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
@@ -127,10 +136,16 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
     WalkRouteOverlay walkRouteOverlay;//路线
     private String [] time;
     private String distance;
+    View shadowView;
+    private boolean isShowingUsing = false;
 
     @Override
     public void onMenuSlide(float offset) {
-
+        shadowView.setVisibility(offset == 0 ? View.INVISIBLE : View.VISIBLE);
+        int alpha = (int) Math.round(offset * 255 * 0.4);
+//        String hex = Integer.toHexString(alpha).toUpperCase();
+//        LogTool.i("color------------" + "#" + hex + "000000");
+        shadowView.setBackgroundColor(Color.argb(alpha, 0, 0, 0));
     }
 
     private static class MyHandler extends Handler {
@@ -176,21 +191,26 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
                     break;
                 case MSG_UPDATE_UI:
                     if(theActivity.isGaming){
+                        if(theActivity.mView == null && theActivity.isShowingUsing){
+                            theActivity.mView = new CatLoadingView();
+                            theActivity.mView.show(theActivity.getSupportFragmentManager(), "");
+                        }
                         theActivity.bikeOnUsing();
                         theActivity.btn_locale.setEnabled(false);
                         theActivity.mIvScan.setEnabled(false);
                         theActivity.mIvMenu.setEnabled(false);
-                        theActivity.mIvScan.setImageResource(R.drawable.middle_using);
+//                        theActivity.mIvScan.setImageResource(R.drawable.middle_using);
                         theActivity.mTvUsingStatus.setText(R.string.main_using);
                     }else {
                         if(theActivity.mView != null){
                             theActivity.mView.dismiss();
+                            theActivity.mView = null;
                         }
                         theActivity.backFromRouteDetail();
                         theActivity.btn_locale.setEnabled(true);
                         theActivity.mIvScan.setEnabled(true);
                         theActivity.mIvMenu.setEnabled(true);
-                        theActivity.mIvScan.setImageResource(R.drawable.middle);
+//                        theActivity.mIvScan.setImageResource(R.drawable.middle);
                         theActivity.mTvUsingStatus.setText(R.string.main_scan);
                     }
                     break;
@@ -243,9 +263,9 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         moveBitmap = BitmapDescriptorFactory
                 .fromResource(R.drawable.location_center);
         smallIdentificationBitmap = BitmapDescriptorFactory
-                .fromResource(R.drawable.stable_cluster_marker_one_normal);
+                .fromResource(R.drawable.bike_icon);
         bigIdentificationBitmap = BitmapDescriptorFactory
-                .fromResource(R.drawable.stable_cluster_marker_one_select);
+                .fromResource(R.drawable.bike_icon_focus);
     }
 
     @Override
@@ -276,7 +296,8 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
             // 绑定 Marker 被点击事件
             aMap.setOnMarkerClickListener(markerClickListener);
             aMap.setInfoWindowAdapter(this);// 设置自定义InfoWindow样式
-            aMap.setMyLocationEnabled(true);// 设置为true表示系统定位按钮显示并响应点击，false表示隐藏，默认是false
+            //TODO
+            aMap.setMyLocationEnabled(false);// 设置为true表示系统定位按钮显示并响应点击，false表示隐藏，默认是false
         }
     }
 
@@ -343,6 +364,8 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
 
     @Override
     protected void initView() {
+        shadowView = (View) findViewById(R.id.shadow);
+        shadowView.setOnClickListener(this);
         mIvScan = (ImageView) findViewById(R.id.iv_scan);
         mIvMenu = (ImageView) findViewById(R.id.iv_menu);
         mTvUsingStatus = (TextView) findViewById(R.id.tv_status);
@@ -382,6 +405,13 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         LogTool.d("onResume");
         MobclickAgent.onPageStart("MainScreen");
         MobclickAgent.onResume(this);
+        boolean isServiceLive = Utils.isServiceWork(this, getPackageName() + ".service.RouteService");
+        LogTool.i("MainActivity------------onRestart------------------");
+        if (!isServiceLive && mView != null) {
+                mView.dismiss();
+                mView = null;
+        }
+        isShowingUsing = true;
     }
 
     @Override
@@ -410,14 +440,18 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
             super.onBackPressed();
         }
     }
-
+    /**
+     * 对正在移动地图事件回调
+     */
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
     }
-
+    /**
+     * 对移动地图结束事件回调
+     */
     @Override
     public void onCameraChangeFinish(CameraPosition cameraPosition) {
-        LogTool.e("onCameraChangeFinish" + cameraPosition.target);
+//        LogTool.e("onCameraChangeFinish" + cameraPosition.target);
         if(!isClickIdentification) {
             mRecordPositon = cameraPosition.target;
         }
@@ -428,10 +462,17 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         if(mIsFirst) {
             //添加模拟测试的车的点
             Utils.addEmulateData(aMap, mStartPosition);
+            currentLatitude = cameraPosition.target.latitude;
+            currentLongitude = cameraPosition.target.longitude;
 //            addOverLayout(currentLatitude, currentLongitude);
             createInitialPosition(cameraPosition.target.latitude, cameraPosition.target.longitude);
             createMovingPosition();
             mIsFirst = false;
+            if(mStartPosition == null){
+                mStartPosition = new LatLng(currentLatitude, currentLongitude);
+            }
+        }else {
+//            addOverLayout(currentLatitude, currentLongitude);
         }
         if (mInitialMark != null) {
             mInitialMark.setToTop();
@@ -454,6 +495,11 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         mLocationTask.startLocate();
     }
 
+    public void getMyLocation() {
+//        aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(currentLatitude, currentLongitude)));
+        aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(mStartPosition.latitude, mStartPosition.longitude)));
+    }
+
     /**
      * 创建初始位置图标
      */
@@ -462,7 +508,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
 //        markerOptions.setFlat(true);
         markerOptions.anchor(0.5f, 0.5f);
         markerOptions.position(new LatLng(lat, lng));
-//        markerOptions.icon(initBitmap);
+        markerOptions.icon(initBitmap);
         mInitialMark = aMap.addMarker(markerOptions);
         mInitialMark.setClickable(false);
     }
@@ -485,7 +531,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
     @Override
     public void onLocationGet(PositionEntity entity) {
         // todo 这里在网络定位时可以减少一个逆地理编码
-        LogTool.e("onLocationGet" + entity.address);
+//        LogTool.e("onLocationGet" + entity.address);
         RouteTask.getInstance(getApplicationContext()).setStartPoint(entity);
         mStartPosition = new LatLng(entity.latitue, entity.longitude);
         if(mIsFirstShow) {
@@ -495,7 +541,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         }
         mInitialMark.setPosition(mStartPosition);
         initLocation = mStartPosition;
-        LogTool.e("onLocationGet" + mStartPosition);
+//        LogTool.e("onLocationGet" + mStartPosition);
     }
 
     @Override
@@ -780,10 +826,13 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
             mCarNo = distance;
             isGaming = true;
             if(getString(R.string.time_end).equalsIgnoreCase(time)) {
+                LogTool.d("onReceive");
                 isGaming = false;
                 mCarNo = null;
             }
-            mHandler.sendEmptyMessage(MSG_UPDATE_UI);
+            if(Utils.isTopActivity(Main2Activity.this)){
+                mHandler.sendEmptyMessage(MSG_UPDATE_UI);
+            }
         }
     }
 
@@ -791,11 +840,13 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         if(!checkUser(this))
             return;
         mLeftDrawerLayout.openDrawer();
+        shadowView.setVisibility(View.VISIBLE);
     }
 
     public void closeMenu() {
         if(mLeftDrawerLayout != null){
             mLeftDrawerLayout.closeDrawer();
+            shadowView.setVisibility(View.GONE);
         }
     }
 
@@ -806,8 +857,8 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
                 countDownTimer.start();
                 break;
             case R.id.btn_locale:
-                /*getMyLocation();
-                if (routeOverlay != null)
+                getMyLocation();
+                /*if (routeOverlay != null)
                     routeOverlay.removeFromMap();
                 LogTool.i("currentLatitude-----btn_locale--------" + currentLatitude);
                 LogTool.i("currentLongitude-----btn_locale--------" + currentLongitude);
@@ -817,6 +868,9 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
             case R.id.iv_menu:
             case R.id.menu_icon:
                 openMenu();
+                break;
+            case R.id.shadow:
+                closeMenu();
                 break;
         }
     }
@@ -832,11 +886,13 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
             @Override
             public void done(List<Car> object, BmobException e) {
                 mProgressHelper.dismissProgressDialog();
+                LogTool.e("result : " + object.size() );
                 if(e==null){
                     Message msg = mHandler.obtainMessage(Constant.MSG_RESPONSE_SUCCESS);
                     msg.obj = object;
                     msg.sendToTarget();
                 }else{
+                    LogTool.e("");
                     loge(e);
                 }
             }
@@ -847,8 +903,8 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         LogTool.d("backFromRouteDetail");
         isFirstIn = true;
 
-        mIvScan.setVisibility(View.VISIBLE);
-        btn_locale.setVisibility(View.VISIBLE);
+//        mIvScan.setVisibility(View.VISIBLE);
+//        btn_locale.setVisibility(View.VISIBLE);
 
     }
 
@@ -878,6 +934,11 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
     protected void onStop() {
         super.onStop();
         LogTool.d("onStop");
+        if(mView != null){
+            mView.dismissAllowingStateLoss();
+            mView = null;
+        }
+        isShowingUsing = false;
     }
 
     @Override
@@ -931,6 +992,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
      */
     private static ArrayList<Marker> markers = new ArrayList<Marker>();
     public void addInfosOverlay(List<BikeInfo> infos) {
+        LogTool.d("addInfosOverlay : " + infos.size());
         /*LatLng latLng = null;
         OverlayOptions overlayOptions = null;
         Marker marker = null;
@@ -958,6 +1020,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
             Marker marker = aMap.addMarker(markerOptions);
             markers.add(marker);
         }
+//        Utils.addEmulateData(aMap, mStartPosition);
     }
 
     /**
@@ -983,5 +1046,56 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         infos.clear();
         //loading car
         loadCarlistNear(_latitude, _longitude);
+    }
+
+    public void gotoCodeUnlock(View view) {
+        if(!checkUser(this))
+            return;
+        if(!checkBalance(BmobUser.getCurrentUser(MyUser.class), Main2Activity.this)){
+            return;
+        }
+        Intent intent = new Intent(this, QRCodeScanActivity.class);
+        intent.putExtra(Constant.BUNDLE_KEY_UNLOCK, true);
+        startActivity(intent);
+    }
+
+    public void gotoMycar(View view) {
+        if(!checkUser(this))
+            return;
+        startActivity(new Intent(this, MyCarActivity.class));
+    }
+
+    public void gotoMyRoute(View view) {
+        if(!checkUser(this))
+            return;
+        startActivity(new Intent(this, MyRouteActivity.class));
+    }
+
+    public void gotoWallet(View view) {
+        if(!checkUser(this))
+            return;
+        startActivity(new Intent(this, WalletActivity.class));
+    }
+
+    public void gotoUser(View view) {
+        if(!checkUser(this))
+            return;
+        startActivity(new Intent(this, UserInfoActivity.class));
+    }
+
+    public void gotoSetting(View view) {
+        if(!checkUser(this))
+            return;
+        Intent intent = new Intent(this, SettingActivity.class);
+        intent.putExtra(Constant.BUNDLE_TYPE_MENU, 0);
+        startActivity(intent);
+    }
+
+    public void gotoGuide(View view){
+        if(!checkUser(this))
+            return;
+        Intent intent = new Intent(this, SettingActivity.class);
+        intent.putExtra(Constant.BUNDLE_TYPE_MENU, 1);
+        startActivity(intent);
     }
 }

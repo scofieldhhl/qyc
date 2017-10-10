@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -53,7 +52,7 @@ public class CatLoadingView extends DialogFragment {
       mDialog.setOnKeyListener(keylistener);
       mDialog.setCancelable(false);
       mDialog.setCanceledOnTouchOutside(false);
-      mDialog.getWindow().setGravity(Gravity.BOTTOM);
+//      mDialog.getWindow().setGravity(Gravity.BOTTOM);
 
       operatingAnim = new RotateAnimation(360f, 0f, Animation.RELATIVE_TO_SELF, 0.5f,
           Animation.RELATIVE_TO_SELF, 0.5f);

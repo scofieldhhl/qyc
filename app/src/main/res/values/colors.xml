@@ -6,7 +6,8 @@
     <color name="colorPrimaryDark">#0087e1</color>
     <color name="colorAccent">#FF4081</color>-->
     <!--<color name="colorPrimary">#fd405c</color>-->
-    <color name="colorPrimary">#f86433</color>
+    <!--<color name="colorPrimary">#f86433</color>-->
+    <color name="colorPrimary">#f85925</color>
     <color name="colorPrimaryDark">#e13900</color>
     <color name="colorAccent">#f8b502</color>
     <color name="color_toolbar_bg">#343333</color>

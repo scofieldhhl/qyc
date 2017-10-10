@@ -29,6 +29,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.model.BitmapDescriptor;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
 import com.systemteam.R;
 import com.systemteam.custom.SelectDialog;
 
@@ -36,6 +42,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -388,5 +395,56 @@ public class Utils {
         (tvCotent).setText(context.getString(content));
         tvCotent.setMovementMethod(ScrollingMovementMethod.getInstance());*/
         dialog.show();
+    }
+
+    private static ArrayList<Marker> markers = new ArrayList<Marker>();
+
+    /**
+     * 添加模拟测试的车的点
+     */
+    public static void addEmulateData(AMap amap, LatLng center) {
+        if (markers.size() == 0) {
+            BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory
+                    .fromResource(R.drawable.bike_icon);
+
+            for (int i = 0; i < 20; i++) {
+                double latitudeDelt;
+                double longtitudeDelt;
+                if(i%2==0) {
+                    latitudeDelt = (Math.random() - 0.5) * 0.1;
+                    longtitudeDelt = (Math.random() - 0.5) * 0.1;
+                }else
+                {
+                    latitudeDelt = (Math.random() - 0.5) * 0.01;
+                    longtitudeDelt = (Math.random() - 0.5) * 0.01;
+                }
+                MarkerOptions markerOptions = new MarkerOptions();
+//                markerOptions.setFlat(true);
+//                markerOptions.anchor(0.5f, 0.5f);
+                markerOptions.icon(bitmapDescriptor);
+
+                markerOptions.position(new LatLng(center.latitude + latitudeDelt, center.longitude + longtitudeDelt));
+                Marker marker = amap.addMarker(markerOptions);
+                markers.add(marker);
+            }
+        } else {
+            for (Marker marker : markers) {
+                double latitudeDelt = (Math.random() - 0.5) * 0.1;
+                double longtitudeDelt = (Math.random() - 0.5) * 0.1;
+                marker.setPosition(new LatLng(center.latitude + latitudeDelt, center.longitude + longtitudeDelt));
+
+            }
+        }
+    }
+
+    /**
+     * 移除marker
+     */
+    public static void removeMarkers() {
+        for (Marker marker : markers) {
+            marker.remove();
+            marker.destroy();
+        }
+        markers.clear();
     }
 }

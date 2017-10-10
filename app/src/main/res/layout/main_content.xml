@@ -26,46 +26,48 @@
         android:id="@+id/rl_action"
         android:layout_width="match_parent"
         android:layout_height="140dp"
-        android:layout_marginBottom="5dp"
-        android:layout_alignParentBottom="true">
+        android:layout_marginBottom="11dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="7dp"
+            android:layout_height="10dp"
             android:layout_centerVertical="true"
-            android:background="@color/line_main"/>
+            android:background="@drawable/line_main"/>
 
         <ImageView
             android:id="@+id/iv_menu"
             android:layout_width="55dp"
             android:layout_height="55dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
             android:layout_margin="30dp"
             android:clickable="true"
             android:onClick="onClick"
-            android:src="@drawable/left_menu" />
+            android:src="@drawable/selector_main_menu"
+            android:layout_centerVertical="true"/>
 
         <ImageView
             android:id="@+id/iv_scan"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/middle"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
+            android:src="@drawable/selector_main_scan"
             android:scaleType="fitXY"
             android:clickable="true"
-            android:onClick="gotoCodeUnlock"/>
+            android:onClick="gotoCodeUnlock"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
 
         <ImageView
             android:id="@+id/btn_locale"
             android:layout_width="55dp"
             android:layout_height="55dp"
+            android:layout_margin="30dp"
+            android:scaleType="fitXY"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_margin="30dp"
             android:clickable="true"
-            android:src="@drawable/right_location" />
+            android:src="@drawable/selector_main_location" />
 
         <TextView
             android:id="@+id/tv_status"
@@ -73,9 +75,11 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:gravity="center"
+            android:textSize="15sp"
+            android:text="@string/main_scan"
             android:layout_alignParentBottom="true"
-            android:textSize="16sp"
-            android:text="@string/main_scan"/>
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
     </RelativeLayout>
     <FrameLayout
         android:layout_width="match_parent"
@@ -107,4 +111,10 @@
             android:visibility="visible"
             android:background="@drawable/main_map_shape"/>
     </FrameLayout>
+    <View
+        android:id="@+id/shadow"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:clickable="true"
+        android:visibility="gone" />
 </RelativeLayout>
