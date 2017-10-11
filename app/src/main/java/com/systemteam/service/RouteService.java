@@ -21,6 +21,7 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.systemteam.BikeApplication;
 import com.systemteam.Main2Activity;
 import com.systemteam.R;
 import com.systemteam.activity.RouteDetailActivity;
@@ -366,6 +367,7 @@ public class RouteService extends Service {
                 Car newCar = new Car();
                 newCar.setIncome((mCar.getIncome() == null ? 0f : mCar.getIncome()) + totalPrice);
                 newCar.setEarn((mCar.getEarn() == null ? 0f : mCar.getEarn()) + mEarn);
+                newCar.setPosition(BikeApplication.mCurrentPosition);// 同步更新设备定位信息
                 addSubscription(newCar.update(mCar.getObjectId(), new UpdateListener() {
                     @Override
                     public void done(BmobException e) {

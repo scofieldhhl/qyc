@@ -89,10 +89,10 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
 import static com.systemteam.R.id.book_bt;
-import static com.systemteam.bean.BikeInfo.infos;
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
 import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
 import static com.systemteam.util.Constant.DISMISS_SPLASH;
+import static com.systemteam.util.Constant.DISTANCE_RELOADCAR_DEFAULT;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 
@@ -118,7 +118,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
     //绘制点标记
     private Marker mPositionMark, mInitialMark,tempMark;//可移动、圆点、点击
     //初始坐标、移动记录坐标
-    private LatLng mStartPosition,mRecordPositon;
+    private LatLng mStartPosition,mRecordPositon,mPrePositon;//记录上次加载设备的位置
     //默认添加一次
     private boolean mIsFirst = true;
     //就第一次显示位置
@@ -170,30 +170,28 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
                     theActivity.cancelFullScreen();
                     break;
                 case MSG_RESPONSE_SUCCESS:
-                    List<Car> list = (List<Car>) msg.obj;
+                    List<Car> list = (List<Car>) msg.obj;//TODO 网络加载数据的26设备没有显示到地图
+                    List<BikeInfo> newList = new ArrayList<>();
                     if(list != null && list.size() > 0){
-                        if(infos == null){
-                            infos = new ArrayList<>();
-                        }
+                        LogTool.e("result : " + list.size() );
                         for(Car car : list){//TODO 两层for循环效率低
                             if(car != null){
-                                infos.add(new BikeInfo(car));
+                                newList.add(new BikeInfo(car));
                             }
                         }
                     }
-                    infos.add(new BikeInfo(theActivity.currentLatitude - new Random().nextInt(5) * 0.0005,
+                    newList.add(new BikeInfo(theActivity.currentLatitude - new Random().nextInt(5) * 0.0005,
                             theActivity.currentLongitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_icon, "001", "100米", "1分钟"));
-                    infos.add(new BikeInfo(theActivity.currentLatitude - new Random().nextInt(5) * 0.0005,
+                    newList.add(new BikeInfo(theActivity.currentLatitude - new Random().nextInt(5) * 0.0005,
                             theActivity.currentLongitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_icon, "002", "200米", "2分钟"));
-                    infos.add(new BikeInfo(theActivity.currentLatitude - new Random().nextInt(5) * 0.0005,
+                    newList.add(new BikeInfo(theActivity.currentLatitude - new Random().nextInt(5) * 0.0005,
                             theActivity.currentLongitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_icon, "003", "300米", "3分钟"));
-                    infos.add(new BikeInfo(theActivity.currentLatitude - new Random().nextInt(5) * 0.0005,
+                    newList.add(new BikeInfo(theActivity.currentLatitude - new Random().nextInt(5) * 0.0005,
                             theActivity.currentLongitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_icon, "004", "400米", "4分钟"));
                     BikeInfo bikeInfo = new BikeInfo(theActivity.currentLatitude - 0.0005,
-                            theActivity.currentLongitude - 0.0005, R.mipmap.bike_icon, "005",
-                            "50米", "0.5分钟");
-                    infos.add(bikeInfo);
-                    theActivity.addInfosOverlay(infos);
+                            theActivity.currentLongitude - 0.0005, R.mipmap.bike_icon, "005", "50米", "0.5分钟");
+                    newList.add(bikeInfo);
+                    theActivity.addInfosOverlay(newList);
 //                  initNearestBike(bikeInfo, new LatLng(_latitude - 0.0005, _longitude - 0.0005));
                     break;
                 case MSG_UPDATE_UI:
@@ -464,12 +462,13 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         if(!isClickIdentification) {
             mRecordPositon = cameraPosition.target;
         }
-        mStartPosition = cameraPosition.target;
-        mRegeocodeTask.setOnLocationGetListener(this);
-        mRegeocodeTask.search(mStartPosition.latitude, mStartPosition.longitude);
-//        Utils.removeMarkers();
         currentLatitude = cameraPosition.target.latitude;
         currentLongitude = cameraPosition.target.longitude;
+//        mStartPosition = cameraPosition.target;
+        //加载
+        mRegeocodeTask.setOnLocationGetListener(this);
+        mRegeocodeTask.search(currentLatitude, currentLongitude);
+//        Utils.removeMarkers();
         if(mIsFirst) {
             //添加模拟测试的车的点
 //            Utils.addEmulateData(aMap, mStartPosition);
@@ -501,8 +500,10 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
     }
 
     public void getMyLocation() {
-//        aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(currentLatitude, currentLongitude)));
-        aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(mStartPosition.latitude, mStartPosition.longitude)));
+        if(mStartPosition != null){
+            aMap.moveCamera(CameraUpdateFactory.changeLatLng(
+                    new LatLng(mStartPosition.latitude, mStartPosition.longitude)));
+        }
     }
 
     /**
@@ -540,6 +541,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         RouteTask.getInstance(getApplicationContext()).setStartPoint(entity);
         mStartPosition = new LatLng(entity.latitue, entity.longitude);
         if(mIsFirstShow) {
+            mPrePositon = mStartPosition;
             CameraUpdate cameraUpate = CameraUpdateFactory.newLatLngZoom(mStartPosition, 17);
             aMap.animateCamera(cameraUpate);
             mIsFirstShow = false;
@@ -548,7 +550,8 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         }
         mInitialMark.setPosition(mStartPosition);
         initLocation = mStartPosition;
-//        LogTool.e("onLocationGet" + mStartPosition);
+        BikeApplication.mCurrentAddress = entity.address;
+        BikeApplication.setPosition(entity.longitude, entity.latitue);
     }
 
     @Override
@@ -886,12 +889,18 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
     }
 
     private void loadCarlistNear(double _latitude, double _longitude){
-        double distance = Utils.GetDistance(mStartPosition.latitude, mStartPosition.longitude, _latitude, _longitude);
-        if(distance < 30){
-            LogTool.d("distance : " + distance + " mStartPosition.latitude :" + mStartPosition.latitude +
-                    " mStartPosition.longitude :" + mStartPosition.longitude + " _latitude: " + _latitude + " _longitude: " + _longitude);
-            return;
+        if(mPrePositon == null){
+            mPrePositon = mStartPosition;
         }
+        double distance = Utils.GetDistance(mPrePositon.latitude, mPrePositon.longitude, _latitude, _longitude);
+        double distanceStart = Utils.GetDistance(_latitude, _longitude, mStartPosition.latitude, mStartPosition.longitude);
+        LogTool.d("distance : " + distance +  " distanceStart:" + distanceStart);
+        if(distance < DISTANCE_RELOADCAR_DEFAULT || distanceStart < DISTANCE_RELOADCAR_DEFAULT){
+            return;
+        }else {
+            mPrePositon = new LatLng(_latitude, _longitude);
+        }
+        LogTool.d("loadCarlistNear");
         BmobQuery<Car> query = new BmobQuery<>();
         query.addWhereWithinRadians("position", new BmobGeoPoint(_longitude, _latitude), 100.0);
         addSubscription(query.findObjects(new FindListener<Car>() {
@@ -899,7 +908,6 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
             @Override
             public void done(List<Car> object, BmobException e) {
                 mProgressHelper.dismissProgressDialog();
-                LogTool.e("result : " + object.size() );
                 if(e==null){
                     Message msg = mHandler.obtainMessage(Constant.MSG_RESPONSE_SUCCESS);
                     msg.obj = object;
@@ -1055,8 +1063,8 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
     private void addOverLayout(double _latitude, double _longitude) {//TODO 减少界面更新，地图跳跃
         LogTool.d("addOverLayout");
         //先清除图层
-        removeMarkers();
-        infos.clear();
+        /*removeMarkers();
+        infos.clear();*/
         //loading car
         loadCarlistNear(_latitude, _longitude);
     }

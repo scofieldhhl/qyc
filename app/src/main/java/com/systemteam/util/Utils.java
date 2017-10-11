@@ -407,7 +407,7 @@ public class Utils {
             BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory
                     .fromResource(R.drawable.bike_icon);
 
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 10; i++) {
                 double latitudeDelt;
                 double longtitudeDelt;
                 if(i%2==0) {
