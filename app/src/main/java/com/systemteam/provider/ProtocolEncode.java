@@ -18,6 +18,7 @@ public class ProtocolEncode {
 
 //    public final static String URL_NIU = "http://120.76.77.233:20022/start";
     public final static String URL_NIU = "http://yyc.yiqiniubi.com:20022/start";
+    public final static String URL_NIU_QUERY = "http://yyc.yiqiniubi.com:20022/query";
 
     /**
      * 开锁请求
@@ -38,6 +39,33 @@ public class ProtocolEncode {
 
         StringBuilder sbUrl = new StringBuilder();
         sbUrl.append(URL_NIU)
+                .append("?appid=").append(appId)
+                .append("&device_id=").append(deviceId)
+                .append("&nonce_str=").append(nonce_str)
+                .append("&sign=").append(sign);
+        LogTool.i("encodeUnlockUrl = " + sbUrl.toString());
+        return sbUrl.toString();
+    }
+
+    /**
+     * 开锁请求
+     *
+     * @return
+     * @
+     */
+    public static String encodeQueryUrl(String deviceId) {
+        String appId = "5pGH5pGH6L2m";
+        String nonce_str = getRandomString(32);
+
+        String key = "65696e5e3624af4e287bee8559b494d5";
+        HashMap<String, String> map = new HashMap<>();
+        map.put("appid", appId);
+        map.put("device_id", deviceId);
+        map.put("nonce_str", nonce_str);
+        String sign = ProtocolUtil.createSign(key, map);
+
+        StringBuilder sbUrl = new StringBuilder();
+        sbUrl.append(URL_NIU_QUERY)
                 .append("?appid=").append(appId)
                 .append("&device_id=").append(deviceId)
                 .append("&nonce_str=").append(nonce_str)

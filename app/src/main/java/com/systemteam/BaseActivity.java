@@ -13,6 +13,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -354,7 +355,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             return Constant.NETWORK_STATUS_NO;
         }
     }
-
+    RequestQueue mQueue;
     protected void startRouteService(final Context context, final Car car) {
         //TODO 测试使用
         if (car.getCarNo().startsWith("1878")) {
@@ -379,12 +380,13 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                              406：响应超时
                              * */
                             LogTool.d(response);
-                            if (response.contains("1000") || response.contains("200")) {
-                                Intent intent = new Intent(context, RouteService.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putSerializable(BUNDLE_CAR, car);
-                                intent.putExtras(bundle);
-                                startService(intent);
+                            if (response.contains("300")) {
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        loadCarStatus(context, car);
+                                    }
+                                }, 2000);
                             } else {
                                 String msg = "";
                                 if (response.contains("4000")) {
@@ -418,9 +420,72 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                     LogTool.e("Error: " + error.getMessage());
                 }
             });
-            RequestQueue mQueue = Volley.newRequestQueue(mContext);
+            if(mQueue == null){
+                mQueue = Volley.newRequestQueue(mContext);
+            }
             mQueue.add(stringRequest);
         }
+    }
+
+    private void loadCarStatus(final Context context, final Car car){
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,
+                ProtocolEncode.encodeQueryUrl(car.getCarNo()),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        /**
+                         * 200：机器启动成功
+                         401：appid错误
+                         402：签名验证错误
+                         403：机器号有误
+                         404：机器不在线
+                         405：机器正在使用中
+                         406：响应超时
+                         * */
+                        LogTool.d(response);
+                        if (response.contains("1000") || response.contains("200")) {
+                            Intent intent = new Intent(context, RouteService.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(BUNDLE_CAR, car);
+                            intent.putExtras(bundle);
+                            startService(intent);
+                        } else {
+                            String msg = "";
+                            if (response.contains("4000")) {
+                                msg = getString(R.string.error_lock_4000);
+                            } else if (response.contains("4001")) {
+                                msg = getString(R.string.error_lock_4001);
+                            } else if (response.contains("4002")) {
+                                msg = getString(R.string.error_lock_4002);
+                            } else if (response.contains("4003")) {
+                                msg = getString(R.string.error_lock_4003);
+                            } else if (response.contains("401")) {
+                                msg = getString(R.string.error_lock_401);
+                            } else if (response.contains("402")) {
+                                msg = getString(R.string.error_lock_402);
+                            } else if (response.contains("403")) {
+                                msg = getString(R.string.error_lock_403);
+                            } else if (response.contains("404")) {
+                                msg = getString(R.string.error_lock_404);
+                            } else if (response.contains("405")) {
+                                msg = getString(R.string.error_lock_405);
+                            } else if (response.contains("406")) {
+                                msg = getString(R.string.error_lock_406);
+                            }
+                            Utils.showDialog(context, getString(R.string.error_lock_failed), msg);
+                            LogTool.e("response error!");
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                LogTool.e("Error: " + error.getMessage());
+            }
+        });
+        if(mQueue == null){
+            mQueue = Volley.newRequestQueue(mContext);
+        }
+        mQueue.add(stringRequest);
     }
 
     /**
