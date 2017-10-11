@@ -21,7 +21,17 @@ public class ProtocolEncode {
 
     /**
      * 开锁请求
-     *
+     * 10-11 14:59:49.903 5480-5480/? D/[HHL]com.systemteam.provider.d: a L71--
+     * appid=5pGH5pGH6L2m&device_id=21591&nonce_str=revy0ntxts6w7qoskeg58xv4m7h9dwpz--
+     10-11 14:59:49.904 5480-5480/? D/[HHL]com.systemteam.provider.d: a L73--
+     appid=5pGH5pGH6L2m&device_id=21591&nonce_str=revy0ntxts6w7qoskeg58xv4m7h9dwpz&key=65696e5e3624af4e287bee8559b494d5--
+     10-11 14:59:49.907 5480-5480/? D/[HHL]com.systemteam.provider.d: a L87--
+     strMD5: 19B1BC392472A8DFE49A1C0F7C486446--
+     10-11 14:59:49.907 5480-5480/? I/[HHL]com.systemteam.provider.c: a L45--
+     encodeUnlockUrl = http://yyc.yiqiniubi.com:20022/start?appid=5pGH5pGH6L2m&device_id=21591&
+     nonce_str=revy0ntxts6w7qoskeg58xv4m7h9dwpz&sign=19B1BC392472A8DFE49A1C0F7C486446--
+     10-11 14:59:53.034 5480-5480/? D/[HHL]com.systemteam.BaseActivity$5: a L381--
+     {"code":"405","msg":"机器正在使用中!"}--
      * @return
      * @
      */

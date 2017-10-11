@@ -221,7 +221,7 @@
     <string name="account_tip_change_avatar_failed">头像上传失败</string>
     <string name="account_tip_change_name_success">名称修改成功</string>
     <string name="account_tip_change_avatar_success">头像上传成功</string>
-    <string name="account_tip_login_failed">登陆失败</string>
+    <string name="account_tip_login_failed">登陆失败，请稍后重试！</string>
     <string name="account_tip_logging_out">账户登出中...</string>
     <string name="account_tip_logging_out_failed">账户登出失败</string>
     <string name="account_tip_change_pwd_success">密码修改成功</string>

@@ -8,12 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.systemteam.BaseActivity;
 import com.systemteam.Main2Activity;
 import com.systemteam.R;
@@ -32,8 +26,26 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 /**
  * 微信登陆AccessToken查询https://1.rockingcar.applinzi.com/wxAccessToken?code="123456"
  * 返回：{"code": "1", "data": "{\"errcode\":40029,\"errmsg\":\"invalid code,
@@ -157,7 +169,6 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 	public void onResp(BaseResp resp) {
 		int result;
 		LogTool.e("onPayFinish errCode = " + resp.errCode);
-		Toast.makeText(this, "baseresp.getType = " + resp.getType(), Toast.LENGTH_SHORT).show();
 
 		switch (resp.errCode) {
 			case BaseResp.ErrCode.ERR_AUTH_DENIED:
@@ -170,7 +181,8 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 				if (RETURN_MSG_TYPE_SHARE == resp.getType())
 					Toast.makeText(this,"分享失败", Toast.LENGTH_SHORT).show();
 				else
-					Toast.makeText(this,"登录失败", Toast.LENGTH_SHORT).show();
+					Toast.makeText(this, R.string.account_tip_login_failed, Toast.LENGTH_SHORT).show();
+				this.finish();
 				break;
 			case BaseResp.ErrCode.ERR_OK:
 				switch (resp.getType()) {
@@ -179,7 +191,8 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 						String code = ((SendAuth.Resp) resp).code;
 						LogTool.d("code = " + code);
 						//TODO 改成通过后台方式
-						getAccess_token(code);
+//						getAccess_token(code);
+						loadWxInfo(code);
 						//就在这个地方，用网络库什么的或者自己封的网络api，发请求去咯，注意是get请求
 
 						break;
@@ -267,11 +280,106 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 
 	}
 
-	RequestQueue mQueue;
+	/**
+	 * 获取openid accessToken值用于后期操作
+	 * (new HostnameVerifier() {
+	@Override
+	public boolean verify(String hostname, SSLSession session) {
+	return true;
+	}
+	})
+	 * @param code 请求码
+	 */
+	private void loadWxInfo(final String code) {
+		String path = "https://1.rockingcar.applinzi.com/wxAccessToken?code="+ code;
+		LogTool.d("loadWxInfo：" + path);
+//		OkHttpClient client = new OkHttpClient();
+		final TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+			@Override
+			public void checkClientTrusted(
+					java.security.cert.X509Certificate[] chain,
+					String authType) throws CertificateException {
+			}
+
+			@Override
+			public void checkServerTrusted(
+					java.security.cert.X509Certificate[] chain,
+					String authType) throws CertificateException {
+			}
+
+			@Override
+			public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+				return new X509Certificate[0];
+			}
+		}};
+
+		try {
+			// Install the all-trusting trust manager
+			final SSLContext sslContext = SSLContext.getInstance("SSL");
+			sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+			OkHttpClient client = new OkHttpClient().newBuilder().sslSocketFactory(sslContext.getSocketFactory())
+                    .hostnameVerifier(new HostnameVerifier() {
+						@Override
+						public boolean verify(String hostname, SSLSession session) {
+							return true;
+						}
+					}).build();
+			Request request = new Request.Builder()
+                    .url(path)
+                    .build();
+			client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    LogTool.e(e.toString());
+					Toast.makeText(mContext, R.string.account_tip_login_failed, Toast.LENGTH_SHORT).show();
+					finish();
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    // do something...
+                    LogTool.e(response.body().string());
+                    /**
+                     * {"code": "1", "data":
+                     * "{\"access_token\":\"jrkD104nUcfSn6Xy8udHDNJiFzvXpLrZWqGIARquku3Rikaye-DBTpiWc5a_hcbat3y-bjVHxlrWZg1N8udb8g\",
+                     * \"expires_in\":7200,\
+                     * "refresh_token\":\"_-V6wE4XgXe-Wb4fYf34lFOKSU8exdW7tcg1e7q1thRc6PONglAf-TMGb_mYcLueqw4NpzrzqhOX3Xy8Ezvrdw\",\
+                     * "openid\":\"oaxY41fhWTbStB1wH9KViiBlDn1M\",\"scope\":\"snsapi_userinfo\",\"unionid\":\"oTojM1BRcHkr2TWRsOq3IShP9fyI\"}"}
+                     * */
+					try {
+						String result = response.body().string();
+                        String[] arrResult = result.split("\\\\");
+						if(arrResult != null && arrResult.length > 0){
+							if("\"access_token".equalsIgnoreCase(arrResult[1]) && "\"openid".equalsIgnoreCase(arrResult[9])){
+                                String access_token = arrResult[3].replace("\"", "");
+                                String openid = arrResult[11].replace("\"", "");
+                                getUserMesg(access_token, openid);
+                            }
+						}else {
+							Toast.makeText(mContext, R.string.account_tip_login_failed, Toast.LENGTH_SHORT).show();
+							finish();
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						LogTool.e(e.toString());
+						Toast.makeText(mContext, R.string.account_tip_login_failed, Toast.LENGTH_SHORT).show();
+						finish();
+					}
+                }
+
+            });
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (KeyManagementException e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * 获取openid accessToken值用于后期操作
 	 * @param code 请求码
 	 */
+	/*RequestQueue mQueue;
 	private void getAccess_token(final String code) {
 		String path = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="
 				+ Constant.WX_APP_ID
@@ -308,7 +416,7 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 			mQueue = Volley.newRequestQueue(mContext);
 		}
 		mQueue.add(stringRequest);
-	}
+	}*/
 
 
 	/**
@@ -317,7 +425,7 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 	 * @param openid
 	 */
 	private void getUserMesg(final String access_token, final String openid) {
-		String path = "https://api.weixin.qq.com/sns/userinfo?access_token="
+		/*String path = "https://api.weixin.qq.com/sns/userinfo?access_token="
 				+ access_token
 				+ "&openid="
 				+ openid;
@@ -328,12 +436,12 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 				new Response.Listener<String>() {
 					@Override
 					public void onResponse(String response) {
-						/**
+						*//**
 						 * {"openid":"oaxY41fhWTbStB1wH9KViiBlDn1M",
 						 * "nickname":"Scofield.H","sex":1,"language":"zh_CN","city":"Shenzhen",
 						 * "province":"Guangdong","country":"CN",
 						 * "headimgurl":"http:\/\/wx.qlogo.cn\/mmopen\/vi_32\/ibYCL2nbctJCDm3ZH9kWYYuCI3yibjKy5x67GEJVREqZwB0iaEV8m41ObgFnZBWrnGAxmmFO8uqwNYqzAmoO7Ku3w\/0","privilege":[],"unionid":"oTojM1BRcHkr2TWRsOq3IShP9fyI"}
-						 * */
+						 * *//*
 						LogTool.d("getAccess_token_result:" + response);
 						try {
 							JSONObject jsonObject = new JSONObject(response);
@@ -363,7 +471,55 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 		if(mQueue == null){
 			mQueue = Volley.newRequestQueue(mContext);
 		}
-		mQueue.add(stringRequest);
+		mQueue.add(stringRequest);*/
+		try {
+			String path = "https://api.weixin.qq.com/sns/userinfo?access_token="
+					+ access_token
+					+ "&openid="
+					+ openid;
+			LogTool.d("getUserMesg：" + path);
+			OkHttpClient client = new OkHttpClient();
+			Request request = new Request.Builder()
+					.url(path)
+					.build();
+			client.newCall(request).enqueue(new Callback() {
+				@Override
+				public void onFailure(Call call, IOException e) {
+					LogTool.e(e.toString());
+					Toast.makeText(mContext, R.string.account_tip_login_failed, Toast.LENGTH_SHORT).show();
+					finish();
+				}
+
+				@Override
+				public void onResponse(Call call, Response response) throws IOException {
+					LogTool.e(response.body().string());
+					try {
+						JSONObject jsonObject = new JSONObject(response.body().string());
+						String openId = jsonObject.getString("nickname");
+						String nickname = jsonObject.getString("nickname");
+						int sex = Integer.parseInt(jsonObject.get("sex").toString());
+						String headimgurl = jsonObject.getString("headimgurl");
+						MyUser myUser = new MyUser();
+						myUser.setOpenid(openId);
+						myUser.setUsername(nickname);
+						myUser.setPhotoPath(headimgurl);
+						registerUser(myUser);
+						LogTool.d("用户基本信息:");
+						LogTool.d("nickname:" + nickname);
+						LogTool.d("sex:" + sex);
+						LogTool.d("headimgurl:" + headimgurl);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+			LogTool.e(e.toString());
+			Toast.makeText(mContext, R.string.account_tip_login_failed, Toast.LENGTH_SHORT).show();
+			finish();
+		}
 	}
 
 	@Override

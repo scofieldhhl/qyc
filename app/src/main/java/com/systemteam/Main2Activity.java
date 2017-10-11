@@ -888,6 +888,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         }
     }
 
+    //TODO 通过load后台获得的设备列表没有显示到地图
     private void loadCarlistNear(double _latitude, double _longitude){
         if(mPrePositon == null){
             mPrePositon = mStartPosition;
