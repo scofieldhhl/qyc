@@ -118,12 +118,11 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
     private Marker mPositionMark, mInitialMark,tempMark;//可移动、圆点、点击
     //初始坐标、移动记录坐标
     private LatLng mStartPosition,mRecordPositon,mPrePositon;//记录上次加载设备的位置
+    private LatLng initLocation;
     //默认添加一次
     private boolean mIsFirst = true;
     //就第一次显示位置
     private boolean mIsFirstShow = true;
-
-    private LatLng initLocation;
 
     private ValueAnimator animator = null;//坐标动画
     private BitmapDescriptor initBitmap,moveBitmap,smallIdentificationBitmap,bigIdentificationBitmap;//定位圆点、可移动、所有标识（车）
@@ -139,6 +138,15 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
     private String distance;
     View shadowView;
     private boolean isShowingUsing = false;
+
+    private LocationReceiver mReciver;
+    private double currentLatitude, currentLongitude;
+    private ImageView  btn_locale, mIvScan, mIvMenu;
+    private TextView mTvUsingStatus;
+    private long exitTime = 0;
+    CatLoadingView mView;
+    LeftDrawerLayout mLeftDrawerLayout;
+    LeftMenuFragment mMenuFragment;
 
     @Override
     public void onMenuSlide(float offset) {
@@ -205,7 +213,6 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
                             theActivity.mView.dismiss();
                             theActivity.mView = null;
                         }
-                        theActivity.backFromRouteDetail();
                         theActivity.btn_locale.setEnabled(true);
                         theActivity.mIvScan.setEnabled(true);
                         theActivity.mIvMenu.setEnabled(true);
@@ -217,19 +224,6 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         }
     }
     private MyHandler mHandler = new MyHandler(this);
-    private LocationReceiver mReciver;
-    private double currentLatitude, currentLongitude, changeLatitude, changeLongitude;
-    private ImageView  btn_locale, mIvScan, mIvMenu;
-    private TextView mTvUsingStatus;
-    private long exitTime = 0;
-    private boolean isFirstIn;
-    private BikeInfo bInfo;
-    private String mCarNo;
-    private float mCurrentX;
-    private boolean isFirstLoc = true; // 是否首次定位
-    CatLoadingView mView;
-    LeftDrawerLayout mLeftDrawerLayout;
-    LeftMenuFragment mMenuFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -464,8 +458,6 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         mRegeocodeTask.search(currentLatitude, currentLongitude);
 //        Utils.removeMarkers();
         if(mIsFirst) {
-            //添加模拟测试的车的点
-//            Utils.addEmulateData(aMap, mStartPosition);
             createInitialPosition(cameraPosition.target.latitude, cameraPosition.target.longitude);
             createMovingPosition();
             mIsFirst = false;
@@ -831,13 +823,10 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         @Override
         public void onReceive(Context context, Intent intent) {
             String time = intent.getStringExtra("totalTime");
-            String distance = intent.getStringExtra("totalDistance");
-            mCarNo = distance;
             isGaming = true;
             if(getString(R.string.time_end).equalsIgnoreCase(time)) {
                 LogTool.d("onReceive");
                 isGaming = false;
-                mCarNo = null;
             }
             if(Utils.isTopActivity(Main2Activity.this)){
                 mHandler.sendEmptyMessage(MSG_UPDATE_UI);
@@ -914,15 +903,6 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         }));
     }
 
-    private void backFromRouteDetail() {
-        LogTool.d("backFromRouteDetail");
-        isFirstIn = true;
-
-//        mIvScan.setVisibility(View.VISIBLE);
-//        btn_locale.setVisibility(View.VISIBLE);
-
-    }
-
     private void bikeOnUsing(){
         mIvScan.setVisibility(View.VISIBLE);
         countDownTimer.cancel();
@@ -967,7 +947,6 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         mMapView = null;
         mLocationTask.onDestroy();
         RouteTask.getInstance(getApplicationContext()).removeRouteCalculateListener(this);
-        isFirstIn = true;
         unregisterReceiver(mReciver);
     }
 
@@ -1008,23 +987,6 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
     private static ArrayList<Marker> markers = new ArrayList<Marker>();
     public void addInfosOverlay(List<BikeInfo> infos) {
         LogTool.d("addInfosOverlay : " + infos.size());
-        /*LatLng latLng = null;
-        OverlayOptions overlayOptions = null;
-        Marker marker = null;
-        for (BikeInfo info : infos) {
-            // 位置
-            latLng = new LatLng(info.getLatitude(), info.getLongitude());
-            // 图标
-            overlayOptions = new MarkerOptions().position(latLng).icon(bikeIcon).zIndex(5);
-            marker = (Marker) (mBaiduMap.addOverlay(overlayOptions));
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("info", info);
-            marker.setExtraInfo(bundle);
-        }
-        // 将地图移到到最后一个经纬度位置
-        MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(latLng);
-        mBaiduMap.setMapStatus(u);*/
-
         for (BikeInfo info : infos) {
             MarkerOptions markerOptions = new MarkerOptions();
 //                markerOptions.setFlat(true);
@@ -1036,17 +998,6 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
             markers.add(marker);
         }
 //        Utils.addEmulateData(aMap, mStartPosition);
-    }
-
-    /**
-     * 移除marker
-     */
-    public static void removeMarkers() {
-        for (Marker marker : markers) {
-            marker.remove();
-            marker.destroy();
-        }
-        markers.clear();
     }
 
     public void gotoCodeUnlock(View view) {
