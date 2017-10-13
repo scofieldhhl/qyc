@@ -331,7 +331,6 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
         mSearch.setOnGetRoutePlanResultListener(this);
         initMarkerClickEvent();
 
-        //TODO 预加载设备图标
     }
 
     private void initLocation(){
@@ -714,7 +713,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
      * @param _longitude
      *//*
 
-    private void addOverLayout(double _latitude, double _longitude) {//TODO 减少界面更新，地图跳跃
+    private void addOverLayout(double _latitude, double _longitude) {// 减少界面更新，地图跳跃
         LogTool.d("addOverLayout");
         //先清除图层
         mBaiduMap.clear();
@@ -831,7 +830,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
                     Intent intent = new Intent(MainActivity.this, BreakActivity.class);
                     intent.putExtra(Constant.BUNDLE_TYPE_MENU, Constant.BREAK_TYPE_LOCK);
                     Bundle extras = new Bundle();
-                    if(bInfo != null){//TODO binfo null
+                    if(bInfo != null){// binfo null
                         extras.putSerializable(BUNDLE_CAR, bInfo.getCar());
                     }else {
                         extras.putString(BUNDLE_CARNO, mCarNo);
@@ -844,7 +843,7 @@ public class MainActivity extends BaseActiveActivity implements OnGetRoutePlanRe
                     Intent intentBreak = new Intent(MainActivity.this, BreakActivity.class);
                     intentBreak.putExtra(Constant.BUNDLE_TYPE_MENU, Constant.BREAK_TYPE_BREAK);
                     Bundle bundle = new Bundle();
-                    if(bInfo != null) {//TODO binfo null
+                    if(bInfo != null) {//binfo null
                         bundle.putSerializable(BUNDLE_CAR, bInfo.getCar());
                     }else {
                         bundle.putString(BUNDLE_CARNO, mCarNo);

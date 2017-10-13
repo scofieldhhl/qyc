@@ -353,6 +353,7 @@ public class Utils {
         return s;
     }
 
+    //TODO 校验文案，不能出现小骑手相关的文字
     public static void showProtocol(Context context, int typeDialog){
         final Dialog dialog = new Dialog(context, R.style.MyDialog);
         dialog.setContentView(R.layout.layout_protocol_pay);
@@ -410,13 +411,19 @@ public class Utils {
             for (int i = 0; i < 10; i++) {
                 double latitudeDelt;
                 double longtitudeDelt;
-                if(i%2==0) {
+                /*if(i%2==0) {
                     latitudeDelt = (Math.random() - 0.5) * 0.1;
                     longtitudeDelt = (Math.random() - 0.5) * 0.1;
-                }else
-                {
+                }else{
                     latitudeDelt = (Math.random() - 0.5) * 0.01;
                     longtitudeDelt = (Math.random() - 0.5) * 0.01;
+                }*/
+                if(i%2==0) {
+                    latitudeDelt = (Math.random() - 0.5) * 0.01;
+                    longtitudeDelt = (Math.random() - 0.5) * 0.01;
+                }else{
+                    latitudeDelt = (Math.random() - 0.5) * 0.001;
+                    longtitudeDelt = (Math.random() - 0.5) * 0.001;
                 }
                 MarkerOptions markerOptions = new MarkerOptions();
 //                markerOptions.setFlat(true);

@@ -133,14 +133,12 @@ public class LocationTask implements AMapLocationListener,
 	@Override
 	public void onLocationGet(PositionEntity entity) {
 		LogTool.d("onLocationGet");
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onRegecodeGet(PositionEntity entity) {
 		LogTool.d("onRegecodeGet");
-		// TODO Auto-generated method stub
 
 	}
 

@@ -49,7 +49,6 @@ public class LoginFragment extends BaseFragment {
         return view;
     }
 
-    //TODO login
     @Override
     public void onClick(View v) {
         mImm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘

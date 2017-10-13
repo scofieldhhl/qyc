@@ -53,8 +53,8 @@ public class CatLoadingView extends DialogFragment {
       mDialog.setCancelable(false);
       mDialog.setCanceledOnTouchOutside(false);
 //      mDialog.getWindow().setGravity(Gravity.BOTTOM);
-
-      operatingAnim = new RotateAnimation(360f, 0f, Animation.RELATIVE_TO_SELF, 0.5f,
+//      operatingAnim = new RotateAnimation(360f, 0f, Animation.RELATIVE_TO_SELF, 0.5f,//逆时针
+      operatingAnim = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f,
           Animation.RELATIVE_TO_SELF, 0.5f);
       operatingAnim.setRepeatCount(Animation.INFINITE);
       operatingAnim.setDuration(2000);
@@ -123,10 +123,10 @@ public class CatLoadingView extends DialogFragment {
   public void onResume() {
     super.onResume();
     mouse.setAnimation(operatingAnim);
-    eye_left.setAnimation(eye_left_Anim);
+    /*eye_left.setAnimation(eye_left_Anim);
     eye_right.setAnimation(eye_right_Anim);
     eyelid_left.startLoading();
-    eyelid_right.startLoading();
+    eyelid_right.startLoading();*/
     mGraduallyTextView.startLoading();
   }
 

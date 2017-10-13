@@ -19,9 +19,7 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 /**
  * ClassName:RegeocodeTask <br/>
  * Function: 简单的封装的逆地理编码功能 <br/>
- * Date: 2015年4月2日 下午6:24:53 <br/>
- * 
- * @author yiyi.qi
+ *
  * @version
  * @since JDK 1.6
  * @see
@@ -71,7 +69,7 @@ public class RegeocodeTask implements GeocodeSearch.OnGeocodeSearchListener {
 
 			}
 		}*/
-		//TODO 可以根据app自身需求对查询错误情况进行相应的提示或者逻辑处理
+		// 可以根据app自身需求对查询错误情况进行相应的提示或者逻辑处理
 	}
 
 }

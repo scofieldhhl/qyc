@@ -36,7 +36,7 @@ public class ProtocolEncode {
      * @return
      * @
      */
-    public static String encodeUnlockUrl(String deviceId) {
+    public static String encodeUnlockUrl(String deviceId, String out_trade_no) {
         String appId = "5pGH5pGH6L2m";
         String nonce_str = getRandomString(32);
 
@@ -44,6 +44,7 @@ public class ProtocolEncode {
         HashMap<String, String> map = new HashMap<>();
         map.put("appid", appId);
         map.put("device_id", deviceId);
+        map.put("out_trade_no", out_trade_no);
         map.put("nonce_str", nonce_str);
         String sign = ProtocolUtil.createSign(key, map);
 
@@ -52,6 +53,7 @@ public class ProtocolEncode {
                 .append("?appid=").append(appId)
                 .append("&device_id=").append(deviceId)
                 .append("&nonce_str=").append(nonce_str)
+                .append("&out_trade_no=").append(out_trade_no)
                 .append("&sign=").append(sign);
         LogTool.i("encodeUnlockUrl = " + sbUrl.toString());
         return sbUrl.toString();
@@ -63,14 +65,14 @@ public class ProtocolEncode {
      * @return
      * @
      */
-    public static String encodeQueryUrl(String deviceId) {
+    public static String encodeQueryUrl(String deviceId, String out_trade_no) {
         String appId = "5pGH5pGH6L2m";
         String nonce_str = getRandomString(32);
-
         String key = "65696e5e3624af4e287bee8559b494d5";
         HashMap<String, String> map = new HashMap<>();
         map.put("appid", appId);
         map.put("device_id", deviceId);
+        map.put("out_trade_no", out_trade_no);
         map.put("nonce_str", nonce_str);
         String sign = ProtocolUtil.createSign(key, map);
 
@@ -78,9 +80,10 @@ public class ProtocolEncode {
         sbUrl.append(URL_NIU_QUERY)
                 .append("?appid=").append(appId)
                 .append("&device_id=").append(deviceId)
+                .append("&out_trade_no=").append(out_trade_no)
                 .append("&nonce_str=").append(nonce_str)
                 .append("&sign=").append(sign);
-        LogTool.i("encodeUnlockUrl = " + sbUrl.toString());
+        LogTool.i("encodeQueryUrl = " + sbUrl.toString());
         return sbUrl.toString();
     }
 

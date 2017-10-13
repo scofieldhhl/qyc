@@ -114,8 +114,6 @@ public class RouteTask implements RouteSearch.OnRouteSearchListener {
 	@Override
 	public void onBusRouteSearched(BusRouteResult arg0, int arg1) {
 
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -142,20 +140,15 @@ public class RouteTask implements RouteSearch.OnRouteSearchListener {
 
 			}
 		}*/
-		// TODO 可以根据app自身需求对查询错误情况进行相应的提示或者逻辑处理
 	}
 
 	@Override
 	public void onWalkRouteSearched(WalkRouteResult arg0, int arg1) {
 
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onRideRouteSearched(RideRouteResult arg0, int arg1){
-
-		// TODO Auto-generated method stub
 
 	}
 }

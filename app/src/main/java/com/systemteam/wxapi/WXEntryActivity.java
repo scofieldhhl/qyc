@@ -190,7 +190,7 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 						//拿到了微信返回的code,立马再去请求access_token
 						String code = ((SendAuth.Resp) resp).code;
 						LogTool.d("code = " + code);
-						//TODO 改成通过后台方式
+						// 改成通过后台方式
 //						getAccess_token(code);
 						loadWxInfo(code);
 						//就在这个地方，用网络库什么的或者自己封的网络api，发请求去咯，注意是get请求
@@ -331,7 +331,6 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
                 @Override
                 public void onFailure(Call call, IOException e) {
                     LogTool.e(e.toString());
-					Toast.makeText(mContext, R.string.account_tip_login_failed, Toast.LENGTH_SHORT).show();
 					finish();
                 }
 
@@ -346,24 +345,18 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
                      * "refresh_token\":\"_-V6wE4XgXe-Wb4fYf34lFOKSU8exdW7tcg1e7q1thRc6PONglAf-TMGb_mYcLueqw4NpzrzqhOX3Xy8Ezvrdw\",\
                      * "openid\":\"oaxY41fhWTbStB1wH9KViiBlDn1M\",\"scope\":\"snsapi_userinfo\",\"unionid\":\"oTojM1BRcHkr2TWRsOq3IShP9fyI\"}"}
                      * */
+					JSONObject jsonObject = null;
 					try {
 						String result = response.body().string();
-                        String[] arrResult = result.split("\\\\");
-						if(arrResult != null && arrResult.length > 0){
-							if("\"access_token".equalsIgnoreCase(arrResult[1]) && "\"openid".equalsIgnoreCase(arrResult[9])){
-                                String access_token = arrResult[3].replace("\"", "");
-                                String openid = arrResult[11].replace("\"", "");
-                                getUserMesg(access_token, openid);
-                            }
-						}else {
-							Toast.makeText(mContext, R.string.account_tip_login_failed, Toast.LENGTH_SHORT).show();
-							finish();
-						}
+						String value = response.body().string().substring(23, result.length() - 2);
+						LogTool.d("value :" + value);
+						jsonObject = new JSONObject(value.replaceAll("\\\\", ""));
+						String openid = jsonObject.getString("openid").toString().trim();
+						LogTool.d("openid :" + openid);
+						String access_token = jsonObject.getString("access_token").toString().trim();
+						getUserMesg(access_token, openid);
 					} catch (Exception e) {
 						e.printStackTrace();
-						LogTool.e(e.toString());
-						Toast.makeText(mContext, R.string.account_tip_login_failed, Toast.LENGTH_SHORT).show();
-						finish();
 					}
                 }
 

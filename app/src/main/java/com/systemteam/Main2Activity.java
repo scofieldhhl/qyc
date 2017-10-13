@@ -80,7 +80,6 @@ import com.umeng.analytics.MobclickAgent;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
@@ -96,11 +95,11 @@ import static com.systemteam.util.Constant.DISTANCE_RELOADCAR_DEFAULT;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 
-//TODO 首次打开app都是北京界面换成上次定位结果
-//TODO 定位不准，5D定位成 A8 (移动网络定位不准确，通过WI-FI定位准确率高)
-//TODO 首次定位绘制marker，中心点和定位位置不一致。
-//TODO 移动地图中心位置，加载周边车辆信息
-//TODO 首次20个测试数据太过分散（部分设备标记到海里去了）
+// 首次打开app都是北京界面换成上次定位结果
+// 定位不准，5D定位成 A8 (移动网络定位不准确，通过WI-FI定位准确率高)
+// 首次定位绘制marker，中心点和定位位置不一致。
+// 移动地图中心位置，加载周边车辆信息
+// 首次20个测试数据太过分散（部分设备标记到海里去了）
 //63:EA:F2:A9:F8:38:29:90:CB:E5:07:2E:D3:71:37:DC:4B:A3:A3:E2
 public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraChangeListener,
         AMap.OnMapLoadedListener, OnLocationGetListener, View.OnClickListener,RouteTask.OnRouteCalculateListener,
@@ -126,9 +125,6 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
 
     private LatLng initLocation;
 
-
-    private DrawerLayout drawerLayout;
-
     private ValueAnimator animator = null;//坐标动画
     private BitmapDescriptor initBitmap,moveBitmap,smallIdentificationBitmap,bigIdentificationBitmap;//定位圆点、可移动、所有标识（车）
     private RouteSearch mRouteSearch;
@@ -148,8 +144,6 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
     public void onMenuSlide(float offset) {
         shadowView.setVisibility(offset == 0 ? View.INVISIBLE : View.VISIBLE);
         int alpha = (int) Math.round(offset * 255 * 0.4);
-//        String hex = Integer.toHexString(alpha).toUpperCase();
-//        LogTool.i("color------------" + "#" + hex + "000000");
         shadowView.setBackgroundColor(Color.argb(alpha, 0, 0, 0));
     }
 
@@ -170,7 +164,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
                     theActivity.cancelFullScreen();
                     break;
                 case MSG_RESPONSE_SUCCESS:
-                    List<Car> list = (List<Car>) msg.obj;//TODO 网络加载数据的26设备没有显示到地图
+                    List<Car> list = (List<Car>) msg.obj;//网络加载数据的26设备没有显示到地图
                     List<BikeInfo> newList = new ArrayList<>();
                     if(list != null && list.size() > 0){
                         LogTool.e("result : " + list.size() );
@@ -180,7 +174,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
                             }
                         }
                     }
-                    newList.add(new BikeInfo(theActivity.currentLatitude - new Random().nextInt(5) * 0.0005,
+                    /*newList.add(new BikeInfo(theActivity.currentLatitude - new Random().nextInt(5) * 0.0005,
                             theActivity.currentLongitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_icon, "001", "100米", "1分钟"));
                     newList.add(new BikeInfo(theActivity.currentLatitude - new Random().nextInt(5) * 0.0005,
                             theActivity.currentLongitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_icon, "002", "200米", "2分钟"));
@@ -190,7 +184,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
                             theActivity.currentLongitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_icon, "004", "400米", "4分钟"));
                     BikeInfo bikeInfo = new BikeInfo(theActivity.currentLatitude - 0.0005,
                             theActivity.currentLongitude - 0.0005, R.mipmap.bike_icon, "005", "50米", "0.5分钟");
-                    newList.add(bikeInfo);
+                    newList.add(bikeInfo);*/
                     theActivity.addInfosOverlay(newList);
 //                  initNearestBike(bikeInfo, new LatLng(_latitude - 0.0005, _longitude - 0.0005));
                     break;
@@ -303,7 +297,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
             // 绑定 Marker 被点击事件
             aMap.setOnMarkerClickListener(markerClickListener);
             aMap.setInfoWindowAdapter(this);// 设置自定义InfoWindow样式
-            //TODO
+            //设置为true时，地图每次移动都会自动跳转到定位位置
             aMap.setMyLocationEnabled(false);// 设置为true表示系统定位按钮显示并响应点击，false表示隐藏，默认是false
         }
     }
@@ -536,7 +530,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
 
     @Override
     public void onLocationGet(PositionEntity entity) {
-        // todo 这里在网络定位时可以减少一个逆地理编码
+        // 这里在网络定位时可以减少一个逆地理编码
 //        LogTool.e("onLocationGet" + entity.address);
         RouteTask.getInstance(getApplicationContext()).setStartPoint(entity);
         mStartPosition = new LatLng(entity.latitue, entity.longitude);
@@ -545,8 +539,9 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
             CameraUpdate cameraUpate = CameraUpdateFactory.newLatLngZoom(mStartPosition, 17);
             aMap.animateCamera(cameraUpate);
             mIsFirstShow = false;
-            //添加模拟测试的车的点
+            //TODO 添加模拟测试的车的点
             Utils.addEmulateData(aMap, mStartPosition);
+            addOverLayout(currentLatitude, currentLongitude);
         }
         mInitialMark.setPosition(mStartPosition);
         initLocation = mStartPosition;
@@ -903,7 +898,8 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         }
         LogTool.d("loadCarlistNear");
         BmobQuery<Car> query = new BmobQuery<>();
-        query.addWhereWithinRadians("position", new BmobGeoPoint(_longitude, _latitude), 100.0);
+        query.addWhereNear("position", new BmobGeoPoint(_longitude, _latitude));
+//        query.addWhereWithinRadians("position", new BmobGeoPoint(_longitude, _latitude), 100.0);
         addSubscription(query.findObjects(new FindListener<Car>() {
 
             @Override
@@ -1061,7 +1057,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
      * @param _latitude
      * @param _longitude
      */
-    private void addOverLayout(double _latitude, double _longitude) {//TODO 减少界面更新，地图跳跃
+    private void addOverLayout(double _latitude, double _longitude) {// 减少界面更新，地图跳跃
         LogTool.d("addOverLayout");
         //先清除图层
         /*removeMarkers();

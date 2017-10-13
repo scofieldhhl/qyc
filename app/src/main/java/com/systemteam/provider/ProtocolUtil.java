@@ -12,7 +12,6 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -57,8 +56,12 @@ public class ProtocolUtil {
      */
     public static String createSign(String appKey, Map<String, String> data) {
         List<String> l = new ArrayList<>();
-        l.addAll(data.keySet());
-        Collections.sort(l);
+//        l.addAll(data.keySet());
+//        Collections.sort(l);
+        l.add("appid");     //必须是按照文档上的这种次序
+        l.add("device_id");
+        l.add("out_trade_no");
+        l.add("nonce_str");
         StringBuffer sb = new StringBuffer();
         for (String k : l) {
             if (data.get(k) != null) {

@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -51,13 +52,22 @@ import com.systemteam.util.Utils;
 import com.systemteam.view.ProgressDialogHelper;
 import com.systemteam.welcome.WelcomeActivity;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import cn.bmob.v3.exception.BmobException;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
+import static com.systemteam.provider.ProtocolEncode.getRandomString;
 import static com.systemteam.util.Constant.BUNDLE_CAR;
 import static com.systemteam.util.Constant.COST_BASE_DEFAULT;
 import static com.systemteam.util.Constant.REQUEST_CODE;
@@ -365,8 +375,11 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             intent.putExtras(bundle);
             startService(intent);
         } else {
-            StringRequest stringRequest = new StringRequest(Request.Method.GET,
-                    ProtocolEncode.encodeUnlockUrl(car.getCarNo()),
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+            final String out_trade_no = formatter.format(new Date()) + getRandomString(16);
+            final String url = ProtocolEncode.encodeUnlockUrl(car.getCarNo(), out_trade_no);
+            LogTool.d("out_trade_no: " +out_trade_no);
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
@@ -380,13 +393,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                              406：响应超时
                              * */
                             LogTool.d(response);
-                            if (response.contains("300")) {
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        loadCarStatus(context, car);
-                                    }
-                                }, 2000);
+                            /*if (response.contains("300")) {
                             } else {
                                 String msg = "";
                                 if (response.contains("4000")) {
@@ -412,7 +419,13 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                                 }
                                 Utils.showDialog(context, getString(R.string.error_lock_failed), msg);
                                 LogTool.e("response error!");
-                            }
+                            }*/
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loadCarStatus(context, car, url);
+                                }
+                            }, 5000);
                         }
                     }, new Response.ErrorListener() {
                 @Override
@@ -420,20 +433,19 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                     LogTool.e("Error: " + error.getMessage());
                 }
             });
-            if(mQueue == null){
-                mQueue = Volley.newRequestQueue(mContext);
-            }
+            mQueue = Volley.newRequestQueue(mContext);
             mQueue.add(stringRequest);
         }
     }
 
-    private void loadCarStatus(final Context context, final Car car){
-        StringRequest stringRequest = new StringRequest(Request.Method.GET,
-                ProtocolEncode.encodeQueryUrl(car.getCarNo()),
+    private void loadCarStatus(final Context context, final Car car, String url){
+        String queryUrl = url.replace("start", "query");
+        LogTool.d("queryUrl : " + queryUrl);
+        /*StringRequest stringRequest = new StringRequest(Request.Method.GET, queryUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        /**
+                        *//**
                          * 200：机器启动成功
                          401：appid错误
                          402：签名验证错误
@@ -441,7 +453,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                          404：机器不在线
                          405：机器正在使用中
                          406：响应超时
-                         * */
+                         * *//*
                         LogTool.d(response);
                         if (response.contains("1000") || response.contains("200")) {
                             Intent intent = new Intent(context, RouteService.class);
@@ -479,13 +491,88 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                LogTool.e("Error: " + error.getMessage());
+                error.printStackTrace();
+                LogTool.e("Error: " + error.toString());
             }
         });
-        if(mQueue == null){
-            mQueue = Volley.newRequestQueue(mContext);
-        }
-        mQueue.add(stringRequest);
+        mQueue = Volley.newRequestQueue(mContext);
+        mQueue.add(stringRequest);*/
+
+        new AsyncTask<String, Void, String>(){
+
+            @Override
+            protected String doInBackground(String... params) {
+                try {
+                    URL url=new URL(params[0]);
+                    HttpURLConnection urlConnection=(HttpURLConnection) url.openConnection();
+                    urlConnection.setConnectTimeout(30000);
+                    urlConnection.setReadTimeout(30000);
+                    urlConnection.setRequestMethod("GET");
+                    //设置请求头header
+                    urlConnection.setRequestProperty("test-header","get-header-value");
+                    urlConnection.connect();
+                    int code=urlConnection.getResponseCode();
+                    if (code==200) {
+                        InputStream inputStream=urlConnection.getInputStream();
+                        BufferedReader reader=new BufferedReader(new InputStreamReader(inputStream));
+                        String readerline;
+                        StringBuffer buffer=new StringBuffer();
+                        while ((readerline=reader.readLine())!=null) {
+                            buffer.append(readerline);
+
+                        }
+                        String str=buffer.toString();
+                        return str;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+
+            }
+            protected void onPostExecute(String response) {
+                LogTool.d("response: " + response);
+                if(response == null){
+                    return;
+                }
+                if (response.contains("200")) {
+                    Intent intent = new Intent(context, RouteService.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(BUNDLE_CAR, car);
+                    intent.putExtras(bundle);
+                    startService(intent);
+                } else {
+                    String msg = "";
+                    if (response.contains("4000")) {
+                        msg = getString(R.string.error_lock_4000);
+                    } else if (response.contains("4001")) {
+                        msg = getString(R.string.error_lock_4001);
+                    } else if (response.contains("4002")) {
+                        msg = getString(R.string.error_lock_4002);
+                    } else if (response.contains("4003")) {
+                        msg = getString(R.string.error_lock_4003);
+                    } else if (response.contains("401")) {
+                        msg = getString(R.string.error_lock_401);
+                    } else if (response.contains("402")) {
+                        msg = getString(R.string.error_lock_402);
+                    } else if (response.contains("403")) {
+                        msg = getString(R.string.error_lock_403);
+                    } else if (response.contains("404")) {
+                        msg = getString(R.string.error_lock_404);
+                    } else if (response.contains("405")) {
+                        msg = getString(R.string.error_lock_405);
+                    } else if (response.contains("406")) {
+                        msg = getString(R.string.error_lock_406);
+                    }
+                    Utils.showDialog(context, getString(R.string.error_lock_failed), msg);
+                    LogTool.e("response error!");
+                }
+
+
+            };
+
+
+        }.execute(queryUrl);//urlpath为网址
     }
 
     /**

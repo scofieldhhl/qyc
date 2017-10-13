@@ -340,7 +340,7 @@ public class RouteService extends Service {
             return;
         }
         MyUser newUser = new MyUser();
-        //TODO 增加优惠券一天最多使用3张
+        // 增加优惠券一天最多使用3张
         if(mUser.getCoupon() != null && mUser.getCoupon().intValue() > 0){
             totalPrice = 0;
             newUser.setCoupon(mUser.getCoupon().intValue() - 1);
@@ -353,12 +353,12 @@ public class RouteService extends Service {
             public void done(BmobException e) {
                 if(e==null){
                 }else{
-                    //TODO 错误码：206， 502
+                    // 错误码：206， 502
                     LogTool.e("错误码："+(e).getErrorCode()+",错误描述："+(e).getMessage());
                 }
                 //2.修改car收益
                 if(mCar == null){
-                    //TODO 360
+                    // 360
                     LogTool.e("mCar == null");
 //                    stopSelf();
                     return;
