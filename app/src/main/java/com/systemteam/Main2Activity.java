@@ -470,7 +470,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
             createMovingPosition();
             mIsFirst = false;
         }else {
-            addOverLayout(currentLatitude, currentLongitude);
+            loadCarlistNear(currentLatitude, currentLongitude, false);
         }
         if (mInitialMark != null) {
             mInitialMark.setToTop();
@@ -538,10 +538,11 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
             mPrePositon = mStartPosition;
             CameraUpdate cameraUpate = CameraUpdateFactory.newLatLngZoom(mStartPosition, 17);
             aMap.animateCamera(cameraUpate);
-            mIsFirstShow = false;
             //TODO 添加模拟测试的车的点
             Utils.addEmulateData(aMap, mStartPosition);
-            addOverLayout(currentLatitude, currentLongitude);
+            LogTool.d("onLocationGet" + entity.address + " " + entity.latitue + " " + entity.longitude);
+            loadCarlistNear(entity.latitue, entity.longitude, mIsFirstShow);
+            mIsFirstShow = false;
         }
         mInitialMark.setPosition(mStartPosition);
         initLocation = mStartPosition;
@@ -866,12 +867,6 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
                 break;
             case R.id.btn_locale:
                 getMyLocation();
-                /*if (routeOverlay != null)
-                    routeOverlay.removeFromMap();
-                LogTool.i("currentLatitude-----btn_locale--------" + currentLatitude);
-                LogTool.i("currentLongitude-----btn_locale--------" + currentLongitude);
-//                startNodeStr = PlanNode.withLocation(currentLL);
-                addOverLayout(currentLatitude, currentLongitude);*/
                 break;
             case R.id.iv_menu:
             case R.id.menu_icon:
@@ -883,18 +878,20 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         }
     }
 
-    //TODO 通过load后台获得的设备列表没有显示到地图
-    private void loadCarlistNear(double _latitude, double _longitude){
-        if(mPrePositon == null){
-            mPrePositon = mStartPosition;
-        }
-        double distance = Utils.GetDistance(mPrePositon.latitude, mPrePositon.longitude, _latitude, _longitude);
-        double distanceStart = Utils.GetDistance(_latitude, _longitude, mStartPosition.latitude, mStartPosition.longitude);
-        LogTool.d("distance : " + distance +  " distanceStart:" + distanceStart);
-        if(distance < DISTANCE_RELOADCAR_DEFAULT || distanceStart < DISTANCE_RELOADCAR_DEFAULT){
-            return;
-        }else {
-            mPrePositon = new LatLng(_latitude, _longitude);
+    //通过load后台获得的设备列表没有显示到地图
+    private void loadCarlistNear(double _latitude, double _longitude, boolean isFrist){
+        if(!isFrist){
+            if(mPrePositon == null){
+                mPrePositon = mStartPosition;
+            }
+            double distance = Utils.GetDistance(mPrePositon.latitude, mPrePositon.longitude, _latitude, _longitude);
+            double distanceStart = Utils.GetDistance(_latitude, _longitude, mStartPosition.latitude, mStartPosition.longitude);
+            LogTool.d("distance : " + distance +  " distanceStart:" + distanceStart);
+            if(distance < DISTANCE_RELOADCAR_DEFAULT || distanceStart < DISTANCE_RELOADCAR_DEFAULT){
+                return;
+            }else {
+                mPrePositon = new LatLng(_latitude, _longitude);
+            }
         }
         LogTool.d("loadCarlistNear");
         BmobQuery<Car> query = new BmobQuery<>();
@@ -1050,20 +1047,6 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
             marker.destroy();
         }
         markers.clear();
-    }
-
-    /**
-     * 添加坐标点
-     * @param _latitude
-     * @param _longitude
-     */
-    private void addOverLayout(double _latitude, double _longitude) {// 减少界面更新，地图跳跃
-        LogTool.d("addOverLayout");
-        //先清除图层
-        /*removeMarkers();
-        infos.clear();*/
-        //loading car
-        loadCarlistNear(_latitude, _longitude);
     }
 
     public void gotoCodeUnlock(View view) {

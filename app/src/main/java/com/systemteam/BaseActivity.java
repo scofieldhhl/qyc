@@ -437,7 +437,32 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             mQueue.add(stringRequest);
         }
     }
+    /**
+     * 10-12 00:00:40.931 22381-22381/? D/[HHL]com.systemteam.BaseActivity: a L346--Network is available :MOBILE--
+     10-12 00:00:41.091 22381-22381/? I/[HHL]com.systemteam.Main2Activity: onStart L944--Main2Activity------------onStart--------------------
+     10-12 00:00:41.091 22381-22381/? D/[HHL]com.systemteam.Main2Activity: onResume L414--onResume--
+     10-12 00:00:41.091 22381-22381/? I/[HHL]com.systemteam.Main2Activity: onResume L418--MainActivity------------onRestart--------------------
+     10-12 00:00:41.151 22381-22381/? D/[HHL]com.systemteam.Main2Activity: onNewIntent L935--onNewIntent--
+     10-12 00:00:41.161 22381-22381/? D/[HHL]com.systemteam.activity.BaseActiveActivity: a L37--checkCarExist :21591--
+     10-12 00:00:41.191 22381-22381/? D/[HHL]com.systemteam.Main2Activity: onResume L414--onResume--
+     10-12 00:00:41.191 22381-22381/? I/[HHL]com.systemteam.Main2Activity: onResume L418--MainActivity------------onRestart--------------------
+     10-12 00:00:41.611 22381-22381/? D/[HHL]com.systemteam.provider.d: a L71--appid=5pGH5pGH6L2m&device_id=21591&nonce_str=dpuiept1txiyy0n3bn8xjgtf3o70dra9--
+     10-12 00:00:41.611 22381-22381/? D/[HHL]com.systemteam.provider.d: a L73--appid=5pGH5pGH6L2m&device_id=21591&nonce_str=dpuiept1txiyy0n3bn8xjgtf3o70dra9&key=65696e5e3624af4e287bee8559b494d5--
+     10-12 00:00:41.611 22381-22381/? D/[HHL]com.systemteam.provider.d: a L87--strMD5: F4BC844672EE8300773CD9D8254385FE--
+     10-12 00:00:41.611 22381-22381/? I/[HHL]com.systemteam.provider.c: a L46--encodeUnlockUrl = http://yyc.yiqiniubi.com:20022/start?appid=5pGH5pGH6L2m&device_id=21591&nonce_str=dpuiept1txiyy0n3bn8xjgtf3o70dra9&sign=F4BC844672EE8300773CD9D8254385FE--
+     10-12 00:00:42.031 22381-22381/? D/[HHL]com.systemteam.BaseActivity$6: a L382--{"code":"300","msg":"订单提交成功!"}--
+     10-12 00:00:44.041 22381-22381/? D/[HHL]com.systemteam.provider.d: a L71--appid=5pGH5pGH6L2m&device_id=21591&nonce_str=0s9njxwt30bvywbnmj60pms44zcp1frr--
+     10-12 00:00:44.041 22381-22381/? D/[HHL]com.systemteam.provider.d: a L73--appid=5pGH5pGH6L2m&device_id=21591&nonce_str=0s9njxwt30bvywbnmj60pms44zcp1frr&key=65696e5e3624af4e287bee8559b494d5--
+     10-12 00:00:44.051 22381-22381/? D/[HHL]com.systemteam.provider.d: a L87--strMD5: 88FF792B68B79323980296F3BE8688DB--
+     10-12 00:00:44.051 22381-22381/? I/[HHL]com.systemteam.provider.c: b L73--encodeUnlockUrl = http://yyc.yiqiniubi.com:20022/query?appid=5pGH5pGH6L2m&device_id=21591&nonce_str=0s9njxwt30bvywbnmj60pms44zcp1frr&sign=88FF792B68B79323980296F3BE8688DB--
+     10-12 00:00:44.111 22381-22381/? D/[HHL]com.systemteam.BaseActivity$8: a L445--{"code":"200","msg":"消费成功!"}--
+     10-12 00:00:44.151 22381-22381/? D/[HHL]com.systemteam.service.RouteService: onStartCommand L109--RouteService--------onStartCommand-----------------
+     10-12 00:00:44.441 22381-22381/? E/[HHL]com.systemteam.service.RouteService$3: done L356--错误码：206,错误描述：User cannot be altered without sessionToken Error.--
+     10-12 00:00:44.691 22381-22381/? D/[HHL]com.systemteam.Main2Activity: onResume L414--onResume--
+     10-12 00:00:44.701 22381-22381/? I/[HHL]com.systemteam.Main2Activity: onResume L418--MainActivity------------onRestart--------------------
 
+     //TODO 开锁4s
+     * */
     private void loadCarStatus(final Context context, final Car car, String url){
         String queryUrl = url.replace("start", "query");
         LogTool.d("queryUrl : " + queryUrl);
