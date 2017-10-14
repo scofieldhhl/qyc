@@ -3,15 +3,19 @@ package com.systemteam.wxapi;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.systemteam.BaseActivity;
 import com.systemteam.Main2Activity;
 import com.systemteam.R;
-import com.systemteam.bean.MyUser;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
@@ -26,25 +30,9 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import cn.bmob.v3.listener.LogInListener;
 
 /**
  * 微信登陆AccessToken查询https://1.rockingcar.applinzi.com/wxAccessToken?code="123456"
@@ -191,8 +179,8 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 						String code = ((SendAuth.Resp) resp).code;
 						LogTool.d("code = " + code);
 						// 改成通过后台方式
-//						getAccess_token(code);
-						loadWxInfo(code);
+						getAccess_token(code);
+//						loadWxInfo(code);
 						//就在这个地方，用网络库什么的或者自己封的网络api，发请求去咯，注意是get请求
 
 						break;
@@ -291,7 +279,7 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 	 * @param code 请求码
 	 */
 	private void loadWxInfo(final String code) {
-		String path = "https://1.rockingcar.applinzi.com/wxAccessToken?code="+ code;
+		/*String path = "https://1.rockingcar.applinzi.com/wxAccessToken?code="+ code;
 		LogTool.d("loadWxInfo：" + path);
 //		OkHttpClient client = new OkHttpClient();
 		final TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
@@ -338,13 +326,13 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
                 public void onResponse(Call call, Response response) throws IOException {
                     // do something...
                     LogTool.e(response.body().string());
-                    /**
+                    *//**
                      * {"code": "1", "data":
                      * "{\"access_token\":\"jrkD104nUcfSn6Xy8udHDNJiFzvXpLrZWqGIARquku3Rikaye-DBTpiWc5a_hcbat3y-bjVHxlrWZg1N8udb8g\",
                      * \"expires_in\":7200,\
                      * "refresh_token\":\"_-V6wE4XgXe-Wb4fYf34lFOKSU8exdW7tcg1e7q1thRc6PONglAf-TMGb_mYcLueqw4NpzrzqhOX3Xy8Ezvrdw\",\
                      * "openid\":\"oaxY41fhWTbStB1wH9KViiBlDn1M\",\"scope\":\"snsapi_userinfo\",\"unionid\":\"oTojM1BRcHkr2TWRsOq3IShP9fyI\"}"}
-                     * */
+                     * *//*
 					JSONObject jsonObject = null;
 					try {
 						String result = response.body().string();
@@ -365,14 +353,14 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 			e.printStackTrace();
 		} catch (KeyManagementException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	/**
 	 * 获取openid accessToken值用于后期操作
 	 * @param code 请求码
 	 */
-	/*RequestQueue mQueue;
+	RequestQueue mQueue;
 	private void getAccess_token(final String code) {
 		String path = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="
 				+ Constant.WX_APP_ID
@@ -394,7 +382,12 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 							jsonObject = new JSONObject(response);
 							String openid = jsonObject.getString("openid").toString().trim();
 							String access_token = jsonObject.getString("access_token").toString().trim();
-							getUserMesg(access_token, openid);
+//							getUserMesg(access_token, openid);
+							String expires = String.valueOf(jsonObject.getLong("expires_in"));
+							// 调用Bmob提供的授权登录方法进行微信登陆，登录成功后，你就可以在后台管理界面的User表中看到微信登陆后的用户啦
+							final BmobUser.BmobThirdUserAuth authInfo = new BmobUser.BmobThirdUserAuth(
+									BmobUser.BmobThirdUserAuth.SNS_TYPE_WEIXIN, access_token,expires,openid);
+							loginWithAuth(authInfo);
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
@@ -409,7 +402,42 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 			mQueue = Volley.newRequestQueue(mContext);
 		}
 		mQueue.add(stringRequest);
-	}*/
+		/*try {
+			OkHttpClient client = new OkHttpClient();
+			Request request = new Request.Builder()
+					.url(path)
+					.build();
+			client.newCall(request).enqueue(new Callback() {
+				@Override
+				public void onFailure(Call call, IOException e) {
+					LogTool.e(e.toString());
+					Toast.makeText(mContext, R.string.account_tip_login_failed, Toast.LENGTH_SHORT).show();
+					finish();
+				}
+
+				@Override
+				public void onResponse(Call call, Response response) throws IOException {
+					LogTool.e(response.body().string());
+					LogTool.d("getAccess_token_result:" + response);
+					JSONObject jsonObject = null;
+					try {
+						jsonObject = new JSONObject(response.body().string());
+						String openid = jsonObject.getString("openid").toString().trim();
+						String access_token = jsonObject.getString("access_token").toString().trim();
+						getUserMesg(access_token, openid);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+			LogTool.e(e.toString());
+			Toast.makeText(mContext, R.string.account_tip_login_failed, Toast.LENGTH_SHORT).show();
+			finish();
+		}*/
+	}
 
 
 	/**
@@ -418,7 +446,7 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 	 * @param openid
 	 */
 	private void getUserMesg(final String access_token, final String openid) {
-		/*String path = "https://api.weixin.qq.com/sns/userinfo?access_token="
+		String path = "https://api.weixin.qq.com/sns/userinfo?access_token="
 				+ access_token
 				+ "&openid="
 				+ openid;
@@ -429,12 +457,12 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 				new Response.Listener<String>() {
 					@Override
 					public void onResponse(String response) {
-						*//**
+						/**
 						 * {"openid":"oaxY41fhWTbStB1wH9KViiBlDn1M",
 						 * "nickname":"Scofield.H","sex":1,"language":"zh_CN","city":"Shenzhen",
 						 * "province":"Guangdong","country":"CN",
 						 * "headimgurl":"http:\/\/wx.qlogo.cn\/mmopen\/vi_32\/ibYCL2nbctJCDm3ZH9kWYYuCI3yibjKy5x67GEJVREqZwB0iaEV8m41ObgFnZBWrnGAxmmFO8uqwNYqzAmoO7Ku3w\/0","privilege":[],"unionid":"oTojM1BRcHkr2TWRsOq3IShP9fyI"}
-						 * *//*
+						 * */
 						LogTool.d("getAccess_token_result:" + response);
 						try {
 							JSONObject jsonObject = new JSONObject(response);
@@ -442,15 +470,11 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 							String nickname = jsonObject.getString("nickname");
 							int sex = Integer.parseInt(jsonObject.get("sex").toString());
 							String headimgurl = jsonObject.getString("headimgurl");
-							MyUser myUser = new MyUser();
-							myUser.setOpenid(openId);
-							myUser.setUsername(nickname);
-							myUser.setPhotoPath(headimgurl);
-							registerUser(myUser);
 							LogTool.d("用户基本信息:");
 							LogTool.d("nickname:" + nickname);
 							LogTool.d("sex:" + sex);
 							LogTool.d("headimgurl:" + headimgurl);
+
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
@@ -464,8 +488,8 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 		if(mQueue == null){
 			mQueue = Volley.newRequestQueue(mContext);
 		}
-		mQueue.add(stringRequest);*/
-		try {
+		mQueue.add(stringRequest);
+		/*try {
 			String path = "https://api.weixin.qq.com/sns/userinfo?access_token="
 					+ access_token
 					+ "&openid="
@@ -496,6 +520,7 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 						myUser.setOpenid(openId);
 						myUser.setUsername(nickname);
 						myUser.setPhotoPath(headimgurl);
+						myUser.setMobilePhoneNumber("");
 						registerUser(myUser);
 						LogTool.d("用户基本信息:");
 						LogTool.d("nickname:" + nickname);
@@ -512,7 +537,7 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 			LogTool.e(e.toString());
 			Toast.makeText(mContext, R.string.account_tip_login_failed, Toast.LENGTH_SHORT).show();
 			finish();
-		}
+		}*/
 	}
 
 	@Override
@@ -520,24 +545,29 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 
 	}
 
-	private void registerUser(MyUser myUser){
-		addSubscription(myUser.signOrLogin("123456", new SaveListener<MyUser>() {
+	/**
+	 * @method loginWithAuth
+	 * @param authInfo
+	 * @return void
+	 * @exception
+	 */
+	public void loginWithAuth(final BmobUser.BmobThirdUserAuth authInfo){
+		BmobUser.loginWithAuthData(authInfo, new LogInListener(){
 			@Override
-			public void done(MyUser s, BmobException e) {
+			public void done(Object o, BmobException e) {
 				if(e==null){
 					toast(getString(R.string.reg_success));
-					new Handler().postDelayed(new Runnable() {
-						@Override
-						public void run() {
-							startActivity(new Intent(mContext, Main2Activity.class));
-							finish();
-						}
-					}, 500);
+					Intent intent = new Intent(WXEntryActivity.this,Main2Activity.class);
+					startActivity(intent);
 				}else{
-					toast(getString(R.string.reg_failed));
-					loge(e);
+					toast(getString(R.string.loading_fail));
+					if (e instanceof BmobException) {
+						LogTool.e("错误码：" + ((BmobException) e).getErrorCode() + ",错误描述：" + ((BmobException) e).getMessage());
+					} else {
+						LogTool.e("错误描述：" + e.getMessage());
+					}
 				}
 			}
-		}));
+		});
 	}
 }

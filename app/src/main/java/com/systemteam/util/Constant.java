@@ -1,6 +1,8 @@
 package com.systemteam.util;
 
 public class Constant {
+    public static final String PHONE_NUMBER_TEST = "15812345678";
+    public static final String PASSWORD_TEST = "973350";
     //默认值
     public static final float EARN_RATE_DEFAULT = 0.8f;
     public static final float COST_BASE_DEFAULT = 1.0f;

@@ -456,10 +456,11 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                     toast(getString(R.string.pay_error_amout));
                     return;
                 }
-                if(mUser.getMobilePhoneNumber().equalsIgnoreCase("15811112222") ||
+                if(mUser.getMobilePhoneNumber() != null &&
+                        (mUser.getMobilePhoneNumber().equalsIgnoreCase("15811112222") ||
                         mUser.getMobilePhoneNumber().equalsIgnoreCase("15817438761") ||
                         mUser.getMobilePhoneNumber().equalsIgnoreCase("15812121214") ||
-                        mUser.getMobilePhoneNumber().equalsIgnoreCase("15814551455")) {
+                        mUser.getMobilePhoneNumber().equalsIgnoreCase("15814551455"))) {
                     mAmountPay = 1;
                 }
                 if(isPayByWechat){

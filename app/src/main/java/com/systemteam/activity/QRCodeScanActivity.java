@@ -29,6 +29,8 @@ import com.systemteam.util.LogTool;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import cn.bingoogolapple.qrcode.core.QRCodeView;
 import cn.bingoogolapple.qrcode.zbar.ZBarView;
@@ -115,11 +117,22 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
         vibrate();
         if(result != null && !TextUtils.isEmpty(result)){
             String[] arrResult = result.split("/");
+            if(!isNumeric(arrResult[arrResult.length - 1])){
+                arrResult = result.split("=");
+            }
             checkCode(arrResult[arrResult.length - 1]);
         }else {
             toast(getString(R.string.code_unvalid));
         }
 
+    }
+    public boolean isNumeric(String str){
+        Pattern pattern = Pattern.compile("[0-9]*");
+        Matcher isNum = pattern.matcher(str);
+        if( !isNum.matches() ){
+            return false;
+        }
+        return true;
     }
 
     @Override

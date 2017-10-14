@@ -12,8 +12,8 @@ android {
         release {
             keyAlias 'SystemStudio'
             keyPassword 'HUANGhl8811^'
-//            storeFile file('D:/appkey/systemstudio.jks')
-            storeFile file('/Users/ws/Desktop/systemstudio.jks')
+            storeFile file('D:/appkey/systemstudio.jks')
+//            storeFile file('/Users/ws/Desktop/systemstudio.jks')
             storePassword 'HUANGhl8811^'
         }
     }
