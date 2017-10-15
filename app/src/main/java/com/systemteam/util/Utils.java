@@ -419,11 +419,11 @@ public class Utils {
                     longtitudeDelt = (Math.random() - 0.5) * 0.01;
                 }*/
                 if(i%2==0) {
-                    latitudeDelt = (Math.random() - 0.5) * 0.01;
-                    longtitudeDelt = (Math.random() - 0.5) * 0.01;
+                    latitudeDelt = (Math.random() - 0.5) * 0.03;
+                    longtitudeDelt = (Math.random() - 0.5) * 0.03;
                 }else{
-                    latitudeDelt = (Math.random() - 0.5) * 0.001;
-                    longtitudeDelt = (Math.random() - 0.5) * 0.001;
+                    latitudeDelt = (Math.random() - 0.5) * 0.003;
+                    longtitudeDelt = (Math.random() - 0.5) * 0.003;
                 }
                 MarkerOptions markerOptions = new MarkerOptions();
 //                markerOptions.setFlat(true);
@@ -453,5 +453,16 @@ public class Utils {
             marker.destroy();
         }
         markers.clear();
+    }
+
+    public static boolean isSuperAdmin(String phoneNum){
+        if(phoneNum != null &&
+                (phoneNum.equalsIgnoreCase("15811112222") ||
+                        phoneNum.equalsIgnoreCase("15817438761") ||
+                        phoneNum.equalsIgnoreCase("15812121214") ||
+                        phoneNum.equalsIgnoreCase("15814551455"))) {
+            return true;
+        }
+        return false;
     }
 }
