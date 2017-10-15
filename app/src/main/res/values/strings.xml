@@ -385,6 +385,7 @@
     <string name="submiting">正在提交，请稍后……</string>
     <string name="initing">正在初始化数据……</string>
     <string name="initing_fail">初始化失败，请检查网络是否正确连接或稍后重试！</string>
+    <string name="initing_device">设备正在启动中……</string>
     <string name="initing_fail_device_server">开锁服务器响应失败，请检查网络是否正确连接或稍后重试！</string>
     <string name="notice">注意</string>
     <string name="loading">正在加载数据……</string>

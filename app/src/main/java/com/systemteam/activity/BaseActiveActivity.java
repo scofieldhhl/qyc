@@ -60,7 +60,7 @@ public abstract class BaseActiveActivity extends BaseActivity {
         if(carNo == null || TextUtils.isEmpty(carNo)){
             return;
         }
-        mProgressHelper.showProgressDialog(getString(R.string.initing));
+        mProgressHelper.showProgressDialog(getString(R.string.initing_device));
         BmobQuery<Car> query = new BmobQuery<>();
         query.addWhereEqualTo("carNo", carNo);
         addSubscription(query.findObjects(new FindListener<Car>() {
