@@ -16,6 +16,7 @@ import com.android.volley.toolbox.Volley;
 import com.systemteam.BaseActivity;
 import com.systemteam.Main2Activity;
 import com.systemteam.R;
+import com.systemteam.bean.MyUser;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
@@ -33,6 +34,7 @@ import org.json.JSONObject;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.LogInListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * 微信登陆AccessToken查询https://1.rockingcar.applinzi.com/wxAccessToken?code="123456"
@@ -377,20 +379,7 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 					@Override
 					public void onResponse(String response) {
 						LogTool.d("getAccess_token_result:" + response);
-						JSONObject jsonObject = null;
-						try {
-							jsonObject = new JSONObject(response);
-							String openid = jsonObject.getString("openid").toString().trim();
-							String access_token = jsonObject.getString("access_token").toString().trim();
-//							getUserMesg(access_token, openid);
-							String expires = String.valueOf(jsonObject.getLong("expires_in"));
-							// 调用Bmob提供的授权登录方法进行微信登陆，登录成功后，你就可以在后台管理界面的User表中看到微信登陆后的用户啦
-							final BmobUser.BmobThirdUserAuth authInfo = new BmobUser.BmobThirdUserAuth(
-									BmobUser.BmobThirdUserAuth.SNS_TYPE_WEIXIN, access_token,expires,openid);
-							loginWithAuth(authInfo);
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
+                        loginWithAuth(response);
 					}
 				}, new Response.ErrorListener() {
 			@Override
@@ -439,7 +428,7 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 		}*/
 	}
 
-
+//TODO 同步用户信息
 	/**
 	 * 获取微信的个人信息
 	 * @param access_token
@@ -466,15 +455,34 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 						LogTool.d("getAccess_token_result:" + response);
 						try {
 							JSONObject jsonObject = new JSONObject(response);
-							String openId = jsonObject.getString("nickname");
 							String nickname = jsonObject.getString("nickname");
 							int sex = Integer.parseInt(jsonObject.get("sex").toString());
 							String headimgurl = jsonObject.getString("headimgurl");
-							LogTool.d("用户基本信息:");
 							LogTool.d("nickname:" + nickname);
 							LogTool.d("sex:" + sex);
 							LogTool.d("headimgurl:" + headimgurl);
+                            MyUser newUser = BmobUser.getCurrentUser(MyUser.class);
+                            if(newUser.getCoupon() == null){
+								newUser.setUsername(nickname);
+								newUser.setPhotoPath(headimgurl);
+                                newUser.setCoupon(3);
+								addSubscription(newUser.update(newUser.getObjectId(), new UpdateListener() {
+									@Override
+									public void done(BmobException e) {
+										if(e == null){
+											toast(getString(R.string.reg_success));
+											Intent intent = new Intent(WXEntryActivity.this,Main2Activity.class);
+											startActivity(intent);
+										}else{
 
+										}
+									}
+								}));
+                            }else {
+								toast(getString(R.string.reg_success));
+								Intent intent = new Intent(WXEntryActivity.this,Main2Activity.class);
+								startActivity(intent);
+							}
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
@@ -547,27 +555,38 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 
 	/**
 	 * @method loginWithAuth
-	 * @param authInfo
 	 * @return void
 	 * @exception
 	 */
-	public void loginWithAuth(final BmobUser.BmobThirdUserAuth authInfo){
-		BmobUser.loginWithAuthData(authInfo, new LogInListener(){
-			@Override
-			public void done(Object o, BmobException e) {
-				if(e==null){
-					toast(getString(R.string.reg_success));
-					Intent intent = new Intent(WXEntryActivity.this,Main2Activity.class);
-					startActivity(intent);
-				}else{
-					toast(getString(R.string.loading_fail));
-					if (e instanceof BmobException) {
-						LogTool.e("错误码：" + ((BmobException) e).getErrorCode() + ",错误描述：" + ((BmobException) e).getMessage());
-					} else {
-						LogTool.e("错误描述：" + e.getMessage());
-					}
-				}
-			}
-		});
+	public void loginWithAuth(String response){
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(response);
+            final String openid = jsonObject.getString("openid").toString().trim();
+            final String access_token = jsonObject.getString("access_token").toString().trim();
+//							getUserMesg(access_token, openid);
+            String expires = String.valueOf(jsonObject.getLong("expires_in"));
+            // 调用Bmob提供的授权登录方法进行微信登陆，登录成功后，你就可以在后台管理界面的User表中看到微信登陆后的用户啦
+            final BmobUser.BmobThirdUserAuth authInfo = new BmobUser.BmobThirdUserAuth(
+                    BmobUser.BmobThirdUserAuth.SNS_TYPE_WEIXIN, access_token,expires,openid);
+            BmobUser.loginWithAuthData(authInfo, new LogInListener(){
+                @Override
+                public void done(Object o, BmobException e) {
+                    if(e==null){
+                        getUserMesg(access_token, openid);
+                    }else{
+                        toast(getString(R.string.loading_fail));
+                        if (e instanceof BmobException) {
+                            LogTool.e("错误码：" + ((BmobException) e).getErrorCode() + ",错误描述：" + ((BmobException) e).getMessage());
+                        } else {
+                            LogTool.e("错误描述：" + e.getMessage());
+                        }
+                    }
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 	}
 }

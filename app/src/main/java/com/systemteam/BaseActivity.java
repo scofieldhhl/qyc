@@ -53,7 +53,6 @@ import com.systemteam.view.ProgressDialogHelper;
 import com.systemteam.welcome.WelcomeActivity;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -286,24 +285,24 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     }
 
     public void loadAvatar(final Context context, String path, final ImageView imageView) {
+        LogTool.d("Pohotopath:" + path);
         if (!TextUtils.isEmpty(path)) {
-            File file = new File(path);
-            if (file.exists()) {
-                Glide.with(context)
-                        .load(path)
-                        .asBitmap()
-                        .placeholder(R.drawable.account_default_head_portrait)
-                        .centerCrop()
-                        .into(new BitmapImageViewTarget(imageView) {
-                            @Override
-                            protected void setResource(Bitmap resource) {
-                                RoundedBitmapDrawable circularBitmapDrawable =
-                                        RoundedBitmapDrawableFactory.create(context.getResources(), resource);
-                                circularBitmapDrawable.setCircular(true);
-                                imageView.setImageDrawable(circularBitmapDrawable);
-                            }
-                        });
-            }
+            Glide.with(context)
+                    .load(path)
+                    .asBitmap()
+                    .placeholder(R.drawable.account_default_head_portrait)
+                    .centerCrop()
+                    .into(new BitmapImageViewTarget(imageView) {
+                        @Override
+                        protected void setResource(Bitmap resource) {
+                            RoundedBitmapDrawable circularBitmapDrawable =
+                                    RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+                            circularBitmapDrawable.setCircular(true);
+                            imageView.setImageDrawable(circularBitmapDrawable);
+                        }
+                    });
+        }else {
+            LogTool.e("path null");
         }
     }
 
@@ -425,7 +424,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                                 public void run() {
                                     loadCarStatus(context, car, url);
                                 }
-                            }, 5000);
+                            }, 1000);
                         }
                     }, new Response.ErrorListener() {
                 @Override

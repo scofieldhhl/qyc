@@ -3,6 +3,7 @@ package com.systemteam.welcome.fragment.outlayer.loginlayer;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -218,7 +219,12 @@ public class LoginFragment extends BaseFragment {
         req.scope = "snsapi_userinfo";
         req.state = "diandi_wx_login";
         BikeApplication.mWxApi.sendReq(req);
-
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getActivity().finish();
+            }
+        }, 1000);
     }
 
     public void onLoginQQ(View view){
