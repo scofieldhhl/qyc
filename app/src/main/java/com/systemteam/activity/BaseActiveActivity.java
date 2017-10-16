@@ -172,7 +172,7 @@ public abstract class BaseActiveActivity extends BaseActivity {
                                 public void run() {
                                     loadCarStatus(context, car, url);
                                 }
-                            }, 1000);
+                            }, 4000);
                         }
                     }, new Response.ErrorListener() {
                 @Override

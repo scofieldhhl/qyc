@@ -9,12 +9,28 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdate;
+import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.model.BitmapDescriptor;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
 import com.systemteam.BaseActivity;
+import com.systemteam.BikeApplication;
 import com.systemteam.R;
 import com.systemteam.activity.QRCodeScanActivity;
 import com.systemteam.bean.Car;
 import com.systemteam.bean.MyUser;
+import com.systemteam.gdmap.lib.LocationTask;
+import com.systemteam.gdmap.lib.OnLocationGetListener;
+import com.systemteam.gdmap.lib.PositionEntity;
+import com.systemteam.gdmap.lib.RegeocodeTask;
+import com.systemteam.gdmap.lib.RouteTask;
+import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
 
 import java.lang.ref.WeakReference;
@@ -33,17 +49,32 @@ import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 import static com.systemteam.util.Constant.REQUEST_CODE;
 
-public class NewCarActivity extends BaseActivity {
+public class NewCarActivity extends BaseActivity implements AMap.OnCameraChangeListener,
+        AMap.OnMapLoadedListener, OnLocationGetListener {
     private TextView mTvCode;
     private String mCarNo;
     private Car mCar = null;
-    private MapView mMapView;
-//    private BaiduMap mBaiduMap;
     private double mLatitude; //纬度
     private double mLongitude;
     private Button mBtnSubmit;
-//    public MyLocationListenner myListener = new MyLocationListenner();
-//    private LocationClient mlocationClient;
+    //地图view
+    MapView mMapView = null;
+    //初始化地图控制器对象
+    AMap aMap;
+    //定位
+    private LocationTask mLocationTask;
+    //逆地理编码功能
+    private RegeocodeTask mRegeocodeTask;
+    //绘制点标记
+    private Marker mPositionMark, mInitialMark,tempMark;//可移动、圆点、点击
+    //初始坐标、移动记录坐标
+    private LatLng mStartPosition,mRecordPositon,mPrePositon;//记录上次加载设备的位置
+    private LatLng initLocation;
+    //默认添加一次
+    private boolean mIsFirst = true;
+    //就第一次显示位置
+    private boolean mIsFirstShow = true;
+    private BitmapDescriptor initBitmap,moveBitmap,smallIdentificationBitmap,bigIdentificationBitmap;//定位圆点、可移动、所有标识（车）
 
     private static class MyHandler extends Handler {
         private WeakReference<NewCarActivity> mActivity;
@@ -76,17 +107,48 @@ public class NewCarActivity extends BaseActivity {
         mContext = this;
         initView();
         initData();
+
+        //获取地图控件引用
+        mMapView = (MapView) findViewById(R.id.map);
+        //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
+        mMapView.onCreate(savedInstanceState);
+        initBitmap();
+        initAMap();
+        initLocation();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //在activity执行onResume时执行mMapView.onResume ()，重新绘制加载地图
+        mMapView.onResume();
+        if (mInitialMark != null) {
+            mInitialMark.setToTop();
+        }
+        if (mPositionMark != null) {
+            mPositionMark.setToTop();
+        }
+        LogTool.d("onResume");
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        //在activity执行onPause时执行mMapView.onPause ()，暂停地图的绘制
+        mMapView.onPause();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //在activity执行onSaveInstanceState时执行mMapView.onSaveInstanceState (outState)，保存地图当前的状态
+        mMapView.onSaveInstanceState(outState);
+    }
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        // 退出时销毁定位
-//        mlocationClient.stop();
-        // 关闭定位图层
-//        mBaiduMap.setMyLocationEnabled(false);
         mMapView.onDestroy();
         mMapView = null;
+        mLocationTask.onDestroy();
     }
 
     @Override
@@ -94,25 +156,10 @@ public class NewCarActivity extends BaseActivity {
         initToolBar(NewCarActivity.this, R.string.new_car);
         mTvCode = (TextView) findViewById(R.id.tv_title_code);
         mBtnSubmit = (Button) findViewById(R.id.btn_submit);
-        mMapView = (MapView) findViewById(R.id.id_bmapView);
-        mMapView.setVisibility(View.GONE);
         if (!Utils.isGpsOPen(this)) {
             Utils.showDialog(this);
             return;
         }
-        /*mBaiduMap = mMapView.getMap();
-        // 开启定位图层
-        mBaiduMap.setMyLocationEnabled(true);
-        // 定位初始化
-        mlocationClient = new LocationClient(this);
-        mlocationClient.registerLocationListener(myListener);
-        LocationClientOption option = new LocationClientOption();
-        option.setOpenGps(true); // 打开gps
-        option.setCoorType("bd09ll"); // 设置坐标类型
-        option.setScanSpan(Constant.MAP_SCAN_SPAN);//设置onReceiveLocation()获取位置的频率
-        option.setIsNeedAddress(true);//如想获得具体位置就需要设置为true
-        mlocationClient.setLocOption(option);
-        mlocationClient.start();*/
     }
 
     @Override
@@ -124,6 +171,7 @@ public class NewCarActivity extends BaseActivity {
         if(carNo != null && !TextUtils.isEmpty(carNo)){
             mTvCode.setText(getString(R.string.carNo_scan, mCarNo));
             mBtnSubmit.setVisibility(View.VISIBLE);
+            mMapView.setVisibility(View.VISIBLE);
             mMapView.setVisibility(View.VISIBLE);
         }else {
             mCar = null;
@@ -233,32 +281,142 @@ public class NewCarActivity extends BaseActivity {
         }));
     }
 
+    private void initBitmap(){
+        initBitmap = BitmapDescriptorFactory
+                .fromResource(R.drawable.location_marker);
+        moveBitmap = BitmapDescriptorFactory
+                .fromResource(R.drawable.location_center);
+        smallIdentificationBitmap = BitmapDescriptorFactory
+                .fromResource(R.drawable.bike_icon);
+        bigIdentificationBitmap = BitmapDescriptorFactory
+                .fromResource(R.drawable.bike_icon_focus);
+    }
     /**
-     * 定位SDK监听函数
+     * 初始化地图控制器对象
      */
-    /*public class MyLocationListenner implements BDLocationListener {
-
-        @Override
-        public void onReceiveLocation(BDLocation bdLocation) {
-            // map view 销毁后不在处理新接收的位置
-            if (bdLocation == null || mMapView == null) {
-                return;
-            }
-            mLatitude = bdLocation.getLatitude();
-            mLongitude = bdLocation.getLongitude();
-            LogTool.d("mLongitude: " + mLongitude + "  mLatitude: " + mLatitude );
-            MyLocationData locData = new MyLocationData.Builder()
-                    .accuracy(bdLocation.getRadius())
-                    .latitude(bdLocation.getLatitude())
-                    .longitude(bdLocation.getLongitude()).build();
-            mBaiduMap.setMyLocationData(locData);
-            LocationManager.getInstance().setAddress(bdLocation.getAddrStr());
-            LatLng ll = new LatLng(bdLocation.getLatitude(),
-                    bdLocation.getLongitude());
-            MapStatus.Builder builder = new MapStatus.Builder();
-            //地图缩放比设置为18
-            builder.target(ll).zoom(Constant.MAP_SCALING);
-            mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+    private void initAMap() {
+        if (aMap == null) {
+            aMap = mMapView.getMap();
+            aMap.getUiSettings().setZoomControlsEnabled(false);
+            aMap.getUiSettings().setGestureScaleByMapCenter(true);
+//            aMap.getUiSettings().setScrollGesturesEnabled(false);
+            aMap.setOnMapLoadedListener(this);
+            aMap.setOnCameraChangeListener(this);
+            // 绑定 Marker 被点击事件
+            //设置为true时，地图每次移动都会自动跳转到定位位置
+            aMap.setMyLocationEnabled(false);// 设置为true表示系统定位按钮显示并响应点击，false表示隐藏，默认是false
         }
-    }*/
+    }
+
+    /**
+     * 初始化定位
+     */
+    private void initLocation() {
+        mLocationTask = LocationTask.getInstance(getApplicationContext());
+        mLocationTask.setOnLocationGetListener(this);
+        mRegeocodeTask = new RegeocodeTask(getApplicationContext());
+    }
+
+    /**
+     * 对正在移动地图事件回调
+     */
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
+    }
+    /**
+     * 对移动地图结束事件回调
+     */
+    @Override
+    public void onCameraChangeFinish(CameraPosition cameraPosition) {
+//        LogTool.e("onCameraChangeFinish" + cameraPosition.target);
+        mLatitude = cameraPosition.target.latitude;
+        mLongitude = cameraPosition.target.longitude;
+//        mStartPosition = cameraPosition.target;
+        if(mIsFirst) {
+            createInitialPosition(cameraPosition.target.latitude, cameraPosition.target.longitude);
+            createMovingPosition();
+            mIsFirst = false;
+            return;
+        }
+        if (mInitialMark != null) {
+            mInitialMark.setToTop();
+        }
+        if (mPositionMark != null) {
+            mPositionMark.setToTop();
+        }
+        toast(getString(R.string.location_changed));
+    }
+
+
+    /**
+     * 地图加载完成
+     */
+    @Override
+    public void onMapLoaded() {
+        LogTool.d("onMapLoaded");
+        mLocationTask.startLocate();
+    }
+
+    public void getMyLocation() {
+        if(mStartPosition != null){
+            aMap.moveCamera(CameraUpdateFactory.changeLatLng(
+                    new LatLng(mStartPosition.latitude, mStartPosition.longitude)));
+        }
+    }
+
+    /**
+     * 创建初始位置图标
+     */
+    private void createInitialPosition(double lat, double lng) {
+        MarkerOptions markerOptions = new MarkerOptions();
+//        markerOptions.setFlat(true);
+        markerOptions.anchor(0.5f, 0.5f);
+        markerOptions.position(new LatLng(lat, lng));
+        markerOptions.icon(initBitmap);
+        mInitialMark = aMap.addMarker(markerOptions);
+        mInitialMark.setClickable(false);
+    }
+
+    /**
+     * 创建移动位置图标
+     */
+    private void createMovingPosition() {
+        MarkerOptions markerOptions = new MarkerOptions();
+//        markerOptions.setFlat(true);
+//        markerOptions.anchor(0.5f, 0.5f);
+        markerOptions.position(new LatLng(0, 0));
+        markerOptions.icon(moveBitmap);
+        mPositionMark = aMap.addMarker(markerOptions);
+        mPositionMark.setPositionByPixels(mMapView.getWidth() / 2,
+                mMapView.getHeight() / 2);
+        mPositionMark.setClickable(false);
+    }
+
+    @Override
+    public void onLocationGet(PositionEntity entity) {
+        // 这里在网络定位时可以减少一个逆地理编码
+//        LogTool.e("onLocationGet" + entity.address);
+        RouteTask.getInstance(getApplicationContext()).setStartPoint(entity);
+        mStartPosition = new LatLng(entity.latitue, entity.longitude);
+        if(mIsFirstShow) {
+            mPrePositon = mStartPosition;
+            CameraUpdate cameraUpate = CameraUpdateFactory.newLatLngZoom(mStartPosition, 17);
+            aMap.animateCamera(cameraUpate);
+            mIsFirstShow = false;
+        }
+        mInitialMark.setPosition(mStartPosition);
+        initLocation = mStartPosition;
+        BikeApplication.mCurrentAddress = entity.address;
+        BikeApplication.setPosition(entity.longitude, entity.latitue);
+    }
+
+    @Override
+    public void onRegecodeGet(PositionEntity entity) {
+        LogTool.e("onRegecodeGet" + entity.address);
+        entity.latitue = mStartPosition.latitude;
+        entity.longitude = mStartPosition.longitude;
+        RouteTask.getInstance(getApplicationContext()).setStartPoint(entity);
+        RouteTask.getInstance(getApplicationContext()).search();
+        LogTool.e("onRegecodeGet" + mStartPosition);
+    }
 }

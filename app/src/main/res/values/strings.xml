@@ -399,6 +399,7 @@
     <string name="activate_success">已成功激活！</string>
     <string name="have_added">该摇摇车已添加，请勿重复添加！</string>
     <string name="own_other">该摇摇车已被其他商户激活，如若有疑问请及时联系客服！</string>
+    <string name="location_changed">设备地址已更新!</string>
     <!--add-->
 
     <!--detail-->

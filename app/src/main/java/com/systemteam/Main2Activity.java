@@ -251,18 +251,6 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         mHandler.sendEmptyMessageDelayed(DISMISS_SPLASH, 4 * 1000);
     }
 
-    private void initBitmap()
-    {
-        initBitmap = BitmapDescriptorFactory
-                .fromResource(R.drawable.location_marker);
-        moveBitmap = BitmapDescriptorFactory
-                .fromResource(R.drawable.location_center);
-        smallIdentificationBitmap = BitmapDescriptorFactory
-                .fromResource(R.drawable.bike_icon);
-        bigIdentificationBitmap = BitmapDescriptorFactory
-                .fromResource(R.drawable.bike_icon_focus);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return true;
@@ -273,6 +261,16 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
                 return super.onOptionsItemSelected(item);
     }
 
+    private void initBitmap(){
+        initBitmap = BitmapDescriptorFactory
+                .fromResource(R.drawable.location_marker);
+        moveBitmap = BitmapDescriptorFactory
+                .fromResource(R.drawable.location_center);
+        smallIdentificationBitmap = BitmapDescriptorFactory
+                .fromResource(R.drawable.bike_icon);
+        bigIdentificationBitmap = BitmapDescriptorFactory
+                .fromResource(R.drawable.bike_icon_focus);
+    }
     /**
      * 初始化地图控制器对象
      */
