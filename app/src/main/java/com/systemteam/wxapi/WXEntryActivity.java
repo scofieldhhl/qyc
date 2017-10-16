@@ -428,7 +428,7 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler{
 		}*/
 	}
 
-//TODO 同步用户信息
+	//同步用户信息
 	/**
 	 * 获取微信的个人信息
 	 * @param access_token

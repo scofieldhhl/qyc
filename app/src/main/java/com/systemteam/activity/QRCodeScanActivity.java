@@ -328,6 +328,7 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
         }
     }
 
+    //TODO 开灯替换为红色icon
     public Dialog showInputDialog() {
         final Dialog dialog = new Dialog(mContext, R.style.MyDialog);
         //设置它的ContentView

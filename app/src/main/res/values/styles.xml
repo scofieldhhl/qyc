@@ -21,7 +21,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <!--<item name="android:windowBackground">@mipmap/splash_img</item>-->
-        <item name="android:windowBackground">@drawable/splash_img</item>
+        <item name="android:windowBackground">@color/transparent</item>
     </style>
 
     <style name="text_style">

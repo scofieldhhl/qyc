@@ -113,7 +113,7 @@ public abstract class BaseActiveActivity extends BaseActivity {
     }
 
     protected void startRouteService(final Context context, final Car car) {
-        //TODO 测试使用
+        //测试使用
         if (car.getCarNo().startsWith("1878")) {
             mProgressHelper.dismissProgressDialog();
             Intent intent = new Intent(context, RouteService.class);
@@ -210,7 +210,7 @@ public abstract class BaseActiveActivity extends BaseActivity {
      10-12 00:00:44.691 22381-22381/? D/[HHL]com.systemteam.Main2Activity: onResume L414--onResume--
      10-12 00:00:44.701 22381-22381/? I/[HHL]com.systemteam.Main2Activity: onResume L418--MainActivity------------onRestart--------------------
 
-     //TODO 开锁4s
+     //开锁4s
      * */
     private void loadCarStatus(final Context context, final Car car, String url){
         String queryUrl = url.replace("start", "query");

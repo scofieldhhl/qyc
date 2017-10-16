@@ -67,7 +67,6 @@ import com.systemteam.gdmap.lib.OnLocationGetListener;
 import com.systemteam.gdmap.lib.PositionEntity;
 import com.systemteam.gdmap.lib.RegeocodeTask;
 import com.systemteam.gdmap.lib.RouteTask;
-import com.systemteam.gdmap.lib.Sha1;
 import com.systemteam.gdmap.overlay.WalkRouteOverlay;
 import com.systemteam.user.UserInfoActivity;
 import com.systemteam.util.Constant;
@@ -169,14 +168,14 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
             switch (msg.what){
                 case DISMISS_SPLASH:
                     theActivity.findViewById(R.id.v_splash).setVisibility(View.GONE);
-                    theActivity.cancelFullScreen();
+//                    theActivity.cancelFullScreen();
                     break;
                 case MSG_RESPONSE_SUCCESS:
                     List<Car> list = (List<Car>) msg.obj;//网络加载数据的26设备没有显示到地图
                     List<BikeInfo> newList = new ArrayList<>();
                     if(list != null && list.size() > 0){
                         LogTool.e("result : " + list.size() );
-                        for(Car car : list){//TODO 两层for循环效率低
+                        for(Car car : list){// 两层for循环效率低
                             if(car != null){
                                 newList.add(new BikeInfo(car));
                             }
@@ -228,7 +227,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setFullScreen();
+//        setFullScreen();
         setContentView(R.layout.activity_main);
         checkSDK();
         LogTool.i("Main2Activity---------onCreate---------------");
@@ -246,7 +245,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         initAMap();
         initLocation();
         RouteTask.getInstance(getApplicationContext()).addRouteCalculateListener(this);
-        LogTool.e("sha1" + Sha1.sHA1(this));
+//        LogTool.e("sha1" + Sha1.sHA1(this));
         LogTool.d("oncreate end");
         mHandler.sendEmptyMessageDelayed(DISMISS_SPLASH, 4 * 1000);
     }
@@ -528,7 +527,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
             mPrePositon = mStartPosition;
             CameraUpdate cameraUpate = CameraUpdateFactory.newLatLngZoom(mStartPosition, 17);
             aMap.animateCamera(cameraUpate);
-            //TODO 添加模拟测试的车的点
+            // 添加模拟测试的车的点
             Utils.addEmulateData(aMap, mStartPosition);
             LogTool.d("onLocationGet" + entity.address + " " + entity.latitue + " " + entity.longitude);
             loadCarlistNear(entity.latitue, entity.longitude, mIsFirstShow);
