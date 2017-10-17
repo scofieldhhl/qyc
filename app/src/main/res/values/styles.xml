@@ -17,11 +17,12 @@
         <item name="android:windowBackground">@color/color_f4f3f3</item>
     </style>
 
-    <style name="AppTheme.splash">
+    <style name="AppTheme.splash" >
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowDisablePreview">true</item>
         <!--<item name="android:windowBackground">@mipmap/splash_img</item>-->
-        <item name="android:windowBackground">@color/transparent</item>
+        <!--<item name="android:windowBackground">@color/transparent</item>-->
     </style>
 
     <style name="text_style">

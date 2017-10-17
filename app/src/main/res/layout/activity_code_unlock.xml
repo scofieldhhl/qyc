@@ -90,7 +90,7 @@
                     android:layout_marginLeft="30dp"
                     android:layout_marginRight="30dp"
                     android:background="@drawable/flashlight_circle_bg"
-                    android:src="@mipmap/flashlight_icon" />
+                    android:src="@drawable/selector_flashlight" />
 
                 <ImageView
                     android:id="@+id/iv_scan"
@@ -99,7 +99,7 @@
                     android:layout_marginLeft="30dp"
                     android:layout_marginRight="30dp"
                     android:background="@drawable/flashlight_circle_bg"
-                    android:src="@drawable/ic_scan" />
+                    android:src="@drawable/selector_scan" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

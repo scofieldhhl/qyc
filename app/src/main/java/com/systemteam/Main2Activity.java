@@ -30,9 +30,14 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
@@ -103,7 +108,7 @@ import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraChangeListener,
         AMap.OnMapLoadedListener, OnLocationGetListener, View.OnClickListener,RouteTask.OnRouteCalculateListener,
         AMap.OnMapTouchListener,RouteSearch.OnRouteSearchListener,AMap.OnMapClickListener,AMap.InfoWindowAdapter,
-        AllInterface.OnMenuSlideListener{
+        AllInterface.OnMenuSlideListener, LocationSource, AMapLocationListener{
     //地图view
     MapView mMapView = null;
     //初始化地图控制器对象
@@ -146,6 +151,10 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
     CatLoadingView mView;
     LeftDrawerLayout mLeftDrawerLayout;
     LeftMenuFragment mMenuFragment;
+    //定位功能
+    private OnLocationChangedListener mListener;
+    private AMapLocationClient mlocationClient;
+    private AMapLocationClientOption mLocationOption;
 
     @Override
     public void onMenuSlide(float offset) {
@@ -223,7 +232,23 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         }
     }
     private MyHandler mHandler = new MyHandler(this);
-
+/**
+ * //地图默认显示北京地区，通过采用重载的 MapView 构造方法更改默认地图显示区域：
+ * // 定义北京市经纬度坐标（此处以北京坐标为例）
+ LatLng centerBJPoint= new LatLng(39.904989,116.405285);
+ // 定义了一个配置 AMap 对象的参数类
+ AMapOptions mapOptions = new AMapOptions();
+ // 设置了一个可视范围的初始化位置
+ // CameraPosition 第一个参数： 目标位置的屏幕中心点经纬度坐标。
+ // CameraPosition 第二个参数： 目标可视区域的缩放级别
+ // CameraPosition 第三个参数： 目标可视区域的倾斜度，以角度为单位。
+ // CameraPosition 第四个参数： 可视区域指向的方向，以角度为单位，从正北向顺时针方向计算，从0度到360度
+ mapOptions.camera(new CameraPosition(centerBJPoint, 10f, 0, 0));
+ // 定义一个 MapView 对象，构造方法中传入 mapOptions 参数类
+ MapView mapView = new MapView(this, mapOptions);
+ // 调用 onCreate方法 对 MapView LayoutParams 设置
+ mapView.onCreate(savedInstanceState);
+ * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -247,7 +272,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         RouteTask.getInstance(getApplicationContext()).addRouteCalculateListener(this);
 //        LogTool.e("sha1" + Sha1.sHA1(this));
         LogTool.d("oncreate end");
-        mHandler.sendEmptyMessageDelayed(DISMISS_SPLASH, 4 * 1000);
+        mHandler.sendEmptyMessageDelayed(DISMISS_SPLASH, 4*1000);
     }
 
     @Override
@@ -285,6 +310,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
             aMap.setOnMapLoadedListener(this);
             aMap.setOnCameraChangeListener(this);
             aMap.setOnMapClickListener(this);
+            aMap.setLocationSource(this);
             // 绑定 Marker 被点击事件
             aMap.setOnMarkerClickListener(markerClickListener);
             aMap.setInfoWindowAdapter(this);// 设置自定义InfoWindow样式
@@ -431,6 +457,38 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         } else {
             super.onBackPressed();
         }
+    }
+    @Override
+    public void activate(OnLocationChangedListener listener) {
+        LogTool.d("activate");
+        mListener = listener;
+        if (mlocationClient == null) {
+            mlocationClient = new AMapLocationClient(getApplicationContext());
+            mLocationOption = new AMapLocationClientOption();
+            mlocationClient.setLocationListener(this);
+            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+            mLocationOption.setLocationCacheEnable(true);
+            mlocationClient.setLocationOption(mLocationOption);
+            mlocationClient.startLocation();
+        }
+    }
+
+
+    @Override
+    public void deactivate() {
+        LogTool.d("deactivate");
+        mListener = null;
+        if (mlocationClient != null) {
+            mlocationClient.stopLocation();
+            mlocationClient.onDestroy();
+        }
+        mlocationClient = null;
+        mLocationOption = null;
+    }
+
+    @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+        LogTool.d("onLocationChanged");
     }
     /**
      * 对正在移动地图事件回调
