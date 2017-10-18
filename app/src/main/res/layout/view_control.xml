@@ -47,7 +47,7 @@
             android:onClick="onClick"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@mipmap/flashlight_icon"/>
+            android:src="@drawable/flashlight_icon"/>
         <TextView
             android:id="@+id/open_flashlight"
             style="@style/AutoWrapTv_code"
