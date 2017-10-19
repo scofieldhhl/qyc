@@ -139,67 +139,80 @@ public class BreakActivity extends BaseActivity {
     }
 
     public void doBreakSubmit(View view){
+        if(mCarNo == null || TextUtils.isEmpty(mCarNo)){
+            mProgressHelper.dismissProgressDialog();
+            toast(getString(R.string.break_carNo_no));
+            return;
+        }else if(mType == Constant.BREAK_TYPE_BREAK){
+            String desc = String.valueOf(mEtDescription.getText());
+            boolean bool = false;
+            for(int i = 0; i < mCbArray.length; i++){
+                if(mCbArray[i].isChecked()){
+                    bool = true;
+                    break;
+                }
+            }
+            if(TextUtils.isEmpty(desc) && !bool){
+                toast(getString(R.string.break_breakdesc_no));
+                return;
+            }
+        }
         mProgressHelper.showProgressDialog(getString(R.string.submiting));
         checkCarExist(mCarNo);
     }
 
     private void doSubmit(){
-        if(mCarNo == null || TextUtils.isEmpty(mCarNo)){
+
+        if(mCar == null){
             mProgressHelper.dismissProgressDialog();
-            toast(getString(R.string.break_carNo_no));
+            toast(getString(R.string.break_car_no));
             return;
-        }else {
-            if(mCar == null){
-                mProgressHelper.dismissProgressDialog();
-                toast(getString(R.string.break_car_no));
-                return;
-            }
-            Car newCar = new Car();
-            if(mType == Constant.BREAK_TYPE_LOCK){
-                newCar.setStatus(Constant.BREAK_STATUS_LOCK);
-            }else {
-                int status = -1;
-                for(int i = 0; i < mCbArray.length; i++){
-                    if(mCbArray[i].isChecked()){
-                        status *= 10;
-                        status += (i + 1);
-                    }
-                }
-                if(status == -1){//没有勾选故障原因
-                    status = -10;
-                }
-                newCar.setStatus(status);
-            }
-            String description = String.valueOf(mEtDescription.getText());
-            if(!TextUtils.isEmpty(description)){
-                newCar.setMark(description);
-            }
-            addSubscription(newCar.update(mCar.getObjectId(), new UpdateListener() {
-                @Override
-                public void done(BmobException e) {
-                    mProgressHelper.dismissProgressDialog();
-                    if(e==null){
-                        isSubmitSuccess = true;
-                        toast(getString(R.string.break_submit_success));
-                    }else{
-                        isSubmitSuccess = false;
-                        toast(getString(R.string.submit_faile));
-                        loge(e);
-                    }
-                    if(isActiving){
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if(isSubmitSuccess){
-                                    setResult(RESULT_OK, new Intent().putExtra(BUNDLE_KEY_SUBMIT_SUCCESS, isSubmitSuccess));
-                                }
-                                finish();
-                            }
-                        }, 1000);
-                    }
-                }
-            }));
         }
+        Car newCar = new Car();
+        if(mType == Constant.BREAK_TYPE_LOCK){
+            newCar.setStatus(Constant.BREAK_STATUS_LOCK);
+        }else {
+            int status = -1;
+            for(int i = 0; i < mCbArray.length; i++){
+                if(mCbArray[i].isChecked()){
+                    status *= 10;
+                    status += (i + 1);
+                }
+            }
+            if(status == -1){//没有勾选故障原因
+                status = -10;
+            }
+            newCar.setStatus(status);
+        }
+        String description = String.valueOf(mEtDescription.getText());
+        if(!TextUtils.isEmpty(description)){
+            newCar.setMark(description);
+        }
+        addSubscription(newCar.update(mCar.getObjectId(), new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                mProgressHelper.dismissProgressDialog();
+                if(e==null){
+                    isSubmitSuccess = true;
+                    toast(getString(R.string.break_submit_success));
+                }else{
+                    isSubmitSuccess = false;
+                    toast(getString(R.string.submit_faile));
+                    loge(e);
+                }
+                if(isActiving){
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(isSubmitSuccess){
+                                setResult(RESULT_OK, new Intent().putExtra(BUNDLE_KEY_SUBMIT_SUCCESS, isSubmitSuccess));
+                            }
+                            finish();
+                        }
+                    }, 1000);
+                }
+            }
+        }));
     }
 
     public void gotoScan(View view){

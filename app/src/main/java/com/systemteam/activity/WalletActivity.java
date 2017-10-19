@@ -89,8 +89,8 @@ import static com.systemteam.util.Constant.REQUEST_CODE;
 import static com.systemteam.util.Constant.REQUEST_KEY_BY_USER;
 import static com.systemteam.util.Constant.WX_APP_ID;
 
-//TODO float数值增加精度运算
-//普通用户充值没有及时更新账户余额(pay返回json格式修改导致)
+// float数值增加精度运算
+// 普通用户充值没有及时更新账户余额(pay返回json格式修改导致)
 public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.OnItemClickListener{
     RecyclerView recyclerview_acount;
     ChargeAmountAdapter adapter;

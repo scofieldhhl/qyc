@@ -359,7 +359,7 @@
     <string name="break_portrait">客服服务</string>
     <string name="break_lock_title">无法启动</string>
     <string name="break_title">故障申报</string>
-    <string name="input_title">请描述现象并提交，XXX会尽快处理！</string>
+    <string name="input_title">请描述现象并提交，我们会尽快处理！</string>
     <string name="break_content1">车子太脏</string>
     <string name="break_content2">二维码失效</string>
     <string name="break_content3">外壳损坏</string>
@@ -369,13 +369,14 @@
     <string name="break_content7">声音问题</string>
     <string name="break_content8">其他</string>
 
-    <string name="break_lock1">1.App提示本车故障，请换其他XXX摇摇车。当前提示下，该车可能处于故障中，正在等待维修人员
-    前往维修，请更换其他XXX摇摇车。</string>
-    <string name="break_lock2">2.多次尝试仍开锁失败，请描述现象并提交，XXX会因为您的关怀会越来越好。</string>
+    <string name="break_lock1">1.App提示本车故障，请换其他摇摇车。当前提示下，该车可能处于故障中，正在等待维修人员
+    前往维修，请使用其他摇摇车。</string>
+    <string name="break_lock2">2.多次尝试仍开锁失败，请描述现象并提交，yoyoo会因为您的关怀会越来越好。</string>
     <string name="break_hint">请输入问题描述，非常感谢您的反馈。</string>
     <string name="break_carNo">故障车编号：</string>
     <string name="break_carNo_no">请先扫描或提交故障车车牌上的编号！</string>
     <string name="break_car_no">错误的车牌编号，或请稍后重试！</string>
+    <string name="break_breakdesc_no">请选择故障原因或输入故障描述！</string>
     <string name="break_submit_success">感谢您的反馈，我们会及时处理！</string>
     <string name="submit_success">提交成功</string>
     <string name="submit_faile">提交失败，请检查网络是否正确连接或稍后重试！</string>

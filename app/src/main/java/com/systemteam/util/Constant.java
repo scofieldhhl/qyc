@@ -1,14 +1,13 @@
 package com.systemteam.util;
 
 public class Constant {
-    public static final String PHONE_NUMBER_TEST = "15812345678";
-    public static final String PASSWORD_TEST = "973350";
-    //默认值   //TODO 通过后台配置分成比例
-    public static final float EARN_RATE_DEFAULT = 0.8f;
-    public static final float COST_BASE_DEFAULT = 1.0f;
-    //TODO 通过后台配置分成比例
-    public static int TIME_ONCE_ACTIVE = 3 * 60 * 1000;     //单次使用时长，默认3min，ms
+    //TODO 通过后台配置分成比例 START
+    public static float EARN_RATE_DEFAULT = 0.8f;           //分成比例
+    public static float COST_BASE_DEFAULT = 1.0f;           //单次使用费用（元）
+    public static int TIME_ONCE_ACTIVE = 3 * 60 * 1000;     //单次使用时长，默认3min（ms）
     public static int TIME_ONCE_ACTIVE_TEST = 10 * 1000;
+    //TODO 通过后台配置分成比例 END
+
     public static int DISTANCE_RELOADCAR_DEFAULT = 15000;     //默认超过多少距离加载附近设备列表
     public static int COUPON_DEFAULT = 3;
     public static int CYCLE_DAY_CHART = 15;
