@@ -353,8 +353,11 @@ public class RouteService extends Service {
             public void done(BmobException e) {
                 if(e==null){
                 }else{
-                    // 错误码：206， 502
+                    // 错误码：206， 502 //L357--错误码：206,错误描述：User cannot be altered(修改) without sessionToken Error.
                     LogTool.e("错误码："+(e).getErrorCode()+",错误描述："+(e).getMessage());
+                    if((e).getErrorCode() == 206){//同一账号在多个设备上登录后出现修改用户数据失败,重新登陆后正常
+                        BmobUser.logOut();
+                    }
                 }
                 //2.修改car收益
                 if(mCar == null){

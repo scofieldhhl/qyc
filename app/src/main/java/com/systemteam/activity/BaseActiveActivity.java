@@ -79,8 +79,9 @@ public abstract class BaseActiveActivity extends BaseActivity {
                 }else{
                     mProgressHelper.dismissProgressDialog();
                     toast(getString(R.string.initing_fail));
-                    if(e instanceof BmobException){
+                    if(e instanceof BmobException){//TODO done L83--错误码：400,错误描述：{"data":{},"result":{"code":141,"message":"sdk time error"}}--
                         LogTool.e("错误码："+((BmobException)e).getErrorCode()+",错误描述："+((BmobException)e).getMessage());
+                        //TODO 链接超时重试L83--错误码：9015,错误描述：java.net.SocketTimeoutException
                     }else{
                         LogTool.e("错误描述："+e.getMessage());
                     }
