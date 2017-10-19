@@ -30,6 +30,7 @@ import com.systemteam.bean.EventMessage;
 import com.systemteam.bean.MyUser;
 import com.systemteam.bean.RoutePoint;
 import com.systemteam.bean.UseRecord;
+import com.systemteam.util.Arith;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
@@ -346,7 +347,7 @@ public class RouteService extends Service {
             newUser.setCoupon(mUser.getCoupon().intValue() - 1);
         }else {
             totalPrice = COST_BASE_DEFAULT;
-            newUser.setBalance(mUser.getBalance().floatValue() - totalPrice);
+            newUser.setBalance(Arith.sub(mUser.getBalance().floatValue(), totalPrice));
         }
         addSubscription(newUser.update(mUser.getObjectId(),new UpdateListener() {
             @Override
@@ -361,15 +362,14 @@ public class RouteService extends Service {
                 }
                 //2.修改car收益
                 if(mCar == null){
-                    // 360
                     LogTool.e("mCar == null");
 //                    stopSelf();
                     return;
                 }
-                mEarn = totalPrice * EARN_RATE_DEFAULT;
+                mEarn = Arith.mul(totalPrice, EARN_RATE_DEFAULT);
                 Car newCar = new Car();
-                newCar.setIncome((mCar.getIncome() == null ? 0f : mCar.getIncome()) + totalPrice);
-                newCar.setEarn((mCar.getEarn() == null ? 0f : mCar.getEarn()) + mEarn);
+                newCar.setIncome(Arith.add((mCar.getIncome() == null ? 0f : mCar.getIncome()), totalPrice));
+                newCar.setEarn(Arith.add((mCar.getEarn() == null ? 0f : mCar.getEarn()), mEarn));
                 newCar.setPosition(BikeApplication.mCurrentPosition);// 同步更新设备定位信息
                 addSubscription(newCar.update(mCar.getObjectId(), new UpdateListener() {
                     @Override
@@ -389,7 +389,7 @@ public class RouteService extends Service {
         }));
     }
 
-    float mEarn = COST_BASE_DEFAULT * EARN_RATE_DEFAULT;
+    float mEarn = Arith.mul(COST_BASE_DEFAULT, EARN_RATE_DEFAULT);
     private void newUseRecord(String timeUse){
         //2.增加使用记录
         UseRecord record = new UseRecord();

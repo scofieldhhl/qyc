@@ -16,6 +16,7 @@ import com.systemteam.adapter.WithdrawAdapter;
 import com.systemteam.bean.BankCard;
 import com.systemteam.bean.MyUser;
 import com.systemteam.bean.Withdraw;
+import com.systemteam.util.Arith;
 import com.systemteam.util.Constant;
 import com.systemteam.util.DateUtil;
 import com.systemteam.util.LogTool;
@@ -120,10 +121,16 @@ public class WithdrawActivity extends BaseListActivity {
         mAllWithDraw = getIntent().getFloatExtra(BUNDLE_KEY_ALL_WITHDRAW, 0f);
         mBalance = getIntent().getFloatExtra(BUNDLE_KEY_BLANACE, 0f);
         mAllCost = getIntent().getFloatExtra(BUNDLE_KEY_ALL_COST, 0f);
-        if(isWithdrawBalance){
+        /*if(isWithdrawBalance){
             mAmout = mAllEarn + mBalance - mAllWithDraw;
         }else {
             mAmout = mAllEarn - mAllWithDraw;
+        }*/
+        if(isWithdrawBalance){
+            float value = Arith.add(mAllEarn, mBalance);
+            mAmout = Arith.sub(value, mAllWithDraw);
+        }else {
+            mAmout = Arith.sub(mAllEarn, mAllWithDraw);
         }
         refreshAmout();
         mUser = BmobUser.getCurrentUser(MyUser.class);
@@ -387,7 +394,7 @@ public class WithdrawActivity extends BaseListActivity {
 
     private void onResponseSuccess(){
         isWithDrawSuccess = true;
-        mAllWithDraw += mAmout;
+        mAllWithDraw = Arith.add(mAllWithDraw, mAmout);
         mAmout = 0f;
         Utils.showDialog(mContext, getString(R.string.submit_success),
                 getString(R.string.withdraw_success_content, WITHDRAW_DAYS_DEFAULT));

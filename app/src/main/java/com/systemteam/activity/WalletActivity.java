@@ -274,9 +274,10 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         if(mUser != null && mUser.getType() != null && mUser.getType().intValue() == 1) {
 //            if(isWithdrawBalance){
             if(true){
-                mAmout = mAllEarn + mBalance - mAllWithDraw;
+                float value = Arith.add(mAllEarn, mBalance);
+                mAmout = Arith.sub(value, mAllWithDraw);
             }else {
-                mAmout = mAllEarn - mAllWithDraw;
+                mAmout = Arith.sub(mAllEarn, mAllWithDraw);
             }
             if (mAmout < 0) {
                 mAmout = 0f;
@@ -525,10 +526,11 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         mUser = BmobUser.getCurrentUser(MyUser.class);
         MyUser newUser = new MyUser();
         float balance;
+        final float amout = Arith.div(Float.valueOf(mAmountPay), 100);
         if(mUser.getBalance() == null){
-            balance = Float.valueOf(mAmountPay) / 100;
+            balance = amout;
         }else {
-            balance = (mUser.getBalance() + Float.valueOf(mAmountPay) / 100);
+            balance = Arith.div(mUser.getBalance(), amout);
         }
         newUser.setBalance(balance);
         addSubscription(newUser.update(mUser.getObjectId(), new UpdateListener() {
@@ -539,8 +541,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
                     mProgressHelper.dismissProgressDialog();
                     mHandler.sendEmptyMessage(MSG_UPDATE_UI);
                     CashRecord cashRecord = new CashRecord(mUser,
-                            isPayByWechat ? Constant.PAY_TYPE_WX : Constant.PAY_TYPE_ALI,
-                            Float.valueOf(mAmountPay) / 100);
+                            isPayByWechat ? Constant.PAY_TYPE_WX : Constant.PAY_TYPE_ALI, amout);
                     addSubscription(cashRecord.save(new SaveListener<String>() {
                         @Override
                         public void done(String s, BmobException e) {
