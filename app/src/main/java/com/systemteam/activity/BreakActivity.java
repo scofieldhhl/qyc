@@ -32,6 +32,7 @@ import static com.systemteam.util.Constant.BUNDLE_KEY_IS_ACTIVING;
 import static com.systemteam.util.Constant.BUNDLE_KEY_SUBMIT_SUCCESS;
 import static com.systemteam.util.Constant.BUNDLE_TYPE_MENU;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
+import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 import static com.systemteam.util.Constant.REQUEST_CODE;
 
 public class BreakActivity extends BaseActivity {
@@ -59,6 +60,9 @@ public class BreakActivity extends BaseActivity {
             switch (msg.what){
                 case MSG_RESPONSE_SUCCESS:
                     theActivity.doSubmit();
+                    break;
+                case MSG_UPDATE_UI:
+                    theActivity.initInfo();
                     break;
             }
         }
@@ -117,6 +121,19 @@ public class BreakActivity extends BaseActivity {
                     mTvCode.setText(getString(R.string.break_carNo) + mCarNo);
                 }
                 isActiving = bundle.getBoolean(BUNDLE_KEY_IS_ACTIVING);
+            }
+        }
+    }
+
+    private void initInfo(){
+        if(mCar == null){
+            mCarNo = "";
+            mEtDescription.setText("");
+            mTvCode.setText(R.string.scan_break_hint1);
+            if(mType == Constant.BREAK_TYPE_BREAK){
+                for(int i = 0; i < mCbArray.length; i++){
+                    mCbArray[i].setChecked(false);
+                }
             }
         }
     }
@@ -195,6 +212,8 @@ public class BreakActivity extends BaseActivity {
                 if(e==null){
                     isSubmitSuccess = true;
                     toast(getString(R.string.break_submit_success));
+                    mCar = null;
+                    mHandler.sendEmptyMessage(MSG_UPDATE_UI);
                 }else{
                     isSubmitSuccess = false;
                     toast(getString(R.string.submit_faile));

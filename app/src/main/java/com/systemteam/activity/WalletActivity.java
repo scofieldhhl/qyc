@@ -530,7 +530,7 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
         if(mUser.getBalance() == null){
             balance = amout;
         }else {
-            balance = Arith.div(mUser.getBalance(), amout);
+            balance = Arith.add(mUser.getBalance(), amout);
         }
         newUser.setBalance(balance);
         addSubscription(newUser.update(mUser.getObjectId(), new UpdateListener() {
