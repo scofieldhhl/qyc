@@ -104,7 +104,6 @@
                     android:textColor="@color/tab_message"
                     android:textSize="@dimen/text_18"/>
                 <ImageView
-                    android:id="@+id/iv_login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_login_confirm"
@@ -146,7 +145,6 @@
                 android:orientation="horizontal">
 
                 <View
-                    android:id="@+id/spit_view3"
                     android:layout_width="60dp"
                     android:layout_height="0.6dp"
                     android:layout_centerVertical="true"
@@ -164,7 +162,6 @@
                     android:textSize="@dimen/text_14"/>
 
                 <View
-                    android:id="@+id/spit_view4"
                     android:layout_width="60dp"
                     android:layout_height="0.6dp"
                     android:layout_centerVertical="true"
@@ -182,7 +179,6 @@
                 android:orientation="horizontal">
 
                 <RelativeLayout
-                    android:id="@+id/rl_weibo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
@@ -198,7 +194,6 @@
                         android:src="@drawable/welcome_logo_weibo"/>
 
                     <TextView
-                        android:id="@+id/tv_social_title_weibo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/iv_weibo"
@@ -210,7 +205,6 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/rl_wechat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -225,7 +219,6 @@
                         android:src="@drawable/welcome_logo_wechat"/>
 
                     <TextView
-                        android:id="@+id/tv_social_title_wechat"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/iv_wechat"
@@ -237,7 +230,6 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/rl_qq"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -252,7 +244,6 @@
                         android:src="@drawable/welcome_logo_qq"/>
 
                     <TextView
-                        android:id="@+id/tv_social_title_qq"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/iv_qq"
@@ -299,7 +290,6 @@
             android:orientation="horizontal">
 
             <CheckBox
-                android:id="@+id/chb_share"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ckb_share_back"
@@ -313,7 +303,6 @@
                 android:textSize="@dimen/text_12" />
 
             <TextView
-                android:id="@+id/tv_policy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"

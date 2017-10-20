@@ -54,7 +54,6 @@
         </LinearLayout>
     </LinearLayout>
     <TableLayout
-        android:id="@+id/tl_bankcard"
         style="@style/info_layout_style"
         android:paddingLeft="@dimen/activity_vertical_margin"
         android:paddingRight="@dimen/activity_vertical_margin"
@@ -65,13 +64,11 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
-                android:id="@+id/tv_cardinfo"
                 style="@style/text_style_title"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:text="@string/bankcard_title_info"/>
             <ImageView
-                android:id="@+id/iv_edit"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:scaleType="center"

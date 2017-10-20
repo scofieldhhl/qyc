@@ -186,16 +186,6 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="hoz_margin_48">
-        <item name="android:layout_marginLeft">48dp</item>
-        <item name="android:layout_marginRight">48dp</item>
-    </style>
-
-    <style name="hoz_margin_32">
-        <item name="android:layout_marginLeft">32dp</item>
-        <item name="android:layout_marginRight">32dp</item>
-    </style>
-
     <style name="MyDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
@@ -252,30 +242,12 @@
         <item name="android:layout_height">48dp</item>
     </style>
 
-    <style name="spacing_line">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:background">@color/text_black_30</item>
-    </style>
-
     <style name="tv_size14_height_32">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">32dp</item>
         <item name="android:textSize">@dimen/text_size_14</item>
         <item name="android:textColor">@color/text_black_54</item>
         <item name="android:gravity">center</item>
-    </style>
-
-    <style name="MatchWrapTv">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:gravity">center</item>
-        <item name="android:background">@color/colorPrimary</item>
-        <item name="android:layout_margin">10dp</item>
-        <item name="android:onClick">onClick</item>
-        <item name="android:padding">8dp</item>
     </style>
 
     <style name="AutoWrapTv">

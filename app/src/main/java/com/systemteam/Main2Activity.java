@@ -91,7 +91,6 @@ import cn.bmob.v3.datatype.BmobGeoPoint;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
-import static com.systemteam.R.id.book_bt;
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
 import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
 import static com.systemteam.util.Constant.DISMISS_SPLASH;
@@ -906,9 +905,6 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case book_bt:
-                countDownTimer.start();
-                break;
             case R.id.btn_locale:
                 getMyLocation();
                 break;

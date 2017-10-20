@@ -6,7 +6,6 @@
               android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/rl_country"
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:visibility="gone"
@@ -25,7 +24,6 @@
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/tv_country"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -59,7 +57,6 @@
         android:layout_marginTop="2dp" >
 
         <TextView
-            android:id="@+id/tv_country_num"
             android:layout_width="70dp"
             android:layout_height="match_parent"
             android:background="@null"

@@ -11,7 +11,6 @@
         layout="@layout/layout_experter_info_avatar"></include>
 
     <TableRow
-        android:id="@+id/tr_info0"
         android:onClick="doUpdate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -29,7 +28,6 @@
     <View style="@style/menu_divider_style" />
 
     <TableRow
-        android:id="@+id/tr_info1"
         android:onClick="doUpdate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -47,7 +45,6 @@
     <View style="@style/menu_divider_style" />
 
     <TableRow
-        android:id="@+id/tr_info2"
         android:onClick="doUpdate"
         android:visibility="gone"
         android:layout_width="match_parent"

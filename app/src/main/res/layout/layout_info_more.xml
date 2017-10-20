@@ -9,7 +9,6 @@
     android:paddingRight="@dimen/activity_vertical_margin"
     android:stretchColumns="1">
     <TableRow
-        android:id="@+id/tr_more0"
         android:onClick="doUpdate"
         android:visibility="gone"
         android:layout_width="match_parent"
@@ -27,7 +26,6 @@
     </TableRow>
     <View style="@style/menu_divider_style" />
     <TableRow
-        android:id="@+id/tr_more1"
         android:onClick="doUpdate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

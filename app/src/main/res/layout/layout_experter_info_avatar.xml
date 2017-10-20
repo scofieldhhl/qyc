@@ -34,7 +34,6 @@
     </RelativeLayout>
 
     <ImageView
-        android:id="@+id/iv_del_photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -44,7 +43,6 @@
         android:visibility="gone"
         android:src="@drawable/ic_delete_white"/>
     <TextView
-        android:id="@+id/tv_nickname_apply"
         style="@style/tv_size16_wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginBottom="@dimen/activity_vertical_margin"

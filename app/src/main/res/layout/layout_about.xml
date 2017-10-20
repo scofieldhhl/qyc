@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/layout_about"
-        style="@style/activity_base_bg"
+    style="@style/activity_base_bg"
         android:orientation="vertical" >
 
     <LinearLayout
@@ -41,7 +40,6 @@
         android:paddingRight="@dimen/activity_horizontal_margin">
 
         <LinearLayout
-            android:id="@+id/ll_about_logo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
@@ -106,7 +104,6 @@
         </ScrollView>
 
         <LinearLayout
-            android:id="@+id/ll_about_copyright"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"

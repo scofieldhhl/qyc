@@ -6,7 +6,6 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/person_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
@@ -93,7 +92,6 @@
             style="@style/menu_layout_style">
 
             <ImageView
-                android:id="@+id/imageView7"
                 style="@style/menu_icon_style"
                 android:src="@drawable/ic_yhq" />
 
@@ -123,7 +121,6 @@
                 android:onClick="gotoMycar">
 
                 <ImageView
-                    android:id="@+id/imageView8"
                     style="@style/menu_icon_style"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_mycar" />
@@ -150,7 +147,6 @@
             android:visibility="visible">
 
             <ImageView
-                android:id="@+id/imageView6"
                 style="@style/menu_icon_style"
                 android:src="@drawable/ic_record" />
 
