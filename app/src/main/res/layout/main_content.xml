@@ -33,15 +33,15 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="8dp"
+            android:layout_height="4dp"
             android:layout_centerVertical="true"
             android:background="@drawable/line_main"/>
 
         <ImageView
             android:id="@+id/iv_menu"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:layout_margin="30dp"
+            android:layout_width="60dp"
+            android:layout_height="65dp"
+            android:layout_margin="35dp"
             android:clickable="true"
             android:onClick="onClick"
             android:src="@drawable/selector_main_menu"
@@ -49,8 +49,8 @@
 
         <ImageView
             android:id="@+id/iv_scan"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="94dp"
+            android:layout_height="106dp"
             android:src="@drawable/selector_main_scan"
             android:scaleType="fitXY"
             android:clickable="true"
@@ -60,8 +60,8 @@
 
         <ImageView
             android:id="@+id/btn_locale"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
+            android:layout_width="60dp"
+            android:layout_height="65dp"
             android:layout_margin="30dp"
             android:scaleType="fitXY"
             android:layout_alignParentRight="true"
@@ -113,5 +113,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@mipmap/splash_img"
+        android:visibility="gone"
         android:clickable="true"/>
 </RelativeLayout>
