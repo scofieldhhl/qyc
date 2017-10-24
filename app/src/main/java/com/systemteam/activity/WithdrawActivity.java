@@ -54,6 +54,7 @@ import static com.systemteam.util.Constant.WITHDRAW_DAYS_DEFAULT;
  */
 //提现后金额显示,账户余额不提现
 //账户余额记录增加提现记录
+// TODO 商户摇摇车被删导致收益记录减少，导致提现记录出现负数
 public class WithdrawActivity extends BaseListActivity {
     private BankCard mBankCard;
     private TextView mTvUserName, mTvPhone, mTvCard, mTvInfo;
