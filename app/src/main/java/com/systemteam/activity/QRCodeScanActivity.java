@@ -38,6 +38,7 @@ import cn.bmob.v3.BmobUser;
 
 import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
 
+//#33FFFFFF
 public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Delegate {
     private boolean isLightOpened = false;
     private QRCodeView mQRCodeView;

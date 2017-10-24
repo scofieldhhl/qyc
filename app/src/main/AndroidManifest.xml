@@ -98,6 +98,8 @@
             </intent-filter>
         </receiver>
 
+        <service android:name=".service.RouteService"/>
+
         <provider
             android:name=".provider.PoiProvider"
             android:authorities="com.systemteam.provider.poiprovider"
