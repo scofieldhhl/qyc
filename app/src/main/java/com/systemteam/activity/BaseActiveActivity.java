@@ -309,7 +309,7 @@ public abstract class BaseActiveActivity extends BaseActivity {
                 mProgressHelper.dismissProgressDialog();
                 LogTool.d("response: " + response);
                 if(response == null){
-                    return;
+                    LogTool.e("response == null");
                 }
                 if (response.contains("200")) {
                     Intent intent = new Intent(context, RouteService.class);
