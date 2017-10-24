@@ -35,7 +35,7 @@
         app:qrcv_isShowTipBackground="true"
         app:qrcv_isShowTipTextAsSingleLine="false"
         app:qrcv_isTipTextBelowRect="false"
-        app:qrcv_maskColor="#82101010"
+        app:qrcv_maskColor="#79252424"
         app:qrcv_qrCodeTipText="@string/scan_hint"
         app:qrcv_rectWidth="200dp"
         app:qrcv_scanLineColor="@color/colorPrimaryDark"

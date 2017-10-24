@@ -141,33 +141,33 @@ public abstract class BaseActiveActivity extends BaseActivity {
                              406：响应超时
                              * */
                             LogTool.d(response);
-                            /*if (response.contains("300")) {
-                            } else {
-                                String msg = "";
-                                if (response.contains("4000")) {
-                                    msg = getString(R.string.error_lock_4000);
-                                } else if (response.contains("4001")) {
-                                    msg = getString(R.string.error_lock_4001);
-                                } else if (response.contains("4002")) {
-                                    msg = getString(R.string.error_lock_4002);
-                                } else if (response.contains("4003")) {
-                                    msg = getString(R.string.error_lock_4003);
-                                } else if (response.contains("401")) {
-                                    msg = getString(R.string.error_lock_401);
+                            if(response != null){
+                                if (response.contains("401")) {
+                                    mProgressHelper.dismissProgressDialog();
+                                    Utils.showDialog(context, getString(R.string.error_lock_failed), getString(R.string.error_lock_401));
+                                    return;
                                 } else if (response.contains("402")) {
-                                    msg = getString(R.string.error_lock_402);
+                                    mProgressHelper.dismissProgressDialog();
+                                    Utils.showDialog(context, getString(R.string.error_lock_failed), getString(R.string.error_lock_402));
+                                    return;
                                 } else if (response.contains("403")) {
-                                    msg = getString(R.string.error_lock_403);
+                                    mProgressHelper.dismissProgressDialog();
+                                    Utils.showDialog(context, getString(R.string.error_lock_failed), getString(R.string.error_lock_403));
+                                    return;
                                 } else if (response.contains("404")) {
-                                    msg = getString(R.string.error_lock_404);
+                                    mProgressHelper.dismissProgressDialog();
+                                    Utils.showDialog(context, getString(R.string.error_lock_failed), getString(R.string.error_lock_404));
+                                    return;
                                 } else if (response.contains("405")) {
-                                    msg = getString(R.string.error_lock_405);
+                                    mProgressHelper.dismissProgressDialog();
+                                    Utils.showDialog(context, getString(R.string.error_lock_failed), getString(R.string.error_lock_405));
+                                    return;
                                 } else if (response.contains("406")) {
-                                    msg = getString(R.string.error_lock_406);
+                                    mProgressHelper.dismissProgressDialog();
+                                    Utils.showDialog(context, getString(R.string.error_lock_failed), getString(R.string.error_lock_406));
+                                    return;
                                 }
-                                Utils.showDialog(context, getString(R.string.error_lock_failed), msg);
-                                LogTool.e("response error!");
-                            }*/
+                            }
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
