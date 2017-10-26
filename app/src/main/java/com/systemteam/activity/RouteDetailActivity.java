@@ -40,7 +40,9 @@ public class RouteDetailActivity extends BaseActivity {
 
     @Override
     public void onClick(View view) {
-        checkUser(RouteDetailActivity.this);
+        if(!checkUser(RouteDetailActivity.this)){
+            return;
+        }
         switch (view.getId()){
             case R.id.iv_again:
                 if(!TextUtils.isEmpty(mCarNo)){

@@ -127,7 +127,9 @@ public class RouteService extends Service {
         mUser = BmobUser.getCurrentUser(MyUser.class);
         if(mUser == null){
             Toast.makeText(this, R.string.user_no, Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, WelcomeActivity.class));
+            Intent intent1 = new Intent(this, WelcomeActivity.class);
+            intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent1);
             return super.onStartCommand(intent, flags, startId);
         }
 //        initLocation();//初始化LocationgClient
@@ -357,9 +359,11 @@ public class RouteService extends Service {
                     // 错误码：206， 502 //L357--错误码：206,错误描述：User cannot be altered(修改) without sessionToken Error.
                     LogTool.e("错误码："+(e).getErrorCode()+",错误描述："+(e).getMessage());
                     if((e).getErrorCode() == 206){//同一账号在多个设备上登录后出现修改用户数据失败,重新登陆后正常
-                        BmobUser.logOut();
+
                     }
                 }
+                BmobUser.logOut();
+                ((BikeApplication) RouteService.this.getApplication()).setmUser(null);
                 //2.修改car收益
                 if(mCar == null){
                     LogTool.e("mCar == null");

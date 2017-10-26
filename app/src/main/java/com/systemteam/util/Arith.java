@@ -30,7 +30,6 @@ public class Arith {
         BigDecimal b1 = new BigDecimal(Float.toString(v1));
         BigDecimal b2 = new BigDecimal(Float.toString(v2));
         float result = b1.add(b2).floatValue();
-        LogTool.d("result :" + result);
         return new BigDecimal(result).setScale(DEF_SCALE_MONEY, BigDecimal.ROUND_HALF_UP).floatValue();
     }
 
@@ -44,7 +43,6 @@ public class Arith {
         BigDecimal b1 = new BigDecimal(Float.toString(v1));
         BigDecimal b2 = new BigDecimal(Float.toString(v2));
         float result = b1.subtract(b2).floatValue();
-        LogTool.d("result :" + result);
         return new BigDecimal(result).setScale(DEF_SCALE_MONEY, BigDecimal.ROUND_HALF_UP).floatValue();
     }
 
@@ -58,7 +56,6 @@ public class Arith {
         BigDecimal b1 = new BigDecimal(Float.toString(v1));
         BigDecimal b2 = new BigDecimal(Float.toString(v2));
         float result = b1.multiply(b2).floatValue();
-        LogTool.d("result :" + result);
         return new BigDecimal(result).setScale(DEF_SCALE_MONEY, BigDecimal.ROUND_HALF_UP).floatValue();
     }
 

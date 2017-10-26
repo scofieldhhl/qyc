@@ -245,7 +245,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     }
 
     protected boolean checkUser(final Activity act) {
-        if (((BikeApplication) act.getApplication()).getmUser() == null) {
+        if (((BikeApplication) act.getApplication()).getmUser() == null ||
+                BmobUser.getCurrentUser(MyUser.class) == null) {
             AlertDialog alertDialog = new AlertDialog.Builder(act).create();
             alertDialog.setTitle(act.getString(R.string.tip));
             alertDialog.setMessage(act.getString(R.string.user_no));
