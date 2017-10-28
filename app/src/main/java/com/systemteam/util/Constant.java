@@ -5,11 +5,60 @@ public class Constant {
     public static float EARN_RATE_DEFAULT = 0.8f;           //分成比例
     public static float COST_BASE_DEFAULT = 1.0f;           //单次使用费用（元）
     public static int TIME_ONCE_ACTIVE = 3 * 60 * 1000;     //单次使用时长，默认3min（ms）
-    public static int TIME_ONCE_ACTIVE_TEST = 10 * 1000;
-    //TODO 通过后台配置分成比例 END
+    public static int COUPON_DEFAULT = 3;                   //新用户注册赠送
+    public static int COUPON_DEFAULT_pay_100 = 0;           //用户充值100赠送
+    public static int COUPON_DEFAULT_pay_200 = 0;           //用户充值200赠送
+    public static int WITHDRAW_DAYS_DEFAULT = 15;           //提现时间间隔
 
+    public enum ConfigEnum {
+
+        EARN_RATE_DEFAULT("EARN_RATE_DEFAULT"),
+        COST_BASE_DEFAULT("COST_BASE_DEFAULT"),
+        TIME_ONCE_ACTIVE("TIME_ONCE_ACTIVE"),
+        COUPON_DEFAULT("COUPON_DEFAULT"),
+        COUPON_DEFAULT_pay_100("COUPON_DEFAULT_pay_100"),
+        COUPON_DEFAULT_pay_200("COUPON_DEFAULT_pay_200"),
+        WITHDRAW_DAYS_DEFAULT("WITHDRAW_DAYS_DEFAULT");
+
+        // 定义一个 private 修饰的实例变量
+        private String tag;
+
+        // 定义一个带参数的构造器，枚举类的构造器只能使用 private 修饰
+        private ConfigEnum(String tag) {
+            this.tag = tag;
+        }
+
+        // 定义 get set 方法
+        public String getTag() {
+            return tag;
+        }
+
+        public void setTag(String tag) {
+            this.tag = tag;
+        }
+
+    }
+    //TODO 通过后台配置分成比例 END
+    public static float EARN_RATE_DEFAULT_MAX = 1.0f;           //分成比例
+    public static float COST_BASE_DEFAULT_MAX = 10f;           //单次使用费用（元）
+    public static int TIME_ONCE_ACTIVE_MAX = 10 * 60 * 1000;     //单次使用时长，默认3min（ms）
+    public static int COUPON_DEFAULT_MAX = 10;                   //新用户注册赠送
+    public static int COUPON_DEFAULT_pay_100_MAX = 100;           //用户充值100赠送
+    public static int COUPON_DEFAULT_pay_200_MAX = 100;           //用户充值200赠送
+    public static int WITHDRAW_DAYS_DEFAULT_MAX = 60;           //提现时间间隔
+
+    public static float EARN_RATE_DEFAULT_MIN = 0f;           //分成比例
+    public static float COST_BASE_DEFAULT_MIN = 0f;           //单次使用费用（元）
+    public static int TIME_ONCE_ACTIVE_MIN = 0 * 60 * 1000;     //单次使用时长，默认3min（ms）
+    public static int COUPON_DEFAULT_MIN = 0;                   //新用户注册赠送
+    public static int COUPON_DEFAULT_pay_100_MIN = 0;           //用户充值100赠送
+    public static int COUPON_DEFAULT_pay_200_MIN = 0;           //用户充值200赠送
+    public static int WITHDRAW_DAYS_DEFAULT_MIN = 15;           //提现时间间隔
+
+
+
+    public static int TIME_ONCE_ACTIVE_TEST = 10 * 1000;
     public static int DISTANCE_RELOADCAR_DEFAULT = 15000;     //默认超过多少距离加载附近设备列表
-    public static int COUPON_DEFAULT = 3;
     public static int CYCLE_DAY_CHART = 15;
 
     public static final int STATUS_NORMAL = 0;          //正常
@@ -25,7 +74,6 @@ public class Constant {
     //guide
 
     public static final int QUERY_LIMIT_DEFAULT = 10;
-    public static int WITHDRAW_DAYS_DEFAULT = 15;
     public static float WITHDRAW_AMOUNT_DEFAULT = 300f;
     public static float WITHDRAW_AMOUNT_MIN = 1f;
     public static final int WITHDRAW_SUCCESS = 10;

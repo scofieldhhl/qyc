@@ -36,6 +36,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.systemteam.activity.BreakActivity;
 import com.systemteam.activity.WalletActivity;
+import com.systemteam.bean.Config;
 import com.systemteam.bean.MyUser;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
@@ -44,9 +45,13 @@ import com.systemteam.view.ProgressDialogHelper;
 import com.systemteam.welcome.WelcomeActivity;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
@@ -96,6 +101,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                 Constant.TIME_ONCE_ACTIVE = TIME_ONCE_ACTIVE_TEST;
             }
         }
+        requestInitConfig();
     }
 
     @TargetApi(19)
@@ -389,5 +395,171 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             //透明状态栏
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+    }
+
+    private void requestSaveConfig(Config config){
+        addSubscription(config.save(new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
+                if(e==null){
+
+                }else{
+                    if (e instanceof BmobException) {
+                        LogTool.e("错误码：" + ((BmobException) e).getErrorCode() + ",错误描述：" + ((BmobException) e).getMessage());
+                    } else {
+                        LogTool.e("错误描述：" + e.getMessage());
+                    }
+                }
+            }
+        }));
+    }
+
+    private void requestInitConfig(){
+        /*Config config1 = new Config();
+        config1.setTag(Constant.ConfigEnum.EARN_RATE_DEFAULT.getTag());
+        config1.setValue(Float.valueOf(Constant.EARN_RATE_DEFAULT));
+        config1.setMax(Float.valueOf(Constant.EARN_RATE_DEFAULT_MAX));
+        config1.setMin(Float.valueOf(Constant.EARN_RATE_DEFAULT_MIN));
+        requestSaveConfig(config1);
+
+        Config config2 = new Config();
+        config2.setTag(Constant.ConfigEnum.COST_BASE_DEFAULT.getTag());
+        config2.setValue(Float.valueOf(Constant.COST_BASE_DEFAULT));
+        config2.setMax(Float.valueOf(Constant.COST_BASE_DEFAULT_MAX));
+        config2.setMin(Float.valueOf(Constant.COST_BASE_DEFAULT_MIN));
+        requestSaveConfig(config2);
+
+        Config config3 = new Config();
+        config3.setTag(Constant.ConfigEnum.TIME_ONCE_ACTIVE.getTag());
+        config3.setValue(Float.valueOf(Constant.TIME_ONCE_ACTIVE));
+        config3.setMax(Float.valueOf(Constant.TIME_ONCE_ACTIVE_MAX));
+        config3.setMin(Float.valueOf(Constant.TIME_ONCE_ACTIVE_MIN));
+        requestSaveConfig(config3);
+
+        Config config4 = new Config();
+        config4.setTag(Constant.ConfigEnum.COUPON_DEFAULT.getTag());
+        config4.setValue(Float.valueOf(Constant.COUPON_DEFAULT));
+        config4.setMax(Float.valueOf(Constant.COUPON_DEFAULT_MAX));
+        config4.setMin(Float.valueOf(Constant.COUPON_DEFAULT_MIN));
+        requestSaveConfig(config4);
+
+        Config config5 = new Config();
+        config5.setTag(Constant.ConfigEnum.COUPON_DEFAULT_pay_100.getTag());
+        config5.setValue(Float.valueOf(Constant.COUPON_DEFAULT_pay_100));
+        config5.setMax(Float.valueOf(Constant.COUPON_DEFAULT_pay_100_MAX));
+        config5.setMin(Float.valueOf(Constant.COUPON_DEFAULT_pay_100_MIN));
+        requestSaveConfig(config5);
+
+        Config config6 = new Config();
+        config6.setTag(Constant.ConfigEnum.COUPON_DEFAULT_pay_200.getTag());
+        config6.setValue(Float.valueOf(Constant.COUPON_DEFAULT_pay_200));
+        config6.setMax(Float.valueOf(Constant.COUPON_DEFAULT_pay_200_MAX));
+        config6.setMin(Float.valueOf(Constant.COUPON_DEFAULT_pay_200_MIN));
+        requestSaveConfig(config6);
+
+        Config config7 = new Config();
+        config7.setTag(Constant.ConfigEnum.WITHDRAW_DAYS_DEFAULT.getTag());
+        config7.setValue(Float.valueOf(Constant.WITHDRAW_DAYS_DEFAULT));
+        config7.setMax(Float.valueOf(Constant.WITHDRAW_DAYS_DEFAULT_MAX));
+        config7.setMin(Float.valueOf(Constant.WITHDRAW_DAYS_DEFAULT_MIN));
+        requestSaveConfig(config7);*/
+
+        BmobQuery<Config> query = new BmobQuery<>();
+        addSubscription(query.findObjects(new FindListener<Config>() {
+
+            @Override
+            public void done(List<Config> object, BmobException e) {
+                if(e==null){
+                    if(object != null && object.size() > 0){
+                        for(Config config : object){
+                            if(Constant.ConfigEnum.EARN_RATE_DEFAULT.getTag().equalsIgnoreCase(config.getTag())){
+                                if(config.getValue() != null && config.getMax() != null && config.getMin() != null){
+                                    float value = config.getValue();
+                                    float max = config.getMax();
+                                    float min = config.getMin();
+                                    if(value >= min && value <= max &&
+                                            value >= Constant.EARN_RATE_DEFAULT_MIN
+                                            && value <= Constant.EARN_RATE_DEFAULT_MAX){
+                                        Constant.EARN_RATE_DEFAULT = value;
+                                    }
+                                }
+                            }else if(Constant.ConfigEnum.COST_BASE_DEFAULT.getTag().equalsIgnoreCase(config.getTag())){
+                                if(config.getValue() != null && config.getMax() != null && config.getMin() != null){
+                                    float value = config.getValue();
+                                    float max = config.getMax();
+                                    float min = config.getMin();
+                                    if(value >= min && value <= max &&
+                                            value >= Constant.COST_BASE_DEFAULT_MIN
+                                            && value <= Constant.COST_BASE_DEFAULT_MAX){
+                                        Constant.COST_BASE_DEFAULT = value;
+                                    }
+                                }
+                            }else if(Constant.ConfigEnum.TIME_ONCE_ACTIVE.getTag().equalsIgnoreCase(config.getTag())){
+                                if(config.getValue() != null && config.getMax() != null && config.getMin() != null){
+                                    Float value = config.getValue();
+                                    float max = config.getMax();
+                                    float min = config.getMin();
+                                    if(value >= min && value <= max &&
+                                            value >= Constant.TIME_ONCE_ACTIVE_MIN
+                                            && value <= Constant.TIME_ONCE_ACTIVE_MAX){
+                                        Constant.TIME_ONCE_ACTIVE = value.intValue();
+                                    }
+                                }
+                            }else if(Constant.ConfigEnum.COUPON_DEFAULT.getTag().equalsIgnoreCase(config.getTag())){
+                                if(config.getValue() != null && config.getMax() != null && config.getMin() != null){
+                                    Float value = config.getValue();
+                                    float max = config.getMax();
+                                    float min = config.getMin();
+                                    if(value >= min && value <= max &&
+                                            value >= Constant.COUPON_DEFAULT_MIN
+                                            && value <= Constant.COUPON_DEFAULT_MAX){
+                                        Constant.COUPON_DEFAULT = value.intValue();
+                                    }
+                                }
+                            }else if(Constant.ConfigEnum.COUPON_DEFAULT_pay_100.getTag().equalsIgnoreCase(config.getTag())){
+                                if(config.getValue() != null && config.getMax() != null && config.getMin() != null){
+                                    Float value = config.getValue();
+                                    float max = config.getMax();
+                                    float min = config.getMin();
+                                    if(value >= min && value <= max &&
+                                            value >= Constant.COUPON_DEFAULT_pay_100_MIN
+                                            && value <= Constant.COUPON_DEFAULT_pay_100_MAX){
+                                        Constant.COUPON_DEFAULT_pay_100 = value.intValue();
+                                    }
+                                }
+                            }else if(Constant.ConfigEnum.COUPON_DEFAULT_pay_200.getTag().equalsIgnoreCase(config.getTag())){
+                                if(config.getValue() != null && config.getMax() != null && config.getMin() != null){
+                                    Float value = config.getValue();
+                                    float max = config.getMax();
+                                    float min = config.getMin();
+                                    if(value >= min && value <= max &&
+                                            value >= Constant.COUPON_DEFAULT_pay_200_MIN
+                                            && value <= Constant.COUPON_DEFAULT_pay_200_MAX){
+                                        Constant.COUPON_DEFAULT_pay_200 = value.intValue();
+                                    }
+                                }
+                            }else if(Constant.ConfigEnum.WITHDRAW_DAYS_DEFAULT.getTag().equalsIgnoreCase(config.getTag())){
+                                if(config.getValue() != null && config.getMax() != null && config.getMin() != null){
+                                    Float value = config.getValue();
+                                    float max = config.getMax();
+                                    float min = config.getMin();
+                                    if(value >= min && value <= max &&
+                                            value >= Constant.WITHDRAW_DAYS_DEFAULT_MIN
+                                            && value <= Constant.WITHDRAW_DAYS_DEFAULT_MAX){
+                                        Constant.WITHDRAW_DAYS_DEFAULT = value.intValue();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }else{
+                    if (e instanceof BmobException) {
+                        LogTool.e("错误码：" + ((BmobException) e).getErrorCode() + ",错误描述：" + ((BmobException) e).getMessage());
+                    } else {
+                        LogTool.e("错误描述：" + e.getMessage());
+                    }
+                }
+            }
+        }));
     }
 }
