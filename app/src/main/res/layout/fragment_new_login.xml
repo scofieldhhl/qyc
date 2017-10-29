@@ -100,16 +100,10 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:gravity="center"
                     android:text="@string/welcomanim_title_getcode"
                     android:textColor="@color/tab_message"
                     android:textSize="@dimen/text_18"/>
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_login_confirm"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:visibility="gone"/>
             </RelativeLayout>
 
             <View

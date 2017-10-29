@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.tencent.mm.opensdk.modelmsg.SendAuth;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.LogInListener;
 import rx.Subscriber;
 
 import static com.systemteam.BaseActivity.log;
@@ -73,8 +75,27 @@ public class LoginFragment extends BaseFragment {
                 if(isLoginByPsd){
                     testLogin();
                 }else{
-                    //TODO 登录成功后，密码还是首次注册时的密码 是否需要将密码重置为最新注册码
-                    registerUser(mContext, mPhone, mPwd);
+                    BmobUser.loginBySMSCode(mPhone, mPwd, new LogInListener<Object>() {
+                        @Override
+                        public void done(Object o, BmobException e) {
+                            if(mProgressHelper != null){
+                                mProgressHelper.dismissProgressDialog();
+                            }
+                            if(e==null){
+                                toast(mContext, mContext.getString(R.string.reg_success));
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        startActivity(new Intent(getActivity(), Main2Activity.class));
+                                        getActivity().finish();
+                                    }
+                                }, 500);
+                            }else{
+                                toast(mContext, mContext.getString(R.string.reg_failed));
+                                loge(e);
+                            }
+                        }
+                    });
                 }
                 break;
             case R.id.iv_qq:
@@ -87,8 +108,21 @@ public class LoginFragment extends BaseFragment {
                 onLoginWechat(v);
                 break;
             case R.id.tv_forgetpsw:
-                requestSMSCode(mContext, mPhone);
-                isLoginByPsd = false;
+                if(TextUtils.isEmpty(mPhone)){
+                    toast(mContext, mContext.getString(R.string.smssdk_write_mobile_phone));
+                    return;
+                }
+                if ((System.currentTimeMillis() - mTimeSMSCode) < TIME_SMSCODE_WIAT) {
+                    toast(mContext, mContext.getString(R.string.sms_code_wait));
+                } else {
+                    ((TextView) getActivity().findViewById(R.id.tv_forgetpsw)).
+                            setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+                    requestSMSCode(mContext, mPhone);
+                    isLoginByPsd = false;
+                    ((TextView) getActivity().findViewById(R.id.tv_forgetpsw)).
+                            setTextColor(ContextCompat.getColor(mContext, R.color.tab_message));
+                }
+                mTimeSMSCode = System.currentTimeMillis();
                 break;
         }
     }

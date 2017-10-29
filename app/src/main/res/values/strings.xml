@@ -35,6 +35,7 @@
 
     <string name="mark_choice">记住我的选择</string>
     <string name="exist_app">再按一次退出程序</string>
+    <string name="sms_code_wait" formatted="false">请勿频繁获取短信验证码，请20秒后再试！</string>
     <string name="exist">确认要结束进程吗？</string>
     <string name="tip">提示</string>
     <string name="new_car">新增摇摇车</string>

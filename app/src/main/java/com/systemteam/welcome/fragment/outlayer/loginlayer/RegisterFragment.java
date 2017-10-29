@@ -58,7 +58,12 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
         }
         switch (v.getId()){
             case R.id.btn_next:
-                requestSMSCode(mContext, mPhone);
+                if ((System.currentTimeMillis() - mTimeSMSCode) < TIME_SMSCODE_WIAT) {
+                    toast(mContext, mContext.getString(R.string.sms_code_wait));
+                } else {
+                    requestSMSCode(mContext, mPhone);
+                }
+                mTimeSMSCode = System.currentTimeMillis();
                 break;
             case R.id.btn_login:
                 if(TextUtils.isEmpty(mPwd)){

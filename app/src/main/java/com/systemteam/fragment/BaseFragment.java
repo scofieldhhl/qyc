@@ -39,6 +39,8 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     protected InputMethodManager mImm;
     private CompositeSubscription mCompositeSubscription;
     protected ProgressDialogHelper mProgressHelper;
+    protected long mTimeSMSCode = 0;
+    protected final int TIME_SMSCODE_WIAT = 20 * 1000;
 
     /**
      * 解决Subscription内存泄露问题
