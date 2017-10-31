@@ -9,7 +9,8 @@ public class Config extends BmobObject{
 	private String mark;		//备注
 	private Float value;		//
 	private Float max;			//
-	private Float min;			//
+	private Float min;			//    升级：低于min需强制升级
+	private Float type;			//类型 升级：0一般升级 1强制升级
 
 	public String getName() {
 		return name;
@@ -57,5 +58,13 @@ public class Config extends BmobObject{
 
 	public void setMin(Float min) {
 		this.min = min;
+	}
+
+	public Float getType() {
+		return type;
+	}
+
+	public void setType(Float type) {
+		this.type = type;
 	}
 }

@@ -36,6 +36,7 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.systemteam.R;
+import com.systemteam.bean.Config;
 import com.systemteam.custom.SelectDialog;
 
 import java.math.BigDecimal;
@@ -47,6 +48,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.systemteam.util.Constant.UPGRADE_URL;
 
 public class Utils {
     private static PowerManager.WakeLock mWakeLock;
@@ -465,4 +468,98 @@ public class Utils {
         }
         return false;
     }
+
+    public static int getVersionCode(Context context)//获取版本号(内部识别号)
+    {
+        try {
+            PackageInfo pi=context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            return pi.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public static boolean checkUpgrade(Activity activity, Config config){
+        if(config == null || config.getValue() == null){
+            return false;
+        }
+        int value = config.getValue().intValue();
+        int versonCode = Utils.getVersionCode(activity);
+        int typeUpgrade = -1;
+        if(config.getMin() != null && config.getMin().intValue() > versonCode){
+            typeUpgrade = Constant.TYPE_UPGRADE_FORCE;
+        }else if(versonCode < value){
+            typeUpgrade = Constant.TYPE_UPGRADE_NORMAL;
+            if(config.getType() != null && config.getType().intValue() == Constant.TYPE_UPGRADE_FORCE){
+                typeUpgrade = Constant.TYPE_UPGRADE_FORCE;
+            }
+        }
+        if(typeUpgrade > -1){
+            showUpgradeDialog(activity, typeUpgrade);
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public static void showUpgradeDialog(final Activity activity, int type) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        final String strNow = sdf.format(new Date());
+        String strDate = ProtocolPreferences.getDateUpgrade(activity);
+        if(type == Constant.TYPE_UPGRADE_NORMAL && strNow.equalsIgnoreCase(strDate)){
+            return;
+        }
+        AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+        alertDialog.setTitle(activity.getString(R.string.new_version_title));
+        if(type == Constant.TYPE_UPGRADE_FORCE){
+            alertDialog.setMessage(activity.getString(R.string.new_version_content_force));
+            alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, activity.getString(R.string.new_version_force),
+                    new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent();
+                            intent.setAction(Intent.ACTION_VIEW);
+                            Uri content_url = Uri.parse(UPGRADE_URL);
+                            intent.setData(content_url);
+                            activity.startActivity(intent);
+                        }
+                    });
+            alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, activity.getString(R.string.cancel),
+                    new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            activity.finish();
+                            System.exit(0);
+                        }
+                    });
+            alertDialog.setCancelable(false);
+        }else {
+            alertDialog.setMessage(activity.getString(R.string.new_version_content));
+            alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, activity.getString(R.string.new_version_upgrade),
+                    new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent();
+                            intent.setAction(Intent.ACTION_VIEW);
+                            Uri content_url = Uri.parse(UPGRADE_URL);
+                            intent.setData(content_url);
+                            activity.startActivity(intent);
+                        }
+                    });
+            alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, activity.getString(R.string.cancel),
+                    new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+            ProtocolPreferences.setDateUpgrade(activity, strNow);
+        }
+        alertDialog.show();
+    }
+
 }

@@ -214,7 +214,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             mToolbarTitle.setText(titleId);
         }
 
-
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
             mToolbar.setNavigationIcon(R.mipmap.return_icon);
@@ -549,6 +548,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                                         Constant.WITHDRAW_DAYS_DEFAULT = value.intValue();
                                     }
                                 }
+                            }else if(Constant.ConfigEnum.VERSION_CODE_NEW.getTag().equalsIgnoreCase(config.getTag())){//升级检查
+                                Utils.checkUpgrade(BaseActivity.this, config);
                             }
                         }
                     }
@@ -562,4 +563,5 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             }
         }));
     }
+
 }

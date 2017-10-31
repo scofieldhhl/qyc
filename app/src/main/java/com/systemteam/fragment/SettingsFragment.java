@@ -27,14 +27,20 @@ import android.widget.Toast;
 
 import com.systemteam.BikeApplication;
 import com.systemteam.R;
+import com.systemteam.bean.Config;
 import com.systemteam.bean.Feedback;
 import com.systemteam.bean.MyUser;
+import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
 import com.systemteam.view.ProgressDialogHelper;
 
+import java.util.List;
+
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
@@ -88,8 +94,35 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
 
     protected void checkAppUpdate() {
-        //TODO 检测新版本
-        Toast.makeText(getActivity(), R.string.no_update, Toast.LENGTH_SHORT).show();
+        mProgressHelper.showProgressDialog(getString(R.string.check_updating));
+        BmobQuery<Config> query = new BmobQuery<>();
+        query.addWhereEqualTo("tag", Constant.ConfigEnum.VERSION_CODE_NEW.getTag());
+        addSubscription(query.findObjects(new FindListener<Config>() {
+
+            @Override
+            public void done(List<Config> object, BmobException e) {
+                if(e==null){
+                    mProgressHelper.dismissProgressDialog();
+                    if(object != null && object.size() > 0){
+                        Config config = object.get(0);
+                        if(!Utils.checkUpgrade(getActivity(), config)){
+                            Toast.makeText(getActivity(), R.string.no_update, Toast.LENGTH_SHORT).show();
+                        }
+                    }else {
+                        Toast.makeText(getActivity(), R.string.no_update, Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    mProgressHelper.dismissProgressDialog();
+                    Toast.makeText(getActivity(), R.string.no_update, Toast.LENGTH_SHORT).show();
+                    if(e instanceof BmobException){
+                        LogTool.e("错误码："+((BmobException)e).getErrorCode()+",错误描述："+((BmobException)e).getMessage());
+                    }else{
+                        LogTool.e("错误描述："+e.getMessage());
+                    }
+                }
+            }
+        }));
+
     }
 
     public Dialog showFeedbackDialog() {

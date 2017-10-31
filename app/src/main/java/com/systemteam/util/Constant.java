@@ -9,6 +9,7 @@ public class Constant {
     public static int COUPON_DEFAULT_pay_100 = 0;           //用户充值100赠送
     public static int COUPON_DEFAULT_pay_200 = 0;           //用户充值200赠送
     public static int WITHDRAW_DAYS_DEFAULT = 15;           //提现时间间隔
+    public static int VERSION_CODE_NEW = -1;                //最新版本版本号
 
     public enum ConfigEnum {
 
@@ -18,7 +19,8 @@ public class Constant {
         COUPON_DEFAULT("COUPON_DEFAULT"),
         COUPON_DEFAULT_pay_100("COUPON_DEFAULT_pay_100"),
         COUPON_DEFAULT_pay_200("COUPON_DEFAULT_pay_200"),
-        WITHDRAW_DAYS_DEFAULT("WITHDRAW_DAYS_DEFAULT");
+        WITHDRAW_DAYS_DEFAULT("WITHDRAW_DAYS_DEFAULT"),
+        VERSION_CODE_NEW("VERSION_CODE_NEW");
 
         // 定义一个 private 修饰的实例变量
         private String tag;
@@ -55,7 +57,9 @@ public class Constant {
     public static int COUPON_DEFAULT_pay_200_MIN = 0;           //用户充值200赠送
     public static int WITHDRAW_DAYS_DEFAULT_MIN = 15;           //提现时间间隔
 
-
+    public static int TYPE_UPGRADE_NORMAL = 0;                //最新版本版本号
+    public static int TYPE_UPGRADE_FORCE = 1;                //最新版本版本号
+    public final static String UPGRADE_URL = "http://android.myapp.com/myapp/detail.htm?apkName=com.systemteam";                //最新版本版本号
 
     public static int TIME_ONCE_ACTIVE_TEST = 10 * 1000;
     public static int DISTANCE_RELOADCAR_DEFAULT = 15000;     //默认超过多少距离加载附近设备列表

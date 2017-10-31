@@ -300,7 +300,13 @@
 
     <string name="email_not_valid">邮件地址无效，请检查后重试！</string>
     <string name="feedback_null">反馈内容不能为空，请检查后重试！</string>
-    <string name="no_update">已是最新版本！</string>
+    <string name="check_updating">正在检查新版本……</string>
+    <string name="no_update">当前已是最新版本！</string>
+    <string name="new_version_title">发现新版本：</string>
+    <string name="new_version_content">亲，摇星球有新版本了，请及时升级更新哦！</string>
+    <string name="new_version_content_force">亲，摇星球有新版本，旧的版本已停止使用，请及时升级到最新版本！</string>
+    <string name="new_version_upgrade">更新</string>
+    <string name="new_version_force">立即更新</string>
     <string name="about_us_1">
         摇星球八客科技荣誉出品。摇星球是一款给你的小孩带来欢乐的APP，APP基于地图精准地位，扫码开锁，快速便捷！
         八客科技是目前国内开创共享经济模式的引领者，致力于应用互联网思维，为广大消费者带来极致体验！\n

@@ -113,7 +113,7 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
 
     @Override
     public void onScanQRCodeSuccess(String result) {
-        // 扫码成功，数据处理下一步操作
+        // 扫码成功，数据处理下一步操作//http://android.myapp.com/myapp/detail.htm?apkName=com.systemteam&no=21591
         LogTool.d("result:" + result);//result:http://pay.yiqiniubi.com/18789--
         vibrate();
         if(result != null && !TextUtils.isEmpty(result)){

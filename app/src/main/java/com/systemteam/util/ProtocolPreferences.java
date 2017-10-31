@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 public class ProtocolPreferences {
     private static final String DB_PROTOCOL = "db_protocol";
     private static final String PROTOCOL_CAR_COUNT = "spf_car_count";
+    private static final String PROTOCOL_DATE_UPGRADE = "spf_date_upgrade";
     private static final String PROTOCOL_WITHDRAW_BALANCE = "spf_withdraw_balance";
 
     public static void setCarCount(Context context, int count) {
@@ -28,4 +29,13 @@ public class ProtocolPreferences {
         return preferences.getBoolean(PROTOCOL_WITHDRAW_BALANCE, false);
     }
 
+    public static void setDateUpgrade(Context context, String date) {
+        SharedPreferences preferences = context.getSharedPreferences(DB_PROTOCOL, 0);
+        preferences.edit().putString(PROTOCOL_DATE_UPGRADE, date).apply();
+    }
+
+    public static String getDateUpgrade(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(DB_PROTOCOL, 0);
+        return preferences.getString(PROTOCOL_DATE_UPGRADE, "");
+    }
 }
