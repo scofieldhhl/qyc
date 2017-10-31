@@ -105,7 +105,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                     mProgressHelper.dismissProgressDialog();
                     if(object != null && object.size() > 0){
                         Config config = object.get(0);
-                        if(!Utils.checkUpgrade(getActivity(), config)){
+                        if(!Utils.checkUpgrade(getActivity(), config, true)){
                             Toast.makeText(getActivity(), R.string.no_update, Toast.LENGTH_SHORT).show();
                         }
                     }else {

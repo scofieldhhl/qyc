@@ -177,6 +177,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
                 case DISMISS_SPLASH:
                     theActivity.findViewById(R.id.v_splash).setVisibility(View.GONE);
 //                    theActivity.cancelFullScreen();
+                    theActivity.requestInitConfig();
                     break;
                 case MSG_RESPONSE_SUCCESS:
                     List<Car> list = (List<Car>) msg.obj;//网络加载数据的26设备没有显示到地图
@@ -253,6 +254,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         super.onCreate(savedInstanceState);
 //        setFullScreen();
         setContentView(R.layout.activity_main);
+        findViewById(R.id.v_splash).setVisibility(View.VISIBLE);
         checkSDK();
         LogTool.i("Main2Activity---------onCreate---------------");
         mContext = this;

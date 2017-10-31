@@ -480,7 +480,7 @@ public class Utils {
         }
     }
 
-    public static boolean checkUpgrade(Activity activity, Config config){
+    public static boolean checkUpgrade(Activity activity, Config config, boolean isByUser){
         if(config == null || config.getValue() == null){
             return false;
         }
@@ -496,18 +496,18 @@ public class Utils {
             }
         }
         if(typeUpgrade > -1){
-            showUpgradeDialog(activity, typeUpgrade);
+            showUpgradeDialog(activity, typeUpgrade, isByUser);
             return true;
         }else {
             return false;
         }
     }
 
-    public static void showUpgradeDialog(final Activity activity, int type) {
+    public static void showUpgradeDialog(final Activity activity, int type, boolean isByUser) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         final String strNow = sdf.format(new Date());
         String strDate = ProtocolPreferences.getDateUpgrade(activity);
-        if(type == Constant.TYPE_UPGRADE_NORMAL && strNow.equalsIgnoreCase(strDate)){
+        if(type == Constant.TYPE_UPGRADE_NORMAL && strNow.equalsIgnoreCase(strDate) && !isByUser){
             return;
         }
         AlertDialog alertDialog = new AlertDialog.Builder(activity).create();

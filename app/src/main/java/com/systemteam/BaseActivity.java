@@ -101,7 +101,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                 Constant.TIME_ONCE_ACTIVE = TIME_ONCE_ACTIVE_TEST;
             }
         }
-        requestInitConfig();
     }
 
     @TargetApi(19)
@@ -413,7 +412,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }));
     }
 
-    private void requestInitConfig(){
+    protected void requestInitConfig(){
         /*Config config1 = new Config();
         config1.setTag(Constant.ConfigEnum.EARN_RATE_DEFAULT.getTag());
         config1.setValue(Float.valueOf(Constant.EARN_RATE_DEFAULT));
@@ -549,7 +548,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                                     }
                                 }
                             }else if(Constant.ConfigEnum.VERSION_CODE_NEW.getTag().equalsIgnoreCase(config.getTag())){//升级检查
-                                Utils.checkUpgrade(BaseActivity.this, config);
+                                Utils.checkUpgrade(BaseActivity.this, config, false);
                             }
                         }
                     }
