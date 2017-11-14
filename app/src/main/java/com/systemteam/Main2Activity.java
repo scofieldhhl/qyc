@@ -59,6 +59,7 @@ import com.systemteam.activity.MyRouteActivity;
 import com.systemteam.activity.QRCodeScanActivity;
 import com.systemteam.activity.SettingActivity;
 import com.systemteam.activity.WalletActivity;
+import com.systemteam.activity.ZxingActivity;
 import com.systemteam.bean.BikeInfo;
 import com.systemteam.bean.Car;
 import com.systemteam.bean.MyUser;
@@ -95,6 +96,7 @@ import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
 import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
 import static com.systemteam.util.Constant.DISMISS_SPLASH;
 import static com.systemteam.util.Constant.DISTANCE_RELOADCAR_DEFAULT;
+import static com.systemteam.util.Constant.MODEL_DEVICE_ZXINGQR;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 
@@ -1060,6 +1062,9 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
             return;
         }
         Intent intent = new Intent(this, QRCodeScanActivity.class);
+        if(MODEL_DEVICE_ZXINGQR.equalsIgnoreCase(android.os.Build.MODEL)){
+            intent = new Intent(this, ZxingActivity.class);
+        }
         intent.putExtra(Constant.BUNDLE_KEY_UNLOCK, true);
         startActivity(intent);
     }

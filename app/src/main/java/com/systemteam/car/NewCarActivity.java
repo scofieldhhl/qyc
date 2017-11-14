@@ -23,6 +23,7 @@ import com.systemteam.BaseActivity;
 import com.systemteam.BikeApplication;
 import com.systemteam.R;
 import com.systemteam.activity.QRCodeScanActivity;
+import com.systemteam.activity.ZxingActivity;
 import com.systemteam.bean.Car;
 import com.systemteam.bean.MyUser;
 import com.systemteam.gdmap.lib.LocationTask;
@@ -45,6 +46,7 @@ import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
 import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
+import static com.systemteam.util.Constant.MODEL_DEVICE_ZXINGQR;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 import static com.systemteam.util.Constant.REQUEST_CODE;
@@ -196,8 +198,11 @@ public class NewCarActivity extends BaseActivity implements AMap.OnCameraChangeL
     }
 
     public void gotoScan(View view) {
-        startActivityForResult(new Intent(NewCarActivity.this, QRCodeScanActivity.class),
-                REQUEST_CODE);
+        Intent intent = new Intent(this, QRCodeScanActivity.class);
+        if(MODEL_DEVICE_ZXINGQR.equalsIgnoreCase(android.os.Build.MODEL)){
+            intent = new Intent(this, ZxingActivity.class);
+        }
+        startActivityForResult(intent, REQUEST_CODE);
     }
 
     @Override

@@ -63,4 +63,5 @@
     <color name="red_background">#D32F2F</color>
     <color name="purple_background">#7B1FA2</color>
 
+    <color name="qr_bg">#79252424</color>
 </resources>

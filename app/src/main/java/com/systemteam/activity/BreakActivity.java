@@ -31,6 +31,7 @@ import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
 import static com.systemteam.util.Constant.BUNDLE_KEY_IS_ACTIVING;
 import static com.systemteam.util.Constant.BUNDLE_KEY_SUBMIT_SUCCESS;
 import static com.systemteam.util.Constant.BUNDLE_TYPE_MENU;
+import static com.systemteam.util.Constant.MODEL_DEVICE_ZXINGQR;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 import static com.systemteam.util.Constant.REQUEST_CODE;
@@ -235,8 +236,11 @@ public class BreakActivity extends BaseActivity {
     }
 
     public void gotoScan(View view){
-        startActivityForResult(new Intent(BreakActivity.this, QRCodeScanActivity.class),
-                REQUEST_CODE);
+        Intent intent = new Intent(this, QRCodeScanActivity.class);
+        if(MODEL_DEVICE_ZXINGQR.equalsIgnoreCase(android.os.Build.MODEL)){
+            intent = new Intent(this, ZxingActivity.class);
+        }
+        startActivityForResult(intent, REQUEST_CODE);
     }
 
     @Override

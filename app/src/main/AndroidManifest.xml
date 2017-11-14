@@ -118,6 +118,11 @@
             android:name=".activity.QRCodeScanActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.ZxingActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".welcome.WelcomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

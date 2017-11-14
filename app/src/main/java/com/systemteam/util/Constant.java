@@ -146,4 +146,6 @@ public class Constant {
     public static final int NETWORK_STATUS_GRPS = 1;
     public static final int NETWORK_STATUS_WIFI = 2;
 
+    public static String MODEL_DEVICE_ZXINGQR = "MHA-AL00";
+
 }
