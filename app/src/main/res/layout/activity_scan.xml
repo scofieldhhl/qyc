@@ -13,7 +13,8 @@
             style="@style/toolbar_title" />
     </android.support.v7.widget.Toolbar>
 
-    <!--app:qrcv_barCodeTipText="@string/scan_hint"-->
+    <!--app:qrcv_barCodeTipText="@string/scan_hint"
+    app:qrcv_qrCodeTipText="@string/scan_hint"-->
     <cn.bingoogolapple.qrcode.zbar.ZBarView
         android:id="@+id/zbarview"
         android:layout_width="match_parent"
@@ -36,7 +37,6 @@
         app:qrcv_isShowTipTextAsSingleLine="false"
         app:qrcv_isTipTextBelowRect="false"
         app:qrcv_maskColor="@color/qr_bg"
-        app:qrcv_qrCodeTipText="@string/scan_hint"
         app:qrcv_rectWidth="200dp"
         app:qrcv_scanLineColor="@color/colorPrimaryDark"
         app:qrcv_toolbarHeight="56dp"
