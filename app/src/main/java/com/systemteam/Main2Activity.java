@@ -96,6 +96,7 @@ import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
 import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
 import static com.systemteam.util.Constant.DISMISS_SPLASH;
 import static com.systemteam.util.Constant.DISTANCE_RELOADCAR_DEFAULT;
+import static com.systemteam.util.Constant.MAP_SCALING;
 import static com.systemteam.util.Constant.MODEL_DEVICE_ZXINGQR;
 import static com.systemteam.util.Constant.MSG_RESPONSE_SUCCESS;
 import static com.systemteam.util.Constant.MSG_UPDATE_UI;
@@ -309,6 +310,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
             aMap.getUiSettings().setZoomControlsEnabled(false);
             aMap.getUiSettings().setGestureScaleByMapCenter(true);
 //            aMap.getUiSettings().setScrollGesturesEnabled(false);
+            aMap.getUiSettings().setLogoBottomMargin(-50);//隐藏logo
             aMap.setOnMapTouchListener(this);
             aMap.setOnMapLoadedListener(this);
             aMap.setOnCameraChangeListener(this);
@@ -547,6 +549,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         if(mStartPosition != null){
             aMap.moveCamera(CameraUpdateFactory.changeLatLng(
                     new LatLng(mStartPosition.latitude, mStartPosition.longitude)));
+            aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(initLocation, MAP_SCALING));
         }
     }
 
@@ -738,8 +741,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
     {
         clickInitInfo();
         if(initLocation!=null) {
-            CameraUpdate cameraUpate = CameraUpdateFactory.newLatLngZoom(
-                    initLocation, 17f);
+            CameraUpdate cameraUpate = CameraUpdateFactory.newLatLngZoom(initLocation, MAP_SCALING);
             aMap.animateCamera(cameraUpate);
         }
     }
@@ -748,7 +750,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         clickInitInfo();
         if(mRecordPositon!=null) {
             CameraUpdate cameraUpate = CameraUpdateFactory.newLatLngZoom(
-                    mRecordPositon, 17f);
+                    mRecordPositon, MAP_SCALING);
             aMap.animateCamera(cameraUpate);
         }
     }

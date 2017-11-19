@@ -227,9 +227,11 @@
         <View style="@style/menu_divider_style" />
         <TextView
             android:id="@+id/tv_version"
-            style="@style/menu_text_style"
-            android:visibility="gone"
+            android:visibility="visible"
+            android:text="V1.0"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
             android:gravity="center" />
     </LinearLayout>
 

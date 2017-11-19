@@ -90,7 +90,7 @@ public class Constant {
     //map
     public static final int MAP_SCAN_SPAN = 1 * 1000;  //设置地图扫描间隔，单位是毫秒
     public static final int MAP_SCAN_SPAN_DEFAULT = 5 * 1000;  //设置地图扫描间隔，单位是毫秒
-    public static final float MAP_SCALING = 18.0f;      ////地图缩放比设置为18
+    public static final float MAP_SCALING = 17.0f;      ////地图缩放比设置为18
     //map
     public static final String REQUEST_KEY_BY_USER = "author";
     public static final String REQUEST_KEY_BY_CAR = "car";

@@ -25,6 +25,7 @@ import com.systemteam.service.RouteService;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
 import com.systemteam.util.Utils;
+import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -145,6 +146,8 @@ public abstract class BaseActiveActivity extends BaseActivity {
                                 if (response.contains("401")) {
                                     mProgressHelper.dismissProgressDialog();
                                     Utils.showDialog(context, getString(R.string.error_lock_failed), getString(R.string.error_lock_401));
+//                                    MobclickAgent.onEventValue(context, UmengConstant.EVENT_UNLOCK,
+//                                            new HashMap<String, String>().put("401",getString(R.string.error_lock_failed)),1);
                                     return;
                                 } else if (response.contains("402")) {
                                     mProgressHelper.dismissProgressDialog();
@@ -183,7 +186,7 @@ public abstract class BaseActiveActivity extends BaseActivity {
                     LogTool.e("Error: " + error.getMessage());
                 }
             });
-            mQueue = Volley.newRequestQueue(mContext);
+            mQueue = Volley.newRequestQueue(context);
             mQueue.add(stringRequest);
         }
     }
@@ -400,5 +403,17 @@ public abstract class BaseActiveActivity extends BaseActivity {
                 EventBus.getDefault().post(new EventMessage(isFree, EventMessage.ACTION_GAMEOVER));
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

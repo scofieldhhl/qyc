@@ -65,7 +65,7 @@ public class LeftMenuFragment extends BaseFragment {
         try {
             String pkName = mContext.getPackageName();
             String versionName = mContext.getPackageManager().getPackageInfo(pkName, 0).versionName;
-            mTvVersion.setText(versionName);
+            mTvVersion.setText("V" + versionName);
         } catch (Exception e) {
 
         }
