@@ -461,7 +461,7 @@ public class Utils {
     public static boolean isSuperAdmin(String phoneNum){
         if(phoneNum != null &&
                 (phoneNum.equalsIgnoreCase("15811112222") ||
-                        phoneNum.equalsIgnoreCase("15817438761") ||
+//                        phoneNum.equalsIgnoreCase("15817438761") ||
                         phoneNum.equalsIgnoreCase("15812121214") ||
                         phoneNum.equalsIgnoreCase("15814551455"))) {
             return true;
