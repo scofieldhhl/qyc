@@ -25,7 +25,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 8
-        versionName "1.12.02"
+        versionName "1.12.05"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a"

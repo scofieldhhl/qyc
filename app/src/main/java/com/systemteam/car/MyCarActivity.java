@@ -185,7 +185,7 @@ public class MyCarActivity extends BaseListActivity
         alertDialog.show();
     }
 
-    private void doUpdate(Car car){
+    private void doUpdate(Car car){//TODO 批量删除小车的使用记录
         if(car == null){
             return;
         }
@@ -209,6 +209,41 @@ public class MyCarActivity extends BaseListActivity
             }
         }));
     }
+
+    /*private void doDelBatch(Car car){
+        if(car == null){
+            return;
+        }
+        //批量删除
+        BmobBatch batch =new BmobBatch();
+        List<UseRecord> useRecordsList = new ArrayList<UseRecord>();
+        UseRecord useRecord = new UseRecord();
+        useRecord.setCar(car);
+        useRecordsList.add(useRecord);
+        batch.deleteBatch(useRecordsList);
+//执行批量操作
+        batch.doBatch(new QueryListListener<BatchResult>(){
+
+            @Override
+            public void done(List<BatchResult> results, BmobException ex) {
+                if(ex==null){
+                    //返回结果的results和上面提交的顺序是一样的，请一一对应
+                    for(int i=0;i<results.size();i++){
+                        BatchResult result= results.get(i);
+                        if(result.isSuccess()){//只有批量添加才返回objectId
+                            log("第"+i+"个成功："+result.getObjectId()+","+result.getUpdatedAt());
+                        }else{
+                            BmobException error= result.getError();
+                            log("第"+i+"个失败："+error.getErrorCode()+","+error.getMessage());
+                        }
+                    }
+                }else{
+                    Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
+                }
+            }
+        });
+
+    }*/
 
     @Override
     protected void initDataList(final int page) {
