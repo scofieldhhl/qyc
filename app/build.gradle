@@ -27,9 +27,17 @@ android {
         versionCode 8
         versionName "1.12.05"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [
+                GETUI_APP_ID : "yLry8IQjRFAn3YqyxyKH15",
+                GETUI_APP_KEY : "sz6pDTcIZ98B6GhAmuQ5L1",
+                GETUI_APP_SECRET : "lNpdWR8xxd5UAMc7quzs69"
+        ]
         ndk {
-            abiFilters "armeabi-v7a"
+            abiFilters "armeabi", "armeabi-v7a", "x86_64"
         }
+        /*ndk {
+            abiFilters "armeabi-v7a"
+        }*/
         multiDexEnabled true
     }
     buildTypes {
@@ -103,4 +111,6 @@ dependencies {
     compile files('libs/alipaySdk-20170623-proguard.jar')
     compile files('src/main/jniLibs/AMap3DMap_5.0.0_AMapNavi_5.0.1_AMapSearch_5.0.0_AMapLocation_3.3.0_20170410.jar')
     compile 'cn.yipianfengye.android:zxing-library:2.2'
+    compile files('libs/json_simple-1.1.jar')
+    compile 'com.getui:sdk:2.11.1.0'
 }

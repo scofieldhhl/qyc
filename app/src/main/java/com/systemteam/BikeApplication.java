@@ -2,9 +2,12 @@ package com.systemteam;
 
 import android.app.Application;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 
 import com.systemteam.bean.MyUser;
 import com.systemteam.database.db.DbCore;
+import com.systemteam.util.LogTool;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.analytics.MobclickAgent;
@@ -58,6 +61,10 @@ public class BikeApplication extends Application {
         regToWx();
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
         DbCore.init(this);
+
+        if (handler == null) {
+            handler = new DemoHandler();
+        }
     }
 
     private boolean initDirs() {
@@ -97,5 +104,44 @@ public class BikeApplication extends Application {
     private void regToWx(){
         mWxApi = WXAPIFactory.createWXAPI(this, WX_APP_ID, true);
         mWxApi.registerApp(WX_APP_ID);
+    }
+
+    //个推
+    private static DemoHandler handler;
+
+    /**
+     * 应用未启动, 个推 service已经被唤醒,保存在该时间段内离线消息(此时 GetuiSdkDemoActivity.tLogView == null)
+     */
+    public static StringBuilder payloadData = new StringBuilder();
+    public static void sendMessage(Message msg) {
+        handler.sendMessage(msg);
+    }
+
+    public static class DemoHandler extends Handler {
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    /*if (demoActivity != null) {
+                        payloadData.append((String) msg.obj);
+                        payloadData.append("\n");
+                        if (GetuiSdkDemoActivity.tLogView != null) {
+                            GetuiSdkDemoActivity.tLogView.append(msg.obj + "\n");
+                        }
+                    }*/
+                    LogTool.e("000:" + ((String) msg.obj));
+                    break;
+
+                case 1:
+                    /*if (demoActivity != null) {
+                        if (GetuiSdkDemoActivity.tLogView != null) {
+                            GetuiSdkDemoActivity.tView.setText((String) msg.obj);
+                        }
+                    }*/
+                    LogTool.e("1111:" + ((String) msg.obj));
+                    break;
+            }
+        }
     }
 }

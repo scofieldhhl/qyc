@@ -54,6 +54,7 @@ import com.amap.api.services.route.RideRouteResult;
 import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkPath;
 import com.amap.api.services.route.WalkRouteResult;
+import com.igexin.sdk.PushManager;
 import com.systemteam.activity.BaseActiveActivity;
 import com.systemteam.activity.MyRouteActivity;
 import com.systemteam.activity.QRCodeScanActivity;
@@ -74,6 +75,8 @@ import com.systemteam.gdmap.lib.PositionEntity;
 import com.systemteam.gdmap.lib.RegeocodeTask;
 import com.systemteam.gdmap.lib.RouteTask;
 import com.systemteam.gdmap.overlay.WalkRouteOverlay;
+import com.systemteam.service.DemoIntentService;
+import com.systemteam.service.DemoPushService;
 import com.systemteam.user.UserInfoActivity;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
@@ -82,6 +85,7 @@ import com.systemteam.view.CatLoadingView;
 import com.systemteam.welcome.WelcomeActivity;
 import com.umeng.analytics.MobclickAgent;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -265,6 +269,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         initToolBar(this, R.string.bybike);
         initView();
         initData();
+        initGeTui();
 
         //获取地图控件引用
         mMapView = (MapView) findViewById(R.id.map);
@@ -277,6 +282,8 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
 //        LogTool.e("sha1" + Sha1.sHA1(this));
         LogTool.d("oncreate end");
         mHandler.sendEmptyMessageDelayed(DISMISS_SPLASH, 4*1000);
+
+
     }
 
     @Override
@@ -820,6 +827,8 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
                 requestPermissions(permissions.toArray(new String[permissions.size()]),
                         REQUEST_CODE_SOME_FEATURES_PERMISSIONS);
             }
+        }else {
+            PushManager.getInstance().initialize(this.getApplicationContext(), userPushService);
         }
     }
 
@@ -832,7 +841,8 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!Settings.System.canWrite(this)) {
                     Uri selfPackageUri = Uri.parse("package:" + getPackageName());
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, selfPackageUri);
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS,
+                            selfPackageUri);
                     startActivity(intent);
                 }
             }
@@ -840,20 +850,17 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                for (int i = 0; i < permissions.length; i++) {
-                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        System.out.println("Permissions --> " + "Permission Granted: " + permissions[i]);
-                    } else if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                        System.out.println("Permissions --> " + "Permission Denied: " + permissions[i]);
-                    }
-                }
+        if (requestCode == REQUEST_CODE_SOME_FEATURES_PERMISSIONS) {
+            if ((grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
+                PushManager.getInstance().initialize(this.getApplicationContext(), userPushService);
+            } else {
+                LogTool.e("We highly recommend that you need to grant the special permissions before initializing the SDK, otherwise some "
+                        + "functions will not work");
+                PushManager.getInstance().initialize(this.getApplicationContext(), userPushService);
             }
-            break;
-            default: {
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
@@ -1005,6 +1012,8 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         mLocationTask.onDestroy();
         RouteTask.getInstance(getApplicationContext()).removeRouteCalculateListener(this);
         unregisterReceiver(mReciver);
+
+        BikeApplication.payloadData.delete(0, BikeApplication.payloadData.length());
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -1110,4 +1119,38 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         intent.putExtra(Constant.BUNDLE_TYPE_MENU, 1);
         startActivity(intent);
     }
+
+
+    // DemoPushService.class 自定义服务名称, 核心服务
+    private Class userPushService = DemoPushService.class;
+    public void initGeTui(){
+        PackageManager pkgManager = getPackageManager();
+
+        // 读写 sd card 权限非常重要, android6.0默认禁止的, 建议初始化之前就弹窗让用户赋予该权限
+        boolean sdCardWritePermission =
+                pkgManager.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, getPackageName()) == PackageManager.PERMISSION_GRANTED;
+
+        // read phone state用于获取 imei 设备信息
+        boolean phoneSatePermission =
+                pkgManager.checkPermission(Manifest.permission.READ_PHONE_STATE, getPackageName()) == PackageManager.PERMISSION_GRANTED;
+
+        // 注册 intentService 后 PushDemoReceiver 无效, sdk 会使用 DemoIntentService 传递数据,
+        // AndroidManifest 对应保留一个即可(如果注册 DemoIntentService, 可以去掉 PushDemoReceiver, 如果注册了
+        // IntentService, 必须在 AndroidManifest 中声明)
+        PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), DemoIntentService.class);
+
+        // 应用未启动, 个推 service已经被唤醒,显示该时间段内离线消息
+        if (BikeApplication.payloadData != null) {
+//            tLogView.append(DemoApplication.payloadData);
+            LogTool.e(BikeApplication.payloadData.toString());
+        }
+
+        // cpu 架构
+        LogTool.e("cpu arch = " + (Build.VERSION.SDK_INT < 21 ? Build.CPU_ABI : Build.SUPPORTED_ABIS[0]));
+
+        // 检查 so 是否存在
+        File file = new File(this.getApplicationInfo().nativeLibraryDir + File.separator + "libgetuiext2.so");
+        LogTool.e("libgetuiext2.so exist = " + file.exists());
+    }
+
 }

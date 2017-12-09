@@ -309,3 +309,12 @@ public static java.lang.String TABLENAME; }
 -keep class com.amap.api.navi.**{*;}
 -keep class com.autonavi.**{*;}
 #gaode
+
+#个推
+-dontwarn com.igexin.**
+-keep class com.igexin.** { *; }
+-keep class org.json.** { *; }
+
+-keep class android.support.v4.app.NotificationCompat { *; }
+-keep class android.support.v4.app.NotificationCompat$Builder { *; }
+#个推

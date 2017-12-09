@@ -53,9 +53,9 @@
 
         <activity
             android:name=".activity.SplashActivity"
-            android:theme="@style/AppTheme.splash"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -64,24 +64,26 @@
         </activity>
         <activity
             android:name=".Main2Activity"
-            android:launchMode="singleTask"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait">
-        </activity>
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.CodeUnlockActivity"
-            android:windowSoftInputMode="stateVisible|adjustResize"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.WalletActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+        <activity
+            android:name=".activity.WalletActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.RouteDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.RouteDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.MyRouteActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MyRouteActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <!--
         <receiver android:name=".MainActivity$LocationReceiver">
@@ -98,7 +100,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".service.RouteService"/>
+        <service android:name=".service.RouteService" />
 
         <provider
             android:name=".provider.PoiProvider"
@@ -118,7 +120,6 @@
             android:name=".activity.QRCodeScanActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.ZxingActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -129,13 +130,15 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />
         <activity
-            android:name="com.systemteam.wxapi.WXEntryActivity"
+            android:name=".wxapi.WXEntryActivity"
             android:exported="true"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:scheme="wx34a15429655e4678"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="wx34a15429655e4678" />
             </intent-filter>
         </activity>
         <activity
@@ -148,55 +151,83 @@
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind" />
-        <activity android:name=".activity.BreakActivity"
+        <activity
+            android:name=".activity.BreakActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.SettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SettingActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".user.UserInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".user.UserInfoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".user.ApplyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".user.ApplyActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.ActiveActivity"
+        <activity
+            android:name=".activity.ActiveActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".car.MyCarActivity"
-            android:label="@string/title_activity_my_car"
-            android:theme="@style/Custom.AppTheme.NoActionBar"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"/>
+            android:label="@string/title_activity_my_car"
+            android:screenOrientation="portrait"
+            android:theme="@style/Custom.AppTheme.NoActionBar" />
         <activity
             android:name=".car.CarDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/detail"
             android:screenOrientation="sensor"
-            android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Custom.AppTheme.NoActionBar" />
         <activity android:name=".car.NewCarActivity" />
-        <activity android:name=".activity.BalanceDetailActivity"
+        <activity
+            android:name=".activity.BalanceDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.WithdrawActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.WithdrawActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.MyWelcomeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MyWelcomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/CustomWelcomeScreenTheme"/>
+            android:theme="@style/CustomWelcomeScreenTheme" />
 
-        <!--设置key-->
+        <!-- 设置key -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="0903c96d3d0e16bc4381cc6fef0f39cf" />
-        <!--声明定位service-->
-        <service android:name="com.amap.api.location.APSService"></service>
+        <!-- 声明定位service -->
+        <service android:name="com.amap.api.location.APSService" />
 
+        <meta-data
+            android:name="PUSH_APPID"
+            android:value="${GETUI_APP_ID}" />
+        <meta-data
+            android:name="PUSH_APPKEY"
+            android:value="${GETUI_APP_KEY}" />
+        <meta-data
+            android:name="PUSH_APPSECRET"
+            android:value="${GETUI_APP_SECRET}" />
+
+        <!-- 用户自定义服务继承自GTIntentService,作为SDK与APP桥梁服务,用来接收各种消息和命令回复-->
+        <service android:name=".service.DemoIntentService"/>
+
+        <!-- 配置SDK核心服务 -->
+        <service
+            android:name=".service.DemoPushService"
+            android:exported="true"
+            android:label="PushService"
+            android:process=":pushservice">
+        </service>
     </application>
 
 </manifest>
