@@ -112,5 +112,6 @@ dependencies {
     compile files('src/main/jniLibs/AMap3DMap_5.0.0_AMapNavi_5.0.1_AMapSearch_5.0.0_AMapLocation_3.3.0_20170410.jar')
     compile 'cn.yipianfengye.android:zxing-library:2.2'
     compile files('libs/json_simple-1.1.jar')
-    compile 'com.getui:sdk:2.11.1.0'
+    compile 'com.getui:sdk:2.11.1.0'//个推
+    compile 'com.getui:gisdk:3.0.0'//个像
 }

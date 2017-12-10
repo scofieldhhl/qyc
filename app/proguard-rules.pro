@@ -318,3 +318,8 @@ public static java.lang.String TABLENAME; }
 -keep class android.support.v4.app.NotificationCompat { *; }
 -keep class android.support.v4.app.NotificationCompat$Builder { *; }
 #个推
+
+#个像
+-dontwarn com.getui.**
+-keep class com.getui.**{*;}
+#个像

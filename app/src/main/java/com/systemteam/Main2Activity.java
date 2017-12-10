@@ -21,6 +21,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -77,6 +78,7 @@ import com.systemteam.gdmap.lib.RouteTask;
 import com.systemteam.gdmap.overlay.WalkRouteOverlay;
 import com.systemteam.service.DemoIntentService;
 import com.systemteam.service.DemoPushService;
+import com.systemteam.service.GInsightEventListener;
 import com.systemteam.user.UserInfoActivity;
 import com.systemteam.util.Constant;
 import com.systemteam.util.LogTool;
@@ -114,7 +116,7 @@ import static com.systemteam.util.Constant.MSG_UPDATE_UI;
 public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraChangeListener,
         AMap.OnMapLoadedListener, OnLocationGetListener, View.OnClickListener,RouteTask.OnRouteCalculateListener,
         AMap.OnMapTouchListener,RouteSearch.OnRouteSearchListener,AMap.OnMapClickListener,AMap.InfoWindowAdapter,
-        AllInterface.OnMenuSlideListener, LocationSource, AMapLocationListener{
+        AllInterface.OnMenuSlideListener, LocationSource, AMapLocationListener, GInsightEventListener {
     //地图view
     MapView mMapView = null;
     //初始化地图控制器对象
@@ -167,6 +169,13 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         shadowView.setVisibility(offset == 0 ? View.INVISIBLE : View.VISIBLE);
         int alpha = (int) Math.round(offset * 255 * 0.4);
         shadowView.setBackgroundColor(Color.argb(alpha, 0, 0, 0));
+    }
+
+    @Override
+    public void onGiuid(String giuid) {
+        if (!TextUtils.isEmpty(giuid)) {
+            LogTool.e("giuid :" +giuid);
+        }
     }
 
     private static class MyHandler extends Handler {
@@ -270,6 +279,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         initView();
         initData();
         initGeTui();
+        initGeX();
 
         //获取地图控件引用
         mMapView = (MapView) findViewById(R.id.map);
@@ -1153,4 +1163,10 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         LogTool.e("libgetuiext2.so exist = " + file.exists());
     }
 
+    private void initGeX(){
+        BikeApplication app = (BikeApplication)getApplication();
+        app.registerGInsightListener(this);
+
+        String giuid = app.getGiuid();
+    }
 }

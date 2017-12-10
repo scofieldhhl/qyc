@@ -66,7 +66,7 @@
             android:name=".Main2Activity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.CodeUnlockActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -218,16 +218,24 @@
             android:name="PUSH_APPSECRET"
             android:value="${GETUI_APP_SECRET}" />
 
-        <!-- 用户自定义服务继承自GTIntentService,作为SDK与APP桥梁服务,用来接收各种消息和命令回复-->
-        <service android:name=".service.DemoIntentService"/>
+        <!-- 用户自定义服务继承自GTIntentService,作为SDK与APP桥梁服务,用来接收各种消息和命令回复 -->
+        <service android:name=".service.DemoIntentService" />
 
         <!-- 配置SDK核心服务 -->
         <service
             android:name=".service.DemoPushService"
             android:exported="true"
             android:label="PushService"
-            android:process=":pushservice">
-        </service>
+            android:process=":pushservice"></service>
+
+        <receiver
+            android:name=".service.GInsightEventReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.getui.gis.action.nwGatlIRCj5lxvecl181u7" /> <!--替换成GInsight的APPID -->
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

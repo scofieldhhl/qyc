@@ -1,18 +1,24 @@
 package com.systemteam;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 
+import com.getui.gis.sdk.GInsightManager;
 import com.systemteam.bean.MyUser;
 import com.systemteam.database.db.DbCore;
+import com.systemteam.service.GInsightEventListener;
 import com.systemteam.util.LogTool;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobConfig;
@@ -51,7 +57,7 @@ public class BikeApplication extends Application {
     public void setmUser(MyUser mUser) {
         this.mUser = mUser;
     }
-
+    private List<GInsightEventListener> gInsightListeners;
     public void onCreate() {
         super.onCreate();
         myApplication = this;
@@ -65,6 +71,10 @@ public class BikeApplication extends Application {
         if (handler == null) {
             handler = new DemoHandler();
         }
+
+        //个像
+        GInsightManager.getInstance().init (getApplicationContext(), "nwGatlIRCj5lxvecl181u7");
+        gInsightListeners = new ArrayList<>();
     }
 
     private boolean initDirs() {
@@ -142,6 +152,28 @@ public class BikeApplication extends Application {
                     LogTool.e("1111:" + ((String) msg.obj));
                     break;
             }
+        }
+    }
+
+    public void registerGInsightListener(GInsightEventListener listener) {
+        gInsightListeners.add(listener);
+    }
+
+    public void unregisterGInsightListener(GInsightEventListener listener) {
+        gInsightListeners.remove(listener);
+    }
+
+    public String getGiuid() {
+        SharedPreferences sp = getSharedPreferences(getClass().getSimpleName(), Context.MODE_PRIVATE);
+        return sp.getString("giuid", null);
+    }
+
+    public void setGiuid(String giuid) {
+        SharedPreferences sp = getSharedPreferences(getClass().getSimpleName(), Context.MODE_PRIVATE);
+        sp.edit().putString("giuid", giuid).apply();
+
+        for (GInsightEventListener l : gInsightListeners) {
+            l.onGiuid(giuid);
         }
     }
 }
