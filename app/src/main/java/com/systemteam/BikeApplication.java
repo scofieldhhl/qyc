@@ -20,10 +20,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.push.BmobPush;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobConfig;
+import cn.bmob.v3.BmobInstallation;
+import cn.bmob.v3.BmobInstallationManager;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.InstallationListener;
 import cn.bmob.v3.datatype.BmobGeoPoint;
+import cn.bmob.v3.exception.BmobException;
 
 import static com.systemteam.util.Constant.WX_APP_ID;
 
@@ -108,6 +113,21 @@ public class BikeApplication extends Application {
 		.setFileExpiration(5500)
 		.build();
 		Bmob.initialize(config);
+        // 使用推送服务时的初始化操作
+        BmobInstallationManager.getInstance().initialize(
+                new InstallationListener<BmobInstallation>() {
+            @Override
+            public void done(BmobInstallation bmobInstallation, BmobException e) {
+                if (e == null) {
+                    LogTool.d(bmobInstallation.getObjectId() + "-" +
+                            bmobInstallation.getInstallationId());
+                } else {
+                    LogTool.e(e.getMessage());
+                }
+            }
+        });
+// 启动推送服务
+        BmobPush.startWork(this);
     }
 
     public static IWXAPI mWxApi;

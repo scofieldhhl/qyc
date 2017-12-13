@@ -148,4 +148,6 @@ public class Constant {
 
     public static String MODEL_DEVICE_ZXINGQR = "MHA-AL00";
 
+    public static String GT_APP_ID = "yLry8IQjRFAn3YqyxyKH15";
+
 }

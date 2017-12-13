@@ -10,16 +10,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 import com.systemteam.BaseActivity;
 import com.systemteam.R;
 import com.systemteam.bean.Car;
 import com.systemteam.bean.EventMessage;
+import com.systemteam.bean.PushSingle;
 import com.systemteam.provider.ProtocolEncode;
 import com.systemteam.service.RouteService;
 import com.systemteam.util.Constant;
@@ -28,6 +32,7 @@ import com.systemteam.util.Utils;
 import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,16 +42,25 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
+import cn.bmob.v3.BmobInstallation;
+import cn.bmob.v3.BmobPushManager;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.PushListener;
 
 import static com.systemteam.provider.ProtocolEncode.getRandomString;
 import static com.systemteam.util.Constant.BUNDLE_CAR;
 import static com.systemteam.util.Constant.BUNDLE_KEY_SUBMIT_SUCCESS;
+import static com.systemteam.util.Constant.GT_APP_ID;
 import static com.systemteam.util.Constant.REQUEST_CODE_BREAK;
+import static com.systemteam.util.Utils.getSHA256StrJava;
 
 //5588输码解锁变成2588
 //扫码or输码启动后，校准遥遥车定位，更新遥遥车定位。移动偏差比较大时记录。
@@ -320,6 +334,32 @@ public abstract class BaseActiveActivity extends BaseActivity {
                     bundle.putSerializable(BUNDLE_CAR, car);
                     intent.putExtras(bundle);
                     startService(intent);
+
+//                    pushSignleTokenPost();
+                    /*try {
+                        new PushtoSingle().doPush();
+                    } catch (Exception e) {
+                        LogTool.e("e:"+ e.toString());
+                        e.printStackTrace();
+                    }*/
+
+
+                    BmobPushManager bmobPushManager = new BmobPushManager();
+                    BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
+                    String installationId = "59B8B1BBD681678A63782B979CCA95ED";
+//                    String installationId = "CA9EAA05DD7C3B541C83A16574BC7EBB";
+                    query.addWhereEqualTo("installationId", installationId);
+                    bmobPushManager.setQuery(query);
+                    bmobPushManager.pushMessage("消息内容", new PushListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e == null) {
+                                LogTool.e("推送成功！");
+                            } else {
+                                LogTool.e("异常：" + e.getMessage());
+                            }
+                        }
+                    });
                 } else {
                     String msg = "";
                     if (response.contains("4000")) {
@@ -415,5 +455,111 @@ public abstract class BaseActiveActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+    }
+
+    public void requestToken(){
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,
+                "http://1.rockingcar.applinzi.com/geTuiToken",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        LogTool.d(response);
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+        if(mQueue == null){
+            mQueue = Volley.newRequestQueue(mContext);
+        }
+        mQueue.add(stringRequest);
+    }
+
+    private void pushSignleTokenPost() {
+        StringRequest request = new StringRequest(Request.Method.POST,
+                String.format(Locale.US, "https://restapi.getui.com/v1/%s/auth_sign", GT_APP_ID)
+                , new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                LogTool.d("onResponse"+ s);
+                pushSinglePost("7aaa194db8634df99cd69ddc53a5cc09", "TEST");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                volleyError.printStackTrace();
+                LogTool.e("volleyError"+ volleyError.toString());
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new LinkedHashMap<>();
+
+                String timestamp = String.valueOf(System.currentTimeMillis());
+                String appkey = "sz6pDTcIZ98B6GhAmuQ5L1";
+                String secretKey = "DJONi4csJE9QvDiE07Iwo2";
+                String sign = getSHA256StrJava(appkey+timestamp+secretKey);
+                map.put("sign", sign);
+                map.put("timestamp", timestamp);
+                map.put("appkey", appkey);
+                LogTool.d(String.valueOf(checkParams(map)));
+                return map;
+            }
+
+            private Map<String, String> checkParams(Map<String, String> map) {
+                Iterator<Map.Entry<String, String>> it = map.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry<String, String> pairs = it.next();
+                    if (pairs.getValue() == null) {
+                        map.put(pairs.getKey(), "");
+                    }
+                }
+                return map;
+            }
+        };
+        if(mQueue == null){
+            mQueue = Volley.newRequestQueue(mContext);
+        }
+        mQueue.add(request);
+    }
+
+    private void pushSinglePost(String cid, String content) {
+        try {
+            PushSingle pushSingle = new PushSingle();
+            pushSingle.cid = cid;
+            pushSingle.transmission.transmission_content= content;
+            String json = new Gson().toJson(pushSingle);
+            LogTool.d("JsonObjectRequest:" + json);
+            /**
+             * 直接传递json数据，但是服务端必须支持接收json数据。
+             */
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    Request.Method.POST,
+                    String.format(Locale.US, "https://restapi.getui.com/v1/%s/push_single", GT_APP_ID),
+                    new JSONObject(),
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject jsonObject) {
+                            LogTool.d("JsonObjectRequest:" + jsonObject.toString());
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            LogTool.d("JsonObjectRequest:" + volleyError.getMessage());
+                        }
+                    }
+            );
+            if(mQueue == null){
+                mQueue = Volley.newRequestQueue(mContext);
+            }
+            mQueue.add(jsonObjectRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
