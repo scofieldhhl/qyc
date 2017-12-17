@@ -99,6 +99,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
 import static com.systemteam.util.Constant.ACTION_BROADCAST_ACTIVE;
+import static com.systemteam.util.Constant.BUNDLE_KEY_ADDEVICE_ID;
 import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
 import static com.systemteam.util.Constant.DISMISS_SPLASH;
 import static com.systemteam.util.Constant.DISTANCE_RELOADCAR_DEFAULT;
@@ -990,6 +991,7 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
     protected void onNewIntent(Intent intent) {
         LogTool.d("onNewIntent");
         super.onNewIntent(intent);
+        mADDeviceId = intent.getStringExtra(BUNDLE_KEY_ADDEVICE_ID);
         checkCarExist(this, intent.getStringExtra(BUNDLE_KEY_CODE));//启动使用
     }
 

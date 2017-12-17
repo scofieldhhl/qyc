@@ -36,6 +36,7 @@ import cn.bingoogolapple.qrcode.core.QRCodeView;
 import cn.bingoogolapple.qrcode.zbar.ZBarView;
 import cn.bmob.v3.BmobUser;
 
+import static com.systemteam.util.Constant.BUNDLE_KEY_ADDEVICE_ID;
 import static com.systemteam.util.Constant.BUNDLE_KEY_CODE;
 
 //#33FFFFFF
@@ -111,15 +112,21 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
         vibrator.vibrate(200);
     }
 
+    private String mAdDeiceId = null;
     @Override
     public void onScanQRCodeSuccess(String result) {
         // 扫码成功，数据处理下一步操作//http://android.myapp.com/myapp/detail.htm?apkName=com.systemteam&no=21591
+        //?apkName=com.systemteam&addevice=qqqwdfsdfa&no=21591
         LogTool.d("result:" + result);//result:http://pay.yiqiniubi.com/18789--
         vibrate();
         if(result != null && !TextUtils.isEmpty(result)){
             String[] arrResult = result.split("/");
             if(!isNumeric(arrResult[arrResult.length - 1])){
                 arrResult = result.split("=");
+            }
+            String strAd = arrResult[arrResult.length - 2];
+            if(strAd != null && !strAd.startsWith("com.systemteam")){
+                mAdDeiceId = strAd.substring(0, strAd.indexOf('&'));
             }
             checkCode(arrResult[arrResult.length - 1]);
         }else {
@@ -393,6 +400,9 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeView.Deleg
 //                                        Intent intent = new Intent(mContext, ActiveActivity.class);
                     Intent intent = new Intent(mContext, Main2Activity.class);
                     intent.putExtra(BUNDLE_KEY_CODE, code);
+                    if(mAdDeiceId != null && !TextUtils.isEmpty(mAdDeiceId)){
+                        intent.putExtra(BUNDLE_KEY_ADDEVICE_ID, mAdDeiceId);
+                    }
                     startActivity(intent);
                 }
             }, 100);
