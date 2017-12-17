@@ -69,6 +69,7 @@ public abstract class BaseActiveActivity extends BaseActivity {
     RequestQueue mQueue;
     protected boolean isGaming = false;   //游戏是否在游戏中
     protected boolean isFree = false;     //是否免费使用：使用过程中申报故障成功。
+    protected String mADDeviceId = null;
 
     protected void checkCarExist(final Context context, String carNo) {
         LogTool.d("checkCarExist :" + carNo);
@@ -343,23 +344,28 @@ public abstract class BaseActiveActivity extends BaseActivity {
                         e.printStackTrace();
                     }*/
 
-
-                    BmobPushManager bmobPushManager = new BmobPushManager();
-                    BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
-                    String installationId = "59B8B1BBD681678A63782B979CCA95ED";
+                    if(mADDeviceId != null && !TextUtils.isEmpty(mADDeviceId)){
+                        LogTool.e("mADDeviceId " + mADDeviceId);
+                        BmobPushManager bmobPushManager = new BmobPushManager();
+                        BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
+                        String installationId = "59B8B1BBD681678A63782B979CCA95ED";
 //                    String installationId = "CA9EAA05DD7C3B541C83A16574BC7EBB";
-                    query.addWhereEqualTo("installationId", installationId);
-                    bmobPushManager.setQuery(query);
-                    bmobPushManager.pushMessage("消息内容", new PushListener() {
-                        @Override
-                        public void done(BmobException e) {
-                            if (e == null) {
-                                LogTool.e("推送成功！");
-                            } else {
-                                LogTool.e("异常：" + e.getMessage());
+                        query.addWhereEqualTo("installationId", mADDeviceId);
+                        bmobPushManager.setQuery(query);
+                        bmobPushManager.pushMessage("消息内容", new PushListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if (e == null) {
+                                    LogTool.e("推送成功！");
+                                } else {
+                                    LogTool.e("异常：" + e.getMessage());
+                                }
                             }
-                        }
-                    });
+                        });
+                    }else {
+                        LogTool.e("mADDeviceId null");
+                    }
+
                 } else {
                     String msg = "";
                     if (response.contains("4000")) {

@@ -78,4 +78,40 @@
         <ImageView style="@style/right_arrow_style" />
     </TableRow>
     <View style="@style/menu_divider_style" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:background="@drawable/edge_shadow_bg"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/et_code"
+            style="@style/code_edit_style"
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:windowSoftInputMode="stateAlwaysVisible"
+            android:hint="@string/input_scan" />
+        <!--android:windowSoftInputMode="stateVisible"-->
+
+        <Button
+            android:id="@+id/btn_unlock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/bt_book_selector"
+            android:text="@string/confirm"
+            android:textColor="@color/white_dd"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/iv_newcode"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_margin="10dp"/>
+    </LinearLayout>
 </TableLayout>
