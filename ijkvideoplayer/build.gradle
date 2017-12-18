@@ -1,0 +1,32 @@
+apply plugin: 'com.android.library'
+
+android {
+
+    def globalConfiguration = rootProject.extensions.getByName("ext")
+    compileSdkVersion globalConfiguration.androidCompileSdkVersion
+    buildToolsVersion globalConfiguration.androidBuildToolsVersion
+
+    defaultConfig {
+        minSdkVersion 15
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    def viewDependencies = rootProject.ext.viewDependencies
+    def dataDependencies = rootProject.ext.dataDependencies
+    compile viewDependencies.ijkplayer_java
+    compile viewDependencies.ijkplayer_exo
+    compile viewDependencies.transitionseverywhere
+    compile dataDependencies.videocache
+    compile androidDependencies.support_v4
+    compile androidDependencies.appcompat_v7
+}
+
+//apply from: '../bintray.gradle'

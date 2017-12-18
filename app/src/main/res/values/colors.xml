@@ -64,4 +64,6 @@
     <color name="purple_background">#7B1FA2</color>
 
     <color name="qr_bg">#79252424</color>
+
+    <color name="mp.divider">#7A7A7A</color>
 </resources>

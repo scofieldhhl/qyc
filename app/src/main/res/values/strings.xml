@@ -452,4 +452,8 @@
     <string name="add_tag_error_black_list">该应用已经在黑名单中,请联系售后支持!</string>
     <string name="add_tag_error_exceed">已存 tag 超过限制</string>
     <string name="push_transmission_data">收到一条透传测试消息</string>
+
+    <string name="video_ratio">Default ratio</string>
+    <string name="video_ratio_16">16:9</string>
+    <string name="video_ratio_4">4:3</string>
 </resources>

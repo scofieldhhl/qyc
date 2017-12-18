@@ -63,6 +63,9 @@ public class BikeApplication extends Application {
         this.mUser = mUser;
     }
     private List<GInsightEventListener> gInsightListeners;
+
+    public static String mInstallationId = null;
+
     public void onCreate() {
         super.onCreate();
         myApplication = this;
@@ -121,6 +124,7 @@ public class BikeApplication extends Application {
                 if (e == null) {
                     LogTool.d(bmobInstallation.getObjectId() + "-" +
                             bmobInstallation.getInstallationId());
+                    mInstallationId = bmobInstallation.getInstallationId();
                 } else {
                     LogTool.e(e.getMessage());
                 }

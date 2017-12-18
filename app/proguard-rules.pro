@@ -323,3 +323,290 @@ public static java.lang.String TABLENAME; }
 -dontwarn com.getui.**
 -keep class com.getui.**{*;}
 #个像
+
+#GSY
+-keep class tv.danmaku.ijk.** { *; }
+-dontwarn tv.danmaku.ijk.**
+-keep class com.shuyu.gsyvideoplayer.** { *; }
+-dontwarn com.shuyu.gsyvideoplayer.**
+#ijk
+-dontwarn tv.danmaku.ijk.media.**
+#GSY
+
+
+
+
+
+# greendao 3 start
+-keep class de.greenrobot.dao.** {*;}
+
+-keepclassmembers class * extends org.greenrobot.greendao.AbstractDao {
+public static java.lang.String TABLENAME;
+}
+-keep class **$Properties
+
+# If you do not use SQLCipher:
+-dontwarn org.greenrobot.greendao.database.**
+# If you do not use Rx:
+-dontwarn rx.**
+
+# greendao 3 end
+
+# # -------------------------------------------
+# #  ############### volley混淆  ###############
+# # -------------------------------------------
+-keep class com.android.volley.** {*;}
+-keep class com.android.volley.toolbox.** {*;}
+-keep class com.android.volley.Response$* { *; }
+-keep class com.android.volley.Request$* { *; }
+-keep class com.android.volley.RequestQueue$* { *; }
+-keep class com.android.volley.toolbox.HurlStack$* { *; }
+-keep class com.android.volley.toolbox.ImageLoader$* { *; }
+#volley
+
+#Flurry Analytics start #Required to preserve the Flurry SDK
+-keep class com.flurry.** { *; }
+-dontwarn com.flurry.**
+-keepattributes *Annotation*,EnclosingMethod,Signature
+-keepclasseswithmembers class *{
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+#Flurry Analytics start
+
+#feddback start
+-keep class com.alibaba.sdk.android.feedback.impl.FeedbackServiceImpl {*;}
+-keep class com.alibaba.sdk.android.feedback.impl.FeedbackAPI {*;}
+-keep class com.alibaba.sdk.android.feedback.util.IWxCallback {*;}
+-keep class com.alibaba.sdk.android.feedback.util.IUnreadCountCallback{*;}
+-keep class com.alibaba.sdk.android.feedback.FeedbackService{*;}
+-keep public class com.alibaba.mtl.log.model.LogField {public *;}
+-keep class com.taobao.securityjni.**{*;}
+-keep class com.taobao.wireless.security.**{*;}
+-keep class com.ut.secbody.**{*;}
+-keep class com.taobao.dp.**{*;}
+-keep class com.alibaba.wireless.security.**{*;}
+-keep class com.ta.utdid2.device.**{*;}
+#feddback end
+
+-dontwarn org.jsoup.**
+-keep class org.jsoup.**{*;}
+
+#glide
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+
+
+##---------------Begin: proguard configuration for Gson  ----------
+# Gson uses generic type information stored in a class file when working with fields. Proguard
+# removes such information by default, so configure it to keep all of it.
+-keepattributes Signature
+
+# For using GSON @Expose annotation
+-keepattributes *Annotation*
+
+# Gson specific classes
+-keep class sun.misc.Unsafe { *; }
+#-keep class com.google.gson.stream.** { *; }
+
+
+# TabLayout点击反混淆
+-keep class android.support.design.widget.TabLayout$Tab {*;}
+
+-dontwarn com.afollestad.materialdialogs.**
+-keep class com.afollestad.materialdialogs.**{*;}
+
+-dontwarn org.mozilla.**
+-keep class org.mozilla.**{*;}
+
+-keep class com.keepvid.studio.view.flowlayout.** { *; }
+
+-dontwarn org.apache.commons.**
+-keep class org.apache.commons.**{*;}
+
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
+
+# JNI
+-keep class com.keepvid.studio.provider.** { *; }
+# JNI
+
+-dontwarn io.github.ryanhoo.music.**
+
+# RxBus musicplayer
+-keepattributes *Annotation*
+-keepclassmembers class ** {
+    @com.hwangjr.rxbus.annotation.Subscribe public *;
+    @com.hwangjr.rxbus.annotation.Produce public *;
+}
+# RxBus musicplayer
+
+#RxJava musicplayer
+-dontwarn sun.misc.**
+-keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
+ long producerIndex;
+ long consumerIndex;
+}
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
+ rx.internal.util.atomic.LinkedQueueNode producerNode;
+}
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
+ rx.internal.util.atomic.LinkedQueueNode consumerNode;
+}
+#RxJava
+
+#lite orm musicplayer
+-optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
+-optimizationpasses 5
+-allowaccessmodification
+-dontpreverify
+
+# The remainder of this file is identical to the non-optimized version
+# of the Proguard configuration file (except that the other file has
+# flags to turn off optimization).
+
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-verbose
+
+# 使用注解
+-keepattributes *Annotation*,Signature,Exceptions,InnerClasses
+
+# For enumeration classes, see http://proguard.sourceforge.net/manual/examples.html#enumerations
+-keepclassmembers enum * {
+    **[] $VALUES;
+    public *;
+}
+
+# 保持混淆时类的实名及行号(--------------- 调试时打开 --------------)
+#-keepattributes SourceFile,LineNumberTable
+
+# 开发者需要调用，不可以混淆
+-keep public class com.litesuits.orm.LiteOrm { *; }
+-keep public class com.litesuits.orm.db.* { *; }
+-keep public class com.litesuits.orm.db.model.** { *; }
+-keep public class com.litesuits.orm.db.annotation.** { *; }
+-keep public class com.litesuits.orm.db.enums.** { *; }
+-keep public class com.litesuits.orm.log.* { *; }
+-keep public class com.litesuits.orm.db.assit.* { *; }
+#lite orm musicplayer
+
+# piaccos  image downloading
+-dontwarn com.squareup.**
+#ID3 edit
+#-dontwarn org.jaudiotagger.**
+#-keep public class org.jaudiotagger.audio.** { *; }
+#-keep public class org.jaudiotagger.tag.* { *; }
+#-keep public class org.jaudiotagger.tag.Tag { *; }
+#-keep public class org.jaudiotagger.tag.id3.** { *; }
+#-keep public class org.jaudiotagger.tag.images.** { *; }
+
+
+#ID3 edit
+-keep class org.jaudiotagger.** {*;}
+-dontwarn org.jaudiotagger.**
+
+#TalkingData
+-dontwarn com.tendcloud.tenddata.**
+-keep class com.tendcloud.** {*;}
+-keep public class com.tendcloud.tenddata.** { public protected *;}
+-keepclassmembers class com.tendcloud.tenddata.**{
+public void *(***);
+}
+-keep class com.talkingdata.sdk.TalkingDataSDK {public *;}
+-keep class com.apptalkingdata.** {*;}
+-keep class dice.** {*; }
+-dontwarn dice.**
+#TalkingData
+
+#ijk
+-dontwarn tv.danmaku.ijk.media.**
+
+#Inmobi
+-keepattributes SourceFile,LineNumberTable
+-keep class com.inmobi.** { *; }
+-dontwarn com.inmobi.**
+-keep public class com.google.android.gms.**
+-dontwarn com.google.android.gms.**
+-dontwarn com.squareup.picasso.**
+-keep class com.google.android.gms.ads.identifier.AdvertisingIdClient{
+     public *;
+}
+-keep class com.google.android.gms.ads.identifier.AdvertisingIdClient$Info{
+     public *;
+}
+# skip the Picasso library classes
+-keep class com.squareup.picasso.** {*;}
+-dontwarn com.squareup.picasso.**
+-dontwarn com.squareup.okhttp.**
+# skip Moat classes
+-keep class com.moat.** {*;}
+-dontwarn com.moat.**
+# skip AVID classes
+-keep class com.integralads.avid.library.* {*;}
+#Inmobi
+
+#cloudmobi ad
+#for sdk
+-keep public class com.cloudtech.**{*;}
+-dontwarn com.cloudtech.**
+
+#for gaid
+-keep class **.AdvertisingIdClient$** { *; }
+
+#for js and webview interface
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
+
+#for not group facebook/admob ads
+-dontwarn com.google.android.**
+-dontwarn com.facebook.**
+#cloudmobi ad
+
+
+#umeng推送
+-dontwarn com.taobao.**
+-dontwarn anet.channel.**
+-dontwarn anetwork.channel.**
+-dontwarn org.android.**
+-dontwarn org.apache.thrift.**
+-dontwarn com.xiaomi.**
+-dontwarn com.huawei.**
+
+-keepattributes *Annotation*
+
+-keep class com.taobao.** {*;}
+-keep class org.android.** {*;}
+-keep class anet.channel.** {*;}
+-keep class com.umeng.** {*;}
+-keep class com.xiaomi.** {*;}
+-keep class com.huawei.** {*;}
+-keep class org.apache.thrift.** {*;}
+
+-keep class com.alibaba.sdk.android.**{*;}
+-keep class com.ut.**{*;}
+-keep class com.ta.**{*;}
+
+-keep public class **.R$*{
+   public static final int *;
+}
+
+-keep class me.zhanghai.android.materialprogressbar.** { *; }
+
+#（可选）避免Log打印输出
+-assumenosideeffects class android.util.Log {
+   public static *** v(...);
+   public static *** d(...);
+   public static *** i(...);
+   public static *** w(...);
+ }
+
+# 有米广告SDK
+-dontwarn com.adxmi.android.**
+-keep class com.adxmi.android.** {
+    *;
+}

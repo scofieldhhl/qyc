@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="tips_not_wifi">You are not using Wi-Fi netwrok. It will cost data usage if you continue to play this video. Continue?</string>
+    <string name="tips_not_wifi_confirm">Continue</string>
+    <string name="no_net">You are not connected to the internet.</string>
+    <string name="tips_not_wifi_cancel">Cancel</string>
+    <string name="no_url">File do not exit, please check it.</string>
+
+</resources>
