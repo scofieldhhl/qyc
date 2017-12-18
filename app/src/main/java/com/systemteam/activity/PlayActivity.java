@@ -13,7 +13,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Transition;
@@ -184,7 +183,7 @@ public class PlayActivity extends BaseActivity implements VideoAllCallBack, View
         } else {
             mList.add(mVideoModelFocus);
         }
-
+        LogTool.d("size:" + mList.size());
         videoPlayer.setUp(mList, mIndexFocus, true, "");
         videoPlayer.setKeepScreenOn(true);
         videoPlayer.setVideoAllCallBack(this);
@@ -401,11 +400,12 @@ public class PlayActivity extends BaseActivity implements VideoAllCallBack, View
     @Override
     public void onAutoComplete(String url, Object... objects) {
         LogTool.d("onAutoComplete");
-        if (++mIndexFocus < mList.size()) {
-            playVideoByPosition(mIndexFocus, 3000);
+        /*if (++mIndexFocus < mList.size()) {
+
         } else {
             PlayActivity.this.finish();
-        }
+        }*/
+        playVideoByPosition(++mIndexFocus % mList.size(), 500);
 
     }
 
@@ -492,7 +492,7 @@ public class PlayActivity extends BaseActivity implements VideoAllCallBack, View
         RecyclerView recyclerView = (RecyclerView) popupView.findViewById(R.id.pop_video_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(PlayActivity.this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(PlayActivity.this, R.drawable.mp_list_divider));
+//        recyclerView.addItemDecoration(new DividerItemDecoration(PlayActivity.this, R.drawable.mp_list_divider));
         mAdapter = new VideoPlayerListAdapter(PlayActivity.this, mList, mIndexFocus);
         recyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(new VideoPlayerListAdapter.OnItemClickListener() {

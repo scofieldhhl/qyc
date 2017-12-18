@@ -293,6 +293,11 @@
         </receiver>
 
         <!-- bmob push end -->
+        <activity android:name=".activity.PlayActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar.FullScreen"  />
     </application>
 
 </manifest>

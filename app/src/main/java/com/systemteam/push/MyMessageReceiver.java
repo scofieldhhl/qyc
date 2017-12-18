@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import cn.bmob.push.PushConstants;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.systemteam.activity.PlayActivity.KEY_PLAY_PATH_LIST;
 
 public class MyMessageReceiver extends BroadcastReceiver {
@@ -39,11 +40,17 @@ public class MyMessageReceiver extends BroadcastReceiver {
 
             ArrayList<String> pathList = new ArrayList<>();
             String path = Environment.getExternalStorageDirectory().getPath()+"/1_M30B.mp4";
+            if(Math.random() % 2 == 1){
+                pathList.add(Environment.getExternalStorageDirectory().getPath()+"/2_M30B.mp4");
+            }else {
+                path = Environment.getExternalStorageDirectory().getPath()+"/1_M40B.mp4";
+                pathList.add(Environment.getExternalStorageDirectory().getPath()+"/2_M40B.mp4");
+            }
             pathList.add(path);
-            pathList.add(Environment.getExternalStorageDirectory().getPath()+"/2_M30B.mp4");
-            pathList.add(Environment.getExternalStorageDirectory().getPath()+"/3_M30B.mp4");
             intentPlayer.putExtra(PlayActivity.KEY_PATH_VIDEO, path);
-            intentPlayer.putStringArrayListExtra(KEY_PLAY_PATH_LIST, new ArrayList<String>());
+            intentPlayer.setFlags(FLAG_ACTIVITY_NEW_TASK);
+            LogTool.d("size:" + pathList.size());
+            intentPlayer.putStringArrayListExtra(KEY_PLAY_PATH_LIST, pathList);
             context.startActivity(intentPlayer);
 
         }
