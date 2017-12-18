@@ -3,6 +3,7 @@ package com.systemteam.push;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 
 import com.systemteam.activity.PlayActivity;
 import com.systemteam.util.LogTool;
@@ -18,7 +19,8 @@ public class MyMessageReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if(intent.getAction().equals(PushConstants.ACTION_MESSAGE)){
-            LogTool.d("bmob push："+intent.getStringExtra("msg"));
+            String msg = intent.getStringExtra("msg");
+            LogTool.d("bmob push："+msg);
             //   0.  定义好视频的路径
 //            Uri uri = Uri.parse(Environment.getExternalStorageDirectory().getPath()+"/keepvid/M30B.mp4");
 //
@@ -33,7 +35,14 @@ public class MyMessageReceiver extends BroadcastReceiver {
 //            //  3.  跳转：
 //            context.startActivity(intent);
             Intent intentPlayer = new Intent(context, PlayActivity.class);
-            intentPlayer.putExtra(PlayActivity.KEY_PATH_VIDEO, "");
+
+
+            ArrayList<String> pathList = new ArrayList<>();
+            String path = Environment.getExternalStorageDirectory().getPath()+"/1_M30B.mp4";
+            pathList.add(path);
+            pathList.add(Environment.getExternalStorageDirectory().getPath()+"/2_M30B.mp4");
+            pathList.add(Environment.getExternalStorageDirectory().getPath()+"/3_M30B.mp4");
+            intentPlayer.putExtra(PlayActivity.KEY_PATH_VIDEO, path);
             intentPlayer.putStringArrayListExtra(KEY_PLAY_PATH_LIST, new ArrayList<String>());
             context.startActivity(intentPlayer);
 
