@@ -65,6 +65,7 @@ public class BikeApplication extends Application {
     private List<GInsightEventListener> gInsightListeners;
 
     public static String mInstallationId = null;
+    public static boolean isMan = true;
 
     public void onCreate() {
         super.onCreate();

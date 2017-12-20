@@ -40,11 +40,11 @@ public class MyMessageReceiver extends BroadcastReceiver {
 
             ArrayList<String> pathList = new ArrayList<>();
             String path = Environment.getExternalStorageDirectory().getPath()+"/1_M30B.mp4";
-            if(Math.random() % 2 == 1){
-                pathList.add(Environment.getExternalStorageDirectory().getPath()+"/2_M30B.mp4");
+            if(msg != null && msg.contains("F")){
+                path = Environment.getExternalStorageDirectory().getPath()+"/1_F30B.mp4";
+                pathList.add(Environment.getExternalStorageDirectory().getPath()+"/2_F30B.mp4");
             }else {
-                path = Environment.getExternalStorageDirectory().getPath()+"/1_M40B.mp4";
-                pathList.add(Environment.getExternalStorageDirectory().getPath()+"/2_M40B.mp4");
+                pathList.add(Environment.getExternalStorageDirectory().getPath()+"/2_M30B.mp4");
             }
             pathList.add(path);
             intentPlayer.putExtra(PlayActivity.KEY_PATH_VIDEO, path);

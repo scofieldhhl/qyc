@@ -83,6 +83,7 @@ public class UserInfoActivity extends BaseActivity {
         setContentView(R.layout.activity_info);
         mContext = this;
         initView();
+        BikeApplication.isMan = false;
     }
 
     @Override

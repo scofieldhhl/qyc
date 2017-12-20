@@ -20,6 +20,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.systemteam.BaseActivity;
+import com.systemteam.BikeApplication;
 import com.systemteam.R;
 import com.systemteam.bean.Car;
 import com.systemteam.bean.EventMessage;
@@ -352,7 +353,12 @@ public abstract class BaseActiveActivity extends BaseActivity {
 //                    String installationId = "CA9EAA05DD7C3B541C83A16574BC7EBB";
                         query.addWhereEqualTo("installationId", mADDeviceId);
                         bmobPushManager.setQuery(query);
-                        bmobPushManager.pushMessage("消息内容", new PushListener() {
+                        String content = "M";
+                        if(!BikeApplication.isMan){
+                            content = "F";
+                        }
+                        LogTool.e("pushMessage:" + content);
+                        bmobPushManager.pushMessage(content, new PushListener() {
                             @Override
                             public void done(BmobException e) {
                                 if (e == null) {
