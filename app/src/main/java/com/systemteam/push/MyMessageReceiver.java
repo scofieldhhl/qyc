@@ -22,29 +22,14 @@ public class MyMessageReceiver extends BroadcastReceiver {
         if(intent.getAction().equals(PushConstants.ACTION_MESSAGE)){
             String msg = intent.getStringExtra("msg");
             LogTool.d("bmob push："+msg);
-            //   0.  定义好视频的路径
-//            Uri uri = Uri.parse(Environment.getExternalStorageDirectory().getPath()+"/keepvid/M30B.mp4");
-//
-//            //  1.  先设定好Intent
-//            Intent intentVideo = new Intent(Intent.ACTION_VIEW);
-//
-//            //  2.  设置好 Data：播放源，是一个URI
-//            //      设置好 Data的Type：类型是 “video/mp4"
-//            intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-//            intent.setDataAndType(uri,"video/*");
-//
-//            //  3.  跳转：
-//            context.startActivity(intent);
             Intent intentPlayer = new Intent(context, PlayActivity.class);
-
-
             ArrayList<String> pathList = new ArrayList<>();
             String path = Environment.getExternalStorageDirectory().getPath()+"/1_M30B.mp4";
-            if(msg != null && msg.contains("F")){
+            if(msg != null && msg.contains("010qww00")){
+                pathList.add(Environment.getExternalStorageDirectory().getPath()+"/2_M30B.mp4");
+            }else {
                 path = Environment.getExternalStorageDirectory().getPath()+"/1_F30B.mp4";
                 pathList.add(Environment.getExternalStorageDirectory().getPath()+"/2_F30B.mp4");
-            }else {
-                pathList.add(Environment.getExternalStorageDirectory().getPath()+"/2_M30B.mp4");
             }
             pathList.add(path);
             intentPlayer.putExtra(PlayActivity.KEY_PATH_VIDEO, path);

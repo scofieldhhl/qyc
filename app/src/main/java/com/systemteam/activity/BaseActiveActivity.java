@@ -19,12 +19,15 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.systemteam.BaseActivity;
 import com.systemteam.BikeApplication;
 import com.systemteam.R;
 import com.systemteam.bean.Car;
+import com.systemteam.bean.Data;
 import com.systemteam.bean.EventMessage;
 import com.systemteam.bean.PushSingle;
+import com.systemteam.bean.ResponseInfo;
 import com.systemteam.provider.ProtocolEncode;
 import com.systemteam.service.RouteService;
 import com.systemteam.util.Constant;
@@ -353,10 +356,7 @@ public abstract class BaseActiveActivity extends BaseActivity {
 //                    String installationId = "CA9EAA05DD7C3B541C83A16574BC7EBB";
                         query.addWhereEqualTo("installationId", mADDeviceId);
                         bmobPushManager.setQuery(query);
-                        String content = "M";
-                        if(!BikeApplication.isMan){
-                            content = "F";
-                        }
+                        String content = BikeApplication.getInstance().getTag();
                         LogTool.e("pushMessage:" + content);
                         bmobPushManager.pushMessage(content, new PushListener() {
                             @Override
@@ -471,12 +471,23 @@ public abstract class BaseActiveActivity extends BaseActivity {
 
     public void requestToken(){
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
-                "http://1.rockingcar.applinzi.com/geTuiToken",
+                        "http://jingzhoudai.shop/a.php?action=geTuiToken",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         LogTool.d(response);
-
+                        try {
+                            if(response != null && !TextUtils.isEmpty(response)){
+                                ResponseInfo info = new Gson().fromJson(response, ResponseInfo.class);
+                                if(info != null && info.data != null){
+                                    String value = info.data;
+                                    Data data = new Gson().fromJson(value, Data.class);
+                                    reqeustGeInstang(data.authtoken);
+                                }
+                            }
+                        } catch (JsonSyntaxException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -489,14 +500,50 @@ public abstract class BaseActiveActivity extends BaseActivity {
         mQueue.add(stringRequest);
     }
 
-    private void pushSignleTokenPost() {
+    public void reqeustGeInstang(String token){
+        String url = String.format(Locale.US, "http://jingzhoudai.shop/a.php?action=queryTag&token=%s&userIdList=%s",
+                token, BikeApplication.getInstance().getGiuid());
+//        token, "8ef2b7b9d4bb3bc0dd96dfa198c0209a");
+        LogTool.d("url:" + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        LogTool.d("onResponse :" +response);
+                        try {
+                            if(response != null && !TextUtils.isEmpty(response)){
+                                ResponseInfo info = new Gson().fromJson(response, ResponseInfo.class);
+                                if(info != null && info.data != null){
+                                    String value = info.data;
+                                    LogTool.d("value:" + value);
+                                    if(value != null && value.contains("tags")){
+                                        BikeApplication.getInstance().setTag(value);
+                                    }
+                                }
+                            }
+                        } catch (JsonSyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+        if(mQueue == null){
+            mQueue = Volley.newRequestQueue(mContext);
+        }
+        mQueue.add(stringRequest);
+    }
+
+    private void reqeustGeXiangPost(String token) {
         StringRequest request = new StringRequest(Request.Method.POST,
-                String.format(Locale.US, "https://restapi.getui.com/v1/%s/auth_sign", GT_APP_ID)
+                String.format(Locale.US, "http://jingzhoudai.shop/a.php?action=queryTag&token=%s&userIdList=b154c3fb51c213cbfb25edee3b55d127,124587587853829478436231112",
+                        token)
                 , new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 LogTool.d("onResponse"+ s);
-                pushSinglePost("7aaa194db8634df99cd69ddc53a5cc09", "TEST");
             }
         }, new Response.ErrorListener() {
             @Override

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.getui.gis.sdk.GInsightManager;
+import com.systemteam.BikeApplication;
 import com.systemteam.util.LogTool;
 
 public class GInsightEventReceiver extends BroadcastReceiver {
@@ -16,6 +17,7 @@ public class GInsightEventReceiver extends BroadcastReceiver {
         String action = intent.getStringExtra("action");
         if (action.equalsIgnoreCase(GInsightManager.ACTION_GIUID_GENERATED)) {
             String giuid = intent.getStringExtra("giuid");
+            BikeApplication.getInstance().setGiuid(giuid);
             LogTool.d("giuid = " + giuid);
         }
     }

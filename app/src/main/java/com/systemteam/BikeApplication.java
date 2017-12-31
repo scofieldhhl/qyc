@@ -40,7 +40,7 @@ public class BikeApplication extends Application {
     public static BmobGeoPoint mCurrentPosition; //当前定位经纬度信息
     public static boolean isHaveUpdate;
     private MyUser mUser;
-    private static BikeApplication myApplication;
+    public static BikeApplication myApplication;
     public static BikeApplication getInstance() {
         return myApplication;
     }
@@ -65,7 +65,6 @@ public class BikeApplication extends Application {
     private List<GInsightEventListener> gInsightListeners;
 
     public static String mInstallationId = null;
-    public static boolean isMan = true;
 
     public void onCreate() {
         super.onCreate();
@@ -200,5 +199,16 @@ public class BikeApplication extends Application {
         for (GInsightEventListener l : gInsightListeners) {
             l.onGiuid(giuid);
         }
+    }
+
+    public String getTag() {
+        SharedPreferences sp = getSharedPreferences(getClass().getSimpleName(),
+                Context.MODE_PRIVATE);
+        return sp.getString("gitag", null);
+    }
+
+    public void setTag(String gitag) {
+        SharedPreferences sp = getSharedPreferences(getClass().getSimpleName(), Context.MODE_PRIVATE);
+        sp.edit().putString("gitag", gitag).apply();
     }
 }

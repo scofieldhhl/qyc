@@ -24,8 +24,8 @@ android {
         applicationId "com.systemteam"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 9
-        versionName "1.12.18"
+        versionCode 10
+        versionName "1.12.31"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         manifestPlaceholders = [
                 GETUI_APP_ID : "yLry8IQjRFAn3YqyxyKH15",

@@ -294,6 +294,13 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         LogTool.d("oncreate end");
         mHandler.sendEmptyMessageDelayed(DISMISS_SPLASH, 4*1000);
 
+        String tag = BikeApplication.getInstance().getTag();
+        if(tag != null && !TextUtils.isEmpty(tag)){
+            LogTool.e("tag:" + tag);
+        }else {
+            LogTool.e("tag null");
+            requestToken();
+        }
 
     }
 
@@ -838,9 +845,8 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
                 requestPermissions(permissions.toArray(new String[permissions.size()]),
                         REQUEST_CODE_SOME_FEATURES_PERMISSIONS);
             }
-        }else {
-            PushManager.getInstance().initialize(this.getApplicationContext(), userPushService);
         }
+            PushManager.getInstance().initialize(this.getApplicationContext(), userPushService);
     }
 
 
@@ -1170,5 +1176,6 @@ public class Main2Activity extends BaseActiveActivity implements AMap.OnCameraCh
         app.registerGInsightListener(this);
 
         String giuid = app.getGiuid();
+        LogTool.d("GIUID:" + giuid);
     }
 }
